@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <gradient android:startColor="@color/btn_orange_p" android:endColor="@color/btn_orange_p" android:angle="90.0" />
+    <stroke android:width="1.0px" android:color="@color/list_text_orange_color" />
+    <corners android:radius="5.0sp" />
+</shape>
+<!-- From: file:/D:/studioSpace/hospital180/app/src/main/res/drawable/shape_orange_edge_p.xml -->

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="home_array">
+        <item>分拣</item>
+        <item>查物流</item>
+        <item>下单</item>
+        <item>稽查</item>
+        <item>发货</item>
+        <item>退货</item>
+        <item>销售</item>
+    </string-array>
+
+</resources>

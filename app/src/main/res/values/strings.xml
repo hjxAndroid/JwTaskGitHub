@@ -3,4 +3,19 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="menu1">消息</string>
+    <string name="menu2">工作</string>
+    <string name="menu3">联系人</string>
+    <string name="menu4">更多</string>
+    <string name="menu5">菜单五</string>
+    <string name="menu6">菜单六</string>
+    <string name="title_activity_news_home">NewsHomeActivity</string>
+    <string name="title_activity_task_home">TaskHomeActivity</string>
+    <string name="title_activity_contact_home">ContactHomeActivity</string>
+    <string name="title_activity_more_home">MoreHomeActivity</string>
+    <string name="news">消息</string>
+    <string name="more">更多</string>
+    <string name="contact">联系人</string>
+    <string name="任务">任务</string>
 </resources>
