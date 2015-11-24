@@ -1,0 +1,3 @@
+[submodule "jwfflib"]
+	path = jwfflib
+	url = https://git.oschina.net/yilongmd/JwFastFrameworkLibrary.git
