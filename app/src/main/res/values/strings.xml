@@ -29,4 +29,12 @@
     <string name="minutes">分钟</string>
     <string name="people">人数</string>
     <string name="setControl">设置</string>
+    <string name="account">账号与安全</string>
+    <string name="sercurity">已保护</string>
+    <string name="new_Information">新消息通知</string>
+    <string name="private_Information">隐私</string>
+    <string name="public_Function">通用</string>
+    <string name="about">关于</string>
+    <string name="version_Information">版本信息</string>
+    <string name="exit_Login">退出登录</string>
 </resources>
