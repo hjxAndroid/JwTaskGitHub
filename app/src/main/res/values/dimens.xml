@@ -12,9 +12,9 @@
     <dimen name="drawablePaddingSpace">6dp</dimen>
     <dimen name="textSize_list">15.0sp</dimen>
     <dimen name="margin_Right_Size">10dp</dimen>
-    <dimen name="user_Layout_Height">70dp</dimen>
+    <dimen name="user_Layout_Height">60dp</dimen>
     <dimen name="double_Part">130dp</dimen>
-    <dimen name="item_Height">60dp</dimen>
-    <dimen name="three_Part">180dp</dimen>
+    <dimen name="item_Height">50dp</dimen>
+    <dimen name="three_Part">150dp</dimen>
     <dimen name="drawablePad">6dp</dimen>
 </resources>
