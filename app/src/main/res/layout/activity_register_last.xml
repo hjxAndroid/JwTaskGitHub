@@ -1,0 +1,98 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:orientation="vertical"
+    tools:context="com.jeeweel.syl.jwtask.business.main.module.basic.LoginActivity">
+
+
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/gray_fgx" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@color/gray_f2f2f2"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="密码"
+                android:textColor="@color/list_text_color"
+                android:textSize="@dimen/textSize_large" />
+
+            <EditText android:id="@+id/et_pwd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:background="@null"
+                android:hint="请输入密码"
+                android:textColor="@color/list_text_color"
+                android:textSize="@dimen/textSize_large" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/gray_fgx" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="确认密码"
+                android:textColor="@color/list_text_color"
+                android:textSize="@dimen/textSize_large" />
+
+            <EditText android:id="@+id/et_confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:background="@null"
+                android:hint="请再次输入密码"
+                android:textColor="@color/list_text_color"
+                android:textSize="@dimen/textSize_large" />
+
+        </LinearLayout>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_fgx" />
+
+    <Button android:id="@+id/bt_login"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:background="@drawable/bg_button"
+        android:text="进入任务管理"/>
+
+</LinearLayout>

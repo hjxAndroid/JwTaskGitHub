@@ -1,0 +1,84 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jeeweel.syl.jwtask.business.main.module.basic.RegisterActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="验证码已经发送到"
+            android:textColor="@color/list_text_color"/>
+
+        <TextView android:id="@+id/tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="18659804618"
+            android:textColor="@color/list_text_color"/>
+</LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_fgx" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="验证码"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_large" />
+
+        <EditText
+            android:id="@+id/et_yzm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@null"
+            android:hint="请输入验证码"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_title" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_fgx" />
+
+
+    <Button android:id="@+id/bt_next"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:background="@drawable/bg_button"
+        android:text="下一步"/>
+
+    <TextView android:id="@+id/tv_rigster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="没收到验证码？点击重新发送"
+        android:textColor="@color/ios7blue"
+        android:textSize="@dimen/textSize_normal"/>
+</LinearLayout>
