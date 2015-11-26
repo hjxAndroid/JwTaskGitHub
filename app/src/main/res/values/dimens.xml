@@ -2,10 +2,19 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <!--钉钉APP-->
-    <dimen name="test_size">15dp</dimen>
-    <dimen name="name_size">12dp</dimen>
-    <dimen name="margin_size">10dp</dimen>
-    <dimen name="margin_top_size">10dp</dimen>
-    <dimen name="view_height">1dp</dimen>
+    <!--lrkAPP-->
+    <dimen name="text_Size">15dp</dimen>
+    <dimen name="margin_Size">10dp</dimen>
+    <dimen name="margin_Top_Size">10dp</dimen>
+    <dimen name="itemSize">15dp</dimen>
+    <dimen name="margin_Large_Top_Size">20dp</dimen>
+    <dimen name="large_Text_Size">30dp</dimen>
+    <dimen name="drawablePaddingSpace">6dp</dimen>
+    <dimen name="textSize_list">15.0sp</dimen>
+    <dimen name="margin_Right_Size">10dp</dimen>
+    <dimen name="user_Layout_Height">60dp</dimen>
+    <dimen name="double_Part">130dp</dimen>
+    <dimen name="item_Height">50dp</dimen>
+    <dimen name="three_Part">150dp</dimen>
+    <dimen name="drawablePad">6dp</dimen>
 </resources>

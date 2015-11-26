@@ -42,8 +42,20 @@
             android:label="@string/title_activity_more_home" >
         </activity>
         <activity
-            android:name=".business.main.module.more.MineActivity"
-            android:label="@string/title_activity_mine" >
+            android:name=".business.main.module.basic.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.RegisterSceondActivity"
+            android:label="@string/title_activity_register_sceond" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.RegisterLastActivity"
+            android:label="@string/title_activity_register_last" >
         </activity>
     </application>
 

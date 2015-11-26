@@ -318,7 +318,4 @@
 
     <color name="title_gray">#f4f1f1</color>
 
-
-    <color name="gray_fgx">#d8d8d8</color> <!-- 灰色 分割线 -->
-    <color name="view_line">#ffe5e5e5</color>
 </resources>

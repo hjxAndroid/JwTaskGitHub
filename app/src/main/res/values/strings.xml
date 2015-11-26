@@ -18,5 +18,30 @@
     <string name="more">更多</string>
     <string name="contact">联系人</string>
     <string name="任务">任务</string>
-    <string name="title_activity_mine">MineActivity</string>
+
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_register_sceond">RegisterSceondActivity</string>
+    <string name="title_activity_register_last">RegisterLastActivity</string>
+
+    <!--lrkString-->
+    <string name="collect">收藏</string>
+    <string name="experience">钉钉体验站</string>
+    <string name="push">推荐给好友</string>
+    <string name="service">我的客服</string>
+    <string name="res">帮助与反馈</string>
+    <string name="phone">本月还可免费拨打</string>
+    <string name="Ding">今日还可DING</string>
+    <string name="minutes">分钟</string>
+    <string name="people">人数</string>
+    <string name="setControl">设置</string>
+    <string name="account">账号与安全</string>
+    <string name="sercurity">已保护</string>
+    <string name="new_Information">新消息通知</string>
+    <string name="private_Information">隐私</string>
+    <string name="public_Function">通用</string>
+    <string name="about">关于</string>
+    <string name="version_Information">版本信息</string>
+    <string name="exit_Login">退出登录</string>
+
 </resources>
