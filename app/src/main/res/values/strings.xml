@@ -18,4 +18,5 @@
     <string name="more">更多</string>
     <string name="contact">联系人</string>
     <string name="任务">任务</string>
+    <string name="title_activity_mine">MineActivity</string>
 </resources>
