@@ -1,5 +1,6 @@
 package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
+import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
 
 import java.util.Date;
@@ -7,7 +8,7 @@ import java.util.Date;
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread
- * @Description: TODO(字符串获取和处理的类)
+ * @Description: TODO(所有功能的已读未读表)
  * @date 2011-11-26 下午7:26:08
  */
 @Table(name="alreadyread")
@@ -15,7 +16,8 @@ public class Alreadyread{
 	/**
 	 * mid
 	 */
-	private String mid;
+	@Id(column="mid")
+	private int mid;
 	/**
 	 * 已读任务或者公告ID
 	 */
@@ -79,11 +81,11 @@ public class Alreadyread{
 	private String update_time;
 
 
-	public String getMid() {
+	public int getMid() {
 		return mid;
 	}
 
-	public void setMid(String mid) {
+	public void setMid(int mid) {
 		this.mid = mid;
 	}
 

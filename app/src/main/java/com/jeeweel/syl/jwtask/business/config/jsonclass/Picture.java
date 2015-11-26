@@ -1,10 +1,21 @@
 package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 
+import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+/**
+ * @author 苏逸龙 317616660@qq.com
+ * @ClassName: Alreadyread
+ * @Description: TODO(图片池表)
+ * @date 2011-11-26 下午7:26:08
+ */
 
 @Table(name="picture")
 public class Picture{
+	/**
+	 * mid
+	 */
+	@Id(column="mid")
 	private int mid;
 	private int out_id;
 	private int pic_id;

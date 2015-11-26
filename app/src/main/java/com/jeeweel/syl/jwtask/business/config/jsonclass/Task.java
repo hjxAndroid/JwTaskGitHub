@@ -1,9 +1,20 @@
 package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
+import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+/**
+ * @author 苏逸龙 317616660@qq.com
+ * @ClassName: Alreadyread
+ * @Description: TODO(任务表)
+ * @date 2011-11-26 下午7:26:08
+ */
 
 @Table(name="task")
 public class Task {
+    /**
+     * mid
+     */
+    @Id(column="mid")
     private int mid;
     private String task_code;
     private String task_name;

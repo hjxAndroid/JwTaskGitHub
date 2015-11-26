@@ -1,15 +1,21 @@
 package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
+import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
-
 /**
- * friend ʵ����
- * Thu Nov 26 17:04:16 CST 2015 ������ �� GenEntityMysql�Զ�����
+ * @author 苏逸龙 317616660@qq.com
+ * @ClassName: Alreadyread
+ * @Description: TODO(好友表)
+ * @date 2011-11-26 下午7:26:08
  */
 
 @Table(name="friend")
 public class Friend {
-    private int mid;
+    /**
+     * mid
+     */
+    @Id(column="mid")
+    private int mid;;
     private int user_code;
     private String user_name;
     private String content;
