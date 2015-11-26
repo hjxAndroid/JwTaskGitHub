@@ -1,3 +1,6 @@
 [submodule "jwfflib"]
 	path = jwfflib
 	url = https://git.oschina.net/yilongmd/JwFastFrameworkLibrary.git
+[submodule "jclouddb"]
+	path = jclouddb
+	url = https://git.oschina.net/yilongmd/JCloudDB.git
