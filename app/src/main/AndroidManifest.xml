@@ -2,7 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jeeweel.syl.jwtask" >
 
-    <application android:name=".business.main.JwAppAplication"
+    <application
+        android:name=".business.main.JwAppAplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -16,7 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-       <activity
+        <activity
             android:name=".business.main.module.news.NewsHomeActivity"
             android:label="@string/title_activity_news_home" >
         </activity>
@@ -36,14 +37,26 @@
             android:name=".business.main.module.basic.AppStartActivity"
             android:label="@string/title_activity_more_home" >
         </activity>
-
         <activity
             android:name=".business.main.tab.TabHostActivity"
             android:label="@string/title_activity_more_home" >
         </activity>
-
+        <activity
+            android:name=".business.main.module.basic.LoginActivity"
+            android:label="@string/title_activity_login" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.RegisterActivity"
+            android:label="@string/title_activity_register" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.RegisterSceondActivity"
+            android:label="@string/title_activity_register_sceond" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.RegisterLastActivity"
+            android:label="@string/title_activity_register_last" >
+        </activity>
     </application>
-
-
 
 </manifest>
