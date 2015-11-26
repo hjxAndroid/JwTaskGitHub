@@ -17,4 +17,5 @@
     <dimen name="item_Height">50dp</dimen>
     <dimen name="three_Part">150dp</dimen>
     <dimen name="drawablePad">6dp</dimen>
+
 </resources>
