@@ -1,6 +1,5 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,12 +7,16 @@ import android.view.MenuItem;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MoreHomeActivity extends JwActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_more_home);
+        ButterKnife.bind(this);
         setTitle(getString(R.string.more));
     }
 
@@ -37,5 +40,10 @@ public class MoreHomeActivity extends JwActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.lineUsers)
+    void mineClick() {
+        JwStartActivity(MineActivity.class);
     }
 }
