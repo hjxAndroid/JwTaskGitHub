@@ -318,4 +318,7 @@
 
     <color name="title_gray">#f4f1f1</color>
 
+
+    <!--zhu-->
+    <color name="view_line">#f4f1f1</color>
 </resources>
