@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:text="没收到验证码？点击重新发送"
+        android:text="没收到验证码？请等待60秒后点击重新发送"
         android:textColor="@color/ios7blue"
         android:textSize="@dimen/textSize_normal"/>
 </LinearLayout>
