@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread
@@ -9,36 +10,108 @@ import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
  * @date 2011-11-26 下午7:26:08
  */
 
-@Table(name="task")
+@Table(name = "task")
 public class Task {
     /**
      * mid
      */
-    @Id(column="mid")
+    @Id(column = "mid")
     private int mid;
+    /**
+     * 任务代码
+     */
     private String task_code;
+    /**
+     * 任务名称
+     */
     private String task_name;
+    /**
+     * 预留组织ID
+     */
     private int org_id;
+    /**
+     * 预留组织名称
+     */
     private String org_name;
+    /**
+     * 起始时间
+     */
     private String begin_time;
+    /**
+     * 结束时间
+     */
     private String over_time;
+    /**
+     * 预留字段
+     */
     private String principal;
+    /**
+     * 负责人代码（过个，号隔开）
+     */
     private String principal_code;
+    /**
+     * 发布人预留字段
+     */
     private int promulgator;
+    /**
+     * 发布人代码
+     */
     private String promulgator_code;
+    /**
+     * 审核人预留ID
+     */
     private int auditor;
+    /**
+     * 审核人代码
+     */
     private String auditor_code;
+    /**
+     * 参与者字段,预留
+     */
     private String participant;
+    /**
+     * 参与者代码
+     */
     private String participant_code;
+    /**
+     * 预留字段
+     */
     private String observer;
+    /**
+     * 观察者（多个）预留字段
+     */
     private String observer_code;
+    /**
+     * 任务要求
+     */
     private String task_request;
+    /**
+     * 优先级
+     */
     private String priority;
+    /**
+     * 考核标准
+     */
     private String assess_standard;
+    /**
+     * 目前状态
+     */
     private String now_state;
+    /**
+     * 图片id,预留字段
+     */
     private int photo_id;
+    /**
+     * 图片代码
+     */
     private String photo_code;
+    /**
+     * 创建时间
+     */
     private String create_time;
+    /**
+     * 更新时间
+     */
     private String update_time;
 
 

@@ -2,135 +2,181 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread
- * @Description: TODO(表)
+ * @Description: TODO(公告表)
  * @date 2011-11-26 下午7:26:08
  */
 
-@Table(name="publicity")
-public class Publicity{
-	/**
-	 * mid
-	 */
-	@Id(column="mid")
-	private int mid;
-	private String publicity_code;
-	private String publicity_title;
-	private String witness;
-	private int photo_id;
-	private String photo_code;
-	private int prouser_id;
-	private String prouser;
-	private String pro_time;
-	private int accept_orgid;
-	private String remark;
-	private String create_time;
-	private String update_time;
+@Table(name = "publicity")
+public class Publicity {
+    /**
+     * mid
+     */
+    @Id(column = "mid")
+    private int mid;
+    /**
+     * 公告代码
+     */
+    private String publicity_code;
+    /**
+     * 公告名称
+     */
+    private String publicity_title;
+    /**
+     * 证人
+     */
+    private String witness;
+    /**
+     * 预留字段
+     */
+    private int photo_id;
+    /**
+     * 图片代码
+     */
+    private String photo_code;
+    private int prouser_id;
+    /**
+     * 发布人代码
+     */
+    private String prouser_code;
+    private String prouser;
+    /**
+     * 发布时间
+     */
+    private String pro_time;
+    private int accept_orgid;
+    /**
+     * 接收组织代码
+     */
+    private String accept_org_code;
+    /**
+     * 备注
+     */
+    private String remark;
+    private String create_time;
+    private String update_time;
 
-	public String getPhoto_code() {
-		return photo_code;
-	}
+    public String getProuser_code() {
+        return prouser_code;
+    }
 
-	public void setPhoto_code(String photo_code) {
-		this.photo_code = photo_code;
-	}
+    public void setProuser_code(String prouser_code) {
+        this.prouser_code = prouser_code;
+    }
 
-	public int getMid() {
-		return mid;
-	}
+    public String getAccept_org_code() {
+        return accept_org_code;
+    }
 
-	public void setMid(int mid) {
-		this.mid = mid;
-	}
+    public void setAccept_org_code(String accept_org_code) {
+        this.accept_org_code = accept_org_code;
+    }
 
-	public String getPublicity_code() {
-		return publicity_code;
-	}
+    public String getPhoto_code() {
+        return photo_code;
+    }
 
-	public void setPublicity_code(String publicity_code) {
-		this.publicity_code = publicity_code;
-	}
+    public void setPhoto_code(String photo_code) {
+        this.photo_code = photo_code;
+    }
 
-	public String getPublicity_title() {
-		return publicity_title;
-	}
+    public int getMid() {
+        return mid;
+    }
 
-	public void setPublicity_title(String publicity_title) {
-		this.publicity_title = publicity_title;
-	}
+    public void setMid(int mid) {
+        this.mid = mid;
+    }
 
-	public String getWitness() {
-		return witness;
-	}
+    public String getPublicity_code() {
+        return publicity_code;
+    }
 
-	public void setWitness(String witness) {
-		this.witness = witness;
-	}
+    public void setPublicity_code(String publicity_code) {
+        this.publicity_code = publicity_code;
+    }
 
-	public int getPhoto_id() {
-		return photo_id;
-	}
+    public String getPublicity_title() {
+        return publicity_title;
+    }
 
-	public void setPhoto_id(int photo_id) {
-		this.photo_id = photo_id;
-	}
+    public void setPublicity_title(String publicity_title) {
+        this.publicity_title = publicity_title;
+    }
 
-	public int getProuser_id() {
-		return prouser_id;
-	}
+    public String getWitness() {
+        return witness;
+    }
 
-	public void setProuser_id(int prouser_id) {
-		this.prouser_id = prouser_id;
-	}
+    public void setWitness(String witness) {
+        this.witness = witness;
+    }
 
-	public String getProuser() {
-		return prouser;
-	}
+    public int getPhoto_id() {
+        return photo_id;
+    }
 
-	public void setProuser(String prouser) {
-		this.prouser = prouser;
-	}
+    public void setPhoto_id(int photo_id) {
+        this.photo_id = photo_id;
+    }
 
-	public String getPro_time() {
-		return pro_time;
-	}
+    public int getProuser_id() {
+        return prouser_id;
+    }
 
-	public void setPro_time(String pro_time) {
-		this.pro_time = pro_time;
-	}
+    public void setProuser_id(int prouser_id) {
+        this.prouser_id = prouser_id;
+    }
 
-	public int getAccept_orgid() {
-		return accept_orgid;
-	}
+    public String getProuser() {
+        return prouser;
+    }
 
-	public void setAccept_orgid(int accept_orgid) {
-		this.accept_orgid = accept_orgid;
-	}
+    public void setProuser(String prouser) {
+        this.prouser = prouser;
+    }
 
-	public String getRemark() {
-		return remark;
-	}
+    public String getPro_time() {
+        return pro_time;
+    }
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+    public void setPro_time(String pro_time) {
+        this.pro_time = pro_time;
+    }
 
-	public String getCreate_time() {
-		return create_time;
-	}
+    public int getAccept_orgid() {
+        return accept_orgid;
+    }
 
-	public void setCreate_time(String create_time) {
-		this.create_time = create_time;
-	}
+    public void setAccept_orgid(int accept_orgid) {
+        this.accept_orgid = accept_orgid;
+    }
 
-	public String getUpdate_time() {
-		return update_time;
-	}
+    public String getRemark() {
+        return remark;
+    }
 
-	public void setUpdate_time(String update_time) {
-		this.update_time = update_time;
-	}
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(String create_time) {
+        this.create_time = create_time;
+    }
+
+    public String getUpdate_time() {
+        return update_time;
+    }
+
+    public void setUpdate_time(String update_time) {
+        this.update_time = update_time;
+    }
 }
 

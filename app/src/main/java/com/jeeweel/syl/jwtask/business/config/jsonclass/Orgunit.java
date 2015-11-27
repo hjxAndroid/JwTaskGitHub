@@ -16,9 +16,21 @@ public class Orgunit{
 	 */
 	@Id(column="mid")
 	private int mid;
+	/**
+	 * 组织代码
+	 */
 	private String org_code;
+	/**
+	 * 组织名称
+	 */
 	private String org_name;
+	/**
+	 * 组织状态
+	 */
 	private String org_state;
+	/**
+	 * 备注
+	 */
 	private String remark;
 	private String founder;
 	private String founder_time;

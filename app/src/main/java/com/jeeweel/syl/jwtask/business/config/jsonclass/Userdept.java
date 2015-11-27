@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread
@@ -9,15 +10,24 @@ import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
  * @date 2011-11-26 下午7:26:08
  */
 
-@Table(name="userdept")
+@Table(name = "userdept")
 public class Userdept {
     /**
      * mid
      */
-    @Id(column="mid")
+    @Id(column = "mid")
     private int mid;
+    /**
+     * 部门代码
+     */
     private String dept_code;
+    /**
+     * 部门名称
+     */
     private String dept_name;
+    /**
+     * 用户
+     */
     private int user_id;
     private String username;
     private String nickname;
