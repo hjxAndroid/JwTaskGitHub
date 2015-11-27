@@ -32,7 +32,7 @@ public class JwAppAplication extends JeeweelApplication {
         SMSSDK.initSDK(this, APPKEY, APPSECRET);
         finalDb = FinalDb.create(this);
         try {
-            CloudClient.init(getApplicationContext(), "192.168.0.202:8080", "jwtask", "58975c511b1bcaddecc906a2c9337665", "");
+            CloudClient.init(getApplicationContext(), "192.168.0.37:8080", "jwtask", "58975c511b1bcaddecc906a2c9337665", "");
         }catch (Exception e){
             e.printStackTrace();
         }
