@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.view;
+package api.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

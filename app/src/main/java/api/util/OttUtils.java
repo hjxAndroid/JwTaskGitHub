@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.util;
+package api.util;
 
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.jeeweel.syl.lib.api.core.otto.OttoBus;

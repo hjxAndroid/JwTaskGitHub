@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.util;
+package api.util;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;

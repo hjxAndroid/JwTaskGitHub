@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.viewpage;
+package api.viewpage;
 
 import android.os.Build;
 import android.util.SparseArray;

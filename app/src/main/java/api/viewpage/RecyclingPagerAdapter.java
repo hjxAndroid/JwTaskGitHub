@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.viewpage;
+package api.viewpage;
 
 import android.support.v4.view.PagerAdapter;
 import android.view.View;

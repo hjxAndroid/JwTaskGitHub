@@ -1,13 +1,10 @@
-package com.jeeweel.syl.jwtask.business.api.viewpage;
+package api.viewpage;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.lib.api.config.ApiUrlUtil;
-import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;

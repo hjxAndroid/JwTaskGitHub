@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.view;
+package api.view;
 
 import android.graphics.RectF;
 import android.widget.ImageView;

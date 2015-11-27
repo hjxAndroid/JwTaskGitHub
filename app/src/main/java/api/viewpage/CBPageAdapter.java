@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.viewpage;
+package api.viewpage;
 
 import android.content.Context;
 import android.view.View;

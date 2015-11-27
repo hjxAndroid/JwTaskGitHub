@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jeeweel.syl.jwtask.business.api.viewpage;
+package api.viewpage;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -47,11 +47,11 @@ public class CBLoopViewPager extends ViewPager {
     OnPageChangeListener mOuterPageChangeListener;
     private CBLoopPagerAdapterWrapper mAdapter;
     private boolean mBoundaryCaching = DEFAULT_BOUNDARY_CASHING;
-    
-    
+
+
     /**
      * helper function which may be used when implementing FragmentPagerAdapter
-     *   
+     *
      * @param position
      * @param count
      * @return (position-1)%count
@@ -65,11 +65,11 @@ public class CBLoopViewPager extends ViewPager {
         }
         return position;
     }
-    
+
     /**
      * If set to true, the boundary views (i.e. first and last) will never be destroyed
-     * This may help to prevent "blinking" of some views 
-     * 
+     * This may help to prevent "blinking" of some views
+     *
      * @param flag
      */
     public void setBoundaryCaching(boolean flag) {

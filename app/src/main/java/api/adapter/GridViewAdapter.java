@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.adapter;
+package api.adapter;
 
 
 

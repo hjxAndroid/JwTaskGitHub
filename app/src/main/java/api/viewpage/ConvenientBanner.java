@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.viewpage;
+package api.viewpage;
 
 import android.content.Context;
 import android.os.Handler;
@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-
 
 import com.jeeweel.syl.jwtask.R;
 

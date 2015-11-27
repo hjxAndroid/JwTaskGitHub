@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.jeeweel.syl.jwtask.business.api.viewpage;
+package api.viewpage;
 
 import android.os.Parcelable;
 import android.support.v4.app.FragmentPagerAdapter;

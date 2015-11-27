@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.util;
+package api.util;
 
 /**
  * Created by asusa on 2015/11/18.

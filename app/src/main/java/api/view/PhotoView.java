@@ -1,4 +1,4 @@
-package com.jeeweel.syl.jwtask.business.api.view;
+package api.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -246,7 +246,7 @@ public class PhotoView extends ImageView {
         if (mInfo != null && System.currentTimeMillis() - mInfoTime < MAX_ANIM_FROM_WAITE) {
             animaFrom(mInfo);
         }
-        
+
         mInfo = null;
     }
 
