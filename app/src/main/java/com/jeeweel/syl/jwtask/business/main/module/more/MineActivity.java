@@ -7,12 +7,17 @@ import android.view.MenuItem;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MineActivity extends JwActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine);
+        ButterKnife.bind(this);
+        setTitle(getString(R.string.mineinformation));
     }
 
     @Override
@@ -35,5 +40,30 @@ public class MineActivity extends JwActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.LinearLayout01)
+    void editNameClick() {
+        JwStartActivity(MineEditnameActivity.class);
+    }
+
+    @OnClick(R.id.LinearLayout02)
+    void editMyAcountClick() {
+        JwStartActivity(MineAccountActivity.class);
+    }
+
+    @OnClick(R.id.LinearLayout04)
+    void editMySexClick() {
+        JwStartActivity(MineSexActivity.class);
+    }
+
+    @OnClick(R.id.LinearLayout07)
+    void editSpecialtyClick() {
+        JwStartActivity(MineEditActivity.class);
+    }
+
+    @OnClick(R.id.LinearLayout08)
+    void editSignatureClick() {
+        JwStartActivity(MineEditActivity.class);
     }
 }
