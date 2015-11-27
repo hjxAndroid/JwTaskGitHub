@@ -9,7 +9,6 @@ import android.widget.EditText;
 import com.jeeweel.syl.jcloudlib.db.api.CloudClient;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.api.util.Utils;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -20,6 +19,7 @@ import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
 import java.util.List;
 
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
