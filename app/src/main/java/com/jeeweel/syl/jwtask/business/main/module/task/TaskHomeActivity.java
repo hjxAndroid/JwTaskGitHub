@@ -1,10 +1,8 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.res.TypedArray;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
@@ -24,6 +22,7 @@ import butterknife.ButterKnife;
 
 public class TaskHomeActivity extends JwActivity {
 
+
     @Bind(R.id.convenientBanner)
     ConvenientBanner convenientBanner;
     @Bind(R.id.li_img)
@@ -35,6 +34,7 @@ public class TaskHomeActivity extends JwActivity {
     private ArrayList<Integer> localImages = new ArrayList<Integer>();
     private List<String> networkImages;
     private String[] images;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +52,7 @@ public class TaskHomeActivity extends JwActivity {
         int width = wm.getDefaultDisplay().getWidth();
 
         LinearLayout li_img = (LinearLayout) findViewById(R.id.li_img);
-        android.view.ViewGroup.LayoutParams lp = li_img.getLayoutParams();
+        ViewGroup.LayoutParams lp = li_img.getLayoutParams();
         int high = width * 10 / 16;
         lp.height = high;
 
@@ -64,7 +64,7 @@ public class TaskHomeActivity extends JwActivity {
         lineGv.setAdapter(gridViewAdapter);
     }
 
-    private void getData(){
+    private void getData() {
         networkImages = new ArrayList<String>();
         networkImages.add("1");
         networkImages.add("2");
