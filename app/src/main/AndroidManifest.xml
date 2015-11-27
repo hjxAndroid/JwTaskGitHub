@@ -78,6 +78,12 @@
             android:name=".business.main.module.basic.RegisterLastActivity"
             android:label="@string/title_activity_register_last" >
         </activity>
+        <activity
+            android:name=".business.main.module.more.MineActivity"
+            android:label="@string/title_activity_register_last" >
+        </activity>
+
+
     </application>
 
 </manifest>
