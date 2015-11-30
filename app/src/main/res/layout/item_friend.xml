@@ -19,14 +19,14 @@
         app:border_width="1.0dip"
         />
 
-   <TextView android:id="@+id/tv_name"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="任小云"
-       style="@style/text_nomor_style"
-       android:layout_centerVertical="true"
-       android:layout_toRightOf="@+id/iv_xz"
-       />
+    <!--<TextView android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="任小云"
+        style="@style/text_nomor_style"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/iv_xz"
+        />-->
 
     <ImageView
         android:layout_width="wrap_content"

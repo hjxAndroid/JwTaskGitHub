@@ -41,9 +41,14 @@ public class MoreHomeActivity extends JwActivity {
 
         return super.onOptionsItemSelected(item);
     }
-/*
+
     @OnClick(R.id.lineUsers)
     void mineClick() {
         JwStartActivity(MineActivity.class);
-    }*/
+    }
+
+    @OnClick(R.id.lineAdervise)
+    void aderviseClick() {
+        JwStartActivity(SettingActivity.class);
+    }
 }

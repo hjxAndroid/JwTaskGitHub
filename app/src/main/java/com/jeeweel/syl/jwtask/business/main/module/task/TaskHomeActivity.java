@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.main.module.basic.LoginActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
 import java.util.ArrayList;
@@ -69,18 +68,18 @@ public class TaskHomeActivity extends JwActivity {
         lineGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (position){
-                    case 0 :
+                switch (position) {
+                    case 0:
                         break;
-                    case 1 :
+                    case 1:
                         //签到
-                        JwStartActivity(LoginActivity.class);
+                        JwStartActivity(StartSignUpActivity.class);
                         break;
-                    case 2 :
+                    case 2:
                         break;
-                    case 3 :
+                    case 3:
                         break;
-                    default :
+                    default:
                         break;
                 }
 
