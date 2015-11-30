@@ -80,7 +80,7 @@
         </activity>
         <activity
             android:name=".business.main.module.more.MineActivity"
-            android:label="@string/title_activity_register_last" >
+            android:label="@string/title_activity_mine" >
         </activity>
 
     </application>
