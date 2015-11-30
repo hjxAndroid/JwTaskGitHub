@@ -23,6 +23,8 @@
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_register_sceond">RegisterSceondActivity</string>
     <string name="title_activity_register_last">RegisterLastActivity</string>
+    <string name="title_activity_mine_editname">MineEditnameActivity</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
 
     <!--lrkString-->
     <string name="collect">收藏</string>
@@ -45,4 +47,4 @@
     <string name="exit_Login">退出登录</string>
     <string name="title_activity_friend_list">FriendListActivity</string>
 
-</resources>
+    </resources>

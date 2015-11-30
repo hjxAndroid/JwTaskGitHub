@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.jeeweel.syl.jwtask" >
 
+
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,6 +13,7 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
+
     <application
         android:name=".business.main.JwAppAplication"
         android:allowBackup="true"
@@ -19,13 +21,14 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
-        <!-- 短信验证 -->
-        ެެ
-        <activity
-            android:name="com.mob.tools.MobUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <!--短信验证-->
+        ެެ<activity
+        android:name="com.mob.tools.MobUIShell"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        android:configChanges="keyboardHidden|orientation|screenSize"
+        android:windowSoftInputMode="stateHidden|adjustResize"/>
+
+
         <activity
             android:name=".business.main.module.basic.WelcomActivity"
             android:label="@string/app_name" >
@@ -77,12 +80,29 @@
         </activity>
         <activity
             android:name=".business.main.module.more.MineActivity"
-            android:label="@string/title_activity_register_last" >
+            android:label="@string/title_activity_mine" >
         </activity>
         <activity
-            android:name=".business.main.module.contact.FriendListActivity"
-            android:label="@string/title_activity_friend_list" >
+            android:name=".business.main.module.more.MineEditnameActivity"
+            android:label="@string/title_activity_mine_editname" >
         </activity>
+        <activity
+            android:name=".business.main.module.more.FeedbackActivity"
+            android:label="@string/title_activity_feedback" >
+        </activity>
+        <activity
+            android:name=".business.main.module.more.MineAccountActivity"
+            android:label="@string/title_activity_mine_account" >
+        </activity>
+        <activity
+            android:name=".business.main.module.more.MineSexActivity"
+            android:label="@string/title_activity_mine_sex" >
+        </activity>
+        <activity
+            android:name=".business.main.module.more.MineEditActivity"
+            android:label="@string/title_activity_main_edit" >
+        </activity>
+
     </application>
 
 </manifest>
