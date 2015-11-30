@@ -18,13 +18,5 @@
     <dimen name="three_Part">150dp</dimen>
     <dimen name="drawablePad">6dp</dimen>
     <dimen name="circle">40dp</dimen>
-
-    <!--zhu-->
-    <dimen name="name_size">12dp</dimen>
-    <dimen name="view_height">1dp</dimen>
-    <dimen name="margin_size">10dp</dimen>
-    <dimen name="test_size">15dp</dimen>
-    <dimen name="margin_top_size">10dp</dimen>
-
-
 </resources>
+
