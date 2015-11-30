@@ -67,6 +67,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_size"
+                    android:id="@+id/LinearLayout01"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
@@ -98,6 +99,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/LinearLayout02"
                     android:orientation="horizontal"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
@@ -131,6 +133,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/LinearLayout03"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -162,6 +165,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/LinearLayout04"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -171,11 +175,11 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:gravity="right">
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
                             android:background="@drawable/_uidic_forms_item_arrow"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -188,6 +192,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/LinearLayout05"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -220,6 +225,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/LinearLayout06"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -252,6 +258,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/LinearLayout07"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -284,6 +291,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:id="@+id/LinearLayout08"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -331,7 +339,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="钉钉用户社区"
+                        android:text="我的组织"
                         android:textSize="@dimen/test_size"/>
                     <TextView
                         android:layout_width="wrap_content"
