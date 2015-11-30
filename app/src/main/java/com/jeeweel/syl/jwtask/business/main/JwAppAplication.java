@@ -2,10 +2,15 @@ package com.jeeweel.syl.jwtask.business.main;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudClient;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.lib.api.core.base.JeeweelApplication;
 import com.jeeweel.syl.lib.api.core.base.PublicColors;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
 import net.tsz.afinal.FinalDb;
+
+import java.util.List;
 
 import cn.smssdk.SMSSDK;
 
@@ -22,6 +27,9 @@ public class JwAppAplication extends JeeweelApplication {
 
     // 填写从短信SDK应用后台注册得到的APPSECRET
     private static String APPSECRET = "4999b5a40e56d32fc49bd569cfb8158d";
+
+    //全局当前登录人信息；
+    public static Users users = null;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -35,6 +43,10 @@ public class JwAppAplication extends JeeweelApplication {
             CloudClient.init(getApplicationContext(), "192.168.0.37:8080", "jwtask", "58975c511b1bcaddecc906a2c9337665", "");
         }catch (Exception e){
             e.printStackTrace();
+        }
+        List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
+        if (ListUtils.IsNotNull(usersList)) {
+            users = usersList.get(0);
         }
     }
 

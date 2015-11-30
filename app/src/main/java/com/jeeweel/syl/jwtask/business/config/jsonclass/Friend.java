@@ -53,7 +53,7 @@ public class Friend {
     /**
      * 状态
      */
-    private String state;
+    private int state;
     /**
      * 备注
      */
@@ -66,6 +66,25 @@ public class Friend {
      * 更新代码
      */
     private String update_time;
+
+    /**
+     * 用户昵称
+     * @return
+     */
+    private String user_nickname;
+
+    /**
+     * 好友昵称
+     * @return
+     */
+    private String friend_nickname;
+
+    /**
+     * 发送状态
+     * @return
+     */
+    private int send_state;
+
 
 
     public int getMid() {
@@ -116,11 +135,11 @@ public class Friend {
         this.friend_name = friend_name;
     }
 
-    public String getState() {
+    public int getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(int state) {
         this.state = state;
     }
 
@@ -170,6 +189,30 @@ public class Friend {
 
     public void setUnid_code(String unid_code) {
         this.unid_code = unid_code;
+    }
+
+    public String getUser_nickname() {
+        return user_nickname;
+    }
+
+    public void setUser_nickname(String user_nickname) {
+        this.user_nickname = user_nickname;
+    }
+
+    public String getFriend_nickname() {
+        return friend_nickname;
+    }
+
+    public void setFriend_nickname(String friend_nickname) {
+        this.friend_nickname = friend_nickname;
+    }
+
+    public int getSend_state() {
+        return send_state;
+    }
+
+    public void setSend_state(int send_state) {
+        this.send_state = send_state;
     }
 }
 

@@ -6,7 +6,7 @@
 
 
 
-    <RelativeLayout android:id="@+id/rl_org"
+    <RelativeLayout android:id="@+id/rl_publicy"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
@@ -22,15 +22,6 @@
             android:id="@+id/imageView" />
 
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/arrow_right"
-            android:id="@+id/imageView2" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +33,7 @@
             android:layout_toRightOf="@+id/imageView"
             android:layout_marginLeft="8dp"/>
 
-        <TextView
+        <TextView android:id="@+id/tv_publicy_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="组织架构"
@@ -50,9 +41,26 @@
             android:layout_alignLeft="@+id/org_name"
             android:textSize="13dp"
             android:textColor="@color/gray"/>
+
+        <TextView android:id="@+id/tv_pulicy_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/imageView"
+            android:layout_marginRight="10dp"
+            style="@style/text_nomor_style"
+            android:text="17:50"/>
+
+        <ImageView android:id="@+id/iv_publicy_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/org_name"
+            android:layout_toRightOf="@+id/org_name"
+            android:background="@drawable/new_point"
+            android:visibility="gone"/>
     </RelativeLayout>
 
-    <RelativeLayout android:id="@+id/rl_dept"
+    <RelativeLayout android:id="@+id/rl_sign"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
@@ -64,16 +72,9 @@
             android:background="@drawable/profile_bottom_message"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:id="@+id/imageView1" />
+            android:id="@+id/imageView2" />
 
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/arrow_right" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -81,12 +82,121 @@
             android:text="签到"
             android:textColor="@color/list_text_color"
             android:textSize="@dimen/textSize_normal"
-            android:id="@+id/dept_name"
-            android:layout_alignTop="@+id/imageView1"
-            android:layout_toRightOf="@+id/imageView1"
+            android:id="@+id/sign"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_toRightOf="@+id/imageView2"
             android:layout_marginLeft="8dp"/>
 
+        <TextView android:id="@+id/tv_sign_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的部门"
+            android:layout_below="@+id/sign"
+            android:layout_alignLeft="@+id/sign"
+            android:textSize="13dp"
+            android:textColor="@color/gray"/>
+
+        <TextView android:id="@+id/tv_sign_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_marginRight="10dp"
+            style="@style/text_nomor_style"
+            android:text="17:50"/>
+
+        <ImageView android:id="@+id/iv_sign_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/sign"
+            android:layout_toRightOf="@+id/sign"
+            android:background="@drawable/new_point"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout android:id="@+id/rl_task"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/settings_mid_select"
+        android:clickable="true">
+
+        <ImageView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/profile_bottom_message"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/imageView3" />
+
+
+
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="任务"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_normal"
+            android:id="@+id/task"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_toRightOf="@+id/imageView3"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView android:id="@+id/tv_task_news"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="我的部门"
+            android:layout_below="@+id/task"
+            android:layout_alignLeft="@+id/task"
+            android:textSize="13dp"
+            android:textColor="@color/gray"/>
+
+        <TextView android:id="@+id/tv_task_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_marginRight="10dp"
+            style="@style/text_nomor_style"
+            android:text="17:50"/>
+
+        <ImageView android:id="@+id/iv_task_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/task"
+            android:layout_toRightOf="@+id/task"
+            android:background="@drawable/new_point"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/rl_friend"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@drawable/settings_mid_select"
+        android:clickable="true">
+
+        <ImageView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/profile_bottom_message"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:id="@+id/imageView4" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="好友请求"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_normal"
+            android:id="@+id/dept_name"
+            android:layout_alignTop="@+id/imageView4"
+            android:layout_toRightOf="@+id/imageView4"
+            android:layout_marginLeft="8dp"/>
+
+
+        <TextView android:id="@+id/rl_friend_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="我的部门"
@@ -94,7 +204,24 @@
             android:layout_alignLeft="@+id/dept_name"
             android:textSize="13dp"
             android:textColor="@color/gray"/>
+
+
+
+        <TextView android:id="@+id/tv_friend_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/imageView4"
+            android:layout_marginRight="10dp"
+            style="@style/text_nomor_style"
+            android:text="17:50"/>
+
+        <ImageView android:id="@+id/iv_friend_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/dept_name"
+            android:layout_toRightOf="@+id/dept_name"
+            android:background="@drawable/new_point"
+            android:visibility="gone"/>
     </RelativeLayout>
-
-
 </LinearLayout>

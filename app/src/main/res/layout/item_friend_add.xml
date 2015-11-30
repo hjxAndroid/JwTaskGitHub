@@ -24,14 +24,27 @@
         android:layout_height="wrap_content"
         android:text="任小云"
         style="@style/text_nomor_style"
-        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/iv_xz"
+        android:layout_alignParentTop="@+id/iv_xz"
+        android:layout_marginTop="4dp"
         />
 
-    <ImageView
+    <TextView android:id="@+id/tv_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/arrow_right"
+        android:text="我是任小云"
+        style="@style/text_nomor_style"
+        android:layout_toRightOf="@+id/iv_xz"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginTop="4dp"
+        />
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:text="接受"
+        android:textColor="@color/white"
+        android:background="@color/ios7blue"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>
 </RelativeLayout>

@@ -44,12 +44,20 @@ public class LoginActivity extends JwActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         autologin();
+
     }
 
     private void autologin(){
-        boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
+        boolean autu = false;
+       // boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
         if(autu){
             JwStartActivity(TabHostActivity.class);
+        }else{
+            Users users = JwAppAplication.getInstance().users;
+            if(null!=users){
+                String phone = users.getUsername();
+                etPhone.setText(phone);
+            }
         }
     }
 

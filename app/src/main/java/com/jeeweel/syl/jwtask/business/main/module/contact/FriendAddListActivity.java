@@ -16,6 +16,7 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
+import com.jeeweel.syl.lib.api.core.base.JeeweelApplication;
 import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class FriendListActivity extends JwListActivity {
+public class FriendAddListActivity extends JwListActivity {
     List<Friend> mListItems = new ArrayList<Friend>();
 
     @Bind(R.id.listview)
@@ -67,7 +68,7 @@ public class FriendListActivity extends JwListActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-               JwStartActivity(FriendAddActivity.class);
+                JwStartActivity(FriendAddActivity.class);
             }
         });
         addMenuView(menuTextView);
@@ -75,10 +76,11 @@ public class FriendListActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_friend) {
+        commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_friend_add) {
             @Override
             public void convert(ViewHolder helper, Friend item) {
                 helper.setText(R.id.tv_name, item.getFriend_name());
+                helper.setText(R.id.tv_msg, "我是"+item.getFriend_name());
             }
         };
         setCommonAdapter(commonAdapter);
