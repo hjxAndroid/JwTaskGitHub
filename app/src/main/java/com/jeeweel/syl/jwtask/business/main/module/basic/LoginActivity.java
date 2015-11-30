@@ -1,13 +1,22 @@
 package com.jeeweel.syl.jwtask.business.main.module.basic;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,15 +39,77 @@ public class LoginActivity extends JwActivity {
         setHideNavcationBar(true);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
+        autologin();
+    }
+
+    private void autologin(){
+        boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
+        if(autu){
+            JwStartActivity(TabHostActivity.class);
+        }
     }
 
     @OnClick(R.id.bt_login)
     void loginClick() {
-        JwStartActivity(TabHostActivity.class);
+        String phone = etPhone.getText().toString();
+        String pwd = etPwd.getText().toString();
+
+        if(StrUtils.IsNotEmpty(phone)&&StrUtils.IsNotEmpty(pwd)){
+            showLoading();
+            new FinishRefresh(getMy()).execute(pwd,phone);
+        }else{
+            ToastShow("请输入用户名密码");
+        }
+
     }
 
     @OnClick(R.id.tv_rigster)
     void registerClick() {
         JwStartActivity(RegisterActivity.class);
+    }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresh(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "0";
+
+            String pwd = params[0].toString();
+            String phone = params[1].toString();
+            JCloudDB jCloudDB = new JCloudDB();
+            List<Users> list = jCloudDB.findAllByWhere(Users.class,
+                    "username=" + StrUtils.QuotedStr(phone) + "and password=" + StrUtils.QuotedStr(pwd));
+            if(ListUtils.IsNotNull(list)){
+                result = "1";
+            }else{
+                result = "0";
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(result.equals("1")){
+                SharedPreferencesUtils.save(context,"autologin",true);
+                JwStartActivity(TabHostActivity.class);
+            }else{
+                ToastShow("用户名或密码出错");
+            }
+            hideLoading();
+        }
     }
 }

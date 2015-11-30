@@ -9,11 +9,17 @@ import android.widget.EditText;
 import com.jeeweel.syl.jcloudlib.db.api.CloudClient;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
+import java.util.List;
+
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,10 +47,11 @@ public class RegisterLastActivity extends JwActivity {
     @OnClick(R.id.bt_login)
     void nextClick() {
         String pwd = etPwd.getText().toString();
-        String confirmPwd = etPwd.getText().toString();
+        String confirmPwd = etConfirm.getText().toString();
 
         if(StrUtils.IsNotEmpty(pwd)&&StrUtils.IsNotEmpty(confirmPwd)){
             if(pwd.equals(confirmPwd)){
+                showLoading();
                 new FinishRefresh(getMy()).execute(pwd,phone);
             }else{
                 ToastShow("两次密码不一样");
@@ -53,7 +60,6 @@ public class RegisterLastActivity extends JwActivity {
             ToastShow("请完善密码信息");
         }
 
-        JwStartActivity(TabHostActivity.class);
     }
 
 
@@ -77,19 +83,25 @@ public class RegisterLastActivity extends JwActivity {
 
             String pwd = params[0].toString();
             String phone = params[1].toString();
-            UsersItem usersItem = new UsersItem();
+            Users usersItem = new Users();
             usersItem.setPassword(pwd);
             usersItem.setUsername(phone);
+            usersItem.setUser_code(Utils.getUUid());
 
             JCloudDB jCloudDB = new JCloudDB();
-            try {
-               if(jCloudDB.save(usersItem)){
-                   result = "1";
-               }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
+            List<Users> list = jCloudDB.findAllByWhere(Users.class,
+                    "username=" + StrUtils.QuotedStr(usersItem.getUsername()));
+            if (ListUtils.IsNull(list)) {
+                try {
+                    if(jCloudDB.save(usersItem)){
+                        result = "1";
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
 
             return result;
         }
@@ -97,10 +109,12 @@ public class RegisterLastActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
               if(result.equals("1")){
+                  SharedPreferencesUtils.save(context, "autologin", true);
                   JwStartActivity(TabHostActivity.class);
               }else{
                   ToastShow("用户保存出错");
               }
+            hideLoading();
         }
     }
 
