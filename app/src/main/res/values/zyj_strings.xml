@@ -1,0 +1,14 @@
+<resources>
+    <!--zhu-->
+    <string name="nickname">昵称</string>
+    <string name="mineinformation">我的资料</string>
+    <string name="minesignatrue">个性签名</string>
+    <string name="mineaccount">设置账号</string>
+    <string name="submit">提交</string>
+    <string name="minesex">性别</string>
+    <string name="title_activity_mine_account">MineAccount</string>
+    <string name="title_activity_mine_sex">MineSexActivity</string>
+    <string name="title_activity_main_edit">MainEditActivity</string>
+
+
+</resources>
