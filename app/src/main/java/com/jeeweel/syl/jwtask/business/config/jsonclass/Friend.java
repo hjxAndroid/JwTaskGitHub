@@ -15,7 +15,12 @@ public class Friend {
      * mid
      */
     @Id(column="mid")
-    private int mid;;
+    private int mid;
+
+    /**
+     * 用户id
+     */
+    private String user_id;
     /**
      * 用户代码
      */
@@ -31,7 +36,7 @@ public class Friend {
     /**
      * 预留字段
      */
-    private int friend_id;
+    private String friend_id;
     /**
      * 朋友用户代码
      */
@@ -90,14 +95,6 @@ public class Friend {
         this.content = content;
     }
 
-    public int getFriend_id() {
-        return friend_id;
-    }
-
-    public void setFriend_id(int friend_id) {
-        this.friend_id = friend_id;
-    }
-
     public String getFriend_code() {
         return friend_code;
     }
@@ -144,6 +141,22 @@ public class Friend {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(String user_id) {
+        this.user_id = user_id;
+    }
+
+    public String getFriend_id() {
+        return friend_id;
+    }
+
+    public void setFriend_id(String friend_id) {
+        this.friend_id = friend_id;
     }
 }
 

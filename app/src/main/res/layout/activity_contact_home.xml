@@ -12,7 +12,7 @@
        android:textSize="@dimen/textSize_normal"
        android:textColor="@color/ios7blue"/>
 
-    <RelativeLayout android:id="@+id/fr_gx"
+    <RelativeLayout android:id="@+id/rl_org"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
@@ -58,7 +58,7 @@
             android:textColor="@color/gray"/>
     </RelativeLayout>
 
-    <RelativeLayout android:id="@+id/fr_gx1"
+    <RelativeLayout android:id="@+id/rl_dept"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
@@ -113,7 +113,7 @@
 
         <ImageView android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/icon_org"
+            android:background="@drawable/icon_friends"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:id="@+id/imageView3" />
