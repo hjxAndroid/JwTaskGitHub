@@ -10,6 +10,7 @@ import com.jeeweel.syl.jcloudlib.db.api.CloudClient;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -34,6 +35,7 @@ public class RegisterLastActivity extends JwActivity {
     Button btLogin;
 
     private String phone = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,6 @@ public class RegisterLastActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle("密码设置");
         phone = getIntent().getStringExtra(StaticStrUtils.baseItem);
-
     }
 
     @OnClick(R.id.bt_login)
@@ -95,6 +96,7 @@ public class RegisterLastActivity extends JwActivity {
             if (ListUtils.IsNull(list)) {
                 try {
                     if(jCloudDB.save(usersItem)){
+
                         result = "1";
                     }
                 } catch (Exception e) {

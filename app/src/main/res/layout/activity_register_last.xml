@@ -16,7 +16,7 @@
         android:background="@color/gray_fgx" />
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="100dp"
         android:background="@color/gray_f2f2f2"
         android:orientation="vertical">
 
@@ -33,7 +33,7 @@
                 android:layout_marginLeft="20dp"
                 android:text="密码"
                 android:textColor="@color/list_text_color"
-                android:textSize="@dimen/textSize_large" />
+                android:textSize="@dimen/textSize_normal" />
 
             <EditText android:id="@+id/et_pwd"
                 android:layout_width="match_parent"
@@ -42,7 +42,7 @@
                 android:background="@null"
                 android:hint="请输入密码"
                 android:textColor="@color/list_text_color"
-                android:textSize="@dimen/textSize_large" />
+                android:textSize="@dimen/textSize_normal" />
 
         </LinearLayout>
 
@@ -66,7 +66,7 @@
                 android:layout_marginLeft="20dp"
                 android:text="确认密码"
                 android:textColor="@color/list_text_color"
-                android:textSize="@dimen/textSize_large" />
+                android:textSize="@dimen/textSize_normal" />
 
             <EditText android:id="@+id/et_confirm"
                 android:layout_width="match_parent"
@@ -75,7 +75,7 @@
                 android:background="@null"
                 android:hint="请再次输入密码"
                 android:textColor="@color/list_text_color"
-                android:textSize="@dimen/textSize_large" />
+                android:textSize="@dimen/textSize_normal" />
 
         </LinearLayout>
     </LinearLayout>
@@ -86,12 +86,12 @@
 
     <Button android:id="@+id/bt_login"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:textColor="@color/white"
-        android:textSize="17sp"
+        android:textSize="16sp"
         android:background="@drawable/bg_button"
         android:text="进入任务管理"/>
 

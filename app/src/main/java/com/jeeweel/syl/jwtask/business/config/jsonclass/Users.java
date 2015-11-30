@@ -17,6 +17,7 @@ public class Users {
      * mid
      */
     @Id(column = "mid")
+    @net.tsz.afinal.annotation.sqlite.Id(column = "mid")
     private int mid;
     private String user_code;
     private String username;

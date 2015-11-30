@@ -46,5 +46,7 @@
     <string name="version_Information">版本信息</string>
     <string name="exit_Login">退出登录</string>
     <string name="title_activity_friend_list">FriendListActivity</string>
+    <string name="title_activity_friend_add">FriendAddActivity</string>
+    <string name="sended">已发出</string>
 
-    </resources>
+</resources>

@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main.module.contact;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
@@ -44,13 +45,29 @@ public class FriendListActivity extends JwListActivity {
     private int addNum = 10;//下拉加载更多条数
 
     List<Friend> list;
+
+    MenuTextView menuTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
         setTitle("好友列表");
         ButterKnife.bind(this);
+        initView();
         initListViewController();
+    }
+
+    private void initView(){
+        menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("添加好友");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+               JwStartActivity(FriendAddActivity.class);
+            }
+        });
+        addMenuView(menuTextView);
     }
 
     @Override

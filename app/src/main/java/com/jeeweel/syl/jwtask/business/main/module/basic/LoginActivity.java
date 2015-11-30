@@ -10,11 +10,14 @@ import android.widget.TextView;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+
+import net.tsz.afinal.FinalDb;
 
 import java.util.List;
 
@@ -33,6 +36,7 @@ public class LoginActivity extends JwActivity {
     @Bind(R.id.tv_rigster)
     TextView tvRigster;
 
+    private List<Users> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +94,7 @@ public class LoginActivity extends JwActivity {
             String pwd = params[0].toString();
             String phone = params[1].toString();
             JCloudDB jCloudDB = new JCloudDB();
-            List<Users> list = jCloudDB.findAllByWhere(Users.class,
+            list = jCloudDB.findAllByWhere(Users.class,
                     "username=" + StrUtils.QuotedStr(phone) + "and password=" + StrUtils.QuotedStr(pwd));
             if(ListUtils.IsNotNull(list)){
                 result = "1";
@@ -105,6 +109,13 @@ public class LoginActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if(result.equals("1")){
                 SharedPreferencesUtils.save(context,"autologin",true);
+
+                if(ListUtils.IsNotNull(list)){
+                    Users users = list.get(0);
+                    FinalDb finalDb = JwAppAplication.getInstance().finalDb;
+                    finalDb.deleteAll(Users.class);
+                    finalDb.save(users);
+                }
                 JwStartActivity(TabHostActivity.class);
             }else{
                 ToastShow("用户名或密码出错");

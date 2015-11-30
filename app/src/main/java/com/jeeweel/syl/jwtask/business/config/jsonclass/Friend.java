@@ -18,6 +18,11 @@ public class Friend {
     private int mid;
 
     /**
+     * 用于两张表相同id，好用于搜索
+     */
+    private String unid_code;
+
+    /**
      * 用户id
      */
     private String user_id;
@@ -157,6 +162,14 @@ public class Friend {
 
     public void setFriend_id(String friend_id) {
         this.friend_id = friend_id;
+    }
+
+    public String getUnid_code() {
+        return unid_code;
+    }
+
+    public void setUnid_code(String unid_code) {
+        this.unid_code = unid_code;
     }
 }
 
