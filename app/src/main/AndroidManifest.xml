@@ -83,7 +83,6 @@
             android:label="@string/title_activity_register_last" >
         </activity>
 
-
     </application>
 
 </manifest>
