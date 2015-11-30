@@ -101,6 +101,7 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/start_sign_button"
             android:layout_width="@dimen/sign_button"
             android:layout_height="@dimen/sign_button"
             android:layout_gravity="center"
