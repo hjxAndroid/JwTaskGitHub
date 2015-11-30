@@ -82,6 +82,26 @@
             android:name=".business.main.module.more.MineActivity"
             android:label="@string/title_activity_mine" >
         </activity>
+        <activity
+            android:name=".business.main.module.more.MineEditnameActivity"
+            android:label="@string/title_activity_mine_editname" >
+        </activity>
+        <activity
+            android:name=".business.main.module.more.FeedbackActivity"
+            android:label="@string/title_activity_feedback" >
+        </activity>
+        <activity
+            android:name=".business.main.module.more.MineAccountActivity"
+            android:label="@string/title_activity_mine_account" >
+        </activity>
+        <activity
+            android:name=".business.main.module.more.MineSexActivity"
+            android:label="@string/title_activity_mine_sex" >
+        </activity>
+        <activity
+            android:name=".business.main.module.more.MineEditActivity"
+            android:label="@string/title_activity_main_edit" >
+        </activity>
 
     </application>
 
