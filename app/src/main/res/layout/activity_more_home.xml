@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/userInformation"
+            android:id="@+id/lineUsers"
             android:layout_width="match_parent"
             android:layout_height="@dimen/user_Layout_Height"
             android:layout_marginTop="@dimen/margin_Top_Size"
@@ -20,12 +20,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/head"
+                android:id="@+id/tv_user_picture"
+                android:layout_width="@dimen/circle"
+                android:layout_height="@dimen/circle"
+                android:layout_margin="@dimen/margin_Size"
+                android:background="@drawable/circular_portrait"
+                android:gravity="center"
+                android:text="dhh"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_list" />
+
+            <TextView
+                android:id="@+id/tv_head"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_Size"
-                android:drawableLeft="@drawable/head"
-                android:drawablePadding="@dimen/drawablePad"
                 android:gravity="center"
                 android:text="dhh"
                 android:textSize="@dimen/textSize_list" />
@@ -76,7 +85,7 @@
                     android:text="@string/phone" />
 
                 <TextView
-                    android:id="@+id/minutes"
+                    android:id="@+id/tv_minutes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="9999"
@@ -114,7 +123,7 @@
                     android:text="@string/phone" />
 
                 <TextView
-                    android:id="@+id/people"
+                    android:id="@+id/tv_people"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="9999"
@@ -129,7 +138,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/collect"
+            android:id="@+id/lineCollect"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
             android:layout_marginTop="@dimen/margin_Top_Size"
@@ -161,7 +170,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/experience"
+            android:id="@+id/lineExperience"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
             android:layout_marginTop="@dimen/margin_Top_Size"
@@ -200,7 +209,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/introduce"
+                android:id="@+id/lineIntroduce"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -238,7 +247,7 @@
                 android:background="@color/gray_fgx" />
 
             <LinearLayout
-                android:id="@+id/service"
+                android:id="@+id/lineService"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -276,7 +285,7 @@
                 android:background="@color/gray_fgx" />
 
             <LinearLayout
-                android:id="@+id/help"
+                android:id="@+id/lineHelp"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
@@ -309,7 +318,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/adervise"
+            android:id="@+id/lineAdervise"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
             android:layout_marginBottom="@dimen/margin_Top_Size"

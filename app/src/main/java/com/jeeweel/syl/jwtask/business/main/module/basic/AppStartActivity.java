@@ -31,7 +31,7 @@ public class AppStartActivity extends JwActivity {
                 // TODO Auto-generated method stub
 //                JwStartActivity(TabHostActivity.class);
                 Intent intent = new Intent();
-                intent.setClass(getApplicationContext(),LoginActivity.class);
+                intent.setClass(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 AppStartActivity.this.finish();
             }

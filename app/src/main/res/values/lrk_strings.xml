@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tv_user_head">榕凯</string>
+    <string name="tv_userName">李榕凯</string>
+    <string name="sign_up_information">发起签到</string>
+    <string name="sign_msg">今日完成签到</string>
+    <string name="counts_value">0</string>
+    <string name="counts">次</string>
+    <string name="date_week">星期四：2015.11.26</string>
+    <string name="current_time">当前时间</string>
+    <string name="system_time">16:33</string>
+    <string name="sign_title">主题:</string>
+    <string name="start_sign_up_button">发起签到</string>
+    <string name="home">是否到家请签到</string>
+    <string name="localtion">地址地址地址</string>
+    <string name="detail_localtion">详细地址详细地址详细地址详细地址</string>
+    <string name="sign_up_button">签到</string>
+    <string name="check_sign_history">查看签到历史</string>
+    <string name="checked_sign">已经签到,</string>
+    <string name="signed_count">人数</string>
+    <string name="unsign_count">人数</string>
+    <string name="unchecked_sign">还未签到,</string>
+    <string name="tv_signed_localtion">签到地点:</string>
+</resources>
