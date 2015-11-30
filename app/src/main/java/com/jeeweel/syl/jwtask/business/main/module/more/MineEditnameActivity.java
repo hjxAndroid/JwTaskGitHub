@@ -6,13 +6,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
-public class MineEditnameActivity extends AppCompatActivity {
+public class MineEditnameActivity extends JwActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine_editname);
+        setTitle(getString(R.string.nickname));
     }
 
     @Override
