@@ -2,8 +2,10 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.res.TypedArray;
 import android.os.Bundle;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 import com.jeeweel.syl.jwtask.R;
@@ -62,6 +64,27 @@ public class TaskHomeActivity extends JwActivity {
         GridViewAdapter gridViewAdapter = new GridViewAdapter(getMy(), data,
                 imagesArrays, R.layout.item_home);
         lineGv.setAdapter(gridViewAdapter);
+
+        lineGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                switch (position) {
+                    case 0:
+                        break;
+                    case 1:
+                        //签到
+                        JwStartActivity(StartSignUpActivity.class);
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    default:
+                        break;
+                }
+
+            }
+        });
     }
 
     private void getData() {

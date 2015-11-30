@@ -45,5 +45,6 @@
     <string name="about">关于</string>
     <string name="version_Information">版本信息</string>
     <string name="exit_Login">退出登录</string>
+    <string name="title_activity_friend_list">FriendListActivity</string>
 
     </resources>

@@ -21,4 +21,7 @@
     <string name="unsign_count">人数</string>
     <string name="unchecked_sign">还未签到,</string>
     <string name="tv_signed_localtion">签到地点:</string>
+    <string name="title_activity_start_sign_up">SignUpActivity</string>
+    <string name="title_activity_setting">SettingActivity</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
 </resources>

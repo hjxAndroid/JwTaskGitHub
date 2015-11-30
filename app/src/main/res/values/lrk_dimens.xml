@@ -2,11 +2,11 @@
 <resources>
     <dimen name="sign_user">100dp</dimen>
     <dimen name="sign_circle">60dp</dimen>
-    <dimen name="userName">20sp</dimen>
+    <dimen name="userName">15sp</dimen>
     <dimen name="counts">40sp</dimen>
     <dimen name="sign_title">40dp</dimen>
-    <dimen name="sign_content">200dp</dimen>
-    <dimen name="sign_button">100dp</dimen>
+    <dimen name="sign_content">180dp</dimen>
+    <dimen name="sign_button">80dp</dimen>
     <dimen name="sign_size">20dp</dimen>
     <dimen name="data_size">15sp</dimen>
     <dimen name="whole_map_size">120dp</dimen>
