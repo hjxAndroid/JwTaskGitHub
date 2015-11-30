@@ -8,18 +8,19 @@ import android.view.MenuItem;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
-public class FeedbackActivity extends JwActivity {
+public class MineSexActivity extends JwActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.actvity_feedback);
+        setContentView(R.layout.activity_mine_sex);
+        setTitle(getString(R.string.minesex));
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_actvity_feedback, menu);
+        getMenuInflater().inflate(R.menu.menu_mine_sex, menu);
         return true;
     }
 

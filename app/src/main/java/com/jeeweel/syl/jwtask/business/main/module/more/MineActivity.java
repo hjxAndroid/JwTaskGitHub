@@ -1,5 +1,6 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,11 +60,17 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.LinearLayout07)
     void editSpecialtyClick() {
-        JwStartActivity(MineEditActivity.class);
+        Intent intent=new Intent();
+        intent.putExtra("title", "特长、兴趣");
+        intent.setClass(MineActivity.this, MineEditActivity.class);
+        JwStartActivity(intent);
     }
 
     @OnClick(R.id.LinearLayout08)
     void editSignatureClick() {
-        JwStartActivity(MineEditActivity.class);
+        Intent intent=new Intent();
+        intent.putExtra("title", "个性签名");
+        intent.setClass(MineActivity.this, MineEditActivity.class);
+        JwStartActivity(intent);
     }
 }
