@@ -49,5 +49,7 @@
     <string name="title_activity_friend_add">FriendAddActivity</string>
     <string name="sended">已发出</string>
     <string name="title_activity_friend_add_list">FriendAddListActivity</string>
+    <string name="title_activity_add_home">AddHomeActivity</string>
+    <string name="title_activity_add_group">AddGroupActivity</string>
 
 </resources>

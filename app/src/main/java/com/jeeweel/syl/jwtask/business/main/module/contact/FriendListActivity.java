@@ -48,7 +48,6 @@ public class FriendListActivity extends JwListActivity {
 
     List<Friend> list;
 
-    MenuTextView menuTextView;
     private Users users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +61,7 @@ public class FriendListActivity extends JwListActivity {
     }
 
     private void initView(){
-        menuTextView = new MenuTextView(getMy());
+        MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("添加好友");
         menuTextView.setTextColor(getResources().getColor(R.color.white));
         menuTextView.setOnClickListener(new View.OnClickListener() {

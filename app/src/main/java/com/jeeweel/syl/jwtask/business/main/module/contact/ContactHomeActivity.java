@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -31,10 +32,24 @@ public class ContactHomeActivity extends JwActivity {
         setContentView(R.layout.activity_contact_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.contact));
+        initView();
     }
 
     @OnClick(R.id.rl_friend)
     void friendClick() {
         JwStartActivity(FriendListActivity.class);
+    }
+
+    private void initView(){
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("添加");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                JwStartActivity(AddHomeActivity.class);
+            }
+        });
+        addMenuView(menuTextView);
     }
 }

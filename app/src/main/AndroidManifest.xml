@@ -123,6 +123,14 @@
             android:name=".business.main.module.contact.FriendAddListActivity"
             android:label="@string/title_activity_friend_add_list" >
         </activity>
+        <activity
+            android:name=".business.main.module.contact.AddHomeActivity"
+            android:label="@string/title_activity_add_home" >
+        </activity>
+        <activity
+            android:name=".business.main.module.contact.AddGroupActivity"
+            android:label="@string/title_activity_add_group" >
+        </activity>
     </application>
 
 </manifest>

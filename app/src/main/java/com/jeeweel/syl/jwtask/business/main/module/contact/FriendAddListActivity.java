@@ -233,7 +233,7 @@ public class FriendAddListActivity extends JwListActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             try {
                 if(null!=users){
