@@ -4,21 +4,38 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MineActivity extends JwActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine);
         ButterKnife.bind(this);
         setTitle(getString(R.string.mineinformation));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Users users;
+        users  = JwAppAplication.getInstance().users;
+        String str;
+        str = users.getNickname();
+        TextView tv;
+        tv = (TextView) findViewById(R.id.nickname);
+        tv.setText(str);
+        str= users.getSign();
+        tv = (TextView) findViewById(R.id.tv_sign);
+        tv.setText(str);
     }
 
     @Override
@@ -56,6 +73,17 @@ public class MineActivity extends JwActivity {
     @OnClick(R.id.LinearLayout04)
     void editMySexClick() {
         JwStartActivity(MineSexActivity.class);
+    }
+
+    private TextView startDateTime;
+    private String initStartDateTime = "2013年9月3日"; // 初始化开始时间
+    @OnClick(R.id.LinearLayout05)
+    void editMyBirthdayClick() {
+        startDateTime = (TextView) findViewById(R.id.inputDate);
+        startDateTime.setText(initStartDateTime);
+        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                MineActivity.this, initStartDateTime);
+        dateTimePicKDialog.dateTimePicKDialog(startDateTime);
     }
 
     @OnClick(R.id.LinearLayout07)

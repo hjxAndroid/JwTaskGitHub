@@ -18,6 +18,7 @@
             android:layout_height="@dimen/view_height"
             android:background="@color/view_line"/>
         <EditText
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:inputType="textMultiLine"
