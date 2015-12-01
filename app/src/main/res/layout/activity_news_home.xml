@@ -36,7 +36,7 @@
         <TextView android:id="@+id/tv_publicy_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="组织架构"
+            android:text="暂无消息"
             android:layout_below="@+id/org_name"
             android:layout_alignLeft="@+id/org_name"
             android:textSize="13dp"
@@ -48,7 +48,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/imageView"
             android:layout_marginRight="10dp"
-            style="@style/text_nomor_style"
+            android:textSize="13dp"
+            android:textColor="@color/gray"
             android:text="17:50"/>
 
         <ImageView android:id="@+id/iv_publicy_num"
@@ -90,7 +91,7 @@
         <TextView android:id="@+id/tv_sign_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的部门"
+            android:text="暂无消息"
             android:layout_below="@+id/sign"
             android:layout_alignLeft="@+id/sign"
             android:textSize="13dp"
@@ -102,7 +103,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/imageView2"
             android:layout_marginRight="10dp"
-            style="@style/text_nomor_style"
+            android:textSize="13dp"
+            android:textColor="@color/gray"
             android:text="17:50"/>
 
         <ImageView android:id="@+id/iv_sign_num"
@@ -145,7 +147,7 @@
         <TextView android:id="@+id/tv_task_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的部门"
+            android:text="暂无消息"
             android:layout_below="@+id/task"
             android:layout_alignLeft="@+id/task"
             android:textSize="13dp"
@@ -157,7 +159,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/imageView3"
             android:layout_marginRight="10dp"
-            style="@style/text_nomor_style"
+            android:textSize="13dp"
+            android:textColor="@color/gray"
             android:text="17:50"/>
 
         <ImageView android:id="@+id/iv_task_num"
@@ -199,7 +202,7 @@
         <TextView android:id="@+id/rl_friend_news"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="我的部门"
+            android:text="暂无消息"
             android:layout_below="@+id/dept_name"
             android:layout_alignLeft="@+id/dept_name"
             android:textSize="13dp"
@@ -213,7 +216,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignTop="@+id/imageView4"
             android:layout_marginRight="10dp"
-            style="@style/text_nomor_style"
+            android:textSize="13dp"
+            android:textColor="@color/gray"
             android:text="17:50"/>
 
         <ImageView android:id="@+id/iv_friend_num"

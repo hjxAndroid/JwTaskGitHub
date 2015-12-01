@@ -8,6 +8,7 @@ import android.widget.EditText;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudClient;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -91,8 +92,13 @@ public class RegisterLastActivity extends JwActivity {
 
             JCloudDB jCloudDB = new JCloudDB();
 
-            List<Users> list = jCloudDB.findAllByWhere(Users.class,
-                    "username=" + StrUtils.QuotedStr(usersItem.getUsername()));
+            List<Users> list = null;
+            try {
+                list = jCloudDB.findAllByWhere(Users.class,
+                        "username=" + StrUtils.QuotedStr(usersItem.getUsername()));
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
             if (ListUtils.IsNull(list)) {
                 try {
                     if(jCloudDB.save(usersItem)){

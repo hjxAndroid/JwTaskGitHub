@@ -4,9 +4,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -29,6 +32,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import api.util.OttUtils;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,6 +60,7 @@ public class FriendAddListActivity extends JwListActivity {
         setContentView(R.layout.activity_friend_list);
         setTitle("好友列表");
         users = JwAppAplication.getInstance().users;
+        setReadState();
         ButterKnife.bind(this);
         initView();
         initListViewController();
@@ -78,16 +83,46 @@ public class FriendAddListActivity extends JwListActivity {
     public void initListViewController() {
         commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_friend_add) {
             @Override
-            public void convert(ViewHolder helper, Friend item) {
-                helper.setText(R.id.tv_name, item.getFriend_name());
-                helper.setText(R.id.tv_msg, "我是"+item.getFriend_name());
+            public void convert(ViewHolder helper, final Friend item) {
+                //接受方
+                    helper.setText(R.id.tv_name, item.getFriend_name());
+                    helper.setText(R.id.tv_msg, "我是"+item.getFriend_nickname());
+                    final TextView textView = helper.getView(R.id.bt_state);
+                    //对方请求，展示接受按钮
+                    if(item.getState()==0){
+                        textView.setText(getResources().getString(R.string.jieshou));
+                        textView.setBackgroundColor(getResources().getColor(R.color.ios7blue));
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                               //接受好友，将好友state设置成2
+                                changeState(item);
+                                textView.setText(getResources().getString(R.string.tongyi));
+                                textView.setTextColor(getResources().getColor(R.color.TextColorGray));
+                            }
+                        });
+
+                        //已经拒绝掉
+                    }else if(item.getState()==1){
+                        textView.setText(getResources().getString(R.string.jujie));
+                        textView.setTextColor(getResources().getColor(R.color.TextColorGray));
+                       //已经同意
+                    }else if(item.getState()==2){
+                        textView.setText(getResources().getString(R.string.tongyi));
+                        textView.setTextColor(getResources().getColor(R.color.TextColorGray));
+                    }
+
             }
         };
         setCommonAdapter(commonAdapter);
         super.initListViewController();
     }
 
-
+    public void changeState(Friend item){
+        String phone = item.getUser_name();
+        String friendphone = item.getFriend_name();
+        new changeTask(getMy()).execute(phone,friendphone);
+    }
     @Override
     public void onListItemClick(int position){
         Friend outBoundItem = (Friend)commonAdapter.getItem(position);
@@ -128,13 +163,18 @@ public class FriendAddListActivity extends JwListActivity {
             String result = "0";
 
             if(null!=users){
-                if(mode == 0 ){
-                    list = jCloudDB.findAllByWhere(Friend.class,
-                            "user_name = " + StrUtils.QuotedStr(users.getUsername()) +" limit "+0+","+10);
-                }else{
-                    setPage();
-                    list = jCloudDB.findAllByWhere(Friend.class,
-                            "user_name = " + StrUtils.QuotedStr(users.getUsername()) +" limit "+pageStart+","+pageEnd);
+                try {
+                    if(mode == 0 ){
+                        setPage(true);
+                        list = jCloudDB.findAllByWhere(Friend.class,
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and send_state=0 limit "+pageStart+","+pageEnd);
+                    }else{
+                        setPage(false);
+                        list = jCloudDB.findAllByWhere(Friend.class,
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and send_state=0 limit "+pageStart+","+pageEnd);
+                    }
+                } catch (CloudServiceException e) {
+                    e.printStackTrace();
                 }
 
                 if(ListUtils.IsNotNull(list)){
@@ -164,8 +204,110 @@ public class FriendAddListActivity extends JwListActivity {
      *分页增数
      */
 
-    private void setPage(){
-        pageStart += addNum;
-        pageEnd += addNum;
+    private void setPage(boolean tag){
+        if(tag){
+            pageStart = 0;
+            pageEnd = 10;
+        }else{
+            pageStart += addNum;
+            pageEnd += addNum;
+        }
+    }
+
+
+    /**
+     * 改变好友状态
+     */
+    private class changeTask extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+        /**
+         * @param context 上下文
+         */
+        public changeTask(Context context)
+        {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "0";
+
+            try {
+                if(null!=users){
+                    String myphone = params[0].toString();
+                    String friendphone = params[1].toString();
+
+                    //改变自己为主体的好友表状态
+                    String sql = "update friend set state = 2 where user_name =" + myphone;
+                    CloudDB.execSQL(sql);
+
+                    //改变好友为主体的好友表状态
+                    String sql1 = "update friend set state = 2 where user_name =" + friendphone;
+                    CloudDB.execSQL(sql1);
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(result.equals("1")){
+                OttUtils.push("news_refresh", "");
+            }else{
+
+            }
+            hideLoading();
+        }
+    }
+
+    private void setReadState(){
+        new readChangeTask(getMy()).execute();
+    }
+
+
+    /**
+     * 改变已读未读状态
+     */
+    private class readChangeTask extends AsyncTask<String, Void, String> {
+        private Context context;
+        /**
+         * @param context 上下文
+         */
+        public readChangeTask(Context context)
+        {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "0";
+            try {
+                if(null!=users){
+                    String myphone = users.getUsername();
+                    String sql = "update friend set read_state = 1 where user_name =" + myphone;
+                    CloudDB.execSQL(sql);
+                }
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(result.equals("1")){
+
+            }else{
+                //没有加载到数据
+            }
+        }
     }
 }

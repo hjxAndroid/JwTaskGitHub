@@ -1,5 +1,7 @@
 ﻿<resources>
     <string name="hjx">小黄</string>
 
-
+    <string name="jieshou">接受</string>
+    <string name="jujie">已拒绝</string>
+    <string name="tongyi">已接受</string>
 </resources>

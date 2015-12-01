@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -79,6 +80,7 @@ public class FriendListActivity extends JwListActivity {
             @Override
             public void convert(ViewHolder helper, Friend item) {
                 helper.setText(R.id.tv_name, item.getFriend_name());
+                helper.setText(R.id.tv_nick_name, item.getFriend_nickname());
             }
         };
         setCommonAdapter(commonAdapter);
@@ -126,13 +128,18 @@ public class FriendListActivity extends JwListActivity {
             String result = "0";
 
             if(null!=users){
-                if(mode == 0 ){
-                    list = jCloudDB.findAllByWhere(Friend.class,
-                            "user_name = " + StrUtils.QuotedStr(users.getUsername()) +" limit "+0+","+10);
-                }else{
-                    setPage();
-                    list = jCloudDB.findAllByWhere(Friend.class,
-                            "user_name = " + StrUtils.QuotedStr(users.getUsername()) +" limit "+pageStart+","+pageEnd);
+                try {
+                    if(mode == 0 ){
+                        setPage(true);
+                        list = jCloudDB.findAllByWhere(Friend.class,
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" +" limit "+pageStart+","+pageEnd);
+                    }else{
+                        setPage(false);
+                        list = jCloudDB.findAllByWhere(Friend.class,
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" +" limit "+pageStart+","+pageEnd);
+                    }
+                } catch (CloudServiceException e) {
+                    e.printStackTrace();
                 }
 
                 if(ListUtils.IsNotNull(list)){
@@ -162,8 +169,13 @@ public class FriendListActivity extends JwListActivity {
      *分页增数
      */
 
-    private void setPage(){
-        pageStart += addNum;
-        pageEnd += addNum;
+    private void setPage(boolean tag){
+        if(tag){
+            pageStart = 0;
+            pageEnd = 10;
+        }else{
+            pageStart += addNum;
+            pageEnd += addNum;
+        }
     }
 }

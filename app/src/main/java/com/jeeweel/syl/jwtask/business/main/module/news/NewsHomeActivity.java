@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -19,6 +20,8 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -63,6 +66,7 @@ public class NewsHomeActivity extends JwActivity {
 
     private List<Friend> friendList;
 
+    private String myphone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,8 +85,9 @@ public class NewsHomeActivity extends JwActivity {
 
         Users users = JwAppAplication.getInstance().users;
         if (null != users) {
-            String phone = users.getUsername();
-            new FinishRefresh(getMy()).execute(phone);
+            myphone = users.getUsername();
+            showLoading();
+            new FinishRefresh(getMy()).execute(myphone);
         }
     }
 
@@ -107,9 +112,15 @@ public class NewsHomeActivity extends JwActivity {
             String result = "1";
 
             String phone = params[0].toString();
-            //请求好友
-            friendList = jCloudDB.findAllByWhere(Friend.class,
-                    "user_name=" + StrUtils.QuotedStr(phone) + " ORDER BY create_time DESC");
+
+            try {
+                //请求好友
+                friendList = jCloudDB.findAllByWhere(Friend.class,
+                        "user_name=" + StrUtils.QuotedStr(phone) + "and read_state=0 " + "ORDER BY create_time DESC");
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
 
             return result;
         }
@@ -119,18 +130,30 @@ public class NewsHomeActivity extends JwActivity {
             if (result.equals("1")) {
                 //刷新好友列表
                 if (ListUtils.IsNotNull(friendList)) {
-                    Friend friend = friendList.get(0);
-                    String friendNickname = friend.getFriend_nickname();
-                    int state = friend.getSend_state();
-                    //0为接受状态  1为发送状态不展示
-                    if(state==0){
-                        if (StrUtils.IsNotEmpty(friendNickname)) {
-                            rlFriendNews.setText(friendNickname + "请求添加您为好友");
-                            ivFriendNum.setVisibility(View.VISIBLE);
+                    for (Friend friend : friendList) {
+                        int sendState = friend.getSend_state();
+                        int state = friend.getState();
+                        //假如是接受者，提醒好友添加
+                        if (sendState == 0) {
+                            //假如是未操作
+                            if (state==0) {
+                                rlFriendNews.setText(friend.getFriend_nickname() + "请求添加您为好友");
+                                ivFriendNum.setVisibility(View.VISIBLE);
+                                break;
+                            }
+                            //假如是发送者，提醒好友通过
+                        } else if (sendState == 1) {
+                            //假如是已经同意，提醒好友添加成功
+                            if (state==2) {
+                                rlFriendNews.setText("您已经成功添加" + friend.getFriend_nickname() + "为好友");
+                                ivFriendNum.setVisibility(View.VISIBLE);
+                                break;
+                            }
                         }
                     }
                 } else {
-
+                    rlFriendNews.setText("暂无消息");
+                    ivFriendNum.setVisibility(View.GONE);
                 }
             } else {
 
@@ -143,5 +166,13 @@ public class NewsHomeActivity extends JwActivity {
     @OnClick(R.id.rl_friend)
     void friendClick() {
         JwStartActivity(FriendAddListActivity.class);
+    }
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (msg.equals("news_refresh")) {
+            new FinishRefresh(getMy()).execute(myphone);
+        }
     }
 }

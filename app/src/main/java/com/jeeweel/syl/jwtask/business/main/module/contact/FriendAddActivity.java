@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.cengalabs.flatui.views.FlatButton;
 import com.cengalabs.flatui.views.FlatEditText;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -77,8 +78,13 @@ public class FriendAddActivity extends JwActivity {
             String friendPhone = params[2].toString();
 
             //先判断好友是否存在
-            List<Users> list = jCloudDB.findAllByWhere(Users.class,
-                    "username=" + StrUtils.QuotedStr(friendPhone));
+            List<Users> list = null;
+            try {
+                list = jCloudDB.findAllByWhere(Users.class,
+                        "username=" + StrUtils.QuotedStr(friendPhone));
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
 
 
             if(ListUtils.IsNotNull(list)){
@@ -95,20 +101,24 @@ public class FriendAddActivity extends JwActivity {
                 //发送状态
                 myself.setSend_state(1);
 
-                if (jCloudDB.save(myself)) {
-                    //添加到好友为主体的好友表
-                    Friend friend = new Friend();
-                    friend.setUnid_code(unid);
-                    friend.setUser_name(friendPhone);
-                    friend.setUser_nickname(friendNickname);
-                    friend.setFriend_name(myPhone);
-                    friend.setFriend_nickname(nickname);
-                    friend.setState(0);
-                    //接受状态
-                    myself.setSend_state(0);
-                    if (jCloudDB.save(friend)) {
-                        result = "1";
+                try {
+                    if (jCloudDB.save(myself)) {
+                        //添加到好友为主体的好友表
+                        Friend friend = new Friend();
+                        friend.setUnid_code(unid);
+                        friend.setUser_name(friendPhone);
+                        friend.setUser_nickname(friendNickname);
+                        friend.setFriend_name(myPhone);
+                        friend.setFriend_nickname(nickname);
+                        friend.setState(0);
+                        //接受状态
+                        myself.setSend_state(0);
+                        if (jCloudDB.save(friend)) {
+                            result = "1";
+                        }
                     }
+                } catch (CloudServiceException e) {
+                    e.printStackTrace();
                 }
 
             }else{

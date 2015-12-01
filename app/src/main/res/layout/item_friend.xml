@@ -24,8 +24,20 @@
         android:layout_height="wrap_content"
         android:text="任小云"
         style="@style/text_nomor_style"
-        android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/iv_xz"
+        android:layout_alignParentTop="@+id/iv_xz"
+        android:layout_marginTop="5dp"
+        />
+
+    <TextView android:id="@+id/tv_nick_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我是任小云"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_small"
+        android:layout_toRightOf="@+id/iv_xz"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginTop="4dp"
         />
 
     <ImageView
