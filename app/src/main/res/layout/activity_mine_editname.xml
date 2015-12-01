@@ -18,7 +18,7 @@
             android:layout_height="@dimen/view_height"
             android:background="@color/view_line"/>
         <EditText
-            android:id="@+id/edittext1"
+            android:id="@+id/et_name"
             android:layout_width="300dp"
             android:layout_height="40dp"
             android:singleLine="true"

@@ -10,17 +10,11 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
-import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
-
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MineActivity extends JwActivity {
-    String phone;
-    String nickname;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,21 +26,16 @@ public class MineActivity extends JwActivity {
     @Override
     protected void onResume() {
         super.onResume();
-  //      List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         Users users;
         users  = JwAppAplication.getInstance().users;
- //       if (ListUtils.IsNotNull(usersList)) {
-  //          Users users = usersList.get(0);
-            nickname = users.getNickname();
-            String sign = users.getSign();
-            phone=users.getUsername();
-            TextView startNickName;
-            startNickName = (TextView) findViewById(R.id.nickname);
-            startNickName.setText(nickname);
-            startNickName = (TextView) findViewById(R.id.tv_sign);
-            startNickName.setText(sign);
-            Logv("adsadsa----" + phone + "--" + nickname);
-  //      }
+        String str;
+        str = users.getNickname();
+        TextView tv;
+        tv = (TextView) findViewById(R.id.nickname);
+        tv.setText(str);
+        str= users.getSign();
+        tv = (TextView) findViewById(R.id.tv_sign);
+        tv.setText(str);
     }
 
     @Override

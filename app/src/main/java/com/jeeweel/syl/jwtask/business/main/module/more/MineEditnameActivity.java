@@ -22,10 +22,10 @@ import butterknife.OnClick;
 public class MineEditnameActivity extends JwActivity {
 
     String phone;
-    EditText editText1;
+    EditText et_name;
     String str1;
-    List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
-    Users users=usersList.get(0);
+    Users users;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +33,10 @@ public class MineEditnameActivity extends JwActivity {
         setContentView(R.layout.activity_mine_editname);
         ButterKnife.bind(this);
         setTitle(getString(R.string.nickname));
+        users  = JwAppAplication.getInstance().users;
         String nickname=users.getNickname();
-        editText1= (EditText) findViewById(R.id.edittext1);
-        editText1.setText(nickname);
+        et_name= (EditText) findViewById(R.id.et_name);
+        et_name.setText(nickname);
     }
 
     @Override
@@ -60,25 +61,21 @@ public class MineEditnameActivity extends JwActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class saveSignInformation extends AsyncTask<String, Void, String> {
+    private class saveNickName extends AsyncTask<String, Void, String> {
         private Context context;
-        public saveSignInformation(Context context) {
+        public saveNickName(Context context) {
             this.context = context;
         }
 
         @Override
         protected String doInBackground(String... params) {
-            Logv("adsadsa" + phone + "--" + users.getNickname());
             String sql="UPDATE users SET nickname='"+str1+"'WHERE username ='"+phone+"'";
-            Logv("adsadsa" + sql);
             Boolean bResult=false;
             try{
                 bResult = CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
 
             }
-
-            Logv("adsadsasuccess"+bResult+"--"+users.getNickname());
             return null;
         }
 
@@ -90,17 +87,16 @@ public class MineEditnameActivity extends JwActivity {
 
     @OnClick(R.id.btnsub)
     void editClick() {
+        users  = JwAppAplication.getInstance().users;
         phone= users.getUsername();
-        editText1 = (EditText) findViewById(R.id.edittext1);
-        str1 = editText1.getText().toString();
+        str1 = et_name.getText().toString();
         users.setNickname(str1);
-        new saveSignInformation(getMy()).execute();
+        new saveNickName(getMy()).execute();
         this.finish();
     }
 
     @OnClick(R.id.btndel)
     void delclick(){
-        editText1 = (EditText) findViewById(R.id.edittext1);
-        editText1.setText("");
+        et_name.setText("");
     }
 }
