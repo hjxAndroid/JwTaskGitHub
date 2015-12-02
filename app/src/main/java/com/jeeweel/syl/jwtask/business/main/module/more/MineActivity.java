@@ -33,6 +33,9 @@ public class MineActivity extends JwActivity {
         TextView tv;
         tv = (TextView) findViewById(R.id.nickname);
         tv.setText(str);
+        str= users.getStrong_point();
+        tv = (TextView) findViewById(R.id.tv_strong_point);
+        tv.setText(str);
         str= users.getSign();
         tv = (TextView) findViewById(R.id.tv_sign);
         tv.setText(str);
@@ -63,11 +66,6 @@ public class MineActivity extends JwActivity {
     @OnClick(R.id.LinearLayout01)
     void editNameClick() {
         JwStartActivity(MineEditnameActivity.class);
-    }
-
-    @OnClick(R.id.LinearLayout02)
-    void editMyAcountClick() {
-        JwStartActivity(MineAccountActivity.class);
     }
 
     @OnClick(R.id.LinearLayout04)

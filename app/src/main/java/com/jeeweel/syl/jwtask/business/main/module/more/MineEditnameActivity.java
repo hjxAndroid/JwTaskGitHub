@@ -14,8 +14,6 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
-import java.util.List;
-
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -87,7 +85,7 @@ public class MineEditnameActivity extends JwActivity {
 
     @OnClick(R.id.btnsub)
     void editClick() {
-        users  = JwAppAplication.getInstance().users;
+ //       users  = JwAppAplication.getInstance().users;
         phone= users.getUsername();
         str1 = et_name.getText().toString();
         users.setNickname(str1);
