@@ -80,9 +80,8 @@ public class MineEditActivity extends JwActivity {
                 users.setSign(str1);
                 sql="UPDATE users SET sign='"+str1+"'WHERE username ='"+phone+"'";
             }
-            Boolean bResult=false;
             try{
-                bResult = CloudDB.execSQL(sql);
+                CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
 
             }

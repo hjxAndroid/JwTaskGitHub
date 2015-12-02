@@ -18,12 +18,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MineEditnameActivity extends JwActivity {
-
     String phone;
     EditText et_name;
     String str1;
     Users users;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +66,8 @@ public class MineEditnameActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             String sql="UPDATE users SET nickname='"+str1+"'WHERE username ='"+phone+"'";
-            Boolean bResult=false;
             try{
-                bResult = CloudDB.execSQL(sql);
+                CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
 
             }
@@ -79,18 +76,16 @@ public class MineEditnameActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-
+            MineEditnameActivity.this.finish();
         }
     }
 
     @OnClick(R.id.btnsub)
     void editClick() {
- //       users  = JwAppAplication.getInstance().users;
-        phone= users.getUsername();
+        phone = users.getUsername();
         str1 = et_name.getText().toString();
         users.setNickname(str1);
         new saveNickName(getMy()).execute();
-        this.finish();
     }
 
     @OnClick(R.id.btndel)

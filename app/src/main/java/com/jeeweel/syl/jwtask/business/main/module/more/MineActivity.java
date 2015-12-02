@@ -29,9 +29,12 @@ public class MineActivity extends JwActivity {
         Users users;
         users  = JwAppAplication.getInstance().users;
         String str;
-        str = users.getNickname();
         TextView tv;
+        str = users.getNickname();
         tv = (TextView) findViewById(R.id.nickname);
+        tv.setText(str);
+        str= users.getSex();
+        tv = (TextView) findViewById(R.id.tv_sex);
         tv.setText(str);
         str= users.getStrong_point();
         tv = (TextView) findViewById(R.id.tv_strong_point);
