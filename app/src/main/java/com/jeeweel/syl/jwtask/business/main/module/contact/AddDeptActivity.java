@@ -7,21 +7,15 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
-import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
@@ -29,12 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
-import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AddGroupActivity extends JwActivity {
+public class AddDeptActivity extends JwActivity {
 
 
     @Bind(R.id.et_group_name)
@@ -48,6 +41,8 @@ public class AddGroupActivity extends JwActivity {
     private CommonAdapter commonAdapter;
 
     List<Friend> friends;
+
+    private String orgname = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +66,7 @@ public class AddGroupActivity extends JwActivity {
 
     @OnClick(R.id.fr_add)
     void nextClick() {
-        JwStartActivity(GroupAddFriendListActivity.class, Contants.group);
+        JwStartActivity(DeptAddFriendListActivity.class, Contants.group);
     }
 
     @Subscribe

@@ -1,39 +1,40 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
-public class AddOrgActivity extends AppCompatActivity {
+import api.util.Contants;
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
+public class AddOrgActivity extends JwActivity {
+
+    @Bind(R.id.et_org_name)
+    EditText etOrgName;
+    @Bind(R.id.bt_ok)
+    Button btOk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_org);
+        ButterKnife.bind(this);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_org, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    @OnClick(R.id.bt_ok)
+    void nextClick() {
+        String orgname = etOrgName.getText().toString();
+        if(StrUtils.IsNotEmpty(orgname)){
+            JwStartActivity(AddDeptActivity.class, orgname);
+        }else{
+            ToastShow("请输入组织名称");
         }
-
-        return super.onOptionsItemSelected(item);
     }
 }

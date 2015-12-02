@@ -1,9 +1,6 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -28,6 +25,6 @@ public class AddHomeActivity extends JwActivity {
 
     @OnClick(R.id.rl_dept)
     void deptClick() {
-        JwStartActivity(AddGroupActivity.class);
+        JwStartActivity(AddDeptActivity.class);
     }
 }

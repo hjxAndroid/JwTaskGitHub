@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class GroupAddFriendListActivity extends JwListActivity {
+public class DeptAddFriendListActivity extends JwListActivity {
     List<Friend> mListItems = new ArrayList<Friend>();
 
     @Bind(R.id.listview)
@@ -87,7 +87,7 @@ public class GroupAddFriendListActivity extends JwListActivity {
             public void onClick(View arg0) {
                 String json = new Gson().toJson(friendList);
 
-                //团队添加好友请求
+                //部门添加好友请求
                 if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.group)){
                     OttUtils.push(Contants.group,json);
                     finish();
