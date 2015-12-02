@@ -108,7 +108,7 @@ public class AddDeptActivity extends JwActivity {
             }
             Dept dept = new Dept();
                 try {
-                    if(JwAppAplication.getInstance().jCloudDB.save(dept)){
+                    if(JwAppAplication.getInstance().getjCloudDB().save(dept)){
                         result = "1";
                     }
                 } catch (Exception e) {

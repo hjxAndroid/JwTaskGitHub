@@ -4,6 +4,8 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
 
+import java.sql.Date;
+
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread
@@ -24,7 +26,7 @@ public class Users {
     private String password;
     private String nickname;
     private String sex;
-    private String birthday;
+    private Date birthday;
     private String area;
     private String strong_point;
     private String sign;
@@ -91,11 +93,11 @@ public class Users {
         this.sex = sex;
     }
 
-    public String getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
