@@ -4,8 +4,11 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -31,13 +34,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class FriendListActivity extends JwListActivity {
+public class GroupAddFriendListActivity extends JwListActivity {
     List<Friend> mListItems = new ArrayList<Friend>();
 
     @Bind(R.id.listview)
@@ -56,12 +60,19 @@ public class FriendListActivity extends JwListActivity {
      * 用于判断是从哪请求过来的
      */
     private String tag = "";
+
+
+    /**
+     * 用来存储已选中的好友
+     */
+    private List<Friend> friendList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
-        setTitle("好友列表");
+        setTitle("添加成员");
         users = JwAppAplication.getInstance().users;
+        tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
         ButterKnife.bind(this);
         initView();
         initListViewController();
@@ -69,12 +80,24 @@ public class FriendListActivity extends JwListActivity {
 
     private void initView(){
         MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("添加好友");
+        menuTextView.setText("完成");
         menuTextView.setTextColor(getResources().getColor(R.color.white));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-               JwStartActivity(FriendAddActivity.class);
+                String json = new Gson().toJson(friendList);
+
+                //团队添加好友请求
+                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.group)){
+                    OttUtils.push(Contants.group,json);
+                    finish();
+                }
+
+                //签到添加好友请求
+                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.sign)){
+                    OttUtils.push(Contants.sign,json);
+                    finish();
+                }
             }
         });
         addMenuView(menuTextView);
@@ -82,11 +105,19 @@ public class FriendListActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_friend) {
+        commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_group_add_friend) {
             @Override
-            public void convert(ViewHolder helper, Friend item) {
-                helper.setText(R.id.tv_name, item.getFriend_name());
-                helper.setText(R.id.tv_nick_name, item.getFriend_nickname());
+            public void convert(ViewHolder helper, final Friend item) {
+                helper.setText(R.id.tv_name, item.getFriend_nickname());
+
+                CheckBox choose = helper.getView(R.id.ck_choose);
+                choose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                    @Override
+                    public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+                        friendList.add(item);
+                    }
+                });
             }
         };
         setCommonAdapter(commonAdapter);
@@ -96,7 +127,7 @@ public class FriendListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position){
-        Friend outBoundItem = (Friend)commonAdapter.getItem(position);
+
     }
 
     @Override

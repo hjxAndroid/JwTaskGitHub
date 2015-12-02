@@ -131,6 +131,14 @@
             android:name=".business.main.module.contact.AddGroupActivity"
             android:label="@string/title_activity_add_group" >
         </activity>
+        <activity
+            android:name=".business.main.module.contact.GroupAddFriendListActivity"
+            android:label="@string/title_activity_group_add_friend_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.contact.AddOrgActivity"
+            android:label="@string/title_activity_add_org" >
+        </activity>
     </application>
 
 </manifest>

@@ -51,5 +51,7 @@
     <string name="title_activity_friend_add_list">FriendAddListActivity</string>
     <string name="title_activity_add_home">AddHomeActivity</string>
     <string name="title_activity_add_group">AddGroupActivity</string>
+    <string name="title_activity_group_add_friend_list">GroupAddFriendListActivity</string>
+    <string name="title_activity_add_org">AddOrgActivity</string>
 
 </resources>

@@ -1,10 +1,9 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context="com.jeeweel.syl.jwtask.business.main.module.contact.AddGroupActivity">
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/li_group"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/main_bg_color"
@@ -49,7 +48,7 @@
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/add"
+            android:id="@+id/fr_add"
             android:layout_width="fill_parent"
             android:layout_height="@dimen/one_line_height"
             android:layout_centerHorizontal="true"
@@ -85,6 +84,8 @@
         android:id="@id/listview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/li_group"
+        android:layout_above="@+id/bt_ok"
         android:cacheColorHint="@color/transparent"
         android:divider="@color/divider_color"
         android:dividerHeight="1.0px"
@@ -92,4 +93,13 @@
         android:listSelector="@color/transparent"
         android:scrollbars="none" />
 
-</LinearLayout>
+    <Button android:id="@+id/bt_ok"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_large"
+        android:background="@drawable/bg_button"
+        android:text="立即创建"/>
+</RelativeLayout>

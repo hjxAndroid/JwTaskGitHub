@@ -14,4 +14,10 @@ public class Contants {
 
     //默认图片ip
     public static String P_URL="http://121.43.116.147:80/aj/";
+
+    //团队传递参数
+    public static String group = "group";
+
+    //签到传递参数
+    public static String sign = "sign";
 }

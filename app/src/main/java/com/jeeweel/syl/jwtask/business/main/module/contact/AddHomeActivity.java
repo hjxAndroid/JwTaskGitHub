@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AddHomeActivity extends JwActivity {
@@ -17,6 +18,7 @@ public class AddHomeActivity extends JwActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_home);
         setTitle("添加");
+        ButterKnife.bind(this);
     }
 
     @OnClick(R.id.rl_friend)
@@ -26,6 +28,6 @@ public class AddHomeActivity extends JwActivity {
 
     @OnClick(R.id.rl_dept)
     void deptClick() {
-        JwStartActivity(FriendAddActivity.class);
+        JwStartActivity(AddGroupActivity.class);
     }
 }
