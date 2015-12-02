@@ -28,11 +28,11 @@ public class Userdept {
     /**
      * 用户
      */
-    private int user_id;
+    private String user_code;
     private String username;
     private String nickname;
     private String remark;
-    private int org_id;
+    private String org_code;
     private String org_name;
     private String create_time;
     private String update_time;
@@ -61,14 +61,6 @@ public class Userdept {
         this.dept_name = dept_name;
     }
 
-    public int getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
-    }
-
     public String getUsername() {
         return username;
     }
@@ -93,14 +85,6 @@ public class Userdept {
         this.remark = remark;
     }
 
-    public int getOrg_id() {
-        return org_id;
-    }
-
-    public void setOrg_id(int org_id) {
-        this.org_id = org_id;
-    }
-
     public String getOrg_name() {
         return org_name;
     }
@@ -123,6 +107,22 @@ public class Userdept {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getUser_code() {
+        return user_code;
+    }
+
+    public void setUser_code(String user_code) {
+        this.user_code = user_code;
+    }
+
+    public String getOrg_code() {
+        return org_code;
+    }
+
+    public void setOrg_code(String org_code) {
+        this.org_code = org_code;
     }
 }
 

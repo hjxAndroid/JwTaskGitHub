@@ -27,4 +27,9 @@ public class AddHomeActivity extends JwActivity {
     void deptClick() {
         JwStartActivity(AddDeptActivity.class);
     }
+
+    @OnClick(R.id.rl_org)
+    void orgClick() {
+        JwStartActivity(AddOrgActivity.class);
+    }
 }
