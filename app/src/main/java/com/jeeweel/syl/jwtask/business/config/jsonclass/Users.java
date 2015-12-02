@@ -26,7 +26,7 @@ public class Users {
     private String password;
     private String nickname;
     private String sex;
-    private Date birthday;
+    private String birthday;
     private String area;
     private String strong_point;
     private String sign;
@@ -93,11 +93,11 @@ public class Users {
         this.sex = sex;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
