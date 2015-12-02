@@ -5,7 +5,7 @@
     <!--lrkAPP-->
     <dimen name="text_Size">15dp</dimen>
     <dimen name="margin_Size">10dp</dimen>
-    <dimen name="margin_Top_Size">10dp</dimen> q
+    <dimen name="margin_Top_Size">10dp</dimen>
     <dimen name="itemSize">15dp</dimen>
     <dimen name="margin_Large_Top_Size">20dp</dimen>
     <dimen name="large_Text_Size">30dp</dimen>
@@ -18,5 +18,8 @@
     <dimen name="three_Part">150dp</dimen>
     <dimen name="drawablePad">6dp</dimen>
     <dimen name="circle">40dp</dimen>
+    <dimen name="add">15dp</dimen>
+    <dimen name="add_space">80dp</dimen>
+
 </resources>
 

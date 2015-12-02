@@ -1,116 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_f2f2f2"
-    android:orientation="vertical">
-
-    <LinearLayout
-        android:id="@+id/line_start_sign_user"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/sign_user"
-        android:background="@drawable/shape_li"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="@dimen/sign_circle"
-            android:layout_height="@dimen/sign_circle"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/margin_Size"
-            android:background="@drawable/circular_portrait"
-            android:gravity="center"
-            android:text="@string/tv_user_head"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textSize_list" />
-
-        <TextView
-            android:id="@+id/tv_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="@dimen/margin_Size"
-            android:text="@string/tv_userName"
-            android:textSize="@dimen/userName" />
-    </LinearLayout>
+    android:background="@color/gray_f2f2f2">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/margin_Size"
+        android:background="@color/gray_f2f2f2"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_Size"
-            android:drawableLeft="@drawable/cmail_icon_calendar1"
-            android:drawablePadding="@dimen/margin_Size"
-            android:gravity="center"
-            android:text="@string/date_week" />
+        <LinearLayout
+            android:id="@+id/line_start_sign_user"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sign_user"
+            android:background="@drawable/shape_li"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_user_pic"
+                style="@style/text_nomor_style"
+                android:layout_width="@dimen/sign_circle"
+                android:layout_height="@dimen/sign_circle"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:background="@drawable/circular_portrait"
+                android:gravity="center"
+                android:text="@string/tv_user_head"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/tv_userName" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_fgx" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_Height"
+            android:layout_marginTop="@dimen/time_space"
+            android:background="@drawable/settings_mid_select">
+
+            <TextView
+                android:id="@+id/tv_week"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/time_space"
+                android:drawableLeft="@drawable/cmail_icon_calendar1"
+                android:drawablePadding="@dimen/time_space"
+                android:gravity="center"
+                android:text="@string/weeks"
+                android:textColor="@color/gray" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/time_space"
+                android:drawablePadding="@dimen/time_space"
+                android:gravity="center"
+                android:text="@string/date" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/time_space"
+                android:background="@color/white"
+                android:gravity="right">
+
+                <TextView
+                    style="@style/text_nomor_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/time_space"
+                    android:drawableLeft="@drawable/alm_cmail_meeting_time"
+                    android:drawablePadding="@dimen/time_space"
+                    android:gravity="center"
+                    android:text="@string/current_time"
+                    android:textColor="@color/gray" />
+
+                <TextView
+                    android:id="@+id/tv_time"
+                    style="@style/text_nomor_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/time_space"
+                    android:gravity="center"
+                    android:text="@string/system_time" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_fgx" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="@dimen/margin_Size"
-            android:background="@color/white"
-            android:gravity="right">
+            android:layout_marginTop="@dimen/time_space"
+            android:background="@drawable/settings_mid_select"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/et_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sign_title"
+                android:background="@null"
+                android:gravity="top" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/time_space"
+            android:background="@drawable/settings_mid_select">
+
+            <EditText
+                android:id="@+id/et_context"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sign_content"
+                android:background="@null"
+                android:gravity="top" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_fgx" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_space"
+            android:layout_marginTop="@dimen/time_space"
+            android:background="@drawable/settings_mid_select"
+            android:orientation="vertical">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:drawableLeft="@drawable/alm_cmail_meeting_time"
-                android:drawablePadding="@dimen/margin_Size"
+                android:text="@string/receive_name" />
+
+            <GridView
+                android:id="@+id/grid_view_start"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sign_circle"
+                android:layout_margin="@dimen/time_space"
+                android:columnWidth="@dimen/time_space"
                 android:gravity="center"
-                android:text="@string/current_time" />
+                android:horizontalSpacing="@dimen/time_space"
+                android:numColumns="8"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="@dimen/time_space"></GridView>
+
+            <!--<ImageView
+                android:id="@+id/iv_add"
+                android:layout_width="@dimen/circle"
+                android:layout_height="@dimen/circle"
+                android:layout_margin="@dimen/margin_Size"
+                android:background="@drawable/icon_org_add" />-->
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray_f2f2f2"
+            android:gravity="center">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_Size"
+                android:id="@+id/start_sign_button"
+                style="@style/text_nomor_style"
+                android:layout_width="@dimen/sign_button"
+                android:layout_height="@dimen/sign_button"
+                android:layout_margin="@dimen/margin_Large_Top_Size"
+                android:background="@drawable/circular_portrait"
                 android:gravity="center"
-                android:text="@string/system_time" />
+                android:text="@string/start_sign_up_button"
+                android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sign_title"
-            android:background="@drawable/lrkborader" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/sign_content"
-            android:background="@drawable/lrkborader" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/gray_f2f2f2"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/start_sign_button"
-            android:layout_width="@dimen/sign_button"
-            android:layout_height="@dimen/sign_button"
-            android:layout_margin="@dimen/margin_Large_Top_Size"
-            android:background="@drawable/circular_portrait"
-            android:gravity="center"
-            android:text="@string/start_sign_up_button"
-            android:textSize="@dimen/sign_size" />
-    </LinearLayout>
-</LinearLayout>
+</ScrollView>

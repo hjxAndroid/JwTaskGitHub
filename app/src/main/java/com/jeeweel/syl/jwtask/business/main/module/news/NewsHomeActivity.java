@@ -67,16 +67,17 @@ public class NewsHomeActivity extends JwActivity {
     private List<Friend> friendList;
 
     private String myphone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.news));
-        getData();
+        /*getData();*/
     }
 
-    private void getData() {
+    /*private void getData() {
         String time = DateHelper.getHourAndM();
         tvFriendTime.setText(time);
         tvTaskTime.setText(time);
@@ -89,7 +90,7 @@ public class NewsHomeActivity extends JwActivity {
             showLoading();
             new FinishRefresh(getMy()).execute(myphone);
         }
-    }
+    }*/
 
     /**
      * 保存到数据库
@@ -136,7 +137,7 @@ public class NewsHomeActivity extends JwActivity {
                         //假如是接受者，提醒好友添加
                         if (sendState == 0) {
                             //假如是未操作
-                            if (state==0) {
+                            if (state == 0) {
                                 rlFriendNews.setText(friend.getFriend_nickname() + "请求添加您为好友");
                                 ivFriendNum.setVisibility(View.VISIBLE);
                                 break;
@@ -144,7 +145,7 @@ public class NewsHomeActivity extends JwActivity {
                             //假如是发送者，提醒好友通过
                         } else if (sendState == 1) {
                             //假如是已经同意，提醒好友添加成功
-                            if (state==2) {
+                            if (state == 2) {
                                 rlFriendNews.setText("您已经成功添加" + friend.getFriend_nickname() + "为好友");
                                 ivFriendNum.setVisibility(View.VISIBLE);
                                 break;
