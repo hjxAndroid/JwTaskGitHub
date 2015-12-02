@@ -24,12 +24,12 @@ public class JwAppAplication extends JeeweelApplication {
     public static FinalDb finalDb = null;
 
     //捷微
-    public static JCloudDB jCloudDB = null;
+    private  JCloudDB jCloudDB = null;
     // 填写从短信SDK应用后台注册得到的APPKEY
-    private static String APPKEY = "cbcb5ea9d879";
+    private  String APPKEY = "cbcb5ea9d879";
 
     // 填写从短信SDK应用后台注册得到的APPSECRET
-    private static String APPSECRET = "4999b5a40e56d32fc49bd569cfb8158d";
+    private  String APPSECRET = "4999b5a40e56d32fc49bd569cfb8158d";
 
     //全局当前登录人信息；
     public static Users users = null;
@@ -59,5 +59,37 @@ public class JwAppAplication extends JeeweelApplication {
     //用于返回一个MyApplication单例
     public static synchronized JwAppAplication getInstance() {
         return mInstance;
+    }
+
+    public static FinalDb getFinalDb() {
+        return finalDb;
+    }
+
+
+
+    public JCloudDB getjCloudDB() {
+        return jCloudDB;
+    }
+
+    public void setjCloudDB(JCloudDB jCloudDB) {
+        this.jCloudDB = jCloudDB;
+    }
+
+    public String getAPPKEY() {
+        return APPKEY;
+    }
+
+
+    public String getAPPSECRET() {
+        return APPSECRET;
+    }
+
+
+    public static Users getUsers() {
+        return users;
+    }
+
+    public static void setUsers(Users users) {
+        JwAppAplication.users = users;
     }
 }

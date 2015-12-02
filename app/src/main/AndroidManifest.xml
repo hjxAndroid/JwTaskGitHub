@@ -88,10 +88,6 @@
             android:label="@string/title_activity_feedback" >
         </activity>
         <activity
-            android:name=".business.main.module.more.MineAccountActivity"
-            android:label="@string/title_activity_mine_account" >
-        </activity>
-        <activity
             android:name=".business.main.module.more.MineSexActivity"
             android:label="@string/title_activity_mine_sex" >
         </activity>

@@ -18,12 +18,13 @@
             android:layout_height="@dimen/view_height"
             android:background="@color/view_line"/>
         <EditText
+            android:id="@+id/et_word"
             android:layout_margin="5dp"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="120dp"
             android:inputType="textMultiLine"
+            android:maxLength="80"
             android:gravity="left|top"
-            android:minLines="3"
             android:background="@null"/>
     </RelativeLayout>
     <View
@@ -31,6 +32,7 @@
         android:layout_height="@dimen/view_height"
         android:background="@color/view_line"/>
     <Button
+        android:id="@+id/btnsub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/submit"/>

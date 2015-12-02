@@ -1,39 +1,56 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.date.JwDateUtils;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MineActivity extends JwActivity {
+    Users users;
+    String phone;
+    String birthday; // 初始化开始时间
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine);
         ButterKnife.bind(this);
         setTitle(getString(R.string.mineinformation));
+
+        users  = JwAppAplication.getInstance().users;
+        birthday = JwDateUtils.ConverToString(users.getBirthday());
+        Logv("qwqwqw%%%" + birthday);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Users users;
         users  = JwAppAplication.getInstance().users;
         String str;
-        str = users.getNickname();
         TextView tv;
+        str = users.getNickname();
         tv = (TextView) findViewById(R.id.nickname);
         tv.setText(str);
-        str= users.getSign();
+        str = users.getSex();
+        tv = (TextView) findViewById(R.id.tv_sex);
+        tv.setText(str);
+        str= users.getStrong_point();
+        tv = (TextView) findViewById(R.id.tv_strong_point);
+        tv.setText(str);
+        str = users.getSign();
         tv = (TextView) findViewById(R.id.tv_sign);
         tv.setText(str);
     }
@@ -65,25 +82,46 @@ public class MineActivity extends JwActivity {
         JwStartActivity(MineEditnameActivity.class);
     }
 
-    @OnClick(R.id.LinearLayout02)
-    void editMyAcountClick() {
-        JwStartActivity(MineAccountActivity.class);
-    }
-
     @OnClick(R.id.LinearLayout04)
     void editMySexClick() {
         JwStartActivity(MineSexActivity.class);
     }
 
-    private TextView startDateTime;
-    private String initStartDateTime = "2013年9月3日"; // 初始化开始时间
+    private class saveBirthday extends AsyncTask<String, Void, String> {
+        private Context context;
+        public saveBirthday(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String sql="UPDATE users SET birthday ='"+birthday+"'WHERE username ='"+phone+"'";
+            try{
+                CloudDB.execSQL(sql);
+            }catch (CloudServiceException e){
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
+    }
+
     @OnClick(R.id.LinearLayout05)
     void editMyBirthdayClick() {
-        startDateTime = (TextView) findViewById(R.id.inputDate);
-        startDateTime.setText(initStartDateTime);
+        TextView tv_birthday;
+        tv_birthday = (TextView) findViewById(R.id.tv_birthday);
+        tv_birthday.setText(birthday);
         DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                MineActivity.this, initStartDateTime);
-        dateTimePicKDialog.dateTimePicKDialog(startDateTime);
+                MineActivity.this, birthday);
+        dateTimePicKDialog.dateTimePicKDialog(tv_birthday);
+        phone = users.getUsername();
+    //    users.setBirthday(birthday);
+
+        Logv("qwqwqw---" + birthday + phone);
+   //     new saveBirthday(getMy()).execute();
     }
 
     @OnClick(R.id.LinearLayout07)
