@@ -135,6 +135,10 @@
             android:name=".business.main.module.contact.AddOrgActivity"
             android:label="@string/title_activity_add_org" >
         </activity>
+        <activity
+            android:name="api.adapter.ExpandAdapter"
+            android:label="@string/title_activity_expand_adapter" >
+        </activity>
     </application>
 
 </manifest>

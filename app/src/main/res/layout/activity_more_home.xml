@@ -21,23 +21,23 @@
 
             <TextView
                 android:id="@+id/tv_user_picture"
+                style="@style/text_nomor_style"
                 android:layout_width="@dimen/circle"
                 android:layout_height="@dimen/circle"
                 android:layout_margin="@dimen/margin_Size"
                 android:background="@drawable/circular_portrait"
                 android:gravity="center"
                 android:text="dhh"
-                android:textColor="@color/white"
-                android:textSize="@dimen/textSize_list" />
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/tv_head"
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_Size"
                 android:gravity="center"
-                android:text="dhh"
-                android:textSize="@dimen/textSize_list" />
+                android:text="dhh" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -146,12 +146,12 @@
             android:clickable="true">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/collect"
-                android:textSize="@dimen/itemSize" />
+                android:text="@string/collect" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -178,12 +178,12 @@
             android:clickable="true">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/experience"
-                android:textSize="@dimen/itemSize" />
+                android:text="@string/experience" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -217,12 +217,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/push"
-                    android:textSize="@dimen/itemSize" />
+                    android:text="@string/push" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -255,12 +255,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/service"
-                    android:textSize="@dimen/itemSize" />
+                    android:text="@string/service" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -293,12 +293,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/res"
-                    android:textSize="@dimen/itemSize" />
+                    android:text="@string/res" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -327,12 +327,12 @@
             android:clickable="true">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/setControl"
-                android:textSize="@dimen/itemSize" />
+                android:text="@string/setControl" />
 
             <LinearLayout
                 android:layout_width="match_parent"

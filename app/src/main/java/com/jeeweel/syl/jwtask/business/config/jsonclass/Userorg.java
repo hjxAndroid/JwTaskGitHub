@@ -37,6 +37,9 @@ public class Userorg {
      * 创建用户名称
      */
     private String user_name;
+
+
+    private String nickname;
     /**
      * 备注
      */
@@ -107,6 +110,22 @@ public class Userorg {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getUser_code() {
+        return user_code;
+    }
+
+    public void setUser_code(String user_code) {
+        this.user_code = user_code;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
 

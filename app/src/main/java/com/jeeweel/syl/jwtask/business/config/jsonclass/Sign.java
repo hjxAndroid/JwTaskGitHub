@@ -65,6 +65,19 @@ public class Sign {
      * 更新时间
      */
     private String update_time;
+    /**
+     * 签到内容
+     */
+    private String send_context;
+
+    public void setSend_context(String send_context) {
+        this.send_context = send_context;
+    }
+
+    public String getSend_context() {
+
+        return send_context;
+    }
 
     public int getMid() {
         return mid;

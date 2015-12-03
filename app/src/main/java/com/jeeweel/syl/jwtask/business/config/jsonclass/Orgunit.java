@@ -2,6 +2,9 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+
+import java.util.ArrayList;
+
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread
@@ -32,10 +35,23 @@ public class Orgunit{
 	 * 备注
 	 */
 	private String remark;
-	private String founder;
+
+
+	private String founder_code;
+	private String founder_name;
+	private String nickname;
+
 	private String founder_time;
 	private String update_time;
 	private String create_time;
+
+
+	/**
+	 * 用于存放第二级
+	 * @return
+	 */
+	private ArrayList<Userdept> childs= new ArrayList<Userdept>();
+
 
 	public int getMid() {
 		return mid;
@@ -77,14 +93,6 @@ public class Orgunit{
 		this.remark = remark;
 	}
 
-	public String getFounder() {
-		return founder;
-	}
-
-	public void setFounder(String founder) {
-		this.founder = founder;
-	}
-
 	public String getFounder_time() {
 		return founder_time;
 	}
@@ -107,6 +115,38 @@ public class Orgunit{
 
 	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
+	}
+
+	public String getFounder_code() {
+		return founder_code;
+	}
+
+	public void setFounder_code(String founder_code) {
+		this.founder_code = founder_code;
+	}
+
+	public String getFounder_name() {
+		return founder_name;
+	}
+
+	public void setFounder_name(String founder_name) {
+		this.founder_name = founder_name;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public void setChild(Userdept userdept) {
+		this.childs.add(userdept);
+	}
+
+	public ArrayList<Userdept> getChilds() {
+		return childs;
 	}
 }
 

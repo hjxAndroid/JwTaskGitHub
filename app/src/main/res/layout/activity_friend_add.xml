@@ -1,32 +1,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:flatui="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:flatui="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context="com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddActivity">
 
     <com.cengalabs.flatui.views.FlatEditText
         android:id="@+id/et_phone"
+        style="@style/text_nomor_style"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_margin="10dip"
-        android:maxLines="1"
         android:gravity="center_vertical"
         android:hint="请输入好友电话号码"
-        style="@style/text_nomor_style"
         android:includeFontPadding="true"
+        android:maxLines="1"
         flatui:fl_fieldStyle="fl_box"
         flatui:fl_theme="@array/sky" />
 
     <com.cengalabs.flatui.views.FlatButton
         android:id="@+id/button_add"
+        style="@style/text_nomor_style"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="添加"
-        style="@style/text_nomor_style"
         android:layout_margin="10dp"
-        flatui:fl_theme="@array/sky"
-        flatui:fl_textAppearance="fl_light" />
+        android:text="添加"
+        flatui:fl_textAppearance="fl_light"
+        flatui:fl_theme="@array/sky" />
 
 </LinearLayout>

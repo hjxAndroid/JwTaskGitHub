@@ -36,7 +36,7 @@ public class Utils {
     //获取32位随机码
     public static String getUUid(){
         String uuid = java.util.UUID.randomUUID().toString();
-        uuid = uuid.replace("_","");
+        uuid = uuid.replace("-","");
         return uuid;
     }
 

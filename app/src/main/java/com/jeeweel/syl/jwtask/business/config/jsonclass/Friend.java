@@ -86,6 +86,11 @@ public class Friend {
     private int send_state;
 
 
+    /**
+     * 存储是否已经选中
+     * @return
+     */
+    private boolean choose = false;
 
     public int getMid() {
         return mid;
@@ -213,6 +218,14 @@ public class Friend {
 
     public void setSend_state(int send_state) {
         this.send_state = send_state;
+    }
+
+    public boolean isChoose() {
+        return choose;
+    }
+
+    public void setChoose(boolean choose) {
+        this.choose = choose;
     }
 }
 
