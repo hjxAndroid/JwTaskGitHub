@@ -4,15 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
@@ -20,6 +18,7 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
@@ -34,15 +33,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
-import api.util.OttUtils;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class DeptAddFriendListActivity extends JwListActivity {
-    List<Friend> mListItems = new ArrayList<Friend>();
+public class DeptUsersListActivity extends JwListActivity {
+    List<Userdept> mListItems = new ArrayList<Userdept>();
 
     @Bind(R.id.listview)
     PullToRefreshListView listview;
@@ -52,81 +50,34 @@ public class DeptAddFriendListActivity extends JwListActivity {
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
 
-    List<Friend> list;
-
-    private Users users;
+    List<Userdept> list;
 
     /**
      * 用于判断是从哪请求过来的
      */
     private String tag = "";
 
-    List<Integer> integers = new ArrayList<>();
+
+    private Userdept userdept;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
-        setTitle("添加成员");
-        users = JwAppAplication.getInstance().users;
-        tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        if(null!=userdept){
+            setTitle(userdept.getOrg_name()+">"+userdept.getDept_name());
+        }
         ButterKnife.bind(this);
-        initView();
         initListViewController();
-    }
-
-    private void initView(){
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                List<Friend> friendcds = new ArrayList<>();
-                for(Friend friend : mListItems){
-                    if(friend.getChoose().equals("1")){
-                        friendcds.add(friend);
-                    }
-                }
-
-
-                String json = new Gson().toJson(friendcds);
-
-                //部门添加好友请求
-                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.group)){
-                    OttUtils.push(Contants.group,json);
-                    finish();
-                }
-
-                //签到添加好友请求
-                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.sign)){
-                    OttUtils.push(Contants.sign,json);
-                    finish();
-                }
-            }
-        });
-        addMenuView(menuTextView);
     }
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_group_add_friend) {
+        commonAdapter = new CommonAdapter<Userdept>(getMy(), mListItems, R.layout.item_friend) {
             @Override
-            public void convert(final ViewHolder helper, final Friend item) {
-                helper.setText(R.id.tv_name, item.getFriend_nickname());
-                final CheckBox choose = helper.getView(R.id.ck_choose);
-                choose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton arg0, boolean arg1) {int position = helper.getPosition();
-
-                       if(choose.isChecked()){
-                           Friend friend = mListItems.get(position);
-                           friend.setChoose("1");
-                       }else{
-                           Friend friend = mListItems.get(position);
-                           friend.setChoose("0");
-                       }
-                    }
-                });
+            public void convert(ViewHolder helper, Userdept item) {
+                helper.setText(R.id.tv_name, item.getUsername());
+                helper.setText(R.id.tv_nick_name, item.getNickname());
             }
         };
         setCommonAdapter(commonAdapter);
@@ -136,7 +87,8 @@ public class DeptAddFriendListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position){
-
+        Userdept userdept = (Userdept)commonAdapter.getItem(position);
+        JwStartActivity(FriendDetailActivity.class,userdept.getUsername());
     }
 
     @Override
@@ -173,17 +125,17 @@ public class DeptAddFriendListActivity extends JwListActivity {
 
             String result = "0";
 
-            if(null!=users){
+            if(null!=userdept){
                 try {
                     if(mode == 0 ){
                         setPage(true);
-                        list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" +" limit "+pageStart+","+pageEnd);
+                        list = jCloudDB.findAllByWhere(Userdept.class,
+                                "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit "+pageStart+","+pageEnd);
                         mListItems.clear();
                     }else{
                         setPage(false);
-                        list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" +" limit "+pageStart+","+pageEnd);
+                        list = jCloudDB.findAllByWhere(Userdept.class,
+                                "user_name = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit "+pageStart+","+pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();

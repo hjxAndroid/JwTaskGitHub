@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:name=".business.main.JwAppAplication"
@@ -136,8 +137,12 @@
             android:label="@string/title_activity_add_org" >
         </activity>
         <activity
-            android:name="api.adapter.ExpandAdapter"
-            android:label="@string/title_activity_expand_adapter" >
+            android:name=".business.main.module.contact.DeptUsersListActivity"
+            android:label="@string/title_activity_dept_users_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.contact.FriendDetailActivity"
+            android:label="@string/title_activity_friend_detail" >
         </activity>
     </application>
 

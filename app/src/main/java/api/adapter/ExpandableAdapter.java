@@ -119,4 +119,9 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
         private TextView value;
         private ImageView img;
     }
+
+    public List<Orgunit> getList() {
+        return groupArray;
+    }
+
 }

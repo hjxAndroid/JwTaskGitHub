@@ -3,9 +3,9 @@ package com.jeeweel.syl.jwtask.business.main.module.contact;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 
-import com.cengalabs.flatui.views.FlatButton;
-import com.cengalabs.flatui.views.FlatEditText;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -27,9 +27,9 @@ public class FriendAddActivity extends JwActivity {
 
 
     @Bind(R.id.et_phone)
-    FlatEditText etPhone;
-    @Bind(R.id.button_add)
-    FlatButton buttonAdd;
+    EditText etPhone;
+    @Bind(R.id.bt_add)
+    Button btAdd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,7 @@ public class FriendAddActivity extends JwActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.button_add)
+    @OnClick(R.id.bt_add)
     void nextClick() {
         List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         if (ListUtils.IsNotNull(usersList)) {
@@ -48,7 +48,7 @@ public class FriendAddActivity extends JwActivity {
             String myphone = users.getUsername();
             String friendPhone = etPhone.getText().toString();
             if (StrUtils.IsNotEmpty(friendPhone)) {
-                  new FinishRefresh(getMy()).execute(nickname,myphone,friendPhone);
+                new FinishRefresh(getMy()).execute(nickname, myphone, friendPhone);
             }
         }
     }
@@ -59,6 +59,7 @@ public class FriendAddActivity extends JwActivity {
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
         private JCloudDB jCloudDB;
+
         /**
          * @param context 上下文
          */
@@ -87,7 +88,7 @@ public class FriendAddActivity extends JwActivity {
             }
 
 
-            if(ListUtils.IsNotNull(list)){
+            if (ListUtils.IsNotNull(list)) {
                 String friendNickname = list.get(0).getNickname();
 
                 //添加到自己为主体的好友表
@@ -121,7 +122,7 @@ public class FriendAddActivity extends JwActivity {
                     e.printStackTrace();
                 }
 
-            }else{
+            } else {
                 result = "2";
             }
 
@@ -133,9 +134,9 @@ public class FriendAddActivity extends JwActivity {
             if (result.equals("1")) {
                 ToastShow("添加好友请求已发出");
                 finish();
-            } else if(result.equals("2")){
+            } else if (result.equals("2")) {
                 ToastShow("好友不存在");
-            }else{
+            } else {
                 ToastShow("好友保存出错");
             }
             hideLoading();

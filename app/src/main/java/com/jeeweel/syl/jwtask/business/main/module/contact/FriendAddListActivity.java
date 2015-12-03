@@ -168,6 +168,7 @@ public class FriendAddListActivity extends JwListActivity {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Friend.class,
                                 "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and send_state=0 limit "+pageStart+","+pageEnd);
+                        mListItems.clear();
                     }else{
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Friend.class,

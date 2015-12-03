@@ -36,6 +36,7 @@ public class Users {
     private String remark;
     private String create_time;
     private String update_time;
+    private String email;
 
     public String getPhoto_code() {
         return photo_code;
@@ -163,6 +164,14 @@ public class Users {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
 

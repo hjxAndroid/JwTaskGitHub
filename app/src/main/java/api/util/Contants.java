@@ -20,4 +20,14 @@ public class Contants {
 
     //签到传递参数
     public static String sign = "sign";
+
+    //部门参数
+    public static String org = "org";
+
+    //部门参数
+    public static String dept = "dept";
+
+    //部门参数
+    public static String dept_code = "dept_code";
+
 }

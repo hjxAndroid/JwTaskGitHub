@@ -50,13 +50,13 @@ public class TaskHomeActivity extends JwActivity {
     private void initView() {
         self = this;
 
-        WindowManager wm = getWindowManager();
+/*        WindowManager wm = getWindowManager();
         int width = wm.getDefaultDisplay().getWidth();
 
         LinearLayout li_img = (LinearLayout) findViewById(R.id.li_img);
         ViewGroup.LayoutParams lp = li_img.getLayoutParams();
         int high = width * 10 / 16;
-        lp.height = high;
+        lp.height = high;*/
 
         data = getResources().getStringArray(R.array.home_array);
         TypedArray imagesArrays = getResources().obtainTypedArray(
