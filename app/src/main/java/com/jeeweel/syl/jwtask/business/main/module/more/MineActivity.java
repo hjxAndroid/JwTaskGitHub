@@ -14,7 +14,9 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
-import com.jeeweel.syl.lib.api.core.jwpublic.date.JwDateUtils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -23,6 +25,7 @@ public class MineActivity extends JwActivity {
     Users users;
     String phone;
     String birthday; // 初始化开始时间
+    TextView tv_birthday;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +33,22 @@ public class MineActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle(getString(R.string.mineinformation));
 
+        tv_birthday = (TextView) findViewById(R.id.tv_birthday);
         users  = JwAppAplication.getInstance().users;
-        birthday = JwDateUtils.ConverToString(users.getBirthday());
+        birthday = users.getBirthday();
+        birthday = convert2String(Long.parseLong(birthday));
+        tv_birthday.setText(birthday);
         Logv("qwqwqw%%%" + birthday);
     }
-
+    public static String convert2String(long time) {//把long类型的时间转换为String类型，格式为yyyy-MM-dd的时间
+        String format = "yyyy-MM-dd";
+        if (time > 0l) {
+            SimpleDateFormat sf = new SimpleDateFormat(format);
+            Date date = new Date(time);
+            return sf.format(date);
+        }
+        return "";
+    }
     @Override
     protected void onResume() {
         super.onResume();
@@ -111,17 +125,16 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.LinearLayout05)
     void editMyBirthdayClick() {
-        TextView tv_birthday;
-        tv_birthday = (TextView) findViewById(R.id.tv_birthday);
-        tv_birthday.setText(birthday);
         DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                 MineActivity.this, birthday);
         dateTimePicKDialog.dateTimePicKDialog(tv_birthday);
         phone = users.getUsername();
-    //    users.setBirthday(birthday);
+        birthday = tv_birthday.getText().toString();
+        users.setBirthday(birthday);
 
         Logv("qwqwqw---" + birthday + phone);
-   //     new saveBirthday(getMy()).execute();
+        new saveBirthday(getMy()).execute();
+   //     tv_birthday.setText(birthday);
     }
 
     @OnClick(R.id.LinearLayout07)
