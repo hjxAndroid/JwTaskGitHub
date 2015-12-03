@@ -38,8 +38,7 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textColorHint="@color/text_gray"
-                android:textSize="@dimen/textSize_normal"
-                android:enabled="false"/>
+                android:textSize="@dimen/textSize_normal" />
 
         </LinearLayout>
 

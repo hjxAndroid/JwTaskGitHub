@@ -53,5 +53,6 @@
     <string name="title_activity_add_group">AddGroupActivity</string>
     <string name="title_activity_group_add_friend_list">GroupAddFriendListActivity</string>
     <string name="title_activity_add_org">AddOrgActivity</string>
+    <string name="title_activity_expand_adapter">ExpandAdapter</string>
 
 </resources>

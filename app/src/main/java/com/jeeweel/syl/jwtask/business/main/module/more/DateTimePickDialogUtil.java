@@ -31,7 +31,6 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
     public DateTimePickDialogUtil(Activity activity, String initDateTime) {
         this.activity = activity;
         this.initDateTime = initDateTime;
-
     }
 
     public void init(DatePicker datePicker) {
@@ -94,7 +93,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
     }
 
     /**
-     * 实现将初始日期时间2012年07月02日 拆分成年 月 日 时,并赋值给calendar
+     * 实现将初始日期时间拆分成年 月 日 时,并赋值给calendar
      *
      * @param initDateTime
      *            初始日期时间值 字符串型

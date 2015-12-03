@@ -4,6 +4,8 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
 
+import java.sql.Date;
+
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread

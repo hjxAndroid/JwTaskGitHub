@@ -26,6 +26,7 @@ public class AddOrgActivity extends JwActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_org);
         ButterKnife.bind(this);
+        setTitle("创建组织");
     }
 
     @OnClick(R.id.bt_ok)

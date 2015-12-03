@@ -61,11 +61,7 @@ public class DeptAddFriendListActivity extends JwListActivity {
      */
     private String tag = "";
 
-
-    /**
-     * 用来存储已选中的好友
-     */
-    private List<Friend> friendList = new ArrayList<>();
+    List<Integer> integers = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +81,15 @@ public class DeptAddFriendListActivity extends JwListActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                String json = new Gson().toJson(friendList);
+                List<Friend> friendcds = new ArrayList<>();
+                for(Friend friend : mListItems){
+                    if(friend.isChoose()){
+                        friendcds.add(friend);
+                    }
+                }
+
+
+                String json = new Gson().toJson(friendcds);
 
                 //部门添加好友请求
                 if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.group)){
@@ -107,15 +111,21 @@ public class DeptAddFriendListActivity extends JwListActivity {
     public void initListViewController() {
         commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_group_add_friend) {
             @Override
-            public void convert(ViewHolder helper, final Friend item) {
+            public void convert(final ViewHolder helper, final Friend item) {
                 helper.setText(R.id.tv_name, item.getFriend_nickname());
 
-                CheckBox choose = helper.getView(R.id.ck_choose);
+                final CheckBox choose = helper.getView(R.id.ck_choose);
                 choose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
                     @Override
                     public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
-                        friendList.add(item);
+                        int position = helper.getPosition();
+                       if(choose.isChecked()){
+                           Friend friend = mListItems.get(position);
+                           friend.setChoose(true);
+                       }else{
+                           Friend friend = mListItems.get(position);
+                           friend.setChoose(false);
+                       }
                     }
                 });
             }

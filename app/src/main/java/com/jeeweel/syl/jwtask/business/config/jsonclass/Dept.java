@@ -26,10 +26,6 @@ public class Dept {
      */
     private String org_name;
     /**
-     * 预留字段
-     */
-    private int depart_id;
-    /**
      * 部门代码
      */
     private String depart_code;
@@ -40,7 +36,15 @@ public class Dept {
     /**
      * 创建人
      */
-    private String founder;
+    private String founder_code;
+    /**
+     * 创建人电话
+     */
+    private String founder_name;
+    /**
+     * 创建人昵称
+     */
+    private String nickname;
     /**
      * 备注
      */
@@ -81,28 +85,12 @@ public class Dept {
         this.org_name = org_name;
     }
 
-    public int getDepart_id() {
-        return depart_id;
-    }
-
-    public void setDepart_id(int depart_id) {
-        this.depart_id = depart_id;
-    }
-
     public String getDepart_name() {
         return depart_name;
     }
 
     public void setDepart_name(String depart_name) {
         this.depart_name = depart_name;
-    }
-
-    public String getFounder() {
-        return founder;
-    }
-
-    public void setFounder(String founder) {
-        this.founder = founder;
     }
 
     public String getRemark() {
@@ -127,6 +115,30 @@ public class Dept {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getFounder_code() {
+        return founder_code;
+    }
+
+    public void setFounder_code(String founder_code) {
+        this.founder_code = founder_code;
+    }
+
+    public String getFounder_name() {
+        return founder_name;
+    }
+
+    public void setFounder_name(String founder_name) {
+        this.founder_name = founder_name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
 

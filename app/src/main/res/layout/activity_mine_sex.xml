@@ -4,40 +4,54 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/bg_color">
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/view_height"
-        android:background="@color/view_line"/>
-    <RadioGroup
-        android:orientation="vertical"
+    <View style="@style/new_item_divider"/>
+    <View style="@style/new_item_divider"
+        android:layout_marginTop="@dimen/margin_top_size"/>
+    <RelativeLayout
+        android:id="@+id/v_man"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_height"
-            android:layout_marginTop="@dimen/margin_top_size"
-            android:background="@color/view_line"/>
-        <RadioButton
+        android:orientation="horizontal">
+        <TextView
             android:text="男"
+            android:textColor="@color/black"
             android:textSize="@dimen/test_size"
+            android:layout_centerVertical="true"
             android:layout_margin="@dimen/margin_Size"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_height"
-            android:layout_marginLeft="@dimen/margin_left_size"
-            android:background="@color/view_line"/>
-        <RadioButton
+        <ImageView
+            android:id="@+id/iv_selm"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/filepicker_icon_back_selected"/>
+    </RelativeLayout>
+    <View style="@style/new_item_divider"
+        android:layout_marginLeft="@dimen/margin_left_size"/>
+    <RelativeLayout
+        android:id="@+id/v_woman"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
             android:text="女"
             android:textSize="@dimen/test_size"
+            android:layout_centerVertical="true"
+            android:textColor="@color/black"
             android:layout_margin="@dimen/margin_Size"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/view_height"
-            android:background="@color/view_line"/>
-    </RadioGroup>
+        <ImageView
+            android:id="@+id/iv_selw"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/filepicker_icon_back_selected"/>
+    </RelativeLayout>
+    <View style="@style/new_item_divider"/>
 </LinearLayout>

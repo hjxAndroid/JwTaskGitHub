@@ -13,8 +13,6 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/one_line_height"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/space_frame"
-            android:layout_marginRight="@dimen/space_frame"
             android:layout_marginTop="@dimen/space_frame"
             android:background="@drawable/settings_up_select"
             android:gravity="center_vertical">
@@ -36,14 +34,13 @@
                 android:layout_marginLeft="10.0dip"
                 android:layout_weight="1.0"
                 android:background="@null"
-                android:hint="请输入团队名称"
+                android:hint="请输入部门名称"
                 android:maxLength="20"
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:textColorHint="@color/text_gray"
-                android:textSize="@dimen/textSize_normal"
-                android:enabled="false"/>
+                android:textSize="@dimen/textSize_normal" />
 
         </LinearLayout>
 
@@ -52,8 +49,6 @@
             android:layout_width="fill_parent"
             android:layout_height="@dimen/one_line_height"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/space_frame"
-            android:layout_marginRight="@dimen/space_frame"
             android:background="@drawable/settings_down_select"
             android:paddingBottom="10.0dip"
             android:paddingTop="10.0dip"
@@ -77,13 +72,40 @@
                 android:src="@drawable/arrow_right" />
         </FrameLayout>
 
-   </LinearLayout>
+        <RelativeLayout android:id="@+id/rl_friend"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            android:background="@drawable/settings_mid_select"
+            android:clickable="true">
+
+            <ImageView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/icon_friends"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:id="@+id/imageView3" />
+
+            <TextView android:id="@+id/tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="黄吉祥"
+                android:textColor="@color/list_text_color"
+                android:textSize="@dimen/textSize_normal"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/imageView3"
+                android:layout_marginLeft="8dp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
 
     <ListView
         android:id="@id/listview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_marginTop="2dp"
         android:layout_below="@+id/li_group"
         android:layout_above="@+id/bt_ok"
         android:cacheColorHint="@color/transparent"

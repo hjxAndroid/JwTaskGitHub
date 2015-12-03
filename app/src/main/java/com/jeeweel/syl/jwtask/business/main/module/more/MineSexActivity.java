@@ -1,20 +1,72 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 public class MineSexActivity extends JwActivity {
+    Users users;
+    String phone;
+    String str1;
+    ImageView iv_selm;
+    ImageView iv_selw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine_sex);
         setTitle(getString(R.string.minesex));
+        ButterKnife.bind(this);
+
+        users  = JwAppAplication.getInstance().users;
+        phone = users.getUsername();
+        iv_selm = (ImageView) findViewById(R.id.iv_selm);
+        iv_selw = (ImageView) findViewById(R.id.iv_selw);
+        String str= users.getSex();
+        if(str.equals("男")){
+            iv_selw.setVisibility(View.INVISIBLE);
+        }else if(str.equals("女")){
+            iv_selm.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private class saveSex extends AsyncTask<String, Void, String> {
+        private Context context;
+        public saveSex(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String sql="UPDATE users SET sex='"+str1+"'WHERE username ='"+phone+"'";
+            try{
+                CloudDB.execSQL(sql);
+            }catch (CloudServiceException e){
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            MineSexActivity.this.finish();
+        }
     }
 
     @Override
@@ -37,5 +89,19 @@ public class MineSexActivity extends JwActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @OnClick(R.id.v_man)
+    void manClick() {
+        str1 = "男";
+        users.setSex(str1);
+        new saveSex(getMy()).execute();
+    }
+
+    @OnClick(R.id.v_woman)
+    void womanClick() {
+        str1 = "女";
+        users.setSex(str1);
+        new saveSex(getMy()).execute();
     }
 }

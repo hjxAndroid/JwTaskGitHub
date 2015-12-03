@@ -49,8 +49,8 @@ public class LoginActivity extends JwActivity {
     }
 
     private void autologin(){
-        boolean autu = false;
-       // boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
+       // boolean autu = false;
+        boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
         if(autu){
             JwStartActivity(TabHostActivity.class);
         }else{
@@ -128,6 +128,7 @@ public class LoginActivity extends JwActivity {
                     FinalDb finalDb = JwAppAplication.getInstance().finalDb;
                     finalDb.deleteAll(Users.class);
                     finalDb.save(users);
+                    JwAppAplication.getInstance().users = users;
                 }
                 JwStartActivity(TabHostActivity.class);
             }else{
