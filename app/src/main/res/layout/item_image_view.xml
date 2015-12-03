@@ -5,10 +5,12 @@
 
     <TextView
         android:id="@+id/tv_cir"
-        android:layout_width="15dp"
-        android:layout_height="15dp"
+        style="@style/text_nomor_style"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_margin="@dimen/time_space"
         android:background="@drawable/tvcircle"
+        android:gravity="center"
         android:visibility="gone" />
 
     <ImageView

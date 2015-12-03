@@ -19,7 +19,7 @@
     <dimen name="drawablePad">6dp</dimen>
     <dimen name="circle">40dp</dimen>
     <dimen name="add">15dp</dimen>
-    <dimen name="add_space">80dp</dimen>
+    <dimen name="add_space">100dp</dimen>
 
 </resources>
 

@@ -13,18 +13,17 @@
             android:id="@+id/account"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@drawable/shape_li"
             android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/account"
-                android:textSize="@dimen/textSize_list" />
+                android:text="@string/account" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,6 +32,7 @@
                 android:gravity="right">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_device_safe"
@@ -46,7 +46,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/three_Part"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@color/white1"
             android:orientation="vertical">
 
@@ -58,12 +57,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/new_Information"
-                    android:textSize="@dimen/textSize_list" />
+                    android:text="@string/new_Information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -83,8 +82,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_Top_Size"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_fgx" />
 
             <LinearLayout
@@ -95,12 +93,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/private_Information"
-                    android:textSize="@dimen/textSize_list" />
+                    android:text="@string/private_Information" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -120,8 +118,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_Top_Size"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_fgx" />
 
             <LinearLayout
@@ -132,12 +129,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/public_Function"
-                    android:textSize="@dimen/textSize_list" />
+                    android:text="@string/public_Function" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -156,21 +153,25 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_fgx" />
+
         <LinearLayout
             android:id="@+id/about"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@drawable/shape_li"
             android:clickable="true">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/about"
-                android:textSize="@dimen/textSize_list" />
+                android:text="@string/about" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -180,6 +181,7 @@
                 android:gravity="right">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/margin_Size"
@@ -189,21 +191,25 @@
             </LinearLayout>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_fgx" />
+
         <LinearLayout
             android:id="@+id/exit_Login"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@drawable/shape_li"
             android:clickable="true"
             android:gravity="center">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/exit_Login"
-                android:textSize="@dimen/textSize_list" />
+                android:text="@string/exit_Login" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
