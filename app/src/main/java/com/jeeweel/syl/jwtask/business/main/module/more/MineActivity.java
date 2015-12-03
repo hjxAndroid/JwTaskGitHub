@@ -10,12 +10,15 @@ import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
-import com.jeeweel.syl.lib.api.core.jwpublic.date.JwDateUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -23,6 +26,19 @@ public class MineActivity extends JwActivity {
     Users users;
     String phone;
     String birthday; // 初始化开始时间
+    String str;
+
+    @Bind(R.id.tv_nickname)
+    TextView tv_nickname;
+    @Bind(R.id.tv_sex)
+    TextView tv_sex;
+    @Bind(R.id.tv_strong_point)
+    TextView tv_strong_point;
+    @Bind(R.id.tv_sign)
+    TextView tv_sign;
+    @Bind(R.id.tv_birthday)
+    TextView tv_birthday;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,28 +47,33 @@ public class MineActivity extends JwActivity {
         setTitle(getString(R.string.mineinformation));
 
         users  = JwAppAplication.getInstance().users;
-       // birthday = JwDateUtils.ConverToString(users.getBirthday());
-        Logv("qwqwqw%%%" + birthday);
+        phone = users.getUsername();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        users  = JwAppAplication.getInstance().users;
-        String str;
-        TextView tv;
         str = users.getNickname();
-        tv = (TextView) findViewById(R.id.nickname);
-        tv.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_nickname.setText(str);
+        }
         str = users.getSex();
-        tv = (TextView) findViewById(R.id.tv_sex);
-        tv.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_sex.setText(str);
+        }
         str= users.getStrong_point();
-        tv = (TextView) findViewById(R.id.tv_strong_point);
-        tv.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_strong_point.setText(str);
+        }
         str = users.getSign();
-        tv = (TextView) findViewById(R.id.tv_sign);
-        tv.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_sign.setText(str);
+        }
+        birthday = users.getBirthday();
+        if (StrUtils.IsNotEmpty(birthday)) {
+            tv_birthday.setText(birthday);
+        }
+
     }
 
     @Override
@@ -94,34 +115,41 @@ public class MineActivity extends JwActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
         protected String doInBackground(String... params) {
+            String result = "1";
             String sql="UPDATE users SET birthday ='"+birthday+"'WHERE username ='"+phone+"'";
             try{
                 CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
-
+                result = "0";
             }
-            return null;
+            return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            hideLoading();
+            if(result.equals("1")){
+                birthday = tv_birthday.getText().toString();
+                users.setBirthday(birthday);
+
+                JwAppAplication.getFinalDb().update(users);
+            }else{
+                ToastShow("数据保存失败");
+            }
         }
     }
 
     @OnClick(R.id.LinearLayout05)
     void editMyBirthdayClick() {
-        TextView tv_birthday;
-        tv_birthday = (TextView) findViewById(R.id.tv_birthday);
-        tv_birthday.setText(birthday);
         DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                 MineActivity.this, birthday);
         dateTimePicKDialog.dateTimePicKDialog(tv_birthday);
-        phone = users.getUsername();
-    //    users.setBirthday(birthday);
-
-        Logv("qwqwqw---" + birthday + phone);
-   //     new saveBirthday(getMy()).execute();
     }
 
     @OnClick(R.id.LinearLayout07)
@@ -138,5 +166,16 @@ public class MineActivity extends JwActivity {
         intent.putExtra("title", "个性签名");
         intent.setClass(MineActivity.this, MineEditActivity.class);
         JwStartActivity(intent);
+    }
+
+    @Subscribe
+    public void dateTimeSelect(ActivityMsgEvent activityMsgEvent) {
+        if (activityMsgEvent.getMsg().equals("dateTimePick")) {
+            birthday = activityMsgEvent.getJson();
+            if (StrUtils.IsNotEmpty(birthday)) {
+                tv_birthday.setText(birthday);
+                new saveBirthday(getMy()).execute();
+            }
+        }
     }
 }

@@ -2,5 +2,5 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@color/gray_fgx" android:state_pressed="true" />
     <item android:drawable="@color/gray_fgx" android:state_focused="true" />
-    <item android:drawable="@color/white" />
+    <item android:drawable="@drawable/settings_mid_select" />
 </selector>

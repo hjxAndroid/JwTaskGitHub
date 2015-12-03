@@ -64,18 +64,31 @@ public class MineEditnameActivity extends JwActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
         protected String doInBackground(String... params) {
+            String result = "1";
             String sql="UPDATE users SET nickname='"+str1+"'WHERE username ='"+phone+"'";
             try{
                 CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
-
+                result = "0";
             }
-            return null;
+            return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            hideLoading();
+            if(result.equals("1")){
+                users.setNickname(str1);
+                JwAppAplication.getFinalDb().update(users);
+            }else{
+                ToastShow("数据保存失败");
+            }
             MineEditnameActivity.this.finish();
         }
     }
@@ -84,7 +97,6 @@ public class MineEditnameActivity extends JwActivity {
     void editClick() {
         phone = users.getUsername();
         str1 = et_name.getText().toString();
-        users.setNickname(str1);
         new saveNickName(getMy()).execute();
     }
 

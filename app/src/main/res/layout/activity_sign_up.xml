@@ -1,188 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_f2f2f2"
-    android:orientation="vertical">
+    android:background="@color/gray_f2f2f2">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/sign_user"
-        android:background="@color/white"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="@dimen/sign_circle"
-            android:layout_height="@dimen/sign_circle"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_Size"
-            android:background="@drawable/circular_portrait"
-            android:gravity="center"
-            android:text="@string/tv_user_head"
-            android:textColor="@color/white"
-            android:textSize="@dimen/textSize_list" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_Large_Top_Size"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tv_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tv_userName"
-                    android:textSize="@dimen/userName" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:text="@string/sign_title"
-                    android:textSize="@dimen/userName" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:singleLine="false"
-                    android:text="@string/home"
-                    android:textSize="@dimen/userName" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/sign_msg"
-                    android:textSize="@dimen/userName" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/counts_value"
-                    android:textSize="@dimen/counts" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/counts"
-                    android:textSize="@dimen/userName" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="@dimen/margin_Top_Size"
-        android:background="@color/gray_fgx" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/margin_Size"
-            android:drawableLeft="@drawable/cmail_icon_calendar1"
-            android:drawablePadding="@dimen/margin_Size"
-            android:gravity="center"
-            android:text="@string/date_week" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="@dimen/margin_Size"
-            android:background="@color/white"
-            android:gravity="right">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_Size"
-                android:drawableLeft="@drawable/alm_cmail_meeting_time"
-                android:drawablePadding="@dimen/margin_Size"
-                android:gravity="center"
-                android:text="@string/current_time" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_Size"
-                android:gravity="center"
-                android:text="@string/system_time" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="@dimen/margin_Top_Size"
-        android:background="@color/gray_fgx" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/whole_map_size"
-        android:background="@drawable/lrkborader"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="@dimen/map_size"
-            android:layout_height="@dimen/map_size"
-            android:layout_margin="@dimen/margin_Size"
-            android:background="@drawable/map" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_Size"
-                android:layout_marginTop="@dimen/margin_Large_Top_Size"
-                android:text="@string/localtion"
-                android:textSize="@dimen/userName" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/margin_Size"
-                android:text="@string/detail_localtion"
-                android:textSize="@dimen/userName" />
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="@color/gray_f2f2f2"
-        android:gravity="center">
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="@dimen/sign_button"
-            android:layout_height="@dimen/sign_button"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/margin_Large_Top_Size"
-            android:background="@drawable/circular_portrait"
-            android:gravity="center"
-            android:text="@string/sign_up_button"
-            android:textColor="@color/white"
-            android:textSize="@dimen/sign_size" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/sign_user"
+            android:background="@drawable/settings_mid_select"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="@dimen/sign_circle"
+                android:layout_height="@dimen/sign_circle"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/margin_Size"
+                android:background="@drawable/circular_portrait"
+                android:gravity="center"
+                android:text="@string/tv_user_head"
+                android:textColor="@color/white" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_Large_Top_Size"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_username"
+                        style="@style/text_nomor_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tv_userName" />
+
+                    <TextView
+                        style="@style/text_nomor_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="@string/sign_title" />
+
+                    <TextView
+                        style="@style/text_nomor_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="false"
+                        android:text="@string/home" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/text_nomor_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sign_msg" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/counts_value"
+                        android:textSize="@dimen/counts" />
+
+                    <TextView
+                        style="@style/text_nomor_style"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/counts" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/margin_Top_Size"
+            android:background="@color/gray_fgx" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/user_Layout_Height"
+            android:background="@drawable/settings_mid_select"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_week"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/time_space"
+                android:drawableLeft="@drawable/cmail_icon_calendar1"
+                android:drawablePadding="@dimen/time_space"
+                android:text="@string/weeks"
+                android:textColor="@color/gray" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/time_space"
+                android:layout_toRightOf="@+id/tv_week"
+                android:drawablePadding="@dimen/time_space"
+                android:text="@string/date" />
+
+            <TextView
+                android:id="@+id/tv_current_time_des"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/time_space"
+                android:layout_toLeftOf="@+id/tv_time"
+                android:drawableLeft="@drawable/alm_cmail_meeting_time"
+                android:drawablePadding="@dimen/time_space"
+                android:text="@string/current_time"
+                android:textColor="@color/gray" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/time_space"
+                android:text="@string/system_time" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/margin_Top_Size"
+            android:background="@color/gray_fgx" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/whole_map_size"
+            android:background="@drawable/settings_mid_select"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/map_size"
+                android:layout_height="@dimen/map_size"
+                android:layout_margin="@dimen/margin_Size"
+                android:background="@drawable/map" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/text_nomor_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_Size"
+                    android:layout_marginTop="@dimen/margin_Large_Top_Size"
+                    android:text="@string/localtion" />
+
+                <TextView
+                    style="@style/text_nomor_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_Size"
+                    android:text="@string/detail_localtion" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/gray_f2f2f2"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="@dimen/sign_button"
+                android:layout_height="@dimen/sign_button"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/margin_Large_Top_Size"
+                android:background="@drawable/circular_portrait"
+                android:gravity="center"
+                android:text="@string/sign_up_button"
+                android:textColor="@color/white"
+                android:textSize="@dimen/sign_size" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

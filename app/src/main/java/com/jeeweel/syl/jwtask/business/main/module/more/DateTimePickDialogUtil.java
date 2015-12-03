@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.jeeweel.syl.lib.api.core.otto.OttoBus;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -35,7 +38,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
 
     public void init(DatePicker datePicker) {
         Calendar calendar = Calendar.getInstance();
-        if (!(null == initDateTime || "".equals(initDateTime))) {
+        if (!(null == initDateTime || "".equals(initDateTime))&&isValidDate(initDateTime)) {
             calendar = this.getCalendarByInintData(initDateTime);
         } else {
             initDateTime = calendar.get(Calendar.YEAR) + "年"
@@ -46,6 +49,19 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
         datePicker.init(calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), this);
+    }
+
+    public static boolean isValidDate(String str) {
+        boolean convertSuccess=true;// 指定日期格式为四位年/两位月份/两位日期，注意yyyy/MM/dd区分大小写；
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {// 设置lenient为false. 否则SimpleDateFormat会比较宽松地验证日期，比如2007/02/29会被接受，并转换成2007/03/01
+            format.setLenient(false);
+            format.parse(str);
+        } catch (ParseException e) {// e.printStackTrace();
+        // 如果throw java.text.ParseException或者NullPointerException，就说明格式不对
+            convertSuccess=false;
+        }
+        return convertSuccess;
     }
 
     /**
@@ -66,12 +82,14 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
                 .setView(dateTimeLayout)
                 .setPositiveButton("设置", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        inputDate.setText(dateTime);
+                        if (StrUtils.IsNotEmpty(dateTime)) {
+                            OttoBus.getDefault().post(new ActivityMsgEvent("dateTimePick",dateTime));
+                        }
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        inputDate.setText("");
+
                     }
                 }).show();
 
@@ -86,7 +104,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
 
         calendar.set(datePicker.getYear(), datePicker.getMonth(),
                 datePicker.getDayOfMonth());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
         dateTime = sdf.format(calendar.getTime());
         ad.setTitle(dateTime);
@@ -103,13 +121,14 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
         Calendar calendar = Calendar.getInstance();
 
         // 将初始日期时间2012年07月02日 拆分成年 月 日
-        String date = spliteString(initDateTime, "日", "index", "front"); // 日期
-
-        String yearStr = spliteString(date, "年", "index", "front"); // 年份
-        String monthAndDay = spliteString(date, "年", "index", "back"); // 月日
-
-        String monthStr = spliteString(monthAndDay, "月", "index", "front"); // 月
-        String dayStr = spliteString(monthAndDay, "月", "index", "back"); // 日
+        int i=initDateTime.lastIndexOf("-");
+        String dayStr=initDateTime.substring(i+1);
+        initDateTime=initDateTime.substring(0,i);
+        i=initDateTime.lastIndexOf("-");
+        String monthStr=initDateTime.substring(i+1);
+        initDateTime=initDateTime.substring(0,i);
+        i=initDateTime.lastIndexOf("-");
+        String yearStr=initDateTime.substring(i + 1);
 
         int currentYear = Integer.valueOf(yearStr.trim()).intValue();
         int currentMonth = Integer.valueOf(monthStr.trim()).intValue() - 1;
@@ -118,35 +137,4 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
         calendar.set(currentYear, currentMonth, currentDay);
         return calendar;
     }
-
-    /**
-     * 截取子串
-     *
-     * @param srcStr
-     *            源串
-     * @param pattern
-     *            匹配模式
-     * @param indexOrLast
-     * @param frontOrBack
-     * @return
-     */
-    public static String spliteString(String srcStr, String pattern,
-                                      String indexOrLast, String frontOrBack) {
-        String result = "";
-        int loc = -1;
-        if (indexOrLast.equalsIgnoreCase("index")) {
-            loc = srcStr.indexOf(pattern); // 取得字符串第一次出现的位置
-        } else {
-            loc = srcStr.lastIndexOf(pattern); // 最后一个匹配串的位置
-        }
-        if (frontOrBack.equalsIgnoreCase("front")) {
-            if (loc != -1)
-                result = srcStr.substring(0, loc); // 截取子串
-        } else {
-            if (loc != -1)
-                result = srcStr.substring(loc + 1, srcStr.length()); // 截取子串
-        }
-        return result;
-    }
-
 }

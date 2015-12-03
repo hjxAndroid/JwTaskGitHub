@@ -13,31 +13,30 @@
             android:id="@+id/lineUsers"
             android:layout_width="match_parent"
             android:layout_height="@dimen/user_Layout_Height"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@drawable/shape_li"
             android:clickable="true"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_user_picture"
+                android:id="@+id/tv_user_head"
+                style="@style/text_nomor_style"
                 android:layout_width="@dimen/circle"
                 android:layout_height="@dimen/circle"
                 android:layout_margin="@dimen/margin_Size"
                 android:background="@drawable/circular_portrait"
                 android:gravity="center"
                 android:text="dhh"
-                android:textColor="@color/white"
-                android:textSize="@dimen/textSize_list" />
+                android:textColor="@color/white" />
 
             <TextView
-                android:id="@+id/tv_head"
+                android:id="@+id/tv_user_name"
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/margin_Size"
                 android:gravity="center"
-                android:text="dhh"
-                android:textSize="@dimen/textSize_list" />
+                android:text="dhh" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,9 +62,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/double_Part"
-            android:layout_marginTop="@dimen/margin_Top_Size"
-            android:background="@color/white1"
-            android:orientation="horizontal">
+            android:background="@drawable/settings_mid_select"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -141,17 +140,16 @@
             android:id="@+id/lineCollect"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@drawable/shape_li"
             android:clickable="true">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/collect"
-                android:textSize="@dimen/itemSize" />
+                android:text="@string/collect" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -173,17 +171,16 @@
             android:id="@+id/lineExperience"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@drawable/shape_li"
             android:clickable="true">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/experience"
-                android:textSize="@dimen/itemSize" />
+                android:text="@string/experience" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -204,7 +201,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/three_Part"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@color/white1"
             android:orientation="vertical">
 
@@ -217,12 +213,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/push"
-                    android:textSize="@dimen/itemSize" />
+                    android:text="@string/push" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -242,8 +238,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_Top_Size"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_fgx" />
 
             <LinearLayout
@@ -255,12 +250,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/service"
-                    android:textSize="@dimen/itemSize" />
+                    android:text="@string/service" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -280,8 +275,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="@dimen/margin_Top_Size"
+                android:layout_height="0.5dp"
                 android:background="@color/gray_fgx" />
 
             <LinearLayout
@@ -293,12 +287,12 @@
                 android:clickable="true">
 
                 <TextView
+                    style="@style/text_nomor_style"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/res"
-                    android:textSize="@dimen/itemSize" />
+                    android:text="@string/res" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -321,18 +315,16 @@
             android:id="@+id/lineAdervise"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
-            android:layout_marginBottom="@dimen/margin_Top_Size"
-            android:layout_marginTop="@dimen/margin_Top_Size"
             android:background="@drawable/shape_li"
             android:clickable="true">
 
             <TextView
+                style="@style/text_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:text="@string/setControl"
-                android:textSize="@dimen/itemSize" />
+                android:text="@string/setControl" />
 
             <LinearLayout
                 android:layout_width="match_parent"

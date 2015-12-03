@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ios7red">#FF3B30</color>
+    <color name="ios7orange">#FF9500</color>
+    <color name="ios7yellow">#FFCC00</color>
+    <color name="ios7green">#4CD964</color>
+    <color name="ios7purple">#5856D6</color>
+    <color name="ios7pink">#FF2D55</color>
+    <color name="ios7gray">#8E8E93</color>
+    <color name="ios7lightgray">#C7C7CC</color>
+    <color name="ios7black">#1F1F21</color>
+    <color name="ios7highred">#FF1300</color>
+    <color name="ios7lightpink">#F7F7F7</color>
+</resources>
