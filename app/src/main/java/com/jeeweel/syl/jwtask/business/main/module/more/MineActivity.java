@@ -31,7 +31,7 @@ public class MineActivity extends JwActivity {
         setTitle(getString(R.string.mineinformation));
 
         users  = JwAppAplication.getInstance().users;
-        birthday = JwDateUtils.ConverToString(users.getBirthday());
+       // birthday = JwDateUtils.ConverToString(users.getBirthday());
         Logv("qwqwqw%%%" + birthday);
     }
 

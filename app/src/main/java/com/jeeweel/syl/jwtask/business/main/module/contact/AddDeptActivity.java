@@ -56,6 +56,9 @@ public class AddDeptActivity extends JwActivity {
     List<Friend> friends;
 
     private String orgname = "";
+
+    private String org_code="";
+
     private String deptName = "";
 
     private Users users;
@@ -68,8 +71,9 @@ public class AddDeptActivity extends JwActivity {
         setContentView(R.layout.activity_add_group);
         setTitle("创建团队");
         orgname = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        org_code = getIntent().getStringExtra("org_code");
         ButterKnife.bind(this);
-        jCloudDB = JwAppAplication.getInstance().jCloudDB;
+        jCloudDB = JwAppAplication.getInstance().getjCloudDB();
         initView();
     }
 
@@ -137,7 +141,13 @@ public class AddDeptActivity extends JwActivity {
             String result = "1";
             //将组织，团队，和成员保存到数据库
             try {
-                String orgUnid = Utils.getUUid();
+                String orgUnid = "";
+                if(StrUtils.IsNotEmpty(org_code)){
+                    orgUnid = org_code;
+                }else {
+                    orgUnid = Utils.getUUid();
+                }
+
                 String deptUnid = Utils.getUUid();
 
                 Friend myfriend = new Friend();

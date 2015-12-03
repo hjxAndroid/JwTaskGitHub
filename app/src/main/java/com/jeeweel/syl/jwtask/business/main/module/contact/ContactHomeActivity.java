@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
+import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
@@ -133,13 +135,35 @@ public class ContactHomeActivity extends JwActivity {
                         }
                     }
 
-                    ExpandableAdapter expandableAdapter = new ExpandableAdapter(getMy(), groups);
+                    final ExpandableAdapter expandableAdapter = new ExpandableAdapter(getMy(), groups);
                     elContact.setAdapter(expandableAdapter);
 
                     for (int i = 0; i < expandableAdapter.getGroupCount(); i++) {
                         elContact.expandGroup(i);
                     }
 
+                    elContact.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+                        @Override
+                        public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
+                            Userdept userdept = expandableAdapter.getList().get(groupPosition).getChilds().get(childPosition);
+                            JwStartActivity(DeptUsersListActivity.class,userdept);
+                            return true;
+                        }
+                    });
+
+                    elContact.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                        @Override
+                        public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
+                            Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
+
+                            Intent intent = new Intent(getMy(),AddDeptActivity.class);
+                            intent.putExtra(StaticStrUtils.baseItem,orgunit.getOrg_name());
+                            intent.putExtra("org_code",orgunit.getOrg_code());
+                            startActivity(intent);
+
+                            return true;
+                        }
+                    });
                 }
             } else {
                 ToastShow("数据获取出错");

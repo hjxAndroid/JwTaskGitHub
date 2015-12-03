@@ -1,32 +1,61 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:flatui="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    tools:context="com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddActivity">
+    android:background="@color/main_bg_color"
+    tools:context="com.jeeweel.syl.jwtask.business.main.module.contact.AddDeptActivity">
 
-    <com.cengalabs.flatui.views.FlatEditText
-        android:id="@+id/et_phone"
+
+    <LinearLayout android:id="@+id/li"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/one_line_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/space_frame"
+        android:layout_marginRight="@dimen/space_frame"
+        android:layout_marginTop="@dimen/space_frame"
+        android:background="@drawable/settings_up_select"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginLeft="5.0dip"
+            android:layout_marginTop="10.0dip"
+            android:text="好友电话:"
+            android:textColor="@color/list_text_name_color"
+            android:textSize="@dimen/textSize_normal" />
+
+        <EditText
+            android:id="@+id/et_phone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:layout_weight="1.0"
+            android:background="@null"
+            android:hint="请输入好友电话号码"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColorHint="@color/text_gray"
+            android:textSize="@dimen/textSize_normal" />
+
+    </LinearLayout>
+
+
+
+
+
+
+    <Button android:id="@+id/bt_add"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_margin="10dip"
-        android:maxLines="1"
-        android:gravity="center_vertical"
-        android:hint="请输入好友电话号码"
-        style="@style/text_nomor_style"
-        android:includeFontPadding="true"
-        flatui:fl_fieldStyle="fl_box"
-        flatui:fl_theme="@array/sky" />
-
-    <com.cengalabs.flatui.views.FlatButton
-        android:id="@+id/button_add"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="添加"
-        style="@style/text_nomor_style"
-        android:layout_margin="10dp"
-        flatui:fl_theme="@array/sky"
-        flatui:fl_textAppearance="fl_light" />
-
-</LinearLayout>
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/li"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_large"
+        android:background="@drawable/bg_button"
+        android:text="添加"/>
+</RelativeLayout>

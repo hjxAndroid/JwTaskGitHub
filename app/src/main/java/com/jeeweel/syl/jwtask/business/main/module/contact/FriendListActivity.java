@@ -10,6 +10,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
@@ -69,7 +70,7 @@ public class FriendListActivity extends JwListActivity {
 
     private void initView(){
         MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("添加好友");
+        menuTextView.setText("添加");
         menuTextView.setTextColor(getResources().getColor(R.color.white));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +97,8 @@ public class FriendListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position){
-        Friend outBoundItem = (Friend)commonAdapter.getItem(position);
+        Friend friend = (Friend)commonAdapter.getItem(position);
+        JwStartActivity(FriendDetailActivity.class,friend.getFriend_name());
     }
 
     @Override
@@ -139,6 +141,7 @@ public class FriendListActivity extends JwListActivity {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Friend.class,
                                 "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" +" limit "+pageStart+","+pageEnd);
+                        mListItems.clear();
                     }else{
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Friend.class,

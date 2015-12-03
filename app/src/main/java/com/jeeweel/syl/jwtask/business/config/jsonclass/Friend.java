@@ -90,7 +90,7 @@ public class Friend {
      * 存储是否已经选中
      * @return
      */
-    private boolean choose = false;
+    private String choose = "0";
 
     public int getMid() {
         return mid;
@@ -220,11 +220,11 @@ public class Friend {
         this.send_state = send_state;
     }
 
-    public boolean isChoose() {
+    public String getChoose() {
         return choose;
     }
 
-    public void setChoose(boolean choose) {
+    public void setChoose(String choose) {
         this.choose = choose;
     }
 }
