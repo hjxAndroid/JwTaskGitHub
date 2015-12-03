@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
+import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,4 +41,13 @@ public class Utils {
         return uuid;
     }
 
+    /**
+     * 获取当前系统小时和分钟
+     */
+    public static String getHourAndM(){
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+        return hour+":"+minute;
+    }
 }

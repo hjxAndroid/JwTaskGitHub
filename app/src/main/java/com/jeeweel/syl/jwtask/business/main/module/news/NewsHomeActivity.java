@@ -25,6 +25,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -74,11 +75,11 @@ public class NewsHomeActivity extends JwActivity {
         setContentView(R.layout.activity_news_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.news));
-        /*getData();*/
+        getData();
     }
 
-    /*private void getData() {
-        String time = DateHelper.getHourAndM();
+    private void getData() {
+        String time = Utils.getHourAndM();
         tvFriendTime.setText(time);
         tvTaskTime.setText(time);
         tvSignTime.setText(time);
@@ -90,7 +91,7 @@ public class NewsHomeActivity extends JwActivity {
             showLoading();
             new FinishRefresh(getMy()).execute(myphone);
         }
-    }*/
+    }
 
     /**
      * 保存到数据库

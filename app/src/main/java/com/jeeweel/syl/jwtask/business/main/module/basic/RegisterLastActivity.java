@@ -19,6 +19,8 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
+import net.tsz.afinal.FinalDb;
+
 import java.util.List;
 
 import api.util.Utils;
@@ -36,7 +38,7 @@ public class RegisterLastActivity extends JwActivity {
     Button btLogin;
 
     private String phone = "";
-
+    List<Users> list = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,6 @@ public class RegisterLastActivity extends JwActivity {
 
             JCloudDB jCloudDB = new JCloudDB();
 
-            List<Users> list = null;
             try {
                 list = jCloudDB.findAllByWhere(Users.class,
                         "username=" + StrUtils.QuotedStr(usersItem.getUsername()));
@@ -117,6 +118,13 @@ public class RegisterLastActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
               if(result.equals("1")){
+
+                  Users users = list.get(0);
+                  FinalDb finalDb = JwAppAplication.getInstance().finalDb;
+                  finalDb.deleteAll(Users.class);
+                  finalDb.save(users);
+                  JwAppAplication.getInstance().setUsers(users);
+
                   SharedPreferencesUtils.save(context, "autologin", true);
                   JwStartActivity(TabHostActivity.class);
               }else{
