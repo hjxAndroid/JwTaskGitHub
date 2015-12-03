@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -19,20 +20,26 @@ import butterknife.OnClick;
 
 public class MineEditnameActivity extends JwActivity {
     String phone;
-    EditText et_name;
+    EditText et;
     String str1;
     Users users;
+    String strtitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine_editname);
         ButterKnife.bind(this);
-        setTitle(getString(R.string.nickname));
+        Intent intent=getIntent();
+        strtitle=intent.getStringExtra("title");
+        setTitle(strtitle);
+        et= (EditText) findViewById(R.id.et_word);
         users  = JwAppAplication.getInstance().users;
-        String nickname=users.getNickname();
-        et_name= (EditText) findViewById(R.id.et_name);
-        et_name.setText(nickname);
+        if(strtitle.equals("设置昵称")){
+            et.setText(users.getNickname());
+        }else if(strtitle.equals("设置邮箱")){
+            et.setText("");
+        }
     }
 
     @Override
@@ -96,12 +103,12 @@ public class MineEditnameActivity extends JwActivity {
     @OnClick(R.id.btnsub)
     void editClick() {
         phone = users.getUsername();
-        str1 = et_name.getText().toString();
+        str1 = et.getText().toString();
         new saveNickName(getMy()).execute();
     }
 
     @OnClick(R.id.btndel)
     void delclick(){
-        et_name.setText("");
+        et.setText("");
     }
 }

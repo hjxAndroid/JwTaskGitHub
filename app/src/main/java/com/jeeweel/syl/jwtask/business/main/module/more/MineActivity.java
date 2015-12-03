@@ -100,7 +100,18 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.LinearLayout01)
     void editNameClick() {
-        JwStartActivity(MineEditnameActivity.class);
+        Intent intent=new Intent();
+        intent.putExtra("title", "设置昵称");
+        intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
+    }
+
+    @OnClick(R.id.ll_email)
+    void editEmailClick() {
+        Intent intent=new Intent();
+        intent.putExtra("title", "设置邮箱");
+        intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
     }
 
     @OnClick(R.id.LinearLayout04)
