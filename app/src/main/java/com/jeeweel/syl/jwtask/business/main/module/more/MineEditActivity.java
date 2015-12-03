@@ -71,7 +71,13 @@ public class MineEditActivity extends JwActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
         protected String doInBackground(String... params) {
+            String result = "1";
             String sql="";
             if(strtitle.equals("特长、兴趣")){
                 users.setStrong_point(str1);
@@ -83,14 +89,20 @@ public class MineEditActivity extends JwActivity {
             try{
                 CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
-
+                result = "0";
             }
-            return null;
+            return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
-
+            hideLoading();
+            if(result.equals("1")){
+                JwAppAplication.getFinalDb().update(users);
+            }else{
+                ToastShow("数据保存失败");
+            }
+            MineEditActivity.this.finish();
         }
     }
 
@@ -99,7 +111,6 @@ public class MineEditActivity extends JwActivity {
         phone= users.getUsername();
         str1 = et.getText().toString();
         new saveData(getMy()).execute();
-        this.finish();
     }
 
 }

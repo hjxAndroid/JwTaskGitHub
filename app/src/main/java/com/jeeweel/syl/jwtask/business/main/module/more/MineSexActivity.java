@@ -7,8 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
@@ -53,18 +51,31 @@ public class MineSexActivity extends JwActivity {
         }
 
         @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
         protected String doInBackground(String... params) {
+            String result = "1";
             String sql="UPDATE users SET sex='"+str1+"'WHERE username ='"+phone+"'";
             try{
                 CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
-
+                result = "0";
             }
-            return null;
+            return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            hideLoading();
+            if(result.equals("1")){
+                users.setSex(str1);
+                JwAppAplication.getFinalDb().update(users);
+            }else{
+                ToastShow("数据保存失败");
+            }
             MineSexActivity.this.finish();
         }
     }
@@ -94,14 +105,12 @@ public class MineSexActivity extends JwActivity {
     @OnClick(R.id.v_man)
     void manClick() {
         str1 = "男";
-        users.setSex(str1);
         new saveSex(getMy()).execute();
     }
 
     @OnClick(R.id.v_woman)
     void womanClick() {
         str1 = "女";
-        users.setSex(str1);
         new saveSex(getMy()).execute();
     }
 }
