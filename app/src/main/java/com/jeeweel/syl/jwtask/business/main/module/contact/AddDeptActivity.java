@@ -69,7 +69,7 @@ public class AddDeptActivity extends JwActivity {
         setTitle("创建团队");
         orgname = getIntent().getStringExtra(StaticStrUtils.baseItem);
         ButterKnife.bind(this);
-        jCloudDB = JwAppAplication.getInstance().jCloudDB;
+        jCloudDB = JwAppAplication.getInstance().getjCloudDB();
         initView();
     }
 
