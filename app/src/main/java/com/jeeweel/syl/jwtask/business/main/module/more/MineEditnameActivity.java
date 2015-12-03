@@ -10,6 +10,7 @@ import android.widget.EditText;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -32,13 +33,14 @@ public class MineEditnameActivity extends JwActivity {
         ButterKnife.bind(this);
         Intent intent=getIntent();
         strtitle=intent.getStringExtra("title");
+        et= (EditText) findViewById(R.id.et_name);
+        users = JwAppAplication.getInstance().users;
+        phone = users.getUsername();
         setTitle(strtitle);
-        et= (EditText) findViewById(R.id.et_word);
-        users  = JwAppAplication.getInstance().users;
         if(strtitle.equals("设置昵称")){
             et.setText(users.getNickname());
         }else if(strtitle.equals("设置邮箱")){
-            et.setText("");
+            et.setText(users.getEmail());
         }
     }
 
@@ -78,7 +80,14 @@ public class MineEditnameActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             String result = "1";
-            String sql="UPDATE users SET nickname='"+str1+"'WHERE username ='"+phone+"'";
+            String sql="";
+            if(strtitle.equals("设置昵称")){
+                users.setNickname(str1);
+                sql="UPDATE users SET nickname='"+str1+"'WHERE username ='"+phone+"'";
+            }else if(strtitle.equals("设置邮箱")){
+                users.setEmail(str1);
+                sql="UPDATE users SET email='"+str1+"'WHERE username ='"+phone+"'";
+            }
             try{
                 CloudDB.execSQL(sql);
             }catch (CloudServiceException e){
@@ -91,7 +100,6 @@ public class MineEditnameActivity extends JwActivity {
         protected void onPostExecute(String result) {
             hideLoading();
             if(result.equals("1")){
-                users.setNickname(str1);
                 JwAppAplication.getFinalDb().update(users);
             }else{
                 ToastShow("数据保存失败");
@@ -100,14 +108,17 @@ public class MineEditnameActivity extends JwActivity {
         }
     }
 
-    @OnClick(R.id.btnsub)
+    @OnClick(R.id.btn_sub)
     void editClick() {
-        phone = users.getUsername();
         str1 = et.getText().toString();
-        new saveNickName(getMy()).execute();
+        if (StrUtils.IsNotEmpty(str1)) {
+            new saveNickName(getMy()).execute();
+        }else{
+            ToastShow("内容不能为空（T T）");
+        }
     }
 
-    @OnClick(R.id.btndel)
+    @OnClick(R.id.btn_del)
     void delclick(){
         et.setText("");
     }
