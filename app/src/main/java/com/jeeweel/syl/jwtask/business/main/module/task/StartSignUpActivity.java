@@ -71,7 +71,7 @@ public class StartSignUpActivity extends JwActivity {
     String sign_code;
     String userNick;
     List<Friend> friends;
-    List<Friend> friendList = new ArrayList<>();
+    List<Friend> friendList = new ArrayList<Friend>();
     private CommonAdapter commonAdapter;
     int dayOfWeek;
     Users user;
@@ -112,6 +112,11 @@ public class StartSignUpActivity extends JwActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
     @OnClick(R.id.line_start_sign_user)
     void personlInformation() {
         JwStartActivity(MineActivity.class);
@@ -137,9 +142,17 @@ public class StartSignUpActivity extends JwActivity {
             @Override
             public void convert(ViewHolder helper, Friend item) {
                 for (int i = 0; i < friendList.size(); i++) {
+                    friend = friendList.get(i);
                     if (i == friendList.size() - 1) {
                         ImageView ivAdd = helper.getImageView(R.id.iv_add);
                         ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
+                    } else {
+                        TextView tvCir = helper.getView(R.id.tv_cir);
+                        ImageView ivAdd = helper.getImageView(R.id.iv_add);
+                        tvCir.setText(friend.getFriend_nickname());
+                        ivAdd.setVisibility(View.GONE);
+                        tvCir.setVisibility(View.VISIBLE);
+
                     }
                 }
                 helper.setText(R.id.tv_name, item.getFriend_name());
