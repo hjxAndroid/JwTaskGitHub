@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -63,6 +64,7 @@ public class StartSignUpActivity extends JwActivity {
 
     String userPic;
     String userName;
+    String userPhone;
     String tvStartWeek;
     String tvStartDate;
     String tvStartTime;
@@ -99,13 +101,15 @@ public class StartSignUpActivity extends JwActivity {
             user = list.get(0);
         }
         userNick = user.getNickname();
-        userName = user.getUsername();
+        userPhone = user.getUsername();
         if (StrUtils.IsNotEmpty(userNick)) {
-            userPic = userNick.substring(userNick.length() - 2, userName.length() - 1);
+            userPic = userNick.substring(userNick.length() - 2, userNick.length());
         } else {
             userPic = "";
         }
-        userName = StrUtils.IfNull(userNick, userName);
+        userName = StrUtils.IfNull(userNick, userPhone);
+        tvUserPic.setText(userPic);
+        tvUserName.setText(userName);
         sign.setProuser_name(userName);
         sign.setProuser_code(user.getUser_code());
 
@@ -115,11 +119,6 @@ public class StartSignUpActivity extends JwActivity {
     @Override
     protected void onResume() {
         super.onResume();
-    }
-
-    @OnClick(R.id.line_start_sign_user)
-    void personlInformation() {
-        JwStartActivity(MineActivity.class);
     }
 
     @OnClick(R.id.start_sign_button)
@@ -141,47 +140,32 @@ public class StartSignUpActivity extends JwActivity {
         commonAdapter = new CommonAdapter<Friend>(self, friendList, R.layout.item_image_view) {
             @Override
             public void convert(ViewHolder helper, Friend item) {
-                for (int i = 0; i < friendList.size(); i++) {
-                    friend = friendList.get(i);
-                    if (i == friendList.size() - 1) {
-                        ImageView ivAdd = helper.getImageView(R.id.iv_add);
-                        ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
-                    } else {
-                        TextView tvCir = helper.getView(R.id.tv_cir);
-                        ImageView ivAdd = helper.getImageView(R.id.iv_add);
-                        tvCir.setText(friend.getFriend_nickname());
-                        ivAdd.setVisibility(View.GONE);
-                        tvCir.setVisibility(View.VISIBLE);
-
-                    }
+                int position = helper.getPosition();
+                TextView tvCir = helper.getView(R.id.tv_cir);
+                ImageView ivAdd = helper.getImageView(R.id.iv_add);
+                if (position == friendList.size()-1) {
+                    ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
+                    ivAdd.setVisibility(View.VISIBLE);
+                    tvCir.setVisibility(View.GONE);
+                } else {
+                    tvCir.setVisibility(View.VISIBLE);
+                    ivAdd.setVisibility(View.GONE);
+                    tvCir.setText(item.getFriend_nickname());
                 }
-                helper.setText(R.id.tv_name, item.getFriend_name());
-                helper.setText(R.id.tv_nick_name, item.getFriend_nickname());
             }
         };
         gridViewStart.setAdapter(commonAdapter);
-        /*gridViewStart.setOnItemClickListener(new onGridViewStartItemClick2());*/
     }
-
-    /*class onGridViewStartItemClick2 implements OnItemClickListener {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-        }
-    }*/
 
     @OnItemClick(R.id.grid_view_start)
     void onGridViewStartItemClick(int pos) {
-        if (pos == friendList.size() - 1) {
+        if (friendList.size() == 8) {
+            CroutonShowALERT("最多只能选择8个");
+        } else if (pos == friendList.size() - 1) {
             JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
         }
-
     }
 
-    /*@OnClick(R.id.fr_add)
-    void nextClick() {
-        JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
-    }*/
 
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
@@ -189,7 +173,18 @@ public class StartSignUpActivity extends JwActivity {
         if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(msg) && msg.equals(Contants.sign)) {
             String json = activityMsgEvent.getParam();
             friends = JwJSONUtils.getParseArray(json, Friend.class);
+
+            if (friendList.size() == 1) {
+                friendList.remove(0);
+            } else {
+                friendList.remove(friendList.size() - 1);
+            }
+
             friendList.addAll(friends);
+
+            Friend friend = new Friend();
+            friendList.add(friend);
+
             commonAdapter.notifyDataSetChanged();
         }
     }
