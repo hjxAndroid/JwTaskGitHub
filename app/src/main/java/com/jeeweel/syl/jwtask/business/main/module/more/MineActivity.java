@@ -54,15 +54,26 @@ public class MineActivity extends JwActivity {
     protected void onResume() {
         super.onResume();
         str = users.getNickname();
-        tv_nickname.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_nickname.setText(str);
+        }
         str = users.getSex();
-        tv_sex.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_sex.setText(str);
+        }
         str= users.getStrong_point();
-        tv_strong_point.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_strong_point.setText(str);
+        }
         str = users.getSign();
-        tv_sign.setText(str);
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_sign.setText(str);
+        }
         birthday = users.getBirthday();
-        tv_birthday.setText(birthday);
+        if (StrUtils.IsNotEmpty(birthday)) {
+            tv_birthday.setText(birthday);
+        }
+
     }
 
     @Override
