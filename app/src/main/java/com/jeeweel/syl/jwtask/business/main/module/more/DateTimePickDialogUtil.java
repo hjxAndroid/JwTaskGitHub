@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.jeeweel.syl.lib.api.core.otto.OttoBus;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -35,7 +38,7 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
 
     public void init(DatePicker datePicker) {
         Calendar calendar = Calendar.getInstance();
-        if (!(null == initDateTime || "".equals(initDateTime))) {
+        if (!(null == initDateTime || "".equals(initDateTime))&&isValidDate(initDateTime)) {
             calendar = this.getCalendarByInintData(initDateTime);
         } else {
             initDateTime = calendar.get(Calendar.YEAR) + "年"
@@ -46,6 +49,19 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
         datePicker.init(calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH), this);
+    }
+
+    public static boolean isValidDate(String str) {
+        boolean convertSuccess=true;// 指定日期格式为四位年/两位月份/两位日期，注意yyyy/MM/dd区分大小写；
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        try {// 设置lenient为false. 否则SimpleDateFormat会比较宽松地验证日期，比如2007/02/29会被接受，并转换成2007/03/01
+            format.setLenient(false);
+            format.parse(str);
+        } catch (ParseException e) {// e.printStackTrace();
+        // 如果throw java.text.ParseException或者NullPointerException，就说明格式不对
+            convertSuccess=false;
+        }
+        return convertSuccess;
     }
 
     /**
@@ -66,12 +82,14 @@ public class DateTimePickDialogUtil implements DatePicker.OnDateChangedListener{
                 .setView(dateTimeLayout)
                 .setPositiveButton("设置", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        inputDate.setText(dateTime);
+                        if (StrUtils.IsNotEmpty(dateTime)) {
+                            OttoBus.getDefault().post(new ActivityMsgEvent("dateTimePick",dateTime));
+                        }
                     }
                 })
                 .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        inputDate.setText("");
+
                     }
                 }).show();
 
