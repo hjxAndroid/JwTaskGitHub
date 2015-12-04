@@ -7,7 +7,6 @@
 
     <View style="@style/new_item_divider" />
     <ScrollView
-        android:id="@+id/ScrollView01"
         android:layout_height="match_parent"
         android:layout_width="match_parent">
         <LinearLayout
@@ -23,6 +22,7 @@
                 android:orientation="vertical">
                 <View style="@style/new_item_divider"/>
                 <LinearLayout
+                    android:id="@+id/ll_user_head"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_size"
@@ -38,6 +38,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="right" >
                         <TextView
+                            android:id="@+id/tv_user_head"
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:text="姓名"
@@ -58,7 +59,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/margin_size"
-                    android:id="@+id/LinearLayout01"
+                    android:id="@+id/ll_nickname"
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="wrap_content"
@@ -149,7 +150,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/LinearLayout04"
+                    android:id="@+id/ll_sex"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -181,7 +182,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/LinearLayout05"
+                    android:id="@+id/ll_birthday"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -243,7 +244,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/LinearLayout07"
+                    android:id="@+id/ll_strong_point"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -275,7 +276,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/LinearLayout08"
+                    android:id="@+id/ll_sign"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"

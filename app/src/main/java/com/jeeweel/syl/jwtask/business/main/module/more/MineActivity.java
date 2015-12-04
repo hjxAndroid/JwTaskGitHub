@@ -28,6 +28,8 @@ public class MineActivity extends JwActivity {
     String birthday;
     String str;
 
+    @Bind(R.id.tv_user_head)
+    TextView tv_user_head;
     @Bind(R.id.tv_nickname)
     TextView tv_nickname;
     @Bind(R.id.tv_mail)
@@ -58,6 +60,10 @@ public class MineActivity extends JwActivity {
         str = users.getNickname();
         if (StrUtils.IsNotEmpty(str)) {
             tv_nickname.setText(str);
+            if (!StrUtils.IsNotEmpty(users.getPhoto_code())) {
+                str = str.substring(str.length() - 2, str.length());
+                tv_user_head.setText(str);
+            }
         }
         str = users.getEmail();
         if (StrUtils.IsNotEmpty(str)) {
@@ -108,7 +114,7 @@ public class MineActivity extends JwActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.LinearLayout01)
+    @OnClick(R.id.ll_nickname)
     void editNameClick() {
         Intent intent=new Intent();
         intent.putExtra("title", "设置昵称");
@@ -124,7 +130,7 @@ public class MineActivity extends JwActivity {
         JwStartActivity(intent);
     }
 
-    @OnClick(R.id.LinearLayout04)
+    @OnClick(R.id.ll_sex)
     void editMySexClick() {
         JwStartActivity(MineSexActivity.class);
     }
@@ -166,14 +172,14 @@ public class MineActivity extends JwActivity {
         }
     }
 
-    @OnClick(R.id.LinearLayout05)
+    @OnClick(R.id.ll_birthday)
     void editMyBirthdayClick() {
         DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                 MineActivity.this, birthday);
         dateTimePicKDialog.dateTimePicKDialog(tv_birthday);
     }
 
-    @OnClick(R.id.LinearLayout07)
+    @OnClick(R.id.ll_strong_point)
     void editSpecialtyClick() {
         Intent intent=new Intent();
         intent.putExtra("title", "特长、兴趣");
@@ -181,7 +187,7 @@ public class MineActivity extends JwActivity {
         JwStartActivity(intent);
     }
 
-    @OnClick(R.id.LinearLayout08)
+    @OnClick(R.id.ll_sign)
     void editSignatureClick() {
         Intent intent=new Intent();
         intent.putExtra("title", "个性签名");

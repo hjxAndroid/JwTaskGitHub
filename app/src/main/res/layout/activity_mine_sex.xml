@@ -22,6 +22,7 @@
             android:layout_height="wrap_content" />
         <ImageView
             android:id="@+id/iv_selm"
+            android:visibility="invisible"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_alignParentRight="true"
@@ -46,6 +47,7 @@
             android:layout_height="wrap_content" />
         <ImageView
             android:id="@+id/iv_selw"
+            android:visibility="invisible"
             android:layout_width="15dp"
             android:layout_height="15dp"
             android:layout_alignParentRight="true"
