@@ -15,4 +15,5 @@
     <dimen name="check_sign">20sp</dimen>
     <dimen name="time_space">5dp</dimen>
     <dimen name="text_lrk_size_normal">12.0sp</dimen>
+    <dimen name="signed_user">120dp</dimen>
 </resources>

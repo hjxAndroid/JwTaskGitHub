@@ -73,6 +73,7 @@ public class StartSignUpActivity extends JwActivity {
     String etStartContext;
     String sign_code;
     String userNick;
+    String buddyCode;
     List<Friend> friends;
     List<Friend> friendList = new ArrayList<Friend>();
     private CommonAdapter commonAdapter;
@@ -94,7 +95,7 @@ public class StartSignUpActivity extends JwActivity {
         friend = new Friend();
         friendList.add(friend);
 
-        //全局获取sign_codeF
+        //全局获取sign_code
         sign_code = Utils.getUUid();
         sign.setSign_code(sign_code);
         List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
@@ -126,10 +127,12 @@ public class StartSignUpActivity extends JwActivity {
     void startSign() {
         etStartTitle = etTitle.getText().toString();
         etStartContext = etContext.getText().toString();
+        buddyCode = saveFcode();
         if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
             sign.setSign_title(etStartTitle);
             sign.setSend_context(etStartContext);
             sign.setReceive_name("小李");
+            sign.setReceive_code(buddyCode);
             JwStartActivity(SignUpActivity.class);
         } else {
             CroutonShowALERT("内容或标题不能为空");
@@ -224,26 +227,6 @@ public class StartSignUpActivity extends JwActivity {
         tvTime.setText(tvStartTime);
     }
 
-    /*private void initSign() {
-        sign_code = Utils.getUUid();
-        sign.setSign_code(sign_code);
-        List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
-        if (list != null && list.size() > 0) {
-            user = list.get(0);
-        }
-        userNick = user.getNickname();
-        userName = user.getUsername();
-        if (StrUtils.IsNotEmpty(userNick)) {
-            userPic = userNick.substring(userNick.length() - 2, userName.length() - 1);
-        } else {
-            userPic = "";
-        }
-        userName = StrUtils.IfNull(userNick, userName);
-        sign.setProuser_name(userName);
-        sign.setProuser_code(user.getUser_code());
-
-    }*/
-
 
     private class saveSignInformaiton extends AsyncTask<String, Void, String> {
         private Context context;
@@ -269,5 +252,16 @@ public class StartSignUpActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
         }
+    }
+
+    private String saveFcode() {
+        String fCode = "";
+        for (int i = 0; i < friendList.size() - 1; i++) {
+            fCode = friendList.get(i).getFriend_code() + ",";
+        }
+        if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(fCode)) {
+            fCode = fCode.substring(0, fCode.length() - 1);
+        }
+        return fCode;
     }
 }
