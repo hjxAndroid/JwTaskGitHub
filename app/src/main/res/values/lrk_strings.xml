@@ -10,7 +10,7 @@
     <string name="weeks">星期四</string>
     <string name="current_time">当前时间</string>
     <string name="system_time">16:33</string>
-    <string name="sign_title">主题:</string>
+    <string name="item_sign_title">主题 :</string>
     <string name="start_sign_up_button">发起签到</string>
     <string name="home">是否到家请签到</string>
     <string name="localtion">地址地址地址</string>
@@ -25,5 +25,6 @@
     <string name="title_activity_start_sign_up">SignUpActivity</string>
     <string name="title_activity_setting">SettingActivity</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_sign_information">SignInformationActivity</string>
     <string name="receive_name">接收者</string>
 </resources>

@@ -16,6 +16,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.task.SignListActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
@@ -168,6 +169,11 @@ public class NewsHomeActivity extends JwActivity {
     @OnClick(R.id.rl_friend)
     void friendClick() {
         JwStartActivity(FriendAddListActivity.class);
+    }
+
+    @OnClick(R.id.rl_sign)
+    void signInformationClick() {
+        JwStartActivity(SignListActivity.class);
     }
 
     @Subscribe
