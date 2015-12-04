@@ -25,11 +25,13 @@ import butterknife.OnClick;
 public class MineActivity extends JwActivity {
     Users users;
     String phone;
-    String birthday; // 初始化开始时间
+    String birthday;
     String str;
 
     @Bind(R.id.tv_nickname)
     TextView tv_nickname;
+    @Bind(R.id.tv_mail)
+    TextView tv_mail;
     @Bind(R.id.tv_sex)
     TextView tv_sex;
     @Bind(R.id.tv_strong_point)
@@ -57,6 +59,10 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(str)) {
             tv_nickname.setText(str);
         }
+        str = users.getEmail();
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_mail.setText(str);
+        }
         str = users.getSex();
         if (StrUtils.IsNotEmpty(str)) {
             tv_sex.setText(str);
@@ -64,10 +70,14 @@ public class MineActivity extends JwActivity {
         str= users.getStrong_point();
         if (StrUtils.IsNotEmpty(str)) {
             tv_strong_point.setText(str);
+        }else {
+            tv_strong_point.setText("未设置");
         }
         str = users.getSign();
         if (StrUtils.IsNotEmpty(str)) {
             tv_sign.setText(str);
+        }else {
+            tv_sign.setText("未设置");
         }
         birthday = users.getBirthday();
         if (StrUtils.IsNotEmpty(birthday)) {
@@ -100,7 +110,18 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.LinearLayout01)
     void editNameClick() {
-        JwStartActivity(MineEditnameActivity.class);
+        Intent intent=new Intent();
+        intent.putExtra("title", "设置昵称");
+        intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
+    }
+
+    @OnClick(R.id.ll_email)
+    void editEmailClick() {
+        Intent intent=new Intent();
+        intent.putExtra("title", "设置邮箱");
+        intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
     }
 
     @OnClick(R.id.LinearLayout04)
