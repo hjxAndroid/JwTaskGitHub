@@ -26,6 +26,7 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -72,6 +73,7 @@ public class StartSignUpActivity extends JwActivity {
     String etStartContext;
     String sign_code;
     String userNick;
+    String buddyCode;
     List<Friend> friends;
     List<Friend> friendList = new ArrayList<Friend>();
     private CommonAdapter commonAdapter;
@@ -125,10 +127,12 @@ public class StartSignUpActivity extends JwActivity {
     void startSign() {
         etStartTitle = etTitle.getText().toString();
         etStartContext = etContext.getText().toString();
+        buddyCode = saveFcode();
         if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
             sign.setSign_title(etStartTitle);
             sign.setSend_context(etStartContext);
             sign.setReceive_name("小李");
+            sign.setReceive_code(buddyCode);
             JwStartActivity(SignUpActivity.class);
         } else {
             CroutonShowALERT("内容或标题不能为空");
@@ -143,7 +147,7 @@ public class StartSignUpActivity extends JwActivity {
                 int position = helper.getPosition();
                 TextView tvCir = helper.getView(R.id.tv_cir);
                 ImageView ivAdd = helper.getImageView(R.id.iv_add);
-                if (position == friendList.size()-1) {
+                if (position == friendList.size() - 1) {
                     ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
                     ivAdd.setVisibility(View.VISIBLE);
                     tvCir.setVisibility(View.GONE);
@@ -159,9 +163,7 @@ public class StartSignUpActivity extends JwActivity {
 
     @OnItemClick(R.id.grid_view_start)
     void onGridViewStartItemClick(int pos) {
-        if (friendList.size() == 8) {
-            CroutonShowALERT("最多只能选择8个");
-        } else if (pos == friendList.size() - 1) {
+        if (pos == friendList.size() - 1) {
             JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
         }
     }
@@ -225,26 +227,6 @@ public class StartSignUpActivity extends JwActivity {
         tvTime.setText(tvStartTime);
     }
 
-    /*private void initSign() {
-        sign_code = Utils.getUUid();
-        sign.setSign_code(sign_code);
-        List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
-        if (list != null && list.size() > 0) {
-            user = list.get(0);
-        }
-        userNick = user.getNickname();
-        userName = user.getUsername();
-        if (StrUtils.IsNotEmpty(userNick)) {
-            userPic = userNick.substring(userNick.length() - 2, userName.length() - 1);
-        } else {
-            userPic = "";
-        }
-        userName = StrUtils.IfNull(userNick, userName);
-        sign.setProuser_name(userName);
-        sign.setProuser_code(user.getUser_code());
-
-    }*/
-
 
     private class saveSignInformaiton extends AsyncTask<String, Void, String> {
         private Context context;
@@ -270,5 +252,16 @@ public class StartSignUpActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
         }
+    }
+
+    private String saveFcode() {
+        String fCode = "";
+        for (int i = 0; i < friendList.size() - 1; i++) {
+            fCode = friendList.get(i).getFriend_code() + ",";
+        }
+        if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(fCode)) {
+            fCode = fCode.substring(0, fCode.length() - 1);
+        }
+        return fCode;
     }
 }

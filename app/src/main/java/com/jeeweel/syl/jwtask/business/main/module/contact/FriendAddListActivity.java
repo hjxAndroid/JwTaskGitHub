@@ -121,7 +121,12 @@ public class FriendAddListActivity extends JwListActivity {
     public void changeState(Friend item){
         String phone = item.getUser_name();
         String friendphone = item.getFriend_name();
-        new changeTask(getMy()).execute(phone,friendphone);
+        if(StrUtils.IsNotEmpty(phone)&&StrUtils.IsNotEmpty(friendphone)){
+            new changeTask(getMy()).execute(phone,friendphone);
+        }else{
+            ToastShow("好有信息不完全");
+        }
+
     }
     @Override
     public void onListItemClick(int position){
@@ -167,12 +172,12 @@ public class FriendAddListActivity extends JwListActivity {
                     if(mode == 0 ){
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and send_state=0 limit "+pageStart+","+pageEnd);
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and send_state=0 ORDER BY create_time DESC limit "+pageStart+","+pageEnd);
                         mListItems.clear();
                     }else{
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and send_state=0 limit "+pageStart+","+pageEnd);
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and send_state=0 ORDER BY create_time DESC limit "+pageStart+","+pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
@@ -240,6 +245,7 @@ public class FriendAddListActivity extends JwListActivity {
                 if(null!=users){
                     String myphone = params[0].toString();
                     String friendphone = params[1].toString();
+
 
                     //改变自己为主体的好友表状态
                     String sql = "update friend set state = 2 where user_name =" + myphone;
