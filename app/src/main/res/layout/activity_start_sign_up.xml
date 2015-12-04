@@ -52,7 +52,7 @@
 
             <TextView
                 android:id="@+id/tv_week"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -64,7 +64,7 @@
 
             <TextView
                 android:id="@+id/tv_date"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -75,10 +75,9 @@
 
             <TextView
                 android:id="@+id/tv_current_time_des"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/time_space"
                 android:layout_toLeftOf="@+id/tv_time"
                 android:drawableLeft="@drawable/alm_cmail_meeting_time"
                 android:drawablePadding="@dimen/time_space"
@@ -87,11 +86,12 @@
 
             <TextView
                 android:id="@+id/tv_time"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/time_space"
+                android:layout_marginRight="@dimen/margin_Size"
                 android:text="@string/system_time" />
 
         </RelativeLayout>
@@ -141,7 +141,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/add_space"
+            android:layout_height="wrap_content"
             android:background="@drawable/settings_mid_select"
             android:orientation="vertical">
 
@@ -153,17 +153,17 @@
                 android:text="@string/receive_name" />
 
 
-            <GridView
+            <api.view.GridNoScrollView
                 android:id="@+id/grid_view_start"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/sign_circle"
+                android:layout_height="wrap_content"
                 android:layout_margin="@dimen/time_space"
                 android:columnWidth="@dimen/time_space"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/time_space"
-                android:numColumns="8"
+                android:numColumns="5"
                 android:stretchMode="columnWidth"
-                android:verticalSpacing="@dimen/time_space"></GridView>
+                android:verticalSpacing="@dimen/time_space"></api.view.GridNoScrollView>
 
             <!--<ImageView
                 android:id="@+id/iv_add"

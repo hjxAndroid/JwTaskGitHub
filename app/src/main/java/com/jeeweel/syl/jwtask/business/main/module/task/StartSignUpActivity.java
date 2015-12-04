@@ -26,6 +26,7 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -93,7 +94,7 @@ public class StartSignUpActivity extends JwActivity {
         friend = new Friend();
         friendList.add(friend);
 
-        //全局获取sign_code
+        //全局获取sign_codeF
         sign_code = Utils.getUUid();
         sign.setSign_code(sign_code);
         List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
@@ -143,7 +144,7 @@ public class StartSignUpActivity extends JwActivity {
                 int position = helper.getPosition();
                 TextView tvCir = helper.getView(R.id.tv_cir);
                 ImageView ivAdd = helper.getImageView(R.id.iv_add);
-                if (position == friendList.size()-1) {
+                if (position == friendList.size() - 1) {
                     ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
                     ivAdd.setVisibility(View.VISIBLE);
                     tvCir.setVisibility(View.GONE);
@@ -159,9 +160,7 @@ public class StartSignUpActivity extends JwActivity {
 
     @OnItemClick(R.id.grid_view_start)
     void onGridViewStartItemClick(int pos) {
-        if (friendList.size() == 8) {
-            CroutonShowALERT("最多只能选择8个");
-        } else if (pos == friendList.size() - 1) {
+        if (pos == friendList.size() - 1) {
             JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
         }
     }
