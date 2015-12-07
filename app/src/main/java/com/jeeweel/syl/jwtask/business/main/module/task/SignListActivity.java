@@ -104,12 +104,22 @@ public class SignListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Sign.class,
-                                "receive_code like" + StrUtils.QuotedStr(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "receive_code like"
+                                        + StrUtils.QuotedStrLike(users.getUser_code())
+                                        + " limit " +
+                                        pageStart +
+                                        "," +
+                                        pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Sign.class,
-                                "receive_code like" + StrUtils.QuotedStr(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "receive_code like" +
+                                        StrUtils.QuotedStrLike(users.getUser_code()) +
+                                        " limit " +
+                                        pageStart +
+                                        "," +
+                                        pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
