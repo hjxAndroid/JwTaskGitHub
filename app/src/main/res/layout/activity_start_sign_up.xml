@@ -164,13 +164,6 @@
                 android:numColumns="5"
                 android:stretchMode="columnWidth"
                 android:verticalSpacing="@dimen/time_space"></api.view.GridNoScrollView>
-
-            <!--<ImageView
-                android:id="@+id/iv_add"
-                android:layout_width="@dimen/circle"
-                android:layout_height="@dimen/circle"
-                android:layout_margin="@dimen/margin_Size"
-                android:background="@drawable/icon_org_add" />-->
         </LinearLayout>
 
 

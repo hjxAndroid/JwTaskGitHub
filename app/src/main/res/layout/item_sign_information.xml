@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/ListViewStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/linear_item_bg"
+    android:orientation="horizontal">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_xz"
+        android:layout_width="@dimen/lrk_doctor_width_height"
+        android:layout_height="@dimen/lrk_doctor_width_height"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10.0dip"
+        android:src="@drawable/dialog_share_link_default_icon"
+        app:border_color="@color/white"
+        app:border_width="1.0dip" />
+
+    <TextView
+        android:id="@+id/tv_title"
+        style="@style/text_lrk_large_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/iv_xz"
+        android:text="@string/item_sign_title" />
+
+    <TextView
+        android:id="@+id/tv_sign_title"
+        style="@style/text_lrk_large_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/tv_title"
+        android:text="题目题目题目题目题目题目题目题目题目" />
+
+    <TextView
+        android:id="@+id/tv_prouser_name"
+        style="@style/text_lrk_large_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_sign_title"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@id/iv_xz"
+        android:text="发起人 :"
+        android:textColor="@color/gray" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/text_lrk_large_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_sign_title"
+        android:layout_margin="5dp"
+        android:layout_toRightOf="@id/tv_prouser_name"
+        android:text="姓名"
+        android:textColor="@color/gray" />
+
+    <TextView
+        android:id="@+id/tv_sign_time"
+        style="@style/text_lrk_large_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_sign_title"
+        android:layout_margin="5dp"
+        android:text="时间"
+        android:textColor="@color/gray" />
+
+</RelativeLayout>

@@ -74,6 +74,8 @@ public class StartSignUpActivity extends JwActivity {
     String sign_code;
     String userNick;
     String buddyCode;
+    String friendNickName;
+    String friendPic;
     List<Friend> friends;
     List<Friend> friendList = new ArrayList<Friend>();
     private CommonAdapter commonAdapter;
@@ -154,7 +156,13 @@ public class StartSignUpActivity extends JwActivity {
                 } else {
                     tvCir.setVisibility(View.VISIBLE);
                     ivAdd.setVisibility(View.GONE);
-                    tvCir.setText(item.getFriend_nickname());
+                    friendNickName = item.getFriend_nickname();
+                    if (StrUtils.IsNotEmpty(friendNickName)) {
+                        friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
+                    } else {
+                        friendPic = "";
+                    }
+                    tvCir.setText(friendPic);
                 }
             }
         };
