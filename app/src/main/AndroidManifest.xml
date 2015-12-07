@@ -149,6 +149,10 @@
             android:name=".business.main.module.task.SignListActivity"
             android:label="@string/title_activity_sign_information" >
         </activity>
+        <activity
+            android:name=".business.main.module.more.MineAddressActivity"
+            android:label="@string/title_activity_mine_address" >
+        </activity>
     </application>
 
 </manifest>
