@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:imagecontrol="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+    <com.jeeweel.syl.jwtask.business.main.module.more.RoundImageView
+        android:id="@+id/image_header"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="100dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/default_user_photo"
+        imagecontrol:border_inside_color="#bc0978"
+        imagecontrol:border_outside_color="#ba3456"
+        imagecontrol:border_thickness="1dp"/>
+    <Button  android:id="@+id/btn_selectimage"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/li"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_large"
+        android:background="@drawable/bg_button"
+        android:text="从相片中选择"/>
+    <Button  android:id="@+id/btn_takephoto"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_below="@+id/li"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_large"
+        android:background="@drawable/bg_button"
+        android:text="拍照"/>
+
+</LinearLayout>

@@ -157,6 +157,10 @@
             android:name=".business.main.module.more.cascade.MineQRCodeActivity"
             android:label="@string/title_activity_mine_qrcode" >
         </activity>
+        <activity
+            android:name=".business.main.module.more.MinePhotoActivity"
+            android:label="@string/title_activity_mine_photo" >
+        </activity>
     </application>
 
 </manifest>

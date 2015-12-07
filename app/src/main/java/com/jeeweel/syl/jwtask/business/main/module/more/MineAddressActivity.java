@@ -34,6 +34,7 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         setUpViews();
         setUpListener();
         setUpData();
+        setTitle("设置地区");
         users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
     }

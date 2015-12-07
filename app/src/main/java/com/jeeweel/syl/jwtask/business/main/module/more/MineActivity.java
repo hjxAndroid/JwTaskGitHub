@@ -120,6 +120,12 @@ public class MineActivity extends JwActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    @OnClick(R.id.ll_user_head)
+    void editPhotoClick() {
+        JwStartActivity(MinePhotoActivity.class);
+    }
+
     @OnClick(R.id.ll_nickname)
     void editNameClick() {
         Intent intent=new Intent();

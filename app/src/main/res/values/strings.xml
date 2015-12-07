@@ -58,5 +58,6 @@
     <string name="title_activity_friend_detail">FriendDetailActivity</string>
     <string name="title_activity_mine_address">MineAddressActivity</string>
     <string name="title_activity_mine_qrcode">MineQRCodeActivity</string>
+    <string name="title_activity_mine_photo">MinePhotoActivity</string>
 
 </resources>
