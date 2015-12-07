@@ -12,6 +12,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
@@ -20,11 +21,13 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import api.util.Contants;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,6 +72,7 @@ public class NewsHomeActivity extends JwActivity {
 
     private String myphone;
 
+    private String orgCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +89,10 @@ public class NewsHomeActivity extends JwActivity {
         tvSignTime.setText(time);
         tvPulicyTime.setText(time);
 
-        Users users = JwAppAplication.getInstance().users;
+        Users users = JwAppAplication.getInstance().getUsers();
+
+        orgCode = (String)SharedPreferencesUtils.get(getMy(), Contants.org_code,"");
+
         if (null != users) {
             myphone = users.getUsername();
             showLoading();
@@ -116,6 +123,17 @@ public class NewsHomeActivity extends JwActivity {
             String phone = params[0].toString();
 
             try {
+
+                if(StrUtils.isEmpty(orgCode)){
+                    //取默认组织
+                    List<Userorg> userorgs = jCloudDB.findAllByWhere(Userorg.class,
+                            "user_name=" + StrUtils.QuotedStr(phone) + "ORDER BY create_time");
+                    if(userorgs!=null){
+                        SharedPreferencesUtils.save(getMy(),Contants.org_code,userorgs.get(0).getOrg_code());
+                        SharedPreferencesUtils.save(getMy(),Contants.org_name,userorgs.get(0).getOrg_name());
+                    }
+                }
+
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
                         "user_name=" + StrUtils.QuotedStr(phone) + "and read_state=0 " + "ORDER BY create_time DESC");

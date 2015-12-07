@@ -31,6 +31,7 @@ public class FriendAddActivity extends JwActivity {
     @Bind(R.id.bt_add)
     Button btAdd;
 
+    String usercode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +46,7 @@ public class FriendAddActivity extends JwActivity {
         if (ListUtils.IsNotNull(usersList)) {
             Users users = usersList.get(0);
             String nickname = users.getNickname();
+            usercode = users.getUser_code();
             String myphone = users.getUsername();
             String friendPhone = etPhone.getText().toString();
             if (StrUtils.IsNotEmpty(friendPhone)&&StrUtils.IsNotEmpty(nickname)) {
@@ -78,7 +80,25 @@ public class FriendAddActivity extends JwActivity {
             String unid = Utils.getUUid();
             String nickname = params[0].toString();
             String myPhone = params[1].toString();
+
+            String friendCode = "";
             String friendPhone = params[2].toString();
+
+
+
+            List<Users> friendsList = null;
+            try {
+                friendsList = jCloudDB.findAllByWhere(Users.class,
+                        "username=" + StrUtils.QuotedStr(friendPhone));
+
+                if(null!=friendsList){
+                    friendCode = friendsList.get(0).getUser_code();
+                }
+
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
+
 
             //先判断好友是否存在
             List<Users> list = null;
@@ -96,8 +116,10 @@ public class FriendAddActivity extends JwActivity {
                 //添加到自己为主体的好友表
                 Friend myself = new Friend();
                 myself.setUnid_code(unid);
+                myself.setUser_code(usercode);
                 myself.setUser_name(myPhone);
                 myself.setUser_nickname(nickname);
+                myself.setFriend_code(friendCode);
                 myself.setFriend_name(friendPhone);
                 myself.setFriend_nickname(friendNickname);
                 myself.setState(0);
@@ -109,8 +131,10 @@ public class FriendAddActivity extends JwActivity {
                         //添加到好友为主体的好友表
                         Friend friend = new Friend();
                         friend.setUnid_code(unid);
+                        friend.setUser_code(friendCode);
                         friend.setUser_name(friendPhone);
                         friend.setUser_nickname(friendNickname);
+                        friend.setFriend_code(usercode);
                         friend.setFriend_name(myPhone);
                         friend.setFriend_nickname(nickname);
                         friend.setState(0);

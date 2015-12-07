@@ -49,15 +49,10 @@ public class LoginActivity extends JwActivity {
     }
 
     private void autologin(){
-       // boolean autu = false;
-        boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
+        boolean autu = false;
+       // boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
         if(autu){
-            Users users = JwAppAplication.getInstance().users;
-            if(null!=users){
-                String pwd = users.getPassword();
-                String phone = users.getUsername();
-                new FinishRefresh(getMy()).execute(pwd,phone);
-            }
+            JwStartActivity(TabHostActivity.class);
         }else{
             Users users = JwAppAplication.getInstance().users;
             if(null!=users){
