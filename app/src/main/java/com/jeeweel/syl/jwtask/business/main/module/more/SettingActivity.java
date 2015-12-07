@@ -15,6 +15,7 @@ public class SettingActivity extends JwActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ButterKnife.bind(this);
+        setTitle("设置");
         setContentView(R.layout.activity_setting);
     }
 }

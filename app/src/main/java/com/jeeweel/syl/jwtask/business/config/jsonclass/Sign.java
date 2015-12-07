@@ -44,7 +44,7 @@ public class Sign {
     /**
      * 预留字段
      */
-    private int receive_id;
+    /*private int receive_id;*/
     /**
      * 接受者代码,多个
      */
@@ -135,13 +135,13 @@ public class Sign {
         this.sign_time = sign_time;
     }
 
-    public int getReceive_id() {
+    /*public int getReceive_id() {
         return receive_id;
     }
 
     public void setReceive_id(int receive_id) {
         this.receive_id = receive_id;
-    }
+    }*/
 
     public String getReceive_code() {
         return receive_code;

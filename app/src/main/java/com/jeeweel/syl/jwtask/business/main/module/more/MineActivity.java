@@ -14,6 +14,7 @@ import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.more.cascade.MineQRCodeActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -25,11 +26,15 @@ import butterknife.OnClick;
 public class MineActivity extends JwActivity {
     Users users;
     String phone;
-    String birthday; // 初始化开始时间
+    String birthday;
     String str;
 
+    @Bind(R.id.tv_user_head)
+    TextView tv_user_head;
     @Bind(R.id.tv_nickname)
     TextView tv_nickname;
+    @Bind(R.id.tv_mail)
+    TextView tv_mail;
     @Bind(R.id.tv_sex)
     TextView tv_sex;
     @Bind(R.id.tv_strong_point)
@@ -38,6 +43,8 @@ public class MineActivity extends JwActivity {
     TextView tv_sign;
     @Bind(R.id.tv_birthday)
     TextView tv_birthday;
+    @Bind(R.id.tv_area)
+    TextView tv_area;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,14 @@ public class MineActivity extends JwActivity {
         str = users.getNickname();
         if (StrUtils.IsNotEmpty(str)) {
             tv_nickname.setText(str);
+            if (!StrUtils.IsNotEmpty(users.getPhoto_code())) {
+                str = str.substring(str.length() - 2, str.length());
+                tv_user_head.setText(str);
+            }
+        }
+        str = users.getEmail();
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_mail.setText(str);
         }
         str = users.getSex();
         if (StrUtils.IsNotEmpty(str)) {
@@ -64,16 +79,23 @@ public class MineActivity extends JwActivity {
         str= users.getStrong_point();
         if (StrUtils.IsNotEmpty(str)) {
             tv_strong_point.setText(str);
+        }else {
+            tv_strong_point.setText("未设置");
         }
         str = users.getSign();
         if (StrUtils.IsNotEmpty(str)) {
             tv_sign.setText(str);
+        }else {
+            tv_sign.setText("未设置");
+        }
+        str = users.getArea();
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_area.setText(str);
         }
         birthday = users.getBirthday();
         if (StrUtils.IsNotEmpty(birthday)) {
             tv_birthday.setText(birthday);
         }
-
     }
 
     @Override
@@ -98,12 +120,31 @@ public class MineActivity extends JwActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @OnClick(R.id.LinearLayout01)
+    @OnClick(R.id.ll_nickname)
     void editNameClick() {
-        JwStartActivity(MineEditnameActivity.class);
+        Intent intent=new Intent();
+        intent.putExtra("title", "设置昵称");
+        intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
     }
 
-    @OnClick(R.id.LinearLayout04)
+    @OnClick(R.id.ll_email)
+    void editEmailClick() {
+        Intent intent=new Intent();
+        intent.putExtra("title", "设置邮箱");
+        intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
+    }
+
+    @OnClick(R.id.ll_qrcode)
+    void editQRCdoeClick() {
+        Intent intent=new Intent();
+        intent.putExtra("phone", phone);
+        intent.setClass(MineActivity.this, MineQRCodeActivity.class);
+        JwStartActivity(intent);
+    }
+
+    @OnClick(R.id.ll_sex)
     void editMySexClick() {
         JwStartActivity(MineSexActivity.class);
     }
@@ -145,14 +186,19 @@ public class MineActivity extends JwActivity {
         }
     }
 
-    @OnClick(R.id.LinearLayout05)
+    @OnClick(R.id.ll_birthday)
     void editMyBirthdayClick() {
         DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                 MineActivity.this, birthday);
         dateTimePicKDialog.dateTimePicKDialog(tv_birthday);
     }
 
-    @OnClick(R.id.LinearLayout07)
+    @OnClick(R.id.ll_address)
+    void editAddressClick() {
+        JwStartActivity(MineAddressActivity.class);
+    }
+
+    @OnClick(R.id.ll_strong_point)
     void editSpecialtyClick() {
         Intent intent=new Intent();
         intent.putExtra("title", "特长、兴趣");
@@ -160,7 +206,7 @@ public class MineActivity extends JwActivity {
         JwStartActivity(intent);
     }
 
-    @OnClick(R.id.LinearLayout08)
+    @OnClick(R.id.ll_sign)
     void editSignatureClick() {
         Intent intent=new Intent();
         intent.putExtra("title", "个性签名");

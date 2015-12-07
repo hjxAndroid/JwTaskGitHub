@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -37,10 +38,12 @@ public class MineSexActivity extends JwActivity {
         iv_selm = (ImageView) findViewById(R.id.iv_selm);
         iv_selw = (ImageView) findViewById(R.id.iv_selw);
         String str= users.getSex();
-        if(str.equals("男")){
-            iv_selw.setVisibility(View.INVISIBLE);
-        }else if(str.equals("女")){
-            iv_selm.setVisibility(View.INVISIBLE);
+        if (StrUtils.IsNotEmpty(str)) {
+            if(str.equals("男")){
+                iv_selm.setVisibility(View.VISIBLE);
+            }else if(str.equals("女")){
+                iv_selw.setVisibility(View.VISIBLE);
+            }
         }
     }
 

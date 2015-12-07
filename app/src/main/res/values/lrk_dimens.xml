@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="sign_user">100dp</dimen>
+    <dimen name="sign_user">80dp</dimen>
     <dimen name="sign_circle">60dp</dimen>
     <dimen name="userName">15sp</dimen>
     <dimen name="counts">40sp</dimen>
@@ -14,4 +14,8 @@
     <dimen name="data_space_size">30dp</dimen>
     <dimen name="check_sign">20sp</dimen>
     <dimen name="time_space">5dp</dimen>
+    <dimen name="text_lrk_size_normal">12.0sp</dimen>
+    <dimen name="signed_user">120dp</dimen>
+    <dimen name="text_lrk_size_large">15.0sp</dimen>
+    <dimen name="lrk_doctor_width_height">55.0dip</dimen>
 </resources>
