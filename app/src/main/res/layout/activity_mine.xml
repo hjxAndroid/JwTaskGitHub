@@ -213,7 +213,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:id="@+id/LinearLayout06"
+                    android:id="@+id/ll_address"
                     android:layout_margin="@dimen/margin_size">
                     <TextView
                         android:layout_width="wrap_content"
@@ -225,6 +225,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="right">
                         <TextView
+                            android:id="@+id/tv_area"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="未设置"

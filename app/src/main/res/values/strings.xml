@@ -56,5 +56,6 @@
     <string name="title_activity_expand_adapter">ExpandAdapter</string>
     <string name="title_activity_dept_users_list">DeptUsersListActivity</string>
     <string name="title_activity_friend_detail">FriendDetailActivity</string>
+    <string name="title_activity_mine_address">MineAddressActivity</string>
 
 </resources>

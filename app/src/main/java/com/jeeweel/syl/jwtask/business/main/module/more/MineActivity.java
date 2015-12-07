@@ -42,6 +42,8 @@ public class MineActivity extends JwActivity {
     TextView tv_sign;
     @Bind(R.id.tv_birthday)
     TextView tv_birthday;
+    @Bind(R.id.tv_area)
+    TextView tv_area;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,11 +87,14 @@ public class MineActivity extends JwActivity {
         }else {
             tv_sign.setText("未设置");
         }
+        str = users.getArea();
+        if (StrUtils.IsNotEmpty(str)) {
+            tv_area.setText(str);
+        }
         birthday = users.getBirthday();
         if (StrUtils.IsNotEmpty(birthday)) {
             tv_birthday.setText(birthday);
         }
-
     }
 
     @Override
@@ -177,6 +182,11 @@ public class MineActivity extends JwActivity {
         DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
                 MineActivity.this, birthday);
         dateTimePicKDialog.dateTimePicKDialog(tv_birthday);
+    }
+
+    @OnClick(R.id.ll_address)
+    void editAddressClick() {
+        JwStartActivity(MineAddressActivity.class);
     }
 
     @OnClick(R.id.ll_strong_point)

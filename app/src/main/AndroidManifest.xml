@@ -144,6 +144,10 @@
             android:name=".business.main.module.contact.FriendDetailActivity"
             android:label="@string/title_activity_friend_detail" >
         </activity>
+        <activity
+            android:name=".business.main.module.more.MineAddressActivity"
+            android:label="@string/title_activity_mine_address" >
+        </activity>
     </application>
 
 </manifest>

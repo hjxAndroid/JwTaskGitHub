@@ -2,5 +2,6 @@
     <!--zhu-->
     <color name="view_line">#c8c7cc</color>
     <color name="bg_color">#efeff4</color>
+    <color name="province_line_border">#C7C7C7</color>
 
 </resources>
