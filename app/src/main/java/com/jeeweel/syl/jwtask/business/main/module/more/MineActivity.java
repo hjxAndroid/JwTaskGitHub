@@ -14,6 +14,7 @@ import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.more.cascade.MineQRCodeActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -132,6 +133,14 @@ public class MineActivity extends JwActivity {
         Intent intent=new Intent();
         intent.putExtra("title", "设置邮箱");
         intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
+    }
+
+    @OnClick(R.id.ll_qrcode)
+    void editQRCdoeClick() {
+        Intent intent=new Intent();
+        intent.putExtra("phone", phone);
+        intent.setClass(MineActivity.this, MineQRCodeActivity.class);
         JwStartActivity(intent);
     }
 
