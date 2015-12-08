@@ -8,6 +8,7 @@
     <string name="title_activity_mine_sex">MineSexActivity</string>
     <string name="title_activity_main_edit">MainEditActivity</string>
     <string name="title_activity_mine">MineActivity</string>
-
+    <string name="title_activity_mine_qrcode">MineQRCodeActivity</string>
+    <string name="title_activity_mine_address">MineAddressActivity</string>
 
 </resources>
