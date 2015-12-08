@@ -141,6 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
             android:background="@drawable/shape_li"
+            android:visibility="gone"
             android:clickable="true">
 
             <TextView
@@ -171,9 +172,9 @@
             android:id="@+id/lineExperience"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
-            android:visibility="gone"
             android:background="@drawable/shape_li"
-            android:clickable="true">
+            android:clickable="true"
+            android:visibility="gone">
 
             <TextView
                 style="@style/text_nomor_style"
@@ -199,118 +200,112 @@
             </LinearLayout>
         </LinearLayout>
 
+
         <LinearLayout
+            android:id="@+id/lineIntroduce"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/three_Part"
-            android:background="@color/white1"
-            android:orientation="vertical">
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:visibility="gone"
+            android:clickable="true">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/push" />
 
             <LinearLayout
-                android:id="@+id/lineIntroduce"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_li"
-                android:clickable="true">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="right">
 
-                <TextView
-                    style="@style/text_nomor_style"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/push" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/margin_Size"
-                    android:gravity="right">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_Size"
-                        android:background="@drawable/alm_cmail_right_arrow" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!--<View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_fgx" />-->
-
-            <LinearLayout
-                android:id="@+id/lineService"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_li"
-                android:clickable="true">
-
-                <TextView
-                    style="@style/text_nomor_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/service" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/margin_Size"
-                    android:gravity="right">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_Size"
-                        android:background="@drawable/alm_cmail_right_arrow" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!--<View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_fgx" />-->
-
-            <LinearLayout
-                android:id="@+id/lineHelp"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="@drawable/shape_li"
-                android:clickable="true">
-
-                <TextView
-                    style="@style/text_nomor_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/res" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/margin_Size"
-                    android:gravity="right">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_Size"
-                        android:background="@drawable/alm_cmail_right_arrow" />
-                </LinearLayout>
+                    android:background="@drawable/alm_cmail_right_arrow" />
             </LinearLayout>
         </LinearLayout>
+
+        <!--<View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_fgx" />-->
+
+        <LinearLayout
+            android:id="@+id/lineService"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:visibility="gone"
+            android:clickable="true">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/service" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="right">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_Size"
+                    android:background="@drawable/alm_cmail_right_arrow" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!--<View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/gray_fgx" />-->
+
+        <LinearLayout
+            android:id="@+id/lineHelp"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:clickable="true">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/res" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="right">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_Size"
+                    android:background="@drawable/alm_cmail_right_arrow" />
+            </LinearLayout>
+        </LinearLayout>
+
 
         <LinearLayout
             android:id="@+id/lineAdervise"

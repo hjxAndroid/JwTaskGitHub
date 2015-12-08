@@ -16,6 +16,7 @@
             android:background="@drawable/shape_li"
             android:clickable="true"
             android:gravity="center_vertical"
+            android:visibility="gone"
             android:orientation="horizontal">
 
             <TextView
@@ -43,120 +44,100 @@
             </LinearLayout>
         </LinearLayout>
 
+
         <LinearLayout
+            android:id="@+id/new_Information"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/three_Part"
-            android:background="@color/white1"
-            android:orientation="vertical">
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:clickable="true">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/new_Information" />
 
             <LinearLayout
-                android:id="@+id/new_Information"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_Height"
-                android:background="@drawable/shape_li"
-                android:clickable="true">
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="right">
 
-                <TextView
-                    style="@style/text_nomor_style"
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/new_Information" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/margin_Size"
-                    android:gravity="right">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_Size"
-                        android:background="@drawable/alm_cmail_right_arrow" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_fgx" />
-
-            <LinearLayout
-                android:id="@+id/private_Information"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_Height"
-                android:background="@drawable/shape_li"
-                android:clickable="true">
-
-                <TextView
-                    style="@style/text_nomor_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/private_Information" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/margin_Size"
-                    android:gravity="right">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_Size"
-                        android:background="@drawable/alm_cmail_right_arrow" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/gray_fgx" />
-
-            <LinearLayout
-                android:id="@+id/public_Function"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/item_Height"
-                android:background="@drawable/shape_li"
-                android:clickable="true">
-
-                <TextView
-                    style="@style/text_nomor_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="@dimen/margin_Size"
-                    android:text="@string/public_Function" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginRight="@dimen/margin_Size"
-                    android:gravity="right">
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/margin_Size"
-                        android:background="@drawable/alm_cmail_right_arrow" />
-                </LinearLayout>
+                    android:background="@drawable/alm_cmail_right_arrow" />
             </LinearLayout>
         </LinearLayout>
 
-        <View
+        <LinearLayout
+            android:id="@+id/private_Information"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/gray_fgx" />
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:visibility="gone"
+            android:clickable="true">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/private_Information" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="right">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_Size"
+                    android:background="@drawable/alm_cmail_right_arrow" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/public_Function"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:clickable="true">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/public_Function" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="right">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/margin_Size"
+                    android:background="@drawable/alm_cmail_right_arrow" />
+            </LinearLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/about"
@@ -190,11 +171,6 @@
                     android:text="@string/version_Information" />
             </LinearLayout>
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/gray_fgx" />
 
         <LinearLayout
             android:id="@+id/exit_Login"
