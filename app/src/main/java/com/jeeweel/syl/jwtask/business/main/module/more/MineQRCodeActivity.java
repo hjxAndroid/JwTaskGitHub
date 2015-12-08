@@ -32,19 +32,6 @@ public class MineQRCodeActivity extends JwActivity {
         Intent intent = getIntent();
         String phone = intent.getStringExtra("phone");
         createQRImage(phone);
-        initRight();
-    }
-    private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-
-            }
-        });
-        addMenuView(menuTextView);
     }
 
     @Override
