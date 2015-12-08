@@ -56,8 +56,12 @@
     <string name="title_activity_expand_adapter">ExpandAdapter</string>
     <string name="title_activity_dept_users_list">DeptUsersListActivity</string>
     <string name="title_activity_friend_detail">FriendDetailActivity</string>
-    <string name="title_activity_mine_address">MineAddressActivity</string>
-    <string name="title_activity_mine_qrcode">MineQRCodeActivity</string>
-    <string name="title_activity_mine_photo">MinePhotoActivity</string>
+    <string name="title_activity_publicy_list">PublicyListActivity</string>
+    <string name="title_activity_publicy_detail">PublicyDetailActivity</string>
+    <string name="title_activity_publicy_add">PublicyAddActivity</string>
+    <string name="title_activity_publicy_add_next">PublicyAddNextActivity</string>
+    <string name="title_activity_publicy_contact_home">PublicyContactHomeActivity</string>
+    <string name="title_activity_check_adapter">CheckAdapter</string>
+    <string name="title_activity_publicy_users_list">PublicyUsersListActivity</string>
 
 </resources>

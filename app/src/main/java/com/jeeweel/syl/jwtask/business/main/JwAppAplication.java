@@ -86,7 +86,15 @@ public class JwAppAplication extends JeeweelApplication {
 
 
     public static Users getUsers() {
-        return users;
+        if(users==null){
+            List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
+            if (ListUtils.IsNotNull(usersList)) {
+                users = usersList.get(0);
+            }
+            return users;
+        }else{
+            return users;
+        }
     }
 
     public static void setUsers(Users users) {

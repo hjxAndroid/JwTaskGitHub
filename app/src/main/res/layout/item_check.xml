@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/doctor_memo"
+    style="@style/ListViewStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/linear_item_bg"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/item_cb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10.0dip"
+        />
+
+    <TextView android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="任小云"
+        style="@style/text_nomor_style"
+        android:layout_toRightOf="@+id/item_cb"
+        android:layout_alignParentTop="@+id/item_cb"
+        android:layout_marginTop="5dp"
+        />
+
+    <TextView android:id="@+id/tv_nick_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我是任小云"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_small"
+        android:layout_toRightOf="@+id/item_cb"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginTop="4dp"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_right"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>

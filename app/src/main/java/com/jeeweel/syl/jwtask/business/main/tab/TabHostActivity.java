@@ -94,4 +94,6 @@ public class TabHostActivity extends JwTabActivity {
     public boolean dispatchTouchEvent(MotionEvent ev) {
         return resideMenu.dispatchTouchEvent(ev);
     }*/
+
+
 }

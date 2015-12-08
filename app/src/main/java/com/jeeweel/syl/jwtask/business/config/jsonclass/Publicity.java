@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
 /**
  * @author 苏逸龙 317616660@qq.com
@@ -11,7 +12,7 @@ import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
  */
 
 @Table(name = "publicity")
-public class Publicity {
+public class Publicity extends BaseItem{
     /**
      * mid
      */
@@ -26,6 +27,10 @@ public class Publicity {
      */
     private String publicity_title;
     /**
+     * 公告内容
+     */
+    private String publicity_content;
+    /**
      * 证人
      */
     private String witness;
@@ -37,27 +42,33 @@ public class Publicity {
      * 图片代码
      */
     private String photo_code;
-    private int prouser_id;
     /**
      * 发布人代码
      */
     private String prouser_code;
-    private String prouser;
+    private String prouser_name;
     /**
      * 发布时间
      */
-    private String pro_time;
+    private String publicity_time;
     private int accept_orgid;
     /**
      * 接收组织代码
      */
     private String accept_org_code;
+
+    private String accept_org_name;
     /**
      * 备注
      */
     private String remark;
     private String create_time;
     private String update_time;
+
+
+    private String nickname;
+
+
 
     public String getProuser_code() {
         return prouser_code;
@@ -123,28 +134,28 @@ public class Publicity {
         this.photo_id = photo_id;
     }
 
-    public int getProuser_id() {
-        return prouser_id;
+    public String getPublicity_content() {
+        return publicity_content;
     }
 
-    public void setProuser_id(int prouser_id) {
-        this.prouser_id = prouser_id;
+    public void setPublicity_content(String publicity_content) {
+        this.publicity_content = publicity_content;
     }
 
-    public String getProuser() {
-        return prouser;
+    public String getProuser_name() {
+        return prouser_name;
     }
 
-    public void setProuser(String prouser) {
-        this.prouser = prouser;
+    public void setProuser_name(String prouser_name) {
+        this.prouser_name = prouser_name;
     }
 
-    public String getPro_time() {
-        return pro_time;
+    public String getPublicity_time() {
+        return publicity_time;
     }
 
-    public void setPro_time(String pro_time) {
-        this.pro_time = pro_time;
+    public void setPublicity_time(String publicity_time) {
+        this.publicity_time = publicity_time;
     }
 
     public int getAccept_orgid() {
@@ -177,6 +188,22 @@ public class Publicity {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getAccept_org_name() {
+        return accept_org_name;
+    }
+
+    public void setAccept_org_name(String accept_org_name) {
+        this.accept_org_name = accept_org_name;
     }
 }
 

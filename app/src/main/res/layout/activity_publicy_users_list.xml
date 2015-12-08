@@ -1,0 +1,45 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jeeweel.syl.jwtask.business.main.module.task.PublicyUsersListActivity">
+
+    <LinearLayout android:id="@+id/li"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/one_line_height"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/space_frame"
+        android:layout_marginRight="@dimen/space_frame"
+        android:layout_marginTop="@dimen/space_frame"
+        android:background="@drawable/settings_up_select"
+        android:gravity="center_vertical">
+
+        <CheckBox android:id="@+id/cb_all"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginLeft="5.0dip"
+            android:layout_marginTop="10.0dip"
+            android:text="全选:"
+            android:textColor="@color/list_text_name_color"
+            android:textSize="@dimen/textSize_normal" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@id/listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:cacheColorHint="@color/transparent"
+        android:divider="@color/divider_color"
+        android:dividerHeight="1.0px"
+        android:fadingEdge="none"
+        android:listSelector="@color/transparent"
+        android:scrollbars="none" />
+
+</LinearLayout>

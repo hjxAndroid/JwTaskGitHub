@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  */
 
 @Table(name="orgunit")
-public class Orgunit{
+public class Orgunit extends BaseItem{
 	/**
 	 * mid
 	 */

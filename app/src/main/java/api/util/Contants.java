@@ -30,4 +30,10 @@ public class Contants {
     //部门参数
     public static String dept_code = "dept_code";
 
+
+    //当前组织code
+    public static String org_code = "org_code";
+
+    //当前组织名
+    public static String org_name = "org_name";
 }

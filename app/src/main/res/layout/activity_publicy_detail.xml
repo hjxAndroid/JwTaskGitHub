@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/main_bg_color"
+    tools:context="com.jeeweel.syl.jwtask.business.main.module.task.PublicyDetailActivity">
+
+    <TextView android:id="@+id/tv_title"
+        style="@style/text_large_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="关于周列会调整的通知" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal">
+
+        <TextView android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="陈晓阳"
+            android:textColor="@color/TextColorGray"
+            android:textSize="@dimen/textSize_normal" />
+
+        <TextView android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="2015-12-10"
+            android:textColor="@color/TextColorGray"
+            android:textSize="@dimen/textSize_normal" />
+    </LinearLayout>
+
+    <TextView android:id="@+id/tv_org_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:text="泉州市捷微信息科技有限公司"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_normal" />
+
+    <TextView android:id="@+id/tv_content"
+        style="@style/text_large_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" />
+</LinearLayout>
