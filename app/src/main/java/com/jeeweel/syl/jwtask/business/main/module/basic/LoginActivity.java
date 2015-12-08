@@ -17,6 +17,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.update.UmengUpdateAgent;
 
 import net.tsz.afinal.FinalDb;
 
@@ -45,7 +46,10 @@ public class LoginActivity extends JwActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         autologin();
-
+        //友盟自动更新检查
+        UmengUpdateAgent.update(this);
+        //允许基站更新
+        UmengUpdateAgent.setUpdateOnlyWifi(false);
     }
 
     private void autologin(){

@@ -25,4 +25,6 @@ dependencies {
     compile project(':jwfflib')
     compile project(':jclouddb')
     compile project(':sMSSDK')
+    //自动更新
+    compile files('libs/umeng-update-v2.6.0.1.jar')
 }

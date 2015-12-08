@@ -59,7 +59,7 @@ public class CheckAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder holder = null;
         if (convertView == null) {
             // 获得ViewHolder对象
@@ -75,11 +75,23 @@ public class CheckAdapter extends BaseAdapter {
             // 取出holder
             holder = (ViewHolder) convertView.getTag();
         }
+        final ViewHolder holders = holder;
         // 设置list中TextView的显示
         holder.tv.setText(list.get(position).getUsername());
         holder.nick.setText(list.get(position).getNickname());
         // 根据isSelected来设置checkbox的选中状况
         holder.cb.setChecked(getIsSelected().get(position));
+        holder.cb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                boolean check = holders.cb.isChecked();
+                if(check){
+                    getIsSelected().put(position, check);
+                }else{
+                    getIsSelected().put(position, check);
+                }
+            }
+        });
         return convertView;
     }
 
@@ -92,8 +104,8 @@ public class CheckAdapter extends BaseAdapter {
     }
 
     public static class ViewHolder {
-        TextView tv;
-        TextView nick;
-        CheckBox cb;
+        public TextView tv;
+        public TextView nick;
+        public CheckBox cb;
     }
 }

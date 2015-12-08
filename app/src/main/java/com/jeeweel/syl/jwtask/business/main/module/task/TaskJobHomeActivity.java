@@ -71,7 +71,7 @@ public class TaskJobHomeActivity extends JwActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-
+                  JwStartActivity(JobAddActivity.class);
             }
         });
         addMenuView(menuTextView);

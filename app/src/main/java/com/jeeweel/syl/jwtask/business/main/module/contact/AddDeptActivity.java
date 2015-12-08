@@ -78,7 +78,7 @@ public class AddDeptActivity extends JwActivity {
     }
 
     private void initView() {
-        users = JwAppAplication.getInstance().users;
+        users = JwAppAplication.getInstance().getUsers();
         if (null != users) {
             tvName.setText(users.getNickname());
         }
@@ -144,8 +144,19 @@ public class AddDeptActivity extends JwActivity {
                 String orgUnid = "";
                 if(StrUtils.IsNotEmpty(org_code)){
                     orgUnid = org_code;
+
+                    //本来已经有，就不必再添加组织表
                 }else {
                     orgUnid = Utils.getUUid();
+
+                    //添加到组织表
+                    Orgunit orgunit = new Orgunit();
+                    orgunit.setOrg_code(orgUnid);
+                    orgunit.setOrg_name(orgname);
+                    orgunit.setFounder_code(users.getUser_code());
+                    orgunit.setFounder_name(users.getUsername());
+                    orgunit.setNickname(users.getNickname());
+                    jCloudDB.save(orgunit);
                 }
 
                 String deptUnid = Utils.getUUid();
@@ -155,15 +166,6 @@ public class AddDeptActivity extends JwActivity {
                 myfriend.setFriend_name(users.getUsername());
                 myfriend.setFriend_nickname(users.getNickname());
                 friendList.add(myfriend);
-
-                //添加到组织表
-                Orgunit orgunit = new Orgunit();
-                orgunit.setOrg_code(orgUnid);
-                orgunit.setOrg_name(orgname);
-                orgunit.setFounder_code(users.getUser_code());
-                orgunit.setFounder_name(users.getUsername());
-                orgunit.setNickname(users.getNickname());
-                jCloudDB.save(orgunit);
 
                 //添加到部门表
                 Dept dept = new Dept();

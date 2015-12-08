@@ -36,4 +36,16 @@ public class Contants {
 
     //当前组织名
     public static String org_name = "org_name";
+
+    //负责人
+    public static String fzr = "fzr";
+
+    //审核人
+    public static String shr = "shr";
+
+    //观察者
+    public static String gcz = "gcz";
+
+    //参与者
+    public static String cyz = "cyz";
 }

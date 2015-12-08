@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -116,6 +117,7 @@ public class PublicyUsersListActivity extends JwActivity {
                 Gson gson = new Gson();
                 String json = gson.toJson(userdepts);
                 OttUtils.push("pulbicy_users",json);
+                finish();
             }
         });
         addMenuView(menuTextView);

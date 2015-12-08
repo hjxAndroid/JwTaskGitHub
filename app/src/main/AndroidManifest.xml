@@ -20,6 +20,23 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <!-- 友盟自动更新 -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="564a926ce0f55a9eea000165" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Channel ID" />
+        <!-- 自动更新服务 -->
+        <service
+            android:name="com.umeng.update.net.DownloadingService"
+            android:process=":DownloadingService" >
+        </service>
+
+        <activity
+            android:name="com.umeng.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
         <!-- 短信验证 -->
         ެެ
         <activity
@@ -190,7 +207,8 @@
         </activity>
         <activity
             android:name=".business.main.module.task.JobAddActivity"
-            android:label="@string/title_activity_job_add" >
+            android:label="@string/title_activity_job_add"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
         </activity>
     </application>
 

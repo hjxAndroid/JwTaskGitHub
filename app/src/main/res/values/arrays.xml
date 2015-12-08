@@ -24,4 +24,25 @@
         <item>@drawable/icon_create_org_tip2</item>
         <item>@drawable/icon_create_org_tip3</item>
     </string-array>
+
+
+    <string-array name="yxj_array">
+        <item>急</item>
+        <item>优先</item>
+        <item>一般</item>
+    </string-array>
+
+    <string-array name="khbz_array">
+        <item>2</item>
+        <item>4</item>
+        <item>6</item>
+        <item>8</item>
+        <item>-2</item>
+        <item>-4</item>
+        <item>-6</item>
+        <item>-8</item>
+    </string-array>
+
+
+
 </resources>

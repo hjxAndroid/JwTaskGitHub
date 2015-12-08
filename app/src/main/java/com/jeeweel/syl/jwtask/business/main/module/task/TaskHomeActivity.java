@@ -1,5 +1,6 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -18,6 +19,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -65,10 +67,12 @@ public class TaskHomeActivity extends JwActivity {
 
     List<Userorg> mListItems;
 
+    private Activity context;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_home);
         setTitle(getString(R.string.任务));
+        context = this;
         ButterKnife.bind(this);
         initView();
         initRight();
@@ -173,11 +177,11 @@ public class TaskHomeActivity extends JwActivity {
     private void showDialog() {
 
         dialog = new AlertDialog.Builder(getMy()).create();// 创建一个AlertDialog对象
-        View view = TaskHomeActivity.this.getLayoutInflater().inflate(R.layout.item_task_dialog,
+        View view = context.getLayoutInflater().inflate(R.layout.item_task_dialog,
                 null);// 自定义布局
         dialog.setView(view, 0, 0, 0, 0);// 把自定义的布局设置到dialog中，注意，布局设置一定要在show之前。从第二个参数分别填充内容与边框之间左、上、右、下、的像素
         dialog.show();// 一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了
-        int width = TaskHomeActivity.this.getWindowManager().getDefaultDisplay().getWidth();// 得到当前显示设备的宽度，单位是像素
+        int width = context.getWindowManager().getDefaultDisplay().getWidth();// 得到当前显示设备的宽度，单位是像素
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();// 得到这个dialog界面的参数对象
         params.width = width - (width / 6);// 设置dialog的界面宽度
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;// 设置dialog高度为包裹内容
@@ -232,6 +236,7 @@ public class TaskHomeActivity extends JwActivity {
                 try {
                     mListItems = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(users.getUsername()));
+                    removeDuplicate(mListItems);
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -249,6 +254,21 @@ public class TaskHomeActivity extends JwActivity {
                 ToastShow("组织获取出错");
             }
             hideLoading();
+        }
+    }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<Userorg> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getOrg_code().equals(list.get(i).getOrg_code())) {
+                    list.remove(j);
+                }
+            }
         }
     }
 }
