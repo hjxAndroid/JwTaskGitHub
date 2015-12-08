@@ -129,7 +129,7 @@ public class NewsHomeActivity extends JwActivity {
                     //取默认组织
                     List<Userorg> userorgs = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(phone) + "ORDER BY create_time");
-                    if(userorgs!=null){
+                    if(ListUtils.IsNotNull(userorgs)){
                         SharedPreferencesUtils.save(getMy(),Contants.org_code,userorgs.get(0).getOrg_code());
                         SharedPreferencesUtils.save(getMy(),Contants.org_name,userorgs.get(0).getOrg_name());
                     }

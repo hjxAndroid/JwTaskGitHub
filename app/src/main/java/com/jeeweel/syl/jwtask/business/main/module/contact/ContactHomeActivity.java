@@ -50,7 +50,7 @@ public class ContactHomeActivity extends JwActivity {
         setContentView(R.layout.activity_contact_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.contact));
-        users = JwAppAplication.getInstance().users;
+        users = JwAppAplication.getInstance().getUsers();
         initView();
         getDate();
     }
