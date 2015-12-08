@@ -171,6 +171,7 @@
             android:id="@+id/lineExperience"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
+            android:visibility="gone"
             android:background="@drawable/shape_li"
             android:clickable="true">
 
@@ -236,10 +237,10 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
+            <!--<View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/gray_fgx" />
+                android:background="@color/gray_fgx" />-->
 
             <LinearLayout
                 android:id="@+id/lineService"
@@ -273,10 +274,10 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <View
+            <!--<View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/gray_fgx" />
+                android:background="@color/gray_fgx" />-->
 
             <LinearLayout
                 android:id="@+id/lineHelp"
