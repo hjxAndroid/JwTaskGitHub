@@ -9,9 +9,8 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/one_line_height"
         android:layout_centerHorizontal="true"
-        android:layout_marginLeft="@dimen/space_frame"
-        android:layout_marginRight="@dimen/space_frame"
-        android:layout_marginTop="@dimen/space_frame"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="10dp"
         android:background="@drawable/settings_up_select"
         android:gravity="center_vertical">
 
@@ -30,6 +29,10 @@
             android:textSize="@dimen/textSize_normal" />
 
     </LinearLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_fgx" />
 
     <ListView
         android:id="@id/listview"

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -28,18 +29,28 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Toast;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.photo.GetPicActivity;
 import com.jeeweel.syl.jwtask.business.main.module.photo.PhotoActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import api.photoview.Bimp;
 import api.photoview.FileUtils;
+import api.util.Contants;
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -54,7 +65,8 @@ public class PublicyAddActivity extends JwActivity {
     GridView noScrollgridview;
     GridAdapter adapter;
     Context context;
-
+    Publicity publicity = new Publicity();
+    Users users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +74,7 @@ public class PublicyAddActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle("发布公告");
         context = this;
+        users = JwAppAplication.getInstance().getUsers();
         initView();
         initRight();
     }
@@ -75,12 +88,15 @@ public class PublicyAddActivity extends JwActivity {
             public void onClick(View arg0) {
                 String title = etTitle.getText().toString();
                 String content = etContent.getText().toString();
-                if(StrUtils.IsNotEmpty(title)&&StrUtils.IsNotEmpty(content)){
-                    Publicity publicity = new Publicity();
+                if (StrUtils.IsNotEmpty(title) && StrUtils.IsNotEmpty(content)) {
                     publicity.setPublicity_title(title);
                     publicity.setPublicity_content(content);
-                    JwStartActivity(PublicyAddNextActivity.class,publicity);
-                }else{
+                    //公告不选人，直接推送到组织
+                    new FinishRefresh(getMy()).execute();
+
+                    // 以下操作留给任务
+                    // JwStartActivity(PublicyAddNextActivity.class,publicity);
+                } else {
                     ToastShow("请完善发布信息");
                 }
 
@@ -349,5 +365,68 @@ public class PublicyAddActivity extends JwActivity {
         Bimp.drr.clear();
         Bimp.max = 0;
         super.onDestroy();
+    }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+            if (null != publicity) {
+                try {
+                    String unid = Utils.getUUid();
+                    //保存到主表
+                    publicity.setPublicity_code(unid);
+                    String orgcode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
+                    if (StrUtils.IsNotEmpty(orgcode)) {
+                        publicity.setAccept_org_code(orgcode);
+                    }
+                    if(users!=null){
+                        publicity.setProuser_code(users.getUser_code());
+                        publicity.setProuser_name(users.getUsername());
+                        publicity.setNickname(users.getNickname());
+                    }
+                    jCloudDB.save(publicity);
+
+                    //保存图片表
+                    for (String sFile : Bimp.drr) {
+                        // File file = new File(sFile);
+                        CloudFile.upload(sFile,unid);
+                    }
+                } catch (CloudServiceException e) {
+                    result = "0";
+                    e.printStackTrace();
+                }
+
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+
+            } else {
+               ToastShow("保存失败");
+            }
+            hideLoading();
+        }
     }
 }

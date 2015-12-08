@@ -50,6 +50,5 @@
         style="@style/text_large_style"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss" />
+        android:padding="10dp"></TextView>
 </LinearLayout>

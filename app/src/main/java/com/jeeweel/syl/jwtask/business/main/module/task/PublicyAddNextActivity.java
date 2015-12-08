@@ -6,13 +6,23 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
+import api.util.Contants;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -29,8 +39,8 @@ public class PublicyAddNextActivity extends JwActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("发公告");
         setContentView(R.layout.activity_publicy_add_next);
+        setTitle("发公告");
         ButterKnife.bind(this);
         initRight();
         users = JwAppAplication.getInstance().getUsers();
@@ -53,5 +63,23 @@ public class PublicyAddNextActivity extends JwActivity {
     @OnClick(R.id.li_fw)
     void loginClick() {
         JwStartActivity(PublicyContactHomeActivity.class);
+    }
+
+
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (StrUtils.IsNotEmpty(msg) && msg.equals("pulbicy_users")) {
+            String json = activityMsgEvent.getParam();
+            if(StrUtils.IsNotEmpty(json)){
+                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                if(ListUtils.IsNotNull(userdepts)){
+                    int size = userdepts.size();
+                    tvNum.setText(IntUtils.toStr(size));
+                }
+            }
+
+        }
     }
 }

@@ -3,11 +3,13 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -19,9 +21,11 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import api.adapter.CheckAdapter;
+import api.util.OttUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -59,9 +63,10 @@ public class PublicyUsersListActivity extends JwActivity {
         setContentView(R.layout.activity_publicy_users_list);
         userdept = (Userdept) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         if (null != userdept) {
-            setTitle(userdept.getOrg_name() + ">" + userdept.getDept_name());
+            setTitle(userdept.getDept_name());
         }
         ButterKnife.bind(this);
+        initRight();
         initListView();
         cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -93,9 +98,32 @@ public class PublicyUsersListActivity extends JwActivity {
         });
     }
 
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("完成");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                List<Userdept> userdepts = new ArrayList<Userdept>();
+                HashMap<Integer, Boolean> isSelected = checkAdapter.getIsSelected();
+                for (int i = 0; i < isSelected.size(); i++) {
+                    if(isSelected.get(i)){
+                        userdepts.add(mListItems.get(i));
+                    }
+                }
+                Gson gson = new Gson();
+                String json = gson.toJson(userdepts);
+                OttUtils.push("pulbicy_users",json);
+            }
+        });
+        addMenuView(menuTextView);
+    }
+
+
     public void initListView() {
-        checkAdapter = new CheckAdapter(mListItems, getMy());
-        listview.setAdapter(checkAdapter);
+        showLoading();
         new FinishRefresh(getMy()).execute();
     }
 
@@ -143,7 +171,8 @@ public class PublicyUsersListActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 mListItems.addAll(list);
-                checkAdapter.notifyDataSetChanged();
+                checkAdapter = new CheckAdapter(mListItems, getMy());
+                listview.setAdapter(checkAdapter);
             } else {
                 //没有加载到数据
             }

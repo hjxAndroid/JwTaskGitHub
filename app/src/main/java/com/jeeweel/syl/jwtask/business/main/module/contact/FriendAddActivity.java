@@ -50,6 +50,7 @@ public class FriendAddActivity extends JwActivity {
             String myphone = users.getUsername();
             String friendPhone = etPhone.getText().toString();
             if (StrUtils.IsNotEmpty(friendPhone)&&StrUtils.IsNotEmpty(nickname)) {
+                showLoading();
                 new FinishRefresh(getMy()).execute(nickname, myphone, friendPhone);
             }else{
                 ToastShow("您要先完善信息，才能添加好友");
