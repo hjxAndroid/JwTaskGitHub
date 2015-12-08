@@ -184,6 +184,14 @@
             android:name=".business.main.module.more.MinePhotoActivity"
             android:label="@string/title_activity_mine_photo" >
         </activity>
+        <activity
+            android:name=".business.main.module.task.TaskJobHomeActivity"
+            android:label="@string/title_activity_task_job_home" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.JobAddActivity"
+            android:label="@string/title_activity_job_add" >
+        </activity>
     </application>
 
 </manifest>

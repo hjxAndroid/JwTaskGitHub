@@ -121,8 +121,8 @@ public class TaskHomeActivity extends JwActivity {
                         JwStartActivity(StartSignUpActivity.class);
                         break;
                     case 2:
-                        break;
-                    case 3:
+                        //任务
+                        JwStartActivity(TaskJobHomeActivity.class);
                         break;
                     default:
                         break;

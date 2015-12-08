@@ -63,5 +63,9 @@
     <string name="title_activity_publicy_contact_home">PublicyContactHomeActivity</string>
     <string name="title_activity_check_adapter">CheckAdapter</string>
     <string name="title_activity_publicy_users_list">PublicyUsersListActivity</string>
+    <string name="title_activity_mine_photo">title_activity_mine_photo</string>
+    <string name="title_activity_task_job_home">TaskJobHomeActivity</string>
+    <string name="title_activity_job_add">JobAddActivity</string>
+
 
 </resources>

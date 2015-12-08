@@ -5,13 +5,23 @@
         <item>公告</item>
         <item>签到</item>
         <item>任务</item>
-        <item>日记</item>
     </string-array>
 
     <string-array name="home_image_array">
         <item>@drawable/chat_app_log_btn_normal</item>
         <item>@drawable/chat_app_mail_btn_normal</item>
         <item>@drawable/chat_app_namecard_btn_normal</item>
-        <item>@drawable/chat_app_yunfile_btn_normal</item>
+    </string-array>
+
+    <string-array name="job_home_array">
+        <item>我收到</item>
+        <item>我参与</item>
+        <item>我审核</item>
+    </string-array>
+
+    <string-array name="job_home_image_array">
+        <item>@drawable/icon_create_org_tip1</item>
+        <item>@drawable/icon_create_org_tip2</item>
+        <item>@drawable/icon_create_org_tip3</item>
     </string-array>
 </resources>
