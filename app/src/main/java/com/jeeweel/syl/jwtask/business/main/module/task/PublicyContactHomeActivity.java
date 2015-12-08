@@ -47,6 +47,7 @@ public class PublicyContactHomeActivity extends JwActivity {
     List<Orgunit> groups = new ArrayList<Orgunit>();
     List<List<Userdept>> childs = new ArrayList<List<Userdept>>();
 
+    String tag = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +55,7 @@ public class PublicyContactHomeActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle(getString(R.string.contact));
         users = JwAppAplication.getInstance().getUsers();
+        tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
         getDate();
     }
 
@@ -136,7 +138,11 @@ public class PublicyContactHomeActivity extends JwActivity {
                         @Override
                         public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
                             Userdept userdept = expandableAdapter.getList().get(groupPosition).getChilds().get(childPosition);
-                            JwStartActivity(PublicyUsersListActivity.class,userdept);
+                            Intent intent = new Intent(getMy(),PublicyUsersListActivity.class);
+                            intent.putExtra(StaticStrUtils.baseItem,userdept);
+                            intent.putExtra("tag",tag);
+                            startActivity(intent);
+
                             return true;
                         }
                     });

@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import api.adapter.CheckAdapter;
+import api.util.Contants;
 import api.util.OttUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -66,6 +67,7 @@ public class PublicyUsersListActivity extends JwActivity {
         if (null != userdept) {
             setTitle(userdept.getDept_name());
         }
+        tag = getIntent().getStringExtra("tag");
         ButterKnife.bind(this);
         initRight();
         initListView();
@@ -116,7 +118,7 @@ public class PublicyUsersListActivity extends JwActivity {
                 }
                 Gson gson = new Gson();
                 String json = gson.toJson(userdepts);
-                OttUtils.push("pulbicy_users",json);
+                OttUtils.push(tag,json);
                 finish();
             }
         });

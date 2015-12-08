@@ -38,7 +38,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
     </LinearLayout>
 
@@ -51,7 +52,7 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10.0dip"
             android:layout_marginLeft="5.0dip"
@@ -72,7 +73,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -88,14 +90,15 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10.0dip"
             android:layout_marginLeft="5.0dip"
             android:layout_marginTop="10.0dip"
             android:text="结束时间"
             android:textColor="@color/list_text_name_color"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            />
 
         <TextView
             android:id="@+id/et_end_time"
@@ -109,7 +112,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -149,7 +153,8 @@
             android:singleLine="true"
             android:ellipsize="end"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -159,12 +164,13 @@
 
 
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/li_shr"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/settings_up_select"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:clickable="true">
 
         <TextView
             android:layout_width="60dp"
@@ -188,7 +194,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -197,14 +204,14 @@
     </LinearLayout>
 
 
-    <LinearLayout
+    <LinearLayout android:id="@+id/li_gcz"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/settings_up_select"
         android:gravity="center_vertical">
 
-        <TextView
+        <TextView android:id="@+id/tv_gcz"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10.0dip"
@@ -226,7 +233,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -234,6 +242,45 @@
             android:src="@drawable/arrow_right" />
     </LinearLayout>
 
+    <LinearLayout android:id="@+id/li_cyz"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/settings_up_select"
+        android:gravity="center_vertical"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginLeft="5.0dip"
+            android:layout_marginTop="10.0dip"
+            android:text="参与者"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/list_text_name_color"
+            android:textSize="@dimen/textSize_normal" />
+
+        <TextView
+            android:id="@+id/tv_cyz"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:layout_weight="1.0"
+            android:hint="请选择"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColorHint="@color/text_gray"
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/arrow_right" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -244,7 +291,7 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10.0dip"
             android:layout_marginLeft="5.0dip"
@@ -266,7 +313,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
     </LinearLayout>
 
@@ -300,7 +348,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -320,7 +369,7 @@
         android:clickable="true">
 
         <TextView
-            android:layout_width="60dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10.0dip"
             android:layout_marginLeft="5.0dip"
@@ -341,7 +390,8 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color"/>
 
         <ImageView
             android:layout_width="wrap_content"
@@ -349,56 +399,5 @@
             android:src="@drawable/arrow_right" />
     </LinearLayout>
 
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="45dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/settings_up_select"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10.0dip"
-            android:layout_marginLeft="5.0dip"
-            android:layout_marginTop="10.0dip"
-            android:text="选择参与者"
-            android:layout_gravity="center_vertical"
-            android:textColor="@color/list_text_name_color"
-            android:textSize="@dimen/textSize_normal" />
-
-        <TextView
-            android:id="@+id/et_xzcyz"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
-            android:layout_weight="1.0"
-            android:hint="请选择"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/arrow_right" />
-    </LinearLayout>
-
-
-    <api.view.GridNoScrollView
-        android:id="@+id/noScrollgridview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:gravity="center"
-        android:horizontalSpacing="1dp"
-        android:numColumns="6"
-        android:scrollbars="none"
-        android:verticalSpacing="5dp" >
-    </api.view.GridNoScrollView>
 </LinearLayout>
 </ScrollView>
