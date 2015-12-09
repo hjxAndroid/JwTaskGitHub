@@ -2,16 +2,23 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -19,14 +26,16 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import api.photoview.Bimp;
 import api.util.Contants;
-import api.view.GridNoScrollView;
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,23 +51,35 @@ public class JobAddActivity extends JwActivity {
     TextView etEndTime;
     @Bind(R.id.et_fzr)
     TextView etFzr;
+    @Bind(R.id.li_fzr)
+    LinearLayout liFzr;
     @Bind(R.id.et_shr)
     TextView etShr;
+    @Bind(R.id.tv_gcz)
+    TextView tvGcz;
     @Bind(R.id.et_gcz)
     TextView etGcz;
+    @Bind(R.id.tv_cyz)
+    TextView tvCyz;
     @Bind(R.id.et_rwyq)
     EditText etRwyq;
     @Bind(R.id.et_yxj)
     TextView etYxj;
     @Bind(R.id.et_khbz)
     TextView etKhbz;
-    @Bind(R.id.et_xzcyz)
-    TextView etXzcyz;
-    @Bind(R.id.noScrollgridview)
-    GridNoScrollView noScrollgridview;
     private AlertDialog dialog;
 
     private Activity context;
+
+    String fzrCode = "";
+
+    String shrCode = "";
+
+    String gczCode = "";
+
+    String cyzCode = "";
+
+    Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +88,125 @@ public class JobAddActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle("发起任务");
         context = this;
+        initRight();
     }
+
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("完成");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Task task = save();
+                if (null != task) {
+                    new FinishRefresh(getMy()).execute();
+                } else {
+                    ToastShow("请完善必填信息");
+                }
+            }
+        });
+        addMenuView(menuTextView);
+    }
+
+    private Task save() {
+
+        task = new Task();
+
+        String task_name = etTaskName.getText().toString();
+        if (StrUtils.IsNotEmpty(task_name)) {
+            task.setTask_name(task_name);
+        } else {
+            return null;
+        }
+
+        String start_time = etStartTime.getText().toString();
+        if (StrUtils.IsNotEmpty(start_time)) {
+            task.setBegin_time(start_time);
+        }
+
+
+        String end_time = etEndTime.getText().toString();
+        if (StrUtils.IsNotEmpty(end_time)) {
+            task.setOver_time(end_time);
+        }
+
+
+        String fzr = etFzr.getText().toString();
+        if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
+            task.setPrincipal_code(fzrCode);
+        } else {
+            return null;
+        }
+
+
+        String shr = etShr.getText().toString();
+        if (StrUtils.IsNotEmpty(shr) && StrUtils.IsNotEmpty(shrCode)) {
+            task.setAuditor_code(shrCode);
+        } else {
+            return null;
+        }
+
+
+        String gcz = etGcz.getText().toString();
+        if (StrUtils.IsNotEmpty(gcz) && StrUtils.IsNotEmpty(gczCode)) {
+            task.setObserver_code(gczCode);
+        }
+
+
+        String cyz = tvCyz.getText().toString();
+        if (StrUtils.IsNotEmpty(cyz) && StrUtils.IsNotEmpty(cyzCode)) {
+            task.setObserver_code(cyzCode);
+        }
+
+
+        String rwyq = etRwyq.getText().toString();
+        if (StrUtils.IsNotEmpty(rwyq)) {
+            task.setTask_request(rwyq);
+        }
+
+
+        String yxj = etYxj.getText().toString();
+        if (StrUtils.IsNotEmpty(yxj)) {
+            task.setPriority(yxj);
+        }
+
+
+        String khbz = etKhbz.getText().toString();
+        if (StrUtils.IsNotEmpty(khbz)) {
+            task.setAssess_standard(khbz);
+        }
+
+        return task;
+    }
+
 
     //选择负责人
     @OnClick(R.id.li_fzr)
     void fzrClick() {
-        JwStartActivity(PublicyContactHomeActivity.class);
+        JwStartActivity(PublicyContactHomeActivity.class, Contants.fzr);
     }
 
+    //选择审核人
+    @OnClick(R.id.li_shr)
+    void shrClick() {
+        JwStartActivity(PublicyContactHomeActivity.class, Contants.shr);
+    }
+
+
+    //选择观察者
+    @OnClick(R.id.li_gcz)
+    void gczClick() {
+        JwStartActivity(PublicyContactHomeActivity.class, Contants.gcz);
+    }
+
+
+    //选择参与者
+    @OnClick(R.id.li_cyz)
+    void cyzClick() {
+        JwStartActivity(PublicyContactHomeActivity.class, Contants.cyz);
+    }
 
 
     @OnClick(R.id.li_yxj)
@@ -141,20 +273,127 @@ public class JobAddActivity extends JwActivity {
         String msg = activityMsgEvent.getMsg();
         String json = activityMsgEvent.getParam();
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
-            if(StrUtils.IsNotEmpty(json)){
+            if (StrUtils.IsNotEmpty(json)) {
                 List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
-                if(ListUtils.IsNotNull(userdepts)){
+                if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
-                    for(Userdept userdept : userdepts){
-                        fzr += userdept.getNickname()+",";
+                    for (Userdept userdept : userdepts) {
+                        fzr += userdept.getNickname() + ",";
+                        fzrCode += userdept.getUser_code() + ",";
                     }
-                    if(StrUtils.IsNotEmpty(fzr)){
-                        fzr = fzr.substring(0,fzr.length()-1);
+                    if (StrUtils.IsNotEmpty(fzr)) {
+                        fzr = fzr.substring(0, fzr.length() - 1);
+                    }
+                    if (StrUtils.IsNotEmpty(fzrCode)) {
+                        fzrCode = fzrCode.substring(0, fzrCode.length() - 1);
                     }
                     etFzr.setText(fzr);
                 }
             }
 
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.shr)) {
+            if (StrUtils.IsNotEmpty(json)) {
+                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                if (ListUtils.IsNotNull(userdepts)) {
+                    String fzr = "";
+                    for (Userdept userdept : userdepts) {
+                        fzr += userdept.getNickname() + ",";
+                        shrCode += userdept.getUser_code() + ",";
+                    }
+                    if (StrUtils.IsNotEmpty(fzr)) {
+                        fzr = fzr.substring(0, fzr.length() - 1);
+                    }
+                    if (StrUtils.IsNotEmpty(shrCode)) {
+                        shrCode = shrCode.substring(0, shrCode.length() - 1);
+                    }
+                    etShr.setText(fzr);
+                }
+            }
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.gcz)) {
+            if (StrUtils.IsNotEmpty(json)) {
+                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                if (ListUtils.IsNotNull(userdepts)) {
+                    String fzr = "";
+                    for (Userdept userdept : userdepts) {
+                        fzr += userdept.getNickname() + ",";
+                        gczCode += userdept.getUser_code() + ",";
+                    }
+                    if (StrUtils.IsNotEmpty(fzr)) {
+                        fzr = fzr.substring(0, fzr.length() - 1);
+                    }
+                    if (StrUtils.IsNotEmpty(gczCode)) {
+                        gczCode = gczCode.substring(0, gczCode.length() - 1);
+                    }
+                    etGcz.setText(fzr);
+                }
+            }
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.cyz)) {
+            if (StrUtils.IsNotEmpty(json)) {
+                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                if (ListUtils.IsNotNull(userdepts)) {
+                    String fzr = "";
+                    for (Userdept userdept : userdepts) {
+                        fzr += userdept.getNickname() + ",";
+                        cyzCode += userdept.getUser_code() + ",";
+                    }
+                    if (StrUtils.IsNotEmpty(fzr)) {
+                        fzr = fzr.substring(0, fzr.length() - 1);
+                    }
+                    if (StrUtils.IsNotEmpty(cyzCode)) {
+                        cyzCode = cyzCode.substring(0, cyzCode.length() - 1);
+                    }
+                    tvCyz.setText(fzr);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+            if (null != task) {
+                try {
+                    String unid = Utils.getUUid();
+                    task.setTask_code(unid);
+                    jCloudDB.save(task);
+
+                } catch (CloudServiceException e) {
+                    result = "0";
+                    e.printStackTrace();
+                }
+
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                ToastShow("任务发布成功");
+                finish();
+            } else {
+                ToastShow("保存失败");
+            }
+            hideLoading();
         }
     }
 }
