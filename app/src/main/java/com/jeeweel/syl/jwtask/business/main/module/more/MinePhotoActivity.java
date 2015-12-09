@@ -204,18 +204,12 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
                     sqlInfo.setSql(sSql);
                     sqlInfo.addValue(user_code);
                     sSql = sqlInfo.getBuildSql();
-                    List<Picture>  list = jCloudDB.findAllByWhere(Picture.class, "pic_code=xxxx");
-                    if (ListUtils.IsNotNull(list)) {
-                        Picture picture = list.get(0);
-                    }
                     jCloudDB.deleteByWhere(Picture.class,sSql);
                     CloudFile.upload(sFile, user_code);
-
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
                 }
-
             }
 
             return result;
