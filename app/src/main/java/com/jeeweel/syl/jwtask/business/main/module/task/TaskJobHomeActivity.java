@@ -94,16 +94,20 @@ public class TaskJobHomeActivity extends JwActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 switch (position) {
                     case 0:
-                        //我收到的
-                        JwStartActivity(PublicyListActivity.class);
+                        //我发布的
+                        JwStartActivity(JobListActivity.class);
                         break;
                     case 1:
-                        //我收到的
-                        JwStartActivity(StartSignUpActivity.class);
+                        //我审核的
+                        JwStartActivity(JobShListActivity.class);
                         break;
                     case 2:
                         //我参与的
-                        JwStartActivity(StartSignUpActivity.class);
+                        JwStartActivity(JobCyListActivity.class);
+                        break;
+                    case 3:
+                        //我观察的
+                        JwStartActivity(JobGcListActivity.class);
                         break;
                     default:
                         break;

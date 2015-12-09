@@ -19,6 +19,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -410,8 +411,16 @@ public class JobAddActivity extends JwActivity{
                         task.setNickname(users.getNickname());
                         //设置当前状态(已发布未确认)
                         task.setNow_state(0);
+                        task.setNow_state_name("未确认");
                     }
                     jCloudDB.save(task);
+
+
+                    //保存到流程表里
+                    Taskflow taskflow = new Taskflow();
+                    taskflow.setTask_code(unid);
+                    taskflow.setNow_state(0);
+                    taskflow.setNow_state_name("未确认");
 
                 } catch (CloudServiceException e) {
                     result = "0";

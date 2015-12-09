@@ -20,7 +20,7 @@ android {
 
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INFTICE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 

@@ -42,7 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class JobListActivity extends JwListActivity {
+public class JobCyListActivity extends JwListActivity {
     List<Task> mListItems = new ArrayList<Task>();
 
     @Bind(R.id.listview)
@@ -62,7 +62,7 @@ public class JobListActivity extends JwListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_list);
-        setTitle("我发布的");
+        setTitle("我参与的");
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
         initListViewController();
@@ -143,12 +143,12 @@ public class JobListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
