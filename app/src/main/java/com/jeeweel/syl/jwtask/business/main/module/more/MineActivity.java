@@ -6,18 +6,29 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -27,9 +38,12 @@ public class MineActivity extends JwActivity {
     String phone;
     String birthday;
     String str;
+    String user_code;
 
-    @Bind(R.id.tv_user_head)
-    TextView tv_user_head;
+    @Bind(R.id.tv_user_head1)
+    TextView tv_user_head1;
+    @Bind(R.id.tv_user_head2)
+    ImageView tv_user_head2;
     @Bind(R.id.tv_nickname)
     TextView tv_nickname;
     @Bind(R.id.tv_mail)
@@ -45,6 +59,7 @@ public class MineActivity extends JwActivity {
     @Bind(R.id.tv_area)
     TextView tv_area;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +69,7 @@ public class MineActivity extends JwActivity {
 
         users  = JwAppAplication.getInstance().users;
         phone = users.getUsername();
+        user_code = users.getUser_code();
     }
 
     @Override
@@ -64,7 +80,7 @@ public class MineActivity extends JwActivity {
             tv_nickname.setText(str);
             if (!StrUtils.IsNotEmpty(users.getPhoto_code())) {
                 str = str.substring(str.length() - 2, str.length());
-                tv_user_head.setText(str);
+                tv_user_head1.setText(str);
             }
         }
         str = users.getEmail();
@@ -94,6 +110,63 @@ public class MineActivity extends JwActivity {
         birthday = users.getBirthday();
         if (StrUtils.IsNotEmpty(birthday)) {
             tv_birthday.setText(birthday);
+        }
+        new GetUserPicture(getMy(),tv_user_head2,user_code).execute();
+  //      new GetPicture(getMy(),tv_user_head2,user_code).execute();
+    }
+
+    private class GetPicture extends AsyncTask<String, Void, String> {
+        private Context context;
+        private ImageView imageView;
+        private String user_code;
+
+        public GetPicture(Context context,ImageView imageView,String user_code) {
+            this.context = context;
+            this.imageView = imageView;
+            this.user_code = user_code;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "0";
+            List<Picture> list;
+            try {
+                JCloudDB jCloudDB=new JCloudDB();
+                String sSql = "pic_code=?";
+                SqlInfo sqlInfo = new SqlInfo();
+                sqlInfo.setSql(sSql);
+                sqlInfo.addValue(user_code);
+                sSql = sqlInfo.getBuildSql();
+                list = jCloudDB.findAllByWhere(Picture.class, sSql);
+                if (ListUtils.IsNotNull(list)) {
+                    Picture picture = list.get(0);
+                    String path=picture.getPic_road();
+                    String uri=Utils.getPicUrl()+path;
+                    if (StrUtils.IsNotEmpty(path)){
+                        result = uri;
+                    }
+                }
+            }catch (CloudServiceException e){
+
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            hideLoading();
+            if(result.equals("0")){
+                imageView.setVisibility(View.GONE);
+            }else{
+                JwImageLoader.displayImage(result,imageView);
+                tv_user_head1.setVisibility(View.GONE);
+                tv_user_head2.setVisibility(View.VISIBLE);
+            }
         }
     }
 
