@@ -70,6 +70,11 @@ public class MoreHomeActivity extends JwActivity {
         JwStartActivity(SettingActivity.class);
     }
 
+    @OnClick(R.id.lineHelp)
+    void helpClick() {
+        JwStartActivity(FeedbackActivity.class);
+    }
+
     private void initUser() {
         List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         if (list != null && list.size() > 0) {

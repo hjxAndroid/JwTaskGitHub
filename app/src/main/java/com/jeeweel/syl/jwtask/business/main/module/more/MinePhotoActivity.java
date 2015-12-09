@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 
 public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private static final int IMAGE_REQUEST_CODE = 0;
@@ -44,7 +45,9 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-
+                String s = getImagePath();
+                Logv("qwqwqw--" + s);
+                CroutonALERT(s);
             }
         });
         addMenuView(menuTextView);
@@ -145,5 +148,9 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private Uri getImageUri() {
         return Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
                 IMAGE_FILE_NAME));
+    }
+
+    private String getImagePath() {
+        return StoreUtils.getSDPath() + IMAGE_FILE_NAME;
     }
 }
