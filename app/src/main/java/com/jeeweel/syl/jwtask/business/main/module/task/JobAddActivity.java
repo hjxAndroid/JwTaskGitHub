@@ -112,6 +112,7 @@ public class JobAddActivity extends JwActivity{
             public void onClick(View arg0) {
                 Task task = save();
                 if (null != task) {
+                    showLoading();
                     new FinishRefresh(getMy()).execute();
                 } else {
                     ToastShow("请完善必填信息");
@@ -411,7 +412,7 @@ public class JobAddActivity extends JwActivity{
                         task.setNickname(users.getNickname());
                         //设置当前状态(已发布未确认)
                         task.setNow_state(0);
-                        task.setNow_state_name("未确认");
+                        task.setNow_state_name(Contants.wqr);
                     }
                     jCloudDB.save(task);
 
@@ -420,7 +421,8 @@ public class JobAddActivity extends JwActivity{
                     Taskflow taskflow = new Taskflow();
                     taskflow.setTask_code(unid);
                     taskflow.setNow_state(0);
-                    taskflow.setNow_state_name("未确认");
+                    taskflow.setNow_state_name(Contants.wqr);
+                    jCloudDB.save(taskflow);
 
                 } catch (CloudServiceException e) {
                     result = "0";

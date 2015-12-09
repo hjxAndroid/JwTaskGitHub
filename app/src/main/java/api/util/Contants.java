@@ -51,4 +51,17 @@ public class Contants {
 
     //参与者
     public static String cyz = "cyz";
+
+    //未确认
+    public static String wqr = "未确认";
+    //未确认
+    public static String yqr = "已确认";
+    //未审核（点击提交审核后变成未审核）
+    public static String wsh = "未审核";
+    //未确认
+    public static String ysh = "已审核";
+    //未确认
+    public static String yyq = "已延期";
+    //未确认
+    public static String yfq = "已放弃";
 }

@@ -89,4 +89,5 @@
     <string name="title_activity_job_cy_list">JobCyListActivity</string>
     <string name="title_activity_job_gc_list">JobGcListActivity</string>
     <string name="title_activity_job_sh_list">JobShListActivity</string>
+    <string name="title_activity_job_detail">JobDetailActivity</string>
 </resources>
