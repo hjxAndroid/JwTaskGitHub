@@ -43,7 +43,7 @@ public class Utils {
      * 获取当前系统小时和分钟
      */
     public static String getPicUrl() {
-        String url = Contants.URL + "/" + Contants.WEB_NAME;
+        String url = Contants.All_URL;
         return url;
     }
 }

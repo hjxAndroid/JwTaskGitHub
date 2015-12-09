@@ -4,8 +4,8 @@ package api.util;
  * Created by asusa on 2015/11/18.
  */
 public class Contants {
-    //图片路劲
-    public static String PIC_URL = "PIC_URL";
+    //默认整个ip
+    public static String All_URL = "http://192.168.0.37:8080/JCloud";
     //整个ip地址
     public static String DB_ID = "58975c511b1bcaddecc906a2c9337665";
 

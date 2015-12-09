@@ -70,7 +70,7 @@ public class JobListActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Task>(getMy(), mListItems, R.layout.item_publicy) {
+        commonAdapter = new CommonAdapter<Task>(getMy(), mListItems, R.layout.item_job_list) {
             @Override
             public void convert(ViewHolder helper, Task item) {
                 helper.setText(R.id.tv_name, item.getNickname());
