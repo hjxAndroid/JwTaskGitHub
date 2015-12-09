@@ -14,15 +14,17 @@
     </string-array>
 
     <string-array name="job_home_array">
-        <item>我收到</item>
-        <item>我参与</item>
+        <item>我发布</item>
         <item>我审核</item>
+        <item>我参与</item>
+        <item>我观察</item>
     </string-array>
 
     <string-array name="job_home_image_array">
-        <item>@drawable/icon_create_org_tip1</item>
-        <item>@drawable/icon_create_org_tip2</item>
-        <item>@drawable/icon_create_org_tip3</item>
+        <item>@drawable/icon_friends</item>
+        <item>@drawable/icon_customer</item>
+        <item>@drawable/icon_group_conversation</item>
+        <item>@drawable/icon_dept</item>
     </string-array>
 
 

@@ -6,6 +6,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Ragn on 2015/11/30.
@@ -18,4 +19,9 @@ public class SettingActivity extends JwActivity {
         setTitle("设置");
         setContentView(R.layout.activity_setting);
     }
+
+//    @OnClick(R.id.ll_update)
+//    void updateClick() {
+//        UmengUpdateAgent.forceUpdate(this);
+//    }
 }

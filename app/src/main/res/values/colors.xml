@@ -319,5 +319,21 @@
     <color name="title_gray">#f4f1f1</color>
 
 
-
+    <color name="line_background">#ffcccccc</color>
+    <color name="done_text_color_normal">#ff333333</color>
+    <color name="done_text_color_disabled">#ffcccccc</color>
+    <color name="darker_blue">#ff0099cc</color>
+    <color name="date_picker_text_normal">#ff999999</color>
+    <color name="calendar_header">#ff999999</color>
+    <color name="date_picker_view_animator">#fff2f2f2</color>
+    <color name="ampm_text_color">#8c8c8c</color>
+    <color name="numbers_text_color">#8c8c8c</color>
+    <color name="blue_time">#ff33b5e5</color>
+    <color name="transparent_black_time">#7F000000</color>
+    <color name="text_color_dialog">#FFFFFF</color>
+    <color name="divider_color_dialog">#11000000</color>
+    <color name="msg_color">#FFFFFFFF</color>
+    <color name="dialog_bg">#ffe74c3c</color>
+    <color name="blue_middle">#aa029be9</color>
+    <color name="circle_background">#fff2f2f2</color>
 </resources>

@@ -13,6 +13,7 @@ import net.tsz.afinal.FinalDb;
 
 import java.util.List;
 
+import api.util.Contants;
 import cn.smssdk.SMSSDK;
 
 /**
@@ -46,7 +47,7 @@ public class JwAppAplication extends JeeweelApplication {
         jCloudDB = new JCloudDB();
 
         try {
-            CloudClient.init(getApplicationContext(), "192.168.0.37:8080", "jwtask", "58975c511b1bcaddecc906a2c9337665", "");
+            CloudClient.init(getApplicationContext(), Contants.URL, Contants.WEB_DB, Contants.DB_ID, "");
         }catch (Exception e){
             e.printStackTrace();
         }

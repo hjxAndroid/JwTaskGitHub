@@ -1,9 +1,9 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -14,8 +14,21 @@ public class FeedbackActivity extends JwActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actvity_feedback);
+        setTitle("帮助与反馈");
+        initRight();
     }
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("提交");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
 
+            }
+        });
+        addMenuView(menuTextView);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
