@@ -105,6 +105,11 @@ public class Task {
      * 目前状态
      */
     private int now_state;
+
+    /**
+     * 目前状态名
+     */
+    private String now_state_name;
     /**
      * 图片代码
      */
@@ -325,6 +330,14 @@ public class Task {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getNow_state_name() {
+        return now_state_name;
+    }
+
+    public void setNow_state_name(String now_state_name) {
+        this.now_state_name = now_state_name;
     }
 }
 

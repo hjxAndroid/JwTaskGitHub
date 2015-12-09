@@ -53,8 +53,8 @@ public class LoginActivity extends JwActivity {
     }
 
     private void autologin(){
-        boolean autu = false;
-       // boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
+       // boolean autu = false;
+        boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
         if(autu){
             JwStartActivity(TabHostActivity.class);
         }else{

@@ -86,4 +86,7 @@
     <string name="sans_serif" translatable="false">sans-serif</string>
     <string name="day_of_week_label_typeface" translatable="false">sans-serif</string>
     <string name="title_activity_job_list">JobListActivity</string>
+    <string name="title_activity_job_cy_list">JobCyListActivity</string>
+    <string name="title_activity_job_gc_list">JobGcListActivity</string>
+    <string name="title_activity_job_sh_list">JobShListActivity</string>
 </resources>
