@@ -21,6 +21,7 @@
                 android:id="@+id/ll_user_head"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_Height"
+                android:orientation="horizontal"
                 android:background="@drawable/shape_li"
                 android:clickable="true"
                 android:gravity="center">
@@ -33,27 +34,34 @@
                     android:layout_marginLeft="@dimen/margin_Size"
                     android:textSize="@dimen/test_size" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="right">
-
                     <TextView
-                        android:id="@+id/tv_user_head"
+                        android:id="@+id/tv_user_head1"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:background="@drawable/circular_portrait"
-                        android:gravity="center"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20dp"
                         android:text="姓名"
+                        android:gravity="center"
                         android:textColor="@color/white"
                         android:textSize="@dimen/name_size" />
-
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/tv_user_head2"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_alignParentRight="true" />
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
                         android:background="@drawable/_uidic_forms_item_arrow" />
-                </LinearLayout>
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout

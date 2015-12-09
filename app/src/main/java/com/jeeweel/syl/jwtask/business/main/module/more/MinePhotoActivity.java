@@ -1,8 +1,11 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
 import java.io.File;
+import java.util.List;
 
+import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -16,9 +19,19 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+
 
 public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private static final int IMAGE_REQUEST_CODE = 0;
@@ -28,6 +41,8 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private static final String IMAGE_FILE_NAME = "header.jpg";
 
     private ImageView mImageHeader;
+    Users users;
+    String sFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +51,8 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         setTitle("设置头像");
         setupViews();
         initRight();
+
+        users  = JwAppAplication.getInstance().users;
     }
 
     private void initRight() {
@@ -45,9 +62,10 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                String s = getImagePath();
-                Logv("qwqwqw--" + s);
-                CroutonALERT(s);
+                sFile = getImagePath();
+                Logv("qwqwqw--" + sFile);
+                CroutonALERT(sFile);
+                new FinishRefresh(getMy()).execute();
             }
         });
         addMenuView(menuTextView);
@@ -151,6 +169,66 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
     }
 
     private String getImagePath() {
+     //   return Utils.getPicUrl() + StoreUtils.getSDPath() + IMAGE_FILE_NAME;
         return StoreUtils.getSDPath() + IMAGE_FILE_NAME;
+    }
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+            String user_code = users.getUser_code();
+
+            if (StrUtils.IsNotEmpty(user_code)) {
+                try {
+                    //保存图片表
+                    // File file = new File(sFile);
+                    Logv("qwqwqw--" + sFile + "~~~" + user_code);
+                    String sSql = "pic_code=?";
+                    SqlInfo sqlInfo = new SqlInfo();
+                    sqlInfo.setSql(sSql);
+                    sqlInfo.addValue(user_code);
+                    sSql = sqlInfo.getBuildSql();
+                    List<Picture>  list = jCloudDB.findAllByWhere(Picture.class, "pic_code=xxxx");
+                    if (ListUtils.IsNotNull(list)) {
+                        Picture picture = list.get(0);
+                    }
+                    jCloudDB.deleteByWhere(Picture.class,sSql);
+                    CloudFile.upload(sFile, user_code);
+
+                } catch (CloudServiceException e) {
+                    result = "0";
+                    e.printStackTrace();
+                }
+
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+
+            } else {
+                ToastShow("保存失败");
+            }
+            hideLoading();
+        }
     }
 }
