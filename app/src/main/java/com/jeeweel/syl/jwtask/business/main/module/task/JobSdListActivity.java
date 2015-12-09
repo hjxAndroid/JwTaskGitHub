@@ -42,7 +42,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class JobCyListActivity extends JwListActivity {
+public class JobSdListActivity extends JwListActivity {
     List<Task> mListItems = new ArrayList<Task>();
 
     @Bind(R.id.listview)
@@ -62,7 +62,7 @@ public class JobCyListActivity extends JwListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_list);
-        setTitle("我参与的");
+        setTitle("我收到的");
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
         initListViewController();
@@ -85,8 +85,8 @@ public class JobCyListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
-//        Publicity publicity = (Publicity) commonAdapter.getItem(position);
-//        JwStartActivity(PublicyDetailActivity.class, publicity);
+        Task task = (Task) commonAdapter.getItem(position);
+        JwStartActivity(JobDetailActivity.class, task);
     }
 
     @Override
@@ -143,12 +143,12 @@ public class JobCyListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "or principal_code like "+ StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "or principal_code like "+ StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/doctor_memo"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/linear_item_bg"
+    android:orientation="horizontal">
+
+    <View android:id="@+id/view"
+        android:layout_width="0.5dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/gray"/>
+
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_xz"
+        android:layout_width="@dimen/doctor_width_height"
+        android:layout_height="@dimen/doctor_width_height"
+        android:layout_marginRight="10.0dip"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_toRightOf="@+id/view"
+        android:src="@drawable/dialog_share_link_default_icon"
+        app:border_color="@color/white"
+        app:border_width="1.0dip"
+        />
+
+    <TextView android:id="@+id/tv_nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:text="张三"
+        style="@style/text_nomor_style"
+        android:layout_alignTop="@+id/iv_xz"
+        android:layout_toRightOf="@+id/iv_xz"
+        android:layout_alignParentTop="@+id/iv_xz"
+        />
+
+    <TextView android:id="@+id/tv_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发布"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_small"
+        android:layout_toRightOf="@+id/iv_xz"
+        android:layout_below="@+id/tv_nickname"
+        android:layout_marginTop="4dp"
+        />
+
+    <TextView android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2015-10-05"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_small"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+</RelativeLayout>

@@ -16,7 +16,7 @@
     <string-array name="job_home_array">
         <item>我发布</item>
         <item>我审核</item>
-        <item>我参与</item>
+        <item>我收到</item>
         <item>我观察</item>
     </string-array>
 

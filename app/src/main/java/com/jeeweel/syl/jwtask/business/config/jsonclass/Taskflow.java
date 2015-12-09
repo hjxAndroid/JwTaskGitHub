@@ -1,11 +1,18 @@
 package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
+import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
+import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
 /**
  * Created by asusa on 2015/12/9.
  */
+@Table(name = "taskflow")
 public class Taskflow extends BaseItem {
+    /**
+     * mid
+     */
+    @Id(column = "mid")
     private int mid;
     /**
      * 任务code
@@ -29,6 +36,18 @@ public class Taskflow extends BaseItem {
      * 更新时间
      */
     private String update_time;
+
+
+    private String user_code;
+
+    private String user_name;
+
+    private String nickname;
+
+    /**
+     * 所做操作
+     */
+    private String user_action;
 
     public int getMid() {
         return mid;
@@ -76,5 +95,38 @@ public class Taskflow extends BaseItem {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+
+    public String getUser_code() {
+        return user_code;
+    }
+
+    public void setUser_code(String user_code) {
+        this.user_code = user_code;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getUser_action() {
+        return user_action;
+    }
+
+    public void setUser_action(String user_action) {
+        this.user_action = user_action;
     }
 }
