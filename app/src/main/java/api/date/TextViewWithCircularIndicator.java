@@ -7,7 +7,7 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import com.linewell.wellapp.main.R;
+import com.jeeweel.syl.jwtask.R;
 
 public class TextViewWithCircularIndicator extends TextView {
     

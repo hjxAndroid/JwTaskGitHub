@@ -24,7 +24,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.linewell.wellapp.main.R;
+import com.jeeweel.syl.jwtask.R;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 public class DatePickerDialog extends DialogFragment implements View.OnClickListener, DatePickerController {

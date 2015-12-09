@@ -22,18 +22,6 @@ public class Utils {
         return all;
     }
 
-    //获取ip地址
-    public static String getIp(Context mcContext){
-        String ip = (String) SharedPreferencesUtils.get(mcContext, Contants.BASE_URL, Contants.URL);
-        return ip;
-    }
-
-    //获取图片ip地址
-    public static String getPicIp(Context mcContext){
-        String picIp = (String) SharedPreferencesUtils.get(mcContext, Contants.PIC_URL, Contants.P_URL);
-        return picIp;
-    }
-
     //获取32位随机码
     public static String getUUid(){
         String uuid = java.util.UUID.randomUUID().toString();

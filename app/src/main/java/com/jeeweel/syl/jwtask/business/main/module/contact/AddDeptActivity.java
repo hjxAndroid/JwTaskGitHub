@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -144,7 +145,6 @@ public class AddDeptActivity extends JwActivity {
                 String orgUnid = "";
                 if(StrUtils.IsNotEmpty(org_code)){
                     orgUnid = org_code;
-
                     //本来已经有，就不必再添加组织表
                 }else {
                     orgUnid = Utils.getUUid();
@@ -186,6 +186,7 @@ public class AddDeptActivity extends JwActivity {
                     userdept.setOrg_name(orgname);
                     userdept.setDept_code(deptUnid);
                     userdept.setDept_name(deptName);
+                    userdept.setUser_code(friend.getFriend_code());
                     userdept.setUsername(friend.getFriend_name());
                     userdept.setNickname(friend.getFriend_nickname());
                     jCloudDB.save(userdept);
@@ -194,6 +195,7 @@ public class AddDeptActivity extends JwActivity {
                     Userorg userorg = new Userorg();
                     userorg.setOrg_code(orgUnid);
                     userorg.setOrg_name(orgname);
+                    userdept.setUser_code(friend.getFriend_code());
                     userorg.setUser_name(friend.getFriend_name());
                     userorg.setNickname(friend.getFriend_nickname());
                     jCloudDB.save(userorg);
@@ -213,6 +215,7 @@ public class AddDeptActivity extends JwActivity {
             hideLoading();
             if (result.equals("1")) {
                 ToastShow("创建成功");
+                OttUtils.push("deptAdd_refresh","");
                 finish();
             } else {
                 ToastShow("创建失败");

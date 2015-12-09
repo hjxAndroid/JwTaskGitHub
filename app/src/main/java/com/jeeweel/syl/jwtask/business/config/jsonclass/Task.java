@@ -58,6 +58,14 @@ public class Task {
      */
     private String promulgator_code;
     /**
+     * 发布人电话号码
+     */
+    private String promulgator_name;
+    /**
+     * 发布人姓名
+     */
+    private String nickname;
+    /**
      * 审核人预留ID
      */
     private int auditor;
@@ -98,10 +106,6 @@ public class Task {
      */
     private String now_state;
     /**
-     * 图片id,预留字段
-     */
-    private int photo_id;
-    /**
      * 图片代码
      */
     private String photo_code;
@@ -114,14 +118,6 @@ public class Task {
      */
     private String update_time;
 
-
-    public int getPhoto_id() {
-        return photo_id;
-    }
-
-    public void setPhoto_id(int photo_id) {
-        this.photo_id = photo_id;
-    }
 
     public String getPhoto_code() {
         return photo_code;
@@ -313,6 +309,22 @@ public class Task {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getPromulgator_name() {
+        return promulgator_name;
+    }
+
+    public void setPromulgator_name(String promulgator_name) {
+        this.promulgator_name = promulgator_name;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
 

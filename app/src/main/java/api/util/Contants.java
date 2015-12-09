@@ -7,13 +7,13 @@ public class Contants {
     //图片路劲
     public static String PIC_URL = "PIC_URL";
     //整个ip地址
-    public static String BASE_URL = "BASE_URL";
+    public static String DB_ID = "58975c511b1bcaddecc906a2c9337665";
 
     //默认整个ip
-    public static String URL = "http://121.43.116.147:80/aj/Jeeweel/";
+    public static String URL = "192.168.0.37:8080";
 
     //默认图片ip
-    public static String P_URL="http://121.43.116.147:80/aj/";
+    public static String WEB_NAME="jwtask";
 
     //团队传递参数
     public static String group = "group";

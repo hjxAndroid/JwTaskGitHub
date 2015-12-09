@@ -19,7 +19,7 @@ import android.text.format.Time;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.linewell.wellapp.main.R;
+import com.jeeweel.syl.jwtask.R;
 
 public class SimpleMonthView extends View {
 

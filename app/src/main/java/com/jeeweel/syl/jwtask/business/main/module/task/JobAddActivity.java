@@ -14,12 +14,15 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
+
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.more.DateTimePickDialogUtil;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -28,11 +31,14 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import api.date.DatePickerDialog;
 import api.photoview.Bimp;
 import api.util.Contants;
 import api.util.Utils;
@@ -40,7 +46,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class JobAddActivity extends JwActivity {
+public class JobAddActivity extends JwActivity{
 
 
     @Bind(R.id.et_task_name)
@@ -81,6 +87,9 @@ public class JobAddActivity extends JwActivity {
 
     Task task;
 
+    Users users;
+
+    int timeFlag= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +97,7 @@ public class JobAddActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle("发起任务");
         context = this;
+        users = JwAppAplication.getInstance().getUsers();
         initRight();
     }
 
@@ -179,6 +189,27 @@ public class JobAddActivity extends JwActivity {
         }
 
         return task;
+    }
+
+    //开始时间
+    @OnClick(R.id.li_start_time)
+    void starttimeClick() {
+        timeFlag = 0;
+        String starttime = etStartTime.getText().toString();
+        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                JobAddActivity.this, starttime);
+        dateTimePicKDialog.dateTimePicKDialog(etStartTime);
+    }
+
+
+    //接受时间
+    @OnClick(R.id.li_end_time)
+    void endtimeClick() {
+        timeFlag = 1;
+        String endtiem = etEndTime.getText().toString();
+        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
+                JobAddActivity.this, endtiem);
+        dateTimePicKDialog.dateTimePicKDialog(etEndTime);
     }
 
 
@@ -372,7 +403,12 @@ public class JobAddActivity extends JwActivity {
             if (null != task) {
                 try {
                     String unid = Utils.getUUid();
-                    task.setTask_code(unid);
+                    if(null!=users){
+                        task.setTask_code(unid);
+                        task.setPromulgator_code(users.getUser_code());
+                        task.setPromulgator_name(users.getUsername());
+                        task.setNickname(users.getNickname());
+                    }
                     jCloudDB.save(task);
 
                 } catch (CloudServiceException e) {
@@ -396,4 +432,19 @@ public class JobAddActivity extends JwActivity {
             hideLoading();
         }
     }
+
+    @Subscribe
+    public void dateTimeSelect(ActivityMsgEvent activityMsgEvent) {
+        if (activityMsgEvent.getMsg().equals("dateTimePick")) {
+            String birthday = activityMsgEvent.getJson();
+            if (StrUtils.IsNotEmpty(birthday)) {
+                if(timeFlag==0){
+                    etStartTime.setText(birthday);
+                }else{
+                    etEndTime.setText(birthday);
+                }
+            }
+        }
+    }
+
 }
