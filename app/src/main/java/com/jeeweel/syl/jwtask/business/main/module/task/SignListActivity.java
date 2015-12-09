@@ -8,9 +8,12 @@ import android.util.Log;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.contact.FriendDetailActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
@@ -37,6 +40,7 @@ public class SignListActivity extends JwListActivity {
     private int pageStart = 0; //截取的开始
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
+    private String isUserCode;
 
     List<Sign> list;
 
@@ -59,13 +63,35 @@ public class SignListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<Sign>(getMy(), mListItems, R.layout.item_sign_information) {
             @Override
             public void convert(ViewHolder helper, Sign item) {
-                helper.setText(R.id.tv_sign_title, item.getSign_title());
-                helper.setText(R.id.tv_name, item.getProuser_name());
-                helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
+                String sCode = item.getReceive_code();
+                if (sCode.contains(",")) {
+                    String[] sCodes = sCode.split(",");
+                    for (int i = 0; i < sCode.length(); i++) {
+                        isUserCode = sCodes[i];
+                        if (isUserCode.equals(users.getUser_code())) {
+                            helper.setText(R.id.tv_sign_title, item.getSign_title());
+                            helper.setText(R.id.tv_name, item.getProuser_name());
+                            helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
+                        }
+                    }
+                } else {
+                    isUserCode = sCode;
+                    if (isUserCode.equals(users.getUser_code())) {
+                        helper.setText(R.id.tv_sign_title, item.getSign_title());
+                        helper.setText(R.id.tv_name, item.getProuser_name());
+                        helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
+                    }
+                }
             }
         };
         setCommonAdapter(commonAdapter);
         super.initListViewController();
+    }
+
+    @Override
+    public void onListItemClick(int position) {
+        Sign sign = (Sign) commonAdapter.getItem(position);
+        JwStartActivity(SignUpActivity.class, sign.getSign_code());
     }
 
     @Override
@@ -124,7 +150,6 @@ public class SignListActivity extends JwListActivity {
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
-
                 if (ListUtils.IsNotNull(list)) {
                     result = "1";
                 } else {
@@ -140,8 +165,6 @@ public class SignListActivity extends JwListActivity {
             if (result.equals("1")) {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
-            } else {
-                //没有加载到数据
             }
             listview.onRefreshComplete();
             hideLoading();
