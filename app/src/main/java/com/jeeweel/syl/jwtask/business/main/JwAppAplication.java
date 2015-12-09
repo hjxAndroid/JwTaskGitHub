@@ -47,7 +47,7 @@ public class JwAppAplication extends JeeweelApplication {
         jCloudDB = new JCloudDB();
 
         try {
-            CloudClient.init(getApplicationContext(), Contants.URL, Contants.WEB_NAME, Contants.DB_ID, "");
+            CloudClient.init(getApplicationContext(), Contants.URL, Contants.WEB_DB, Contants.DB_ID, "");
         }catch (Exception e){
             e.printStackTrace();
         }

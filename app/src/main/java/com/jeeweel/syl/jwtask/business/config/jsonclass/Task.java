@@ -104,7 +104,7 @@ public class Task {
     /**
      * 目前状态
      */
-    private String now_state;
+    private int now_state;
     /**
      * 图片代码
      */
@@ -287,11 +287,11 @@ public class Task {
         this.assess_standard = assess_standard;
     }
 
-    public String getNow_state() {
+    public int getNow_state() {
         return now_state;
     }
 
-    public void setNow_state(String now_state) {
+    public void setNow_state(int now_state) {
         this.now_state = now_state;
     }
 

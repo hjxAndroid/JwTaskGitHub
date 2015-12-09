@@ -408,6 +408,8 @@ public class JobAddActivity extends JwActivity{
                         task.setPromulgator_code(users.getUser_code());
                         task.setPromulgator_name(users.getUsername());
                         task.setNickname(users.getNickname());
+                        //设置当前状态(已发布未确认)
+                        task.setNow_state(0);
                     }
                     jCloudDB.save(task);
 

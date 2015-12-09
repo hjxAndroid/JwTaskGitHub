@@ -85,4 +85,5 @@
     <string name="radial_numbers_typeface" translatable="false">sans-serif</string>
     <string name="sans_serif" translatable="false">sans-serif</string>
     <string name="day_of_week_label_typeface" translatable="false">sans-serif</string>
+    <string name="title_activity_job_list">JobListActivity</string>
 </resources>

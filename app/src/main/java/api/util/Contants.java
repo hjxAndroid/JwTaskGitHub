@@ -12,8 +12,11 @@ public class Contants {
     //默认整个ip
     public static String URL = "192.168.0.37:8080";
 
-    //默认图片ip
-    public static String WEB_NAME="jwtask";
+    //后台服务名
+    public static String WEB_NAME = "JCloud";
+
+    //后台数据库
+    public static String WEB_DB="jwtask";
 
     //团队传递参数
     public static String group = "group";
