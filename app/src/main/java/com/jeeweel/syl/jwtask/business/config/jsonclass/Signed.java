@@ -50,6 +50,14 @@ public class Signed {
      */
     private String sign_msg;
     /**
+     * 签到code
+     */
+    private String sign_code;
+    /**
+     * 签到人code
+     */
+    private String sign_user_code;
+    /**
      * 备注
      */
     private String remark;
@@ -118,6 +126,22 @@ public class Signed {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public void setSign_code(String sign_code) {
+        this.sign_code = sign_code;
+    }
+
+    public String getSign_code() {
+        return sign_code;
+    }
+
+    public String getSign_user_code() {
+        return sign_user_code;
+    }
+
+    public void setSign_user_code(String sign_user_code) {
+        this.sign_user_code = sign_user_code;
     }
 
     public String getSign_msg() {
