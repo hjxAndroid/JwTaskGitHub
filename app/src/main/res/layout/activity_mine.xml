@@ -50,7 +50,7 @@
                         android:textColor="@color/white"
                         android:textSize="@dimen/name_size" />
                     <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/tv_user_head2"
+                        android:id="@+id/iv_user_head2"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginRight="20dp"

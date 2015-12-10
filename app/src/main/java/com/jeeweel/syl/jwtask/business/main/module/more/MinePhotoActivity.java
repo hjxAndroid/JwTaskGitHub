@@ -1,7 +1,8 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
 import java.io.File;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import android.content.Context;
 import android.net.Uri;
@@ -28,7 +29,6 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
-import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
@@ -63,9 +63,8 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
             @Override
             public void onClick(View arg0) {
                 sFile = getImagePath();
-                Logv("qwqwqw--" + sFile);
-                CroutonALERT(sFile);
                 new FinishRefresh(getMy()).execute();
+                ToastShow("保存成功");
             }
         });
         addMenuView(menuTextView);
@@ -142,7 +141,7 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         }
     }
 
-    public void resizeImage(Uri uri) {
+    public void resizeImage(Uri uri) {//调整图片大小
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");
@@ -160,6 +159,11 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(photo);
             mImageHeader.setImageDrawable(drawable);
+            try{
+                saveFile(photo);
+            }catch (IOException e){
+
+            }
         }
     }
 
@@ -171,6 +175,19 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private String getImagePath() {
      //   return Utils.getPicUrl() + StoreUtils.getSDPath() + IMAGE_FILE_NAME;
         return StoreUtils.getSDPath() + IMAGE_FILE_NAME;
+    }
+
+    /**
+     * 保存文件
+     * @param bm
+     * @throws IOException
+     */
+    public void saveFile(Bitmap bm) throws IOException {
+        File myCaptureFile = new File(getImagePath());
+        FileOutputStream bos = new FileOutputStream(myCaptureFile);
+        bm.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        bos.flush();
+        bos.close();
     }
 
     /**
@@ -193,12 +210,9 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
 
             String result = "1";
             String user_code = users.getUser_code();
-
             if (StrUtils.IsNotEmpty(user_code)) {
                 try {
                     //保存图片表
-                    // File file = new File(sFile);
-                    Logv("qwqwqw--" + sFile + "~~~" + user_code);
                     String sSql = "pic_code=?";
                     SqlInfo sqlInfo = new SqlInfo();
                     sqlInfo.setSql(sSql);
@@ -220,7 +234,7 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
             if (result.equals("1")) {
 
             } else {
-                ToastShow("保存失败");
+                ToastShow("上传失败");
             }
             hideLoading();
         }
