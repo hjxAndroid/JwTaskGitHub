@@ -50,6 +50,7 @@ import java.io.IOException;
 import api.photoview.Bimp;
 import api.photoview.FileUtils;
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -422,7 +423,9 @@ public class PublicyAddActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-
+                OttUtils.push("publicy_refresh","");
+                ToastShow("保存成功");
+                finish();
             } else {
                ToastShow("保存失败");
             }
