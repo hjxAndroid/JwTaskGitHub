@@ -124,6 +124,12 @@ public class Task extends BaseItem{
      */
     private String update_time;
 
+    /**
+     * 确认时间
+     * @return
+     */
+    private String confirm_time;
+
 
     public String getPhoto_code() {
         return photo_code;
@@ -339,6 +345,14 @@ public class Task extends BaseItem{
 
     public void setNow_state_name(String now_state_name) {
         this.now_state_name = now_state_name;
+    }
+
+    public String getConfirm_time() {
+        return confirm_time;
+    }
+
+    public void setConfirm_time(String confirm_time) {
+        this.confirm_time = confirm_time;
     }
 }
 

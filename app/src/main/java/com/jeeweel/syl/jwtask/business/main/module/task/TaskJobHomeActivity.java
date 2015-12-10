@@ -72,10 +72,13 @@ public class TaskJobHomeActivity extends JwActivity {
                         JwStartActivity(JobShListActivity.class);
                         break;
                     case 2:
-                        //我参与的
-                        JwStartActivity(JobSdListActivity.class);
+                        //我负责的
+                        JwStartActivity(JobFzListActivity.class);
                         break;
                     case 3:
+                        //我参与的
+                        JwStartActivity(JobCyListActivity.class);
+                    case 4:
                         //我观察的
                         JwStartActivity(JobGcListActivity.class);
                         break;

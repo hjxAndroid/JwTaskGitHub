@@ -76,6 +76,15 @@ public class Submit {
     private String create_time;
     private String update_time;
 
+    /**
+     * 审核评价
+     */
+    private String audit_content;
+    /**
+     * 审核结论
+     */
+    private String audit_evaluate;
+
     public int getMid() {
         return mid;
     }
@@ -210,6 +219,23 @@ public class Submit {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+
+    public String getAudit_content() {
+        return audit_content;
+    }
+
+    public void setAudit_content(String audit_content) {
+        this.audit_content = audit_content;
+    }
+
+    public String getAudit_evaluate() {
+        return audit_evaluate;
+    }
+
+    public void setAudit_evaluate(String audit_evaluate) {
+        this.audit_evaluate = audit_evaluate;
     }
 }
 

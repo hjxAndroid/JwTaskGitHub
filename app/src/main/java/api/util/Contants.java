@@ -64,4 +64,18 @@ public class Contants {
     public static String yyq = "已延期";
     //未确认
     public static String yfq = "已放弃";
+
+
+    //发布
+    public static String action_fb = "发布";
+    //发布
+    public static String action_qr = "已确认";
+    //发布
+    public static String action_dj = "已递交";
+    //发布
+    public static String action_sh = "已审核";
+    //发布
+    public static String action_sqyq = "申请延期";
+    //发布
+    public static String action_fq = "放弃";
 }

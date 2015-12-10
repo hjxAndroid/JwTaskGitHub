@@ -3,38 +3,50 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddActivity;
+import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
+import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.jeeweel.syl.lib.api.core.toast.JwToast;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import api.util.Contants;
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
-public class JobShListActivity extends JwListActivity {
+public class JobCyListActivity extends JwListActivity {
     List<Task> mListItems = new ArrayList<Task>();
-    @Bind(R.id.tv_wzx)
-    TextView tvWzx;
-    @Bind(R.id.tv_yzx)
-    TextView tvYzx;
+
     @Bind(R.id.listview)
     PullToRefreshListView listview;
-
     private CommonAdapter commonAdapter;
 
     private int pageStart = 0; //截取的开始
@@ -45,40 +57,16 @@ public class JobShListActivity extends JwListActivity {
 
     private Users users;
 
-    int flag = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_job_sh_list);
-        setTitle("我审核的");
+        setContentView(R.layout.activity_job_list);
+        setTitle("我参与的");
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
         initListViewController();
     }
-
-
-    //未审批
-    @OnClick(R.id.tv_wzx)
-    void wzxClick() {
-        resetAll();
-        tvWzx.setBackgroundResource(R.drawable.shape_blue);
-        tvWzx.setTextColor(getResources().getColor(R.color.white));
-        dataSourceClear(0, mListItems);
-        flag = 2;
-        onListViewHeadRefresh();
-    }
-
-    //已审批
-    @OnClick(R.id.tv_yzx)
-    void yzxClick() {
-        resetAll();
-        tvYzx.setBackgroundResource(R.drawable.shape_blue);
-        tvYzx.setTextColor(getResources().getColor(R.color.white));
-        dataSourceClear(0, mListItems);
-        flag = 3;
-        onListViewHeadRefresh();
-    }
-
 
     @Override
     public void initListViewController() {
@@ -97,13 +85,8 @@ public class JobShListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
-        Task task = (Task) commonAdapter.getItem(position);
-        if(flag==2){
-            JwStartActivity(FinishShActivity.class, task);
-        }else{
-            JwStartActivity(YshActivity.class, task);
-        }
-
+//        Publicity publicity = (Publicity) commonAdapter.getItem(position);
+//        JwStartActivity(PublicyDetailActivity.class, publicity);
     }
 
     @Override
@@ -160,12 +143,12 @@ public class JobShListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = "+ flag + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = "+ flag + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
@@ -187,7 +170,6 @@ public class JobShListActivity extends JwListActivity {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
             } else {
-                commonAdapter.notifyDataSetChanged();
                 //没有加载到数据
             }
             listview.onRefreshComplete();
@@ -195,10 +177,5 @@ public class JobShListActivity extends JwListActivity {
         }
     }
 
-    private void resetAll() {
-        tvWzx.setBackgroundResource(R.drawable.shape_white);
-        tvWzx.setTextColor(getResources().getColor(R.color.list_text_color));
-        tvYzx.setBackgroundResource(R.drawable.shape_white);
-        tvYzx.setTextColor(getResources().getColor(R.color.list_text_color));
-    }
+
 }

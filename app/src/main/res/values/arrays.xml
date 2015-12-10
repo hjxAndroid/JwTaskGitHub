@@ -16,7 +16,8 @@
     <string-array name="job_home_array">
         <item>我发布</item>
         <item>我审核</item>
-        <item>我收到</item>
+        <item>我负责</item>
+        <item>我参与</item>
         <item>我观察</item>
     </string-array>
 
@@ -24,6 +25,7 @@
         <item>@drawable/icon_friends</item>
         <item>@drawable/icon_customer</item>
         <item>@drawable/icon_group_conversation</item>
+        <item>@drawable/icon_dept</item>
         <item>@drawable/icon_dept</item>
     </string-array>
 
@@ -35,16 +37,21 @@
     </string-array>
 
     <string-array name="khbz_array">
-        <item>2</item>
-        <item>4</item>
-        <item>6</item>
         <item>8</item>
+        <item>6</item>
+        <item>4</item>
+        <item>2</item>
         <item>-2</item>
         <item>-4</item>
         <item>-6</item>
         <item>-8</item>
     </string-array>
 
-
+    <string-array name="zwpj_array">
+        <item>优秀</item>
+        <item>良好</item>
+        <item>差</item>
+        <item>未完成</item>
+    </string-array>
 
 </resources>
