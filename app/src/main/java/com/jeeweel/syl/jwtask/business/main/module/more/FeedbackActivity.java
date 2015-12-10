@@ -1,34 +1,44 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.EditText;
 
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Feedback;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
-public class FeedbackActivity extends JwActivity {
+import api.util.Utils;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
+public class FeedbackActivity extends JwActivity {
+    EditText et_content;
+    String content;
+    Users users;
+    String user_code;
+    JCloudDB jCloudDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.actvity_feedback);
+        setContentView(R.layout.activity_feedback);
+        ButterKnife.bind(this);
         setTitle("帮助与反馈");
-        initRight();
-    }
-    private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("提交");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
 
-            }
-        });
-        addMenuView(menuTextView);
+        et_content= (EditText) findViewById(R.id.et_content);
+        users = JwAppAplication.getInstance().getUsers();
+        user_code = users.getUser_code();
+        jCloudDB = new JCloudDB();
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -49,5 +59,56 @@ public class FeedbackActivity extends JwActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class saveContent extends AsyncTask<String, Void, String> {
+        private Context context;
+
+        public saveContent(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "1";
+            String code = Utils.getUUid();
+            Logv("qwqwqw--code" + code);
+            Feedback feedback = new Feedback();
+            feedback.setCode(code);
+            feedback.setUser_code(user_code);
+            feedback.setContent(content);
+            try {
+                jCloudDB.save(feedback);
+                Logv("qwqwqw--feedback");
+            } catch (CloudServiceException e) {
+                Logv("qwqwqw--CloudServiceException");
+                result = "0";
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            hideLoading();
+            if (result.equals("1")) {
+                Logv("qwqwqw--数据上传成功");
+                ToastShow("数据上传成功");
+            } else {
+                Logv("qwqwqw--数据上传成功");
+                ToastShow("数据保存失败");
+            }
+            FeedbackActivity.this.finish();
+        }
+    }
+
+    @OnClick(R.id.bt_feed_back)
+    public void feedbackClick() {
+        content = StrUtils.StrIfNull(et_content.getText().toString());
+        new saveContent(getMy()).execute();
     }
 }
