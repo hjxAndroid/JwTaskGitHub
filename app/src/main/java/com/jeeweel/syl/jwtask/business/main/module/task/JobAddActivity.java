@@ -90,6 +90,10 @@ public class JobAddActivity extends JwActivity{
 
     Users users;
 
+    String orgcode;
+
+    String orgname;
+
     int timeFlag= 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +103,8 @@ public class JobAddActivity extends JwActivity{
         setTitle("发起任务");
         context = this;
         users = JwAppAplication.getInstance().getUsers();
+        orgcode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
+        orgname = (String) SharedPreferencesUtils.get(getMy(), Contants.org_name, "");
         initRight();
     }
 
@@ -414,6 +420,12 @@ public class JobAddActivity extends JwActivity{
                         task.setNow_state(0);
                         task.setNow_state_name(Contants.wqr);
                     }
+
+                    if(StrUtils.IsNotEmpty(orgcode)){
+                        task.setTask_code(orgcode);
+                        task.setOrg_name(orgname);
+                    }
+
                     jCloudDB.save(task);
 
 
@@ -422,6 +434,7 @@ public class JobAddActivity extends JwActivity{
                     taskflow.setTask_code(unid);
                     taskflow.setNow_state(0);
                     taskflow.setNow_state_name(Contants.wqr);
+                    taskflow.setUser_action(Contants.action_qr);
                     jCloudDB.save(taskflow);
 
                 } catch (CloudServiceException e) {

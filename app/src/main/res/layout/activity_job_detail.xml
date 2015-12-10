@@ -1,11 +1,13 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+ >
 
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent"
+    android:layout_above="@+id/li_bt">
 
 <LinearLayout
     android:layout_width="match_parent"
@@ -326,10 +328,16 @@
         </LinearLayout>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_fgx" />
+
     <api.view.ListNoScrollView
         android:id="@id/listview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:cacheColorHint="@color/transparent"
         android:divider="@color/divider_color"
         android:dividerHeight="1.0px"
@@ -344,14 +352,16 @@
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:id="@+id/li_bt">
 
-        <TextView
+        <Button android:id="@+id/bt_qrjs"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="确认接收"
             android:gravity="center"
+            android:textSize="@dimen/textSize_small"
             android:background="@drawable/bg_button"
             android:textColor="@color/white"/>
 
@@ -359,12 +369,14 @@
             android:layout_height="match_parent"
             android:background="@color/white"/>
 
-        <TextView android:layout_width="0dp"
+        <Button android:id="@+id/bt_djsh"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="递交审核"
             android:gravity="center"
             android:textColor="@color/white"
+            android:textSize="@dimen/textSize_small"
             android:background="@drawable/bg_button"
             />
 
@@ -372,24 +384,28 @@
             android:layout_height="match_parent"
             android:background="@color/white" />
 
-        <TextView android:layout_width="0dp"
+        <Button android:id="@+id/bt_sqyq"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:text="申请延期"
             android:gravity="center"
             android:textColor="@color/white"
+            android:textSize="@dimen/textSize_small"
             android:background="@drawable/bg_button"/>
 
         <View android:layout_width="0.2dp"
             android:layout_height="match_parent"
             android:background="@color/white"/>
 
-        <TextView android:layout_width="0dp"
+        <Button android:id="@+id/bt_fqrw"
+            android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:textColor="@color/white"
             android:text="放弃任务"
             android:gravity="center"
+            android:textSize="@dimen/textSize_small"
             android:background="@drawable/bg_button"/>
       </LinearLayout>
 

@@ -90,4 +90,7 @@
     <string name="title_activity_job_gc_list">JobGcListActivity</string>
     <string name="title_activity_job_sh_list">JobShListActivity</string>
     <string name="title_activity_job_detail">JobDetailActivity</string>
+    <string name="title_activity_send_sh">SendShActivity</string>
+    <string name="title_activity_finish_sh">FinishShActivity</string>
+    <string name="title_activity_ysh">YshActivity</string>
 </resources>
