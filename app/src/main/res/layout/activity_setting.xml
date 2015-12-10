@@ -172,7 +172,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/about"
+            android:id="@+id/ll_about"
             android:layout_width="match_parent"
             android:layout_height="@dimen/item_Height"
             android:background="@drawable/shape_li"
@@ -204,7 +204,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <Button  android:id="@+id/exit_Login"
+        <Button  android:id="@+id/btn_exit_Login"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_margin="10dp"

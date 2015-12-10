@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/main_bg_color"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_feed_back_tip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5.0dip"
+                android:paddingLeft="5.0dip"
+                android:paddingRight="5.0dip"
+                android:paddingTop="5.0dip"
+                android:text="@string/feed_back"
+                android:textColor="@color/list_text_name_color"
+                android:textSize="@dimen/textSize_list" />
+
+            <LinearLayout
+                style="@style/corner_margin_style"
+                android:layout_width="fill_parent"
+                android:layout_height="200.0dip"
+                android:background="@drawable/settings_single"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/et_content"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:background="@null"
+                    android:gravity="top|left|center"
+                    android:hint="@string/feed_back_hint"
+                    android:maxLength="200"
+                    android:textColorHint="@color/list_text_color"
+                    android:textSize="@dimen/textSize_tab" />
+            </LinearLayout>
+            <Button  android:id="@+id/bt_feed_back"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:layout_below="@+id/li"
+                android:textColor="@color/white"
+                android:textSize="@dimen/textSize_large"
+                android:background="@drawable/bg_button"
+                android:text="提交"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
