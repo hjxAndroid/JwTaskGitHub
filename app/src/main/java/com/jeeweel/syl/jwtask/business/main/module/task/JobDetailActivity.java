@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -26,8 +27,6 @@ import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import java.util.List;
 
 import api.util.Contants;
-import api.util.OttUtils;
-import api.util.Utils;
 import api.view.ListNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,6 +76,8 @@ public class JobDetailActivity extends JwActivity {
     Button btFqrw;
     @Bind(R.id.li_bt)
     LinearLayout liBt;
+    @Bind(R.id.iv_commit)
+    ImageView ivCommit;
 
     private Users users;
 
@@ -84,6 +85,7 @@ public class JobDetailActivity extends JwActivity {
      * 任务主键
      */
     private Task task;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,10 +115,10 @@ public class JobDetailActivity extends JwActivity {
             tvKhbz.setText(StrUtils.IsNull(task.getAssess_standard()));
 
             int state = task.getNow_state();
-            if(state==1){
+            if (state == 1) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
-            }else if(state == 2){
+            } else if (state == 2) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
 
@@ -133,12 +135,12 @@ public class JobDetailActivity extends JwActivity {
 
     @OnClick(R.id.bt_qrjs)
     void qrjsClick() {
-       new changeTask(getMy()).execute();
+        new changeTask(getMy()).execute();
     }
 
     @OnClick(R.id.bt_djsh)
     void djshClick() {
-        JwStartActivity(SendShActivity.class,task);
+        JwStartActivity(SendShActivity.class, task);
     }
 
 
@@ -202,11 +204,11 @@ public class JobDetailActivity extends JwActivity {
     private class changeTask extends AsyncTask<String, Void, String> {
         private Context context;
         private JCloudDB jCloudDB;
+
         /**
          * @param context 上下文
          */
-        public changeTask(Context context)
-        {
+        public changeTask(Context context) {
             this.context = context;
             jCloudDB = new JCloudDB();
         }
@@ -217,9 +219,9 @@ public class JobDetailActivity extends JwActivity {
             String result = "1";
 
             try {
-                if(null!=users){
-                    if(null!=task){
-                        String sql = "update task set now_state = 1 , now_state_name = '已确认',confirm_time ="+ StrUtils.QuotedStr(DateHelper.getCurDateTime()) +"  where task_code = "+ StrUtils.QuotedStr(task.getTask_code()) +"and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
+                if (null != users) {
+                    if (null != task) {
+                        String sql = "update task set now_state = 1 , now_state_name = '已确认',confirm_time =" + StrUtils.QuotedStr(DateHelper.getCurDateTime()) + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
 
 
@@ -243,16 +245,15 @@ public class JobDetailActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
-            }else{
-               ToastShow("操作失败");
+            } else {
+                ToastShow("操作失败");
             }
             hideLoading();
         }
     }
-
 
 
     /**
@@ -261,11 +262,11 @@ public class JobDetailActivity extends JwActivity {
     private class changeDjTask extends AsyncTask<String, Void, String> {
         private Context context;
         private JCloudDB jCloudDB;
+
         /**
          * @param context 上下文
          */
-        public changeDjTask(Context context)
-        {
+        public changeDjTask(Context context) {
             this.context = context;
             jCloudDB = new JCloudDB();
         }
@@ -276,9 +277,9 @@ public class JobDetailActivity extends JwActivity {
             String result = "1";
 
             try {
-                if(null!=users){
-                    if(null!=task){
-                        String sql = "update task set now_state = 2 , now_state_name = '未审核' where task_code = "+ StrUtils.QuotedStr(task.getTask_code()) +"and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
+                if (null != users) {
+                    if (null != task) {
+                        String sql = "update task set now_state = 2 , now_state_name = '未审核' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
 
 
@@ -302,10 +303,10 @@ public class JobDetailActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 btDjsh.setText("已递交");
                 btDjsh.setClickable(false);
-            }else{
+            } else {
                 ToastShow("操作失败");
             }
             hideLoading();
