@@ -9,9 +9,11 @@ import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -24,6 +26,7 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
@@ -41,7 +44,6 @@ import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 
 public class PublicyListActivity extends JwListActivity {
     List<Publicity> mListItems = new ArrayList<Publicity>();
@@ -64,8 +66,6 @@ public class PublicyListActivity extends JwListActivity {
     private String tag = "";
 
     private String orgcode;
-
-    private ImageView iv_xz;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,14 +105,63 @@ public class PublicyListActivity extends JwListActivity {
                 helper.setText(R.id.tv_name, item.getNickname());
                 helper.setText(R.id.tv_title, item.getPublicity_title());
                 helper.setText(R.id.tv_time, item.getCreate_time());
-                iv_xz = (ImageView)findViewById(R.id.iv_xz);
-                new GetUserPicture(getMy(),iv_xz,item.getPhoto_code());
+                new GetUserPicture(getMy(),helper.getImageView(R.id.iv_xz),item.getPublicity_code()).execute();
             }
         };
+//        Logv("qwqwqw" + item.getPhoto_code());
+//        iv_xz = (ImageView)findViewById(R.id.iv_xz);
+//        Logv("qwqwqw"+R.id.iv_xz);
+
         setCommonAdapter(commonAdapter);
         super.initListViewController();
     }
 
+    public class GetUrl extends AsyncTask<String, Void, String> {
+        private Context context;
+        private String photo_code;
+        private ViewHolder helper;
+
+        public GetUrl(Context context,ViewHolder helper,String photo_code) {
+            this.context = context;
+            this.photo_code = photo_code;
+            this.helper = helper;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "0";
+            List<Picture> list;
+            try {
+                JCloudDB jCloudDB = new JCloudDB();
+                String sSql = "pic_code=?";
+                SqlInfo sqlInfo = new SqlInfo();
+                sqlInfo.setSql(sSql);
+                sqlInfo.addValue(photo_code);
+                sSql = sqlInfo.getBuildSql();
+                list = jCloudDB.findAllByWhere(Picture.class, sSql);
+                if (ListUtils.IsNotNull(list)) {
+                    Picture picture = list.get(0);
+                    String path = picture.getPic_road();
+                    String uri = Utils.getPicUrl() + path;
+                    if (com.jeeweel.syl.jcloudlib.db.utils.StrUtils.IsNotEmpty(path)) {
+                        result = uri;
+                    }
+                }
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if(result.equals("0")){
+
+            }else{
+                helper.setImageByUrl(R.id.iv_xz,result);
+            }
+        }
+    }
 
     @Override
     public void onListItemClick(int position) {
@@ -174,12 +223,16 @@ public class PublicyListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Publicity.class,
-                                "accept_org_code = " + StrUtils.QuotedStr(orgcode) + " limit " + pageStart + "," + pageEnd);
+                                "accept_org_code = " + StrUtils.QuotedStr(orgcode)
+                                        + " order by create_time desc limit " + pageStart + "," + pageEnd
+                        );
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Publicity.class,
-                                "accept_org_code = " + StrUtils.QuotedStr(orgcode) + " limit " + pageStart + "," + pageEnd);
+                                "accept_org_code = " + StrUtils.QuotedStr(orgcode)
+                                        + " order by create_time desc limit " + pageStart + "," + pageEnd
+                        );
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
@@ -216,6 +269,7 @@ public class PublicyListActivity extends JwListActivity {
         private Context context;
         private JCloudDB jCloudDB;
         List<Orgunit> orgunits = null;
+
         /**
          * @param context 上下文
          */
@@ -246,13 +300,14 @@ public class PublicyListActivity extends JwListActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 if (ListUtils.IsNotNull(orgunits)) {
-                    JwStartActivity(PublicyAddActivity.class,orgunits.get(0));
+                    JwStartActivity(PublicyAddActivity.class, orgunits.get(0));
                 }
             } else {
                 ToastShow("您不是管理员，没有权限发布公告");
             }
             hideLoading();
         }
+
     }
 
     @Subscribe
