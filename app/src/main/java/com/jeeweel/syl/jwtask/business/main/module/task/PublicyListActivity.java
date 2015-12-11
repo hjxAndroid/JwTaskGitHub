@@ -111,7 +111,6 @@ public class PublicyListActivity extends JwListActivity {
 //        Logv("qwqwqw" + item.getPhoto_code());
 //        iv_xz = (ImageView)findViewById(R.id.iv_xz);
 //        Logv("qwqwqw"+R.id.iv_xz);
-
         setCommonAdapter(commonAdapter);
         super.initListViewController();
     }
