@@ -61,9 +61,9 @@ public class GetUserPicture extends AsyncTask<String, Void, String> {
         @Override
         protected void onPostExecute(String result) {
             if(result.equals("0")){
-                imageView.setVisibility(View.GONE);
+     //           this.imageView.setVisibility(View.GONE);
             }else{
-                JwImageLoader.displayImage(result,imageView);
+                JwImageLoader.displayImage(result,this.imageView);
             }
         }
     }
