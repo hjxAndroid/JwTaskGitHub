@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
@@ -15,6 +16,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
@@ -63,6 +65,8 @@ public class PublicyListActivity extends JwListActivity {
 
     private String orgcode;
 
+    private ImageView iv_xz;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +105,8 @@ public class PublicyListActivity extends JwListActivity {
                 helper.setText(R.id.tv_name, item.getNickname());
                 helper.setText(R.id.tv_title, item.getPublicity_title());
                 helper.setText(R.id.tv_time, item.getCreate_time());
+                iv_xz = (ImageView)findViewById(R.id.iv_xz);
+                new GetUserPicture(getMy(),iv_xz,item.getPhoto_code());
             }
         };
         setCommonAdapter(commonAdapter);
