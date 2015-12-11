@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jeeweel.syl.jwtask.business.main.module.task.CommitListActivity">
+
+    <TextView android:id="@+id/tv_xpl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:drawableLeft="@drawable/document_edit"
+        android:drawablePadding="3dp"
+        android:gravity="center_vertical"
+        android:padding="5dp"
+        android:text="写评论"
+        android:textColor="@color/ios7blue"
+        android:textSize="@dimen/textSize_normal" />
+
+
+    <com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView
+        android:id="@id/listview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="@color/transparent"
+        android:divider="@color/divider_color"
+        android:dividerHeight="1.0px"
+        android:fadingEdge="none"
+        android:listSelector="@color/transparent"
+        android:scrollbars="none" />
+
+    <LinearLayout android:id="@+id/li_send"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="#e7eff0">
+
+        <EditText android:id="@+id/et_sned"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:hint="请输入评论"
+            android:textColorHint="@color/TextColorGray"
+            android:textSize="@dimen/textSize_normal"
+            android:paddingLeft="5dp"
+            android:textColor="@color/list_text_color"
+            android:background="@drawable/bt_commit"/>
+
+        <Button android:id="@+id/bt_send"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_normal"
+            android:background="@drawable/bg_button"
+            android:text="发送"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -85,8 +86,11 @@ public class JobCyListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
-//        Publicity publicity = (Publicity) commonAdapter.getItem(position);
-//        JwStartActivity(PublicyDetailActivity.class, publicity);
+        Task task = (Task) commonAdapter.getItem(position);
+        Intent intent = new Intent(getMy(), JobDetailActivity.class);
+        intent.putExtra(StaticStrUtils.baseItem, task);
+        intent.putExtra("flag","cy");
+        startActivity(intent);
     }
 
     @Override

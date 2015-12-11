@@ -245,7 +245,7 @@
             android:label="@string/title_activity_job_list" >
         </activity>
         <activity
-            android:name=".business.main.module.task.JobSdListActivity"
+            android:name=".business.main.module.task.JobFzListActivity"
             android:label="@string/title_activity_job_cy_list" >
         </activity>
         <activity
@@ -264,6 +264,24 @@
             android:name=".business.main.module.more.AboutVersionActivity"
             android:label="@string/title_activity_about_version" >
         </activity>
+        <activity
+            android:name=".business.main.module.task.JobCyListActivity"
+            android:label="@string/title_activity_job_cy_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.CommitListActivity"
+            android:label="@string/title_activity_commit_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.SendShActivity"
+            android:label="@string/title_activity_commit_list"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.YshActivity"
+            android:label="@string/title_activity_commit_list" >
+        </activity>
+
     </application>
 
 </manifest>

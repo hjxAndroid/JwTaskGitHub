@@ -3,10 +3,16 @@ package com.jeeweel.syl.jwtask.business.main.module.more;
 import android.os.Bundle;
 
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.LoginActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.umeng.update.UmengUpdateAgent;
 
+import net.tsz.afinal.FinalDb;
+
+import api.util.Contants;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -34,6 +40,15 @@ public class SettingActivity extends JwActivity {
 
     @OnClick(R.id.btn_exit_Login)
     void exitLoginClick() {
+        //将自动登录设置成否
+        SharedPreferencesUtils.save(getMy(), "autologin", false);
+        //清空afinalDB
+        FinalDb finalDb = JwAppAplication.getInstance().finalDb;
+        finalDb.deleteAll(Users.class);
+        //清空组织
+        SharedPreferencesUtils.remove(getMy(),Contants.org_code);
+        SharedPreferencesUtils.remove(getMy(),Contants.org_name);
         JwStartActivity(LoginActivity.class);
+        finish();
     }
 }

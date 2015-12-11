@@ -1,8 +1,10 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,8 +78,6 @@ public class JobDetailActivity extends JwActivity {
     Button btFqrw;
     @Bind(R.id.li_bt)
     LinearLayout liBt;
-    @Bind(R.id.iv_commit)
-    ImageView ivCommit;
 
     private Users users;
 
@@ -85,7 +85,7 @@ public class JobDetailActivity extends JwActivity {
      * 任务主键
      */
     private Task task;
-
+    String flag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +97,12 @@ public class JobDetailActivity extends JwActivity {
     }
 
     private void setData() {
+        flag = getIntent().getStringExtra("flag");
+        if(StrUtils.IsNotEmpty(flag)){
+            liBt.setVisibility(View.GONE);
+        }
+
+
         task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         if (null != task) {
 
@@ -124,6 +130,12 @@ public class JobDetailActivity extends JwActivity {
 
                 btDjsh.setText("已递交");
                 btDjsh.setClickable(false);
+            }else if(state!=0){
+                btQrjs.setText("已确认");
+                btQrjs.setClickable(false);
+
+                btDjsh.setText("已递交");
+                btDjsh.setClickable(false);
             }
 
             showLoading();
@@ -143,7 +155,15 @@ public class JobDetailActivity extends JwActivity {
         JwStartActivity(SendShActivity.class, task);
     }
 
-
+    @OnClick(R.id.tv_pl)
+    void commitClick() {
+        Intent intent = new Intent(this, CommitListActivity.class);
+        intent.putExtra(StaticStrUtils.baseItem, task);
+        if(StrUtils.IsNotEmpty(flag)&&flag.equals("gc")){
+            intent.putExtra("flag","gc");
+        }
+        startActivity(intent);
+    }
     /**
      * 保存到数据库
      */

@@ -57,6 +57,7 @@ public class LoginActivity extends JwActivity {
         boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
         if(autu){
             JwStartActivity(TabHostActivity.class);
+            finish();
         }else{
             Users users = JwAppAplication.getInstance().users;
             if(null!=users){
@@ -135,6 +136,7 @@ public class LoginActivity extends JwActivity {
                     JwAppAplication.getInstance().setUsers(users);
                 }
                 JwStartActivity(TabHostActivity.class);
+                finish();
             }else{
                 ToastShow("用户名或密码出错");
             }
