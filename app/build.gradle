@@ -32,4 +32,6 @@ dependencies {
     compile project(':sMSSDK')
     //自动更新
     compile files('libs/umeng-update-v2.6.0.1.jar')
+    //定位LOC
+    compile files('libs/locSDK_6.13.jar')
 }

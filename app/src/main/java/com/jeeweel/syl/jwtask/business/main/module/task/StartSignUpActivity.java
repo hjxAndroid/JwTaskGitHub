@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import api.adapter.SignAdapter;
 import api.util.Contants;
 import api.util.Utils;
 import butterknife.Bind;
@@ -78,13 +79,13 @@ public class StartSignUpActivity extends JwActivity {
     String friendPic;
     List<Friend> friends;
     List<Friend> friendList = new ArrayList<Friend>();
-    private CommonAdapter commonAdapter;
+    // private CommonAdapter commonAdapter;
     int dayOfWeek;
     Users user;
     Sign sign;
     Friend friend;
     JCloudDB jCloudDB;
-
+    SignAdapter signAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,10 +95,7 @@ public class StartSignUpActivity extends JwActivity {
         initDate();
         initView();
         sign = new Sign();
-        friend = new Friend();
-        friendList.add(friend);
 
-        //全局获取sign_code
         sign_code = Utils.getUUid();
         sign.setSign_code(sign_code);
         List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
@@ -143,59 +141,69 @@ public class StartSignUpActivity extends JwActivity {
     }
 
     private void initView() {
-        commonAdapter = new CommonAdapter<Friend>(self, friendList, R.layout.item_image_view) {
+//        commonAdapter = new CommonAdapter<Friend>(self, friendList, R.layout.item_image_view) {
+//            @Override
+//            public void convert(ViewHolder helper, Friend item) {
+//                int position = helper.getPosition();
+//                TextView tvCir = helper.getView(R.id.tv_cir);
+//                ImageView ivAdd = helper.getImageView(R.id.iv_add);
+//                if (position == friendList.size() - 1) {
+//                    ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
+//                    ivAdd.setVisibility(View.VISIBLE);
+//                    tvCir.setVisibility(View.GONE);
+//                } else {
+//                    tvCir.setVisibility(View.VISIBLE);
+//                    ivAdd.setVisibility(View.GONE);
+//                    friendNickName = item.getFriend_nickname();
+//                    if (StrUtils.IsNotEmpty(friendNickName)) {
+//                        friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
+//                    } else {
+//                        friendPic = "";
+//                    }
+//                    tvCir.setText(friendPic);
+//                }
+//            }
+//        };
+        friend = new Friend();
+        friend.setFriend_nickname("123");
+        friend.setContent("1");
+        friendList.add(friend);
+
+        signAdapter = new SignAdapter(StartSignUpActivity.this,friendList);
+        gridViewStart.setAdapter(signAdapter);
+        gridViewStart.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void convert(ViewHolder helper, Friend item) {
-                int position = helper.getPosition();
-                TextView tvCir = helper.getView(R.id.tv_cir);
-                ImageView ivAdd = helper.getImageView(R.id.iv_add);
-                if (position == friendList.size() - 1) {
-                    ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
-                    ivAdd.setVisibility(View.VISIBLE);
-                    tvCir.setVisibility(View.GONE);
-                } else {
-                    tvCir.setVisibility(View.VISIBLE);
-                    ivAdd.setVisibility(View.GONE);
-                    friendNickName = item.getFriend_nickname();
-                    if (StrUtils.IsNotEmpty(friendNickName)) {
-                        friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
-                    } else {
-                        friendPic = "";
-                    }
-                    tvCir.setText(friendPic);
+            public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
+                if (postion == friendList.size() - 1) {
+                    JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
                 }
             }
-        };
-        gridViewStart.setAdapter(commonAdapter);
+        });
     }
 
-    @OnItemClick(R.id.grid_view_start)
-    void onGridViewStartItemClick(int pos) {
-        if (pos == friendList.size() - 1) {
-            JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
-        }
-    }
 
 
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
-        if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(msg) && msg.equals(Contants.sign)) {
+        if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.sign)) {
             String json = activityMsgEvent.getParam();
-            friends = JwJSONUtils.getParseArray(json, Friend.class);
+            if(StrUtils.IsNotEmpty(json)){
+                friends = JwJSONUtils.getParseArray(json, Friend.class);
 
-            if (friendList.size() == 1) {
-                friendList.remove(0);
-            } else {
-                friendList.remove(friendList.size() - 1);
+                if (friendList.size() == 1) {
+                    friendList.remove(0);
+                } else {
+                    friendList.remove(friendList.size() - 1);
+                }
+                friendList.addAll(friends);
+                Friend friend = new Friend();
+                friend.setContent("1");
+                friend.setFriend_nickname("123");
+                friendList.add(friend);
+
+                signAdapter.notifyDataSetChanged();
             }
-
-            friendList.addAll(friends);
-
-            Friend friend = new Friend();
-            friendList.add(friend);
-
-            commonAdapter.notifyDataSetChanged();
         }
     }
 
