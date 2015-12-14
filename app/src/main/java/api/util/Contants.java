@@ -5,12 +5,12 @@ package api.util;
  */
 public class Contants {
     //默认整个ip
-    public static String All_URL = "http://192.168.0.37:8080/JCloud";
+    public static String All_URL = "http://192.168.0.19:8080/JCloud";
     //整个ip地址
     public static String DB_ID = "58975c511b1bcaddecc906a2c9337665";
 
     //默认整个ip
-    public static String URL = "192.168.0.37:8080";
+    public static String URL = "192.168.0.19:8080";
 
     //后台服务名
     public static String WEB_NAME = "JCloud";
