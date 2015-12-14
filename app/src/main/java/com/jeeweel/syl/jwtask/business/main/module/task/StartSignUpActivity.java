@@ -3,12 +3,10 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
@@ -21,12 +19,8 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptAddFriendListActivity;
-import com.jeeweel.syl.jwtask.business.main.module.more.MineActivity;
-import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
-import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -41,7 +35,6 @@ import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 
 /**
  * Created by Ragn on 2015/11/27.
@@ -114,8 +107,6 @@ public class StartSignUpActivity extends JwActivity {
         tvUserName.setText(userName);
         sign.setProuser_name(userName);
         sign.setProuser_code(user.getUser_code());
-
-
     }
 
     @Override

@@ -114,7 +114,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/time_space"
-                android:drawableLeft="@drawable/sign_cal"
+                android:drawableLeft="@drawable/cmail_calendar"
                 android:drawablePadding="@dimen/time_space"
                 android:gravity="center"
                 android:text="@string/weeks"

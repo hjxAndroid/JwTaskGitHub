@@ -77,11 +77,7 @@ public class NewsHomeActivity extends JwActivity {
 
     private String orgCode;
 
-    private Sign signs;
-
     private Users user;
-
-    private String readState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,65 +225,6 @@ public class NewsHomeActivity extends JwActivity {
         String msg = activityMsgEvent.getMsg();
         if (msg.equals("news_refresh")) {
             new FinishRefresh(getMy()).execute(myphone);
-        }
-    }
-
-    //签到消息提醒(废弃)
-    private class FinishRefreshSign extends AsyncTask<String, Void, String> {
-        private Context context;
-        JCloudDB jCloudDB;
-        List<Sign> signs;
-
-        /**
-         * @param context 上下文
-         */
-        public FinishRefreshSign(Context context) {
-            this.context = context;
-            jCloudDB = new JCloudDB();
-            user = JwAppAplication.getInstance().getUsers();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String result = "1";
-
-            String phone = params[0].toString();
-
-            try {
-                //通过receive_code获取sign
-                signs = jCloudDB.findAllByWhere(Sign.class,
-                        "receive_code like"
-                                + StrUtils.QuotedStrLike(user.getUser_code()) + "and read_state=0 " + "ORDER BY create_time DESC");
-            } catch (CloudServiceException e) {
-                result = "0";
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.equals("1")) {
-                if (ListUtils.IsNotNull(signs)) {
-                    for (Sign sign : signs) {
-                        String readStatus = sign.getRead_state();
-                        //如果status的状态为0，则消息未读，提醒
-                        if ("0".equals(readStatus)) {
-                            rlFriendNews.setText("您有新的签到消息");
-                            ivSignNum.setVisibility(View.VISIBLE);
-                            break;
-                        }
-                    }
-                } else {
-                    rlFriendNews.setText("暂无消息");
-                    ivFriendNum.setVisibility(View.GONE);
-                }
-            } else {
-
-            }
-            hideLoading();
         }
     }
 }
