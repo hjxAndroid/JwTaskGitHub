@@ -36,4 +36,6 @@ dependencies {
     //友盟推送
     compile files('libs/umeng-analytics-v5.5.3.jar')
     compile files('libs/com.umeng.message.lib_v2.6.0.jar')
+    //定位LOC
+    compile files('libs/locSDK_6.13.jar')
 }
