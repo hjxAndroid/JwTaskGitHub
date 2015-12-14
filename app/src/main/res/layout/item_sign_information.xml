@@ -68,5 +68,4 @@
         android:layout_margin="5dp"
         android:text="时间"
         android:textColor="@color/gray" />
-
 </RelativeLayout>

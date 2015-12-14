@@ -75,8 +75,6 @@ public class StartSignUpActivity extends JwActivity {
     String sign_code;
     String userNick;
     String buddyCode;
-    String friendNickName;
-    String friendPic;
     List<Friend> friends;
     List<Friend> friendList = new ArrayList<Friend>();
     // private CommonAdapter commonAdapter;
@@ -86,6 +84,8 @@ public class StartSignUpActivity extends JwActivity {
     Friend friend;
     JCloudDB jCloudDB;
     SignAdapter signAdapter;
+    String fName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,48 +128,27 @@ public class StartSignUpActivity extends JwActivity {
         etStartTitle = etTitle.getText().toString();
         etStartContext = etContext.getText().toString();
         buddyCode = saveFcode();
+        fName = saveFname();
         if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
             sign.setSign_title(etStartTitle);
             sign.setSend_context(etStartContext);
-            sign.setReceive_name("小李");
+            sign.setReceive_name(fName);
             sign.setReceive_code(buddyCode);
+            sign.setRead_state("0");
             JwStartActivity(SignUpActivity.class);
         } else {
-            CroutonShowALERT("内容或标题不能为空");
+            ToastShow("内容或标题不能为空");
         }
         new saveSignInformaiton(getMy()).execute();
     }
 
     private void initView() {
-//        commonAdapter = new CommonAdapter<Friend>(self, friendList, R.layout.item_image_view) {
-//            @Override
-//            public void convert(ViewHolder helper, Friend item) {
-//                int position = helper.getPosition();
-//                TextView tvCir = helper.getView(R.id.tv_cir);
-//                ImageView ivAdd = helper.getImageView(R.id.iv_add);
-//                if (position == friendList.size() - 1) {
-//                    ivAdd.setImageDrawable((getResources().getDrawable(R.drawable.icon_org_add)));
-//                    ivAdd.setVisibility(View.VISIBLE);
-//                    tvCir.setVisibility(View.GONE);
-//                } else {
-//                    tvCir.setVisibility(View.VISIBLE);
-//                    ivAdd.setVisibility(View.GONE);
-//                    friendNickName = item.getFriend_nickname();
-//                    if (StrUtils.IsNotEmpty(friendNickName)) {
-//                        friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
-//                    } else {
-//                        friendPic = "";
-//                    }
-//                    tvCir.setText(friendPic);
-//                }
-//            }
-//        };
         friend = new Friend();
         friend.setFriend_nickname("123");
         friend.setContent("1");
         friendList.add(friend);
 
-        signAdapter = new SignAdapter(StartSignUpActivity.this,friendList);
+        signAdapter = new SignAdapter(StartSignUpActivity.this, friendList);
         gridViewStart.setAdapter(signAdapter);
         gridViewStart.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -182,13 +161,12 @@ public class StartSignUpActivity extends JwActivity {
     }
 
 
-
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.sign)) {
             String json = activityMsgEvent.getParam();
-            if(StrUtils.IsNotEmpty(json)){
+            if (StrUtils.IsNotEmpty(json)) {
                 friends = JwJSONUtils.getParseArray(json, Friend.class);
 
                 if (friendList.size() == 1) {
@@ -207,6 +185,7 @@ public class StartSignUpActivity extends JwActivity {
         }
     }
 
+    //日期初始化
     private void initDate() {
         Date date = new Date();
         dayOfWeek = DateHelper.getDayOfWeek(date) - 1;
@@ -275,9 +254,20 @@ public class StartSignUpActivity extends JwActivity {
         for (int i = 0; i < friendList.size() - 1; i++) {
             fCode = friendList.get(i).getFriend_code() + ",";
         }
-        if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(fCode)) {
+        if (StrUtils.IsNotEmpty(fCode)) {
             fCode = fCode.substring(0, fCode.length() - 1);
         }
         return fCode;
+    }
+
+    private String saveFname() {
+        String fName = "";
+        for (int i = 0; i < friendList.size() - 1; i++) {
+            fName = friendList.get(i).getFriend_name() + ",";
+        }
+        if (StrUtils.IsNotEmpty(fName)) {
+            fName = fName.substring(0, fName.length() - 1);
+        }
+        return fName;
     }
 }

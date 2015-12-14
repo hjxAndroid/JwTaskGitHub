@@ -72,7 +72,7 @@ public class Sign {
     /**
      * 阅读状态
      */
-    private String read_status;
+    private String read_state;
 
     public void setSend_context(String send_context) {
         this.send_context = send_context;
@@ -139,12 +139,12 @@ public class Sign {
         this.sign_time = sign_time;
     }
 
-    public String getRead_status() {
-        return read_status;
+    public String getRead_state() {
+        return read_state;
     }
 
-    public void setRead_status(String read_status) {
-        this.read_status = read_status;
+    public void setRead_state(String read_status) {
+        this.read_state = read_status;
     }
 
 

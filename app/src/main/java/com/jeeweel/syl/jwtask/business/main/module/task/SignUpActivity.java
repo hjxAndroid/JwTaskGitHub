@@ -120,6 +120,7 @@ public class SignUpActivity extends JwActivity {
         mLocationClient.setLocOption(option);
     }
 
+    //日期初始化
     private void initDate() {
         Date date = new Date();
         counts = DateHelper.getDayOfWeek(date) - 1;
@@ -156,6 +157,7 @@ public class SignUpActivity extends JwActivity {
         tvSignTime.setText(signTime);
     }
 
+    //初始化用户
     private void initUsers() {
         List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         if (list != null && list.size() > 0) {
@@ -174,12 +176,14 @@ public class SignUpActivity extends JwActivity {
         tvSignUserName.setText(signUserName);
     }
 
+    //得到signedCode用于查找签到次数
     private void getData() {
         showLoading();
         signedCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
         new FinishRefresh(getMy()).execute();
     }
 
+    //签到保存信息
     @OnClick(R.id.tv_sign_button)
     void signClick() {
         signed.setSign_msg(signedContext);
@@ -209,9 +213,9 @@ public class SignUpActivity extends JwActivity {
 
             JCloudDB jCloudDB = new JCloudDB();
             try {
-                if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(signedCode)) {
+                if (StrUtils.IsNotEmpty(signedCode)) {
                     list = jCloudDB.findAllByWhere(Sign.class,
-                            "sign_code=" + com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.QuotedStr(signedCode));
+                            "sign_code=" + StrUtils.QuotedStr(signedCode));
                 }
             } catch (CloudServiceException e) {
                 result = "0";
