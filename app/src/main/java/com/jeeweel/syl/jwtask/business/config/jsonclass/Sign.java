@@ -69,6 +69,10 @@ public class Sign {
      * 签到内容
      */
     private String send_context;
+    /**
+     * 阅读状态
+     */
+    private String read_status;
 
     public void setSend_context(String send_context) {
         this.send_context = send_context;
@@ -135,13 +139,14 @@ public class Sign {
         this.sign_time = sign_time;
     }
 
-    /*public int getReceive_id() {
-        return receive_id;
+    public String getRead_status() {
+        return read_status;
     }
 
-    public void setReceive_id(int receive_id) {
-        this.receive_id = receive_id;
-    }*/
+    public void setRead_status(String read_status) {
+        this.read_status = read_status;
+    }
+
 
     public String getReceive_code() {
         return receive_code;
@@ -183,4 +188,3 @@ public class Sign {
         this.update_time = update_time;
     }
 }
-
