@@ -28,10 +28,10 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-
 
 public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private static final int IMAGE_REQUEST_CODE = 0;
@@ -53,6 +53,8 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         initRight();
 
         users  = JwAppAplication.getInstance().users;
+        String user_code = users.getUser_code();
+        new GetUserPicture(getMy(),mImageHeader,user_code).execute();
     }
 
     private void initRight() {
@@ -69,7 +71,6 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         });
         addMenuView(menuTextView);
     }
-
 
     private void setupViews() {
         mImageHeader = (ImageView) findViewById(R.id.image_header);
@@ -206,6 +207,11 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         }
 
         @Override
+        protected void onPreExecute() {
+            showLoading();
+        }
+
+        @Override
         protected String doInBackground(String... params) {
 
             String result = "1";
@@ -225,7 +231,6 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
                     e.printStackTrace();
                 }
             }
-
             return result;
         }
 
@@ -237,6 +242,7 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
                 ToastShow("上传失败");
             }
             hideLoading();
+            MinePhotoActivity.this.finish();
         }
     }
 }
