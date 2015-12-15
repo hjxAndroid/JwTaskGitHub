@@ -307,10 +307,10 @@ public class JobDetailActivity extends JwActivity {
 
                         String newSql = "select * from tmp"+unid;
                         //查找数据
-                        List<Task> tasks = jCloudDB.findAllBySql(Task.class,newSql);
-                        if(ListUtils.IsNotNull(tasks)){
-                            Task task = tasks.get(0);
-                        }
+//                        List<Task> tasks = jCloudDB.findAllBySql(Task.class,newSql);
+//                        if(ListUtils.IsNotNull(tasks)){
+//                            Task task = tasks.get(0);
+//                        }
                     }
                 }
             } catch (CloudServiceException e) {

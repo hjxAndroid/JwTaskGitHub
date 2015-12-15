@@ -219,7 +219,7 @@ public class JwTabActivity extends ActivityGroup {
         setRadioButtondrawableTop((RadioButton) findViewById(R.id.menu1),
                 getResources().getDrawable(R.drawable.menu1_n));
         setRadioButtondrawableTop((RadioButton) findViewById(R.id.menu2),
-                getResources().getDrawable(R.drawable.menu4_n));
+                getResources().getDrawable(R.drawable.menu2_n));
         setRadioButtondrawableTop((RadioButton) findViewById(R.id.menu3),
                 getResources().getDrawable(R.drawable.menu3_n));
         setRadioButtondrawableTop((RadioButton) findViewById(R.id.menu4),
@@ -289,7 +289,7 @@ public class JwTabActivity extends ActivityGroup {
                         // 设置按钮高亮（替换图片）
                         setRadioButtondrawableTop(
                                 (RadioButton) findViewById(checkedId),
-                                getResources().getDrawable(R.drawable.menu4_p));
+                                getResources().getDrawable(R.drawable.menu2_p));
                         break;
 
                     case R.id.menu3:
