@@ -51,4 +51,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"></TextView>
+
+    <LinearLayout android:id="@+id/li_img"
+        android:layout_width="match_parent"
+        android:layout_height="180dp">
+
+        <api.viewpage.ConvenientBanner
+            android:id="@+id/convenientBanner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
 </LinearLayout>

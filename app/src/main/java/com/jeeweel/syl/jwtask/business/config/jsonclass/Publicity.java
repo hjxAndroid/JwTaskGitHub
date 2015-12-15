@@ -67,7 +67,10 @@ public class Publicity extends BaseItem{
 
 
     private String nickname;
-
+    /**
+     * 阅读状态
+     */
+    private int read_state;
 
 
     public String getProuser_code() {
@@ -200,6 +203,14 @@ public class Publicity extends BaseItem{
 
     public String getAccept_org_name() {
         return accept_org_name;
+    }
+
+    public int getRead_state() {
+        return read_state;
+    }
+
+    public void setRead_state(int read_state) {
+        this.read_state = read_state;
     }
 
     public void setAccept_org_name(String accept_org_name) {
