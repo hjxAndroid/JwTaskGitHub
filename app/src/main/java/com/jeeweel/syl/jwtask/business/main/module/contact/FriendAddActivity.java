@@ -1,8 +1,10 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -12,8 +14,10 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.JwCaptureActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
 import java.util.List;
@@ -32,23 +36,58 @@ public class FriendAddActivity extends JwActivity {
     Button btAdd;
 
     String usercode;
+
+    private int scan_code = 1;
+    private String friendphone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_add);
         setTitle("添加好友");
         ButterKnife.bind(this);
+        initRight();
+    }
+
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("扫一扫");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent(FriendAddActivity.this, JwCaptureActivity.class);
+                startActivityForResult(intent, scan_code);
+            }
+        });
+        addMenuView(menuTextView);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == scan_code) {
+            if (OUtils.IsNotNull(intent)) {
+                friendphone = intent.getStringExtra("SCAN_RESULT");
+                if (StrUtils.IsNotEmpty(friendphone)) {
+                    save(friendphone);
+                }
+            }
+        }
+
     }
 
     @OnClick(R.id.bt_add)
     void nextClick() {
+        String friendPhone = etPhone.getText().toString();
+        save(friendPhone);
+    }
+
+    private void save(String friendPhone){
         List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         if (ListUtils.IsNotNull(usersList)) {
             Users users = usersList.get(0);
             String nickname = users.getNickname();
             usercode = users.getUser_code();
             String myphone = users.getUsername();
-            String friendPhone = etPhone.getText().toString();
             if (StrUtils.IsNotEmpty(friendPhone)&&StrUtils.IsNotEmpty(nickname)) {
                 showLoading();
                 new FinishRefresh(getMy()).execute(nickname, myphone, friendPhone);
@@ -57,6 +96,7 @@ public class FriendAddActivity extends JwActivity {
             }
         }
     }
+
 
     /**
      * 保存到数据库

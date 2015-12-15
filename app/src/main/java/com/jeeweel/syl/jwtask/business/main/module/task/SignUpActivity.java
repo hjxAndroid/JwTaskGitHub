@@ -3,12 +3,18 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.google.gson.JsonElement;
-import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.jsonclass.ResMsgItem;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
@@ -22,7 +28,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
-import com.jeeweel.syl.jcloudlib.db.jsonclass.ResMsgItem;
+import com.jeeweel.syl.lib.api.jwlib.baidumaps.InitLocationSign;
 
 import java.util.Date;
 import java.util.List;
@@ -50,6 +56,8 @@ public class SignUpActivity extends JwActivity {
     TextView tvSignDate;
     @Bind(R.id.tv_sign_time)
     TextView tvSignTime;
+    @Bind(R.id.tv_sign_addr)
+    TextView tvSignAddr;
 
 
     String signUserPic;
@@ -64,27 +72,55 @@ public class SignUpActivity extends JwActivity {
     String signedCode;
     String signedContext;
     String signUserCode;
+
+    //地理位置相关字段
+    String address;
+    // 纬度
+    Double latitude;
+    // 经度
+    Double longitude;
+
+
     int counts;
     Users user;
     Sign sign;
     Signed signed = new Signed();
     ResMsgItem res;
     List<Sign> list;
-    List<LSignedCountItem> countList;
     LSignedCountItem lSignedCounts;
+    LocationClient mLocationClient;
+    MyLocationListener mMyLocationListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        setTitle("签到");
         ButterKnife.bind(this);
         initDate();
         initUsers();
         getData();
+        mLocationClient = new LocationClient(this.getApplicationContext());
+        mMyLocationListener = new MyLocationListener();
+        mLocationClient.registerLocationListener(mMyLocationListener);
+        mLocationClient.start();
+        initLocation();
         new FinishRefreshSignedCounts(getMy()).execute();
     }
 
+    private void initLocation() {
+        LocationClientOption option = new LocationClientOption();
+        int span = 1000;
+        option.setScanSpan(span);//可选，默认0，即仅定位一次，设置发起定位请求的间隔需要大于等于1000ms才是有效的
+        option.setOpenGps(true);//可选，默认false,设置是否使用gps
+        option.setLocationNotify(true);//可选，默认false，设置是否当gps有效时按照1S1次频率输出GPS结果
+        option.setIgnoreKillProcess(true);//可选，默认true，定位SDK内部是一个SERVICE，并放到了独立进程，设置是否在stop的时候杀死这个进程，默认不杀死
+        option.setIsNeedAddress(true);
+        mLocationClient.setLocOption(option);
+    }
 
+    //日期初始化
     private void initDate() {
         Date date = new Date();
         counts = DateHelper.getDayOfWeek(date) - 1;
@@ -121,6 +157,7 @@ public class SignUpActivity extends JwActivity {
         tvSignTime.setText(signTime);
     }
 
+    //初始化用户
     private void initUsers() {
         List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         if (list != null && list.size() > 0) {
@@ -139,18 +176,23 @@ public class SignUpActivity extends JwActivity {
         tvSignUserName.setText(signUserName);
     }
 
+    //得到signedCode用于查找签到次数
     private void getData() {
         showLoading();
         signedCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
         new FinishRefresh(getMy()).execute();
     }
 
+    //签到保存信息
     @OnClick(R.id.tv_sign_button)
     void signClick() {
         signed.setSign_msg(signedContext);
         signed.setSign_title(signTitleDet);
         signed.setSign_code(signedCode);
         signed.setSign_user_code(signUserCode);
+        signed.setLatitude(latitude);
+        signed.setLongtude(longitude);
+        signed.setLocation(address);
         new FinishRefreshSigned(getMy()).execute();
     }
 
@@ -171,9 +213,9 @@ public class SignUpActivity extends JwActivity {
 
             JCloudDB jCloudDB = new JCloudDB();
             try {
-                if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(signedCode)) {
+                if (StrUtils.IsNotEmpty(signedCode)) {
                     list = jCloudDB.findAllByWhere(Sign.class,
-                            "sign_code=" + com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.QuotedStr(signedCode));
+                            "sign_code=" + StrUtils.QuotedStr(signedCode));
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -274,6 +316,22 @@ public class SignUpActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             tvSignCounts.setText(StrUtils.StrIfNull(signCounts));
+        }
+    }
+
+    /**
+     * 实现实时位置回调监听
+     */
+    public class MyLocationListener implements BDLocationListener {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            if (null != location) {
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                address = location.getAddrStr();
+                tvSignAddr.setText(StrUtils.IfNull(address, "地址有误！！！"));
+            }
         }
     }
 }

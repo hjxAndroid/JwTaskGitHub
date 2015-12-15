@@ -14,6 +14,9 @@
             android:id="@+id/line_start_sign_user"
             android:layout_width="match_parent"
             android:layout_height="@dimen/sign_user"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/shape_li"
             android:orientation="horizontal">
 
@@ -24,7 +27,7 @@
                 android:layout_height="@dimen/sign_circle"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/margin_Size"
-                android:background="@drawable/circular_portrait"
+                android:background="@drawable/circular_blue"
                 android:gravity="center"
                 android:text="@string/tv_user_head"
                 android:textColor="@color/white" />
@@ -39,26 +42,25 @@
                 android:text="@string/tv_userName" />
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/gray_fgx" />
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/user_Layout_Height"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select"
-            android:gravity="center">
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tv_week"
                 style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/time_space"
-                android:drawableLeft="@drawable/cmail_icon_calendar1"
+                android:drawableLeft="@drawable/cmail_calendar"
                 android:drawablePadding="@dimen/time_space"
+                android:gravity="center"
                 android:text="@string/weeks"
                 android:textColor="@color/gray" />
 
@@ -66,21 +68,23 @@
                 android:id="@+id/tv_date"
                 style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/time_space"
                 android:layout_toRightOf="@+id/tv_week"
                 android:drawablePadding="@dimen/time_space"
+                android:gravity="center"
                 android:text="@string/date" />
 
             <TextView
                 android:id="@+id/tv_current_time_des"
                 style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/tv_time"
-                android:drawableLeft="@drawable/alm_cmail_meeting_time"
+                android:drawableLeft="@drawable/ding_remind_terminated"
                 android:drawablePadding="@dimen/time_space"
+                android:gravity="center"
                 android:text="@string/current_time"
                 android:textColor="@color/gray" />
 
@@ -88,22 +92,21 @@
                 android:id="@+id/tv_time"
                 style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/time_space"
                 android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="center"
                 android:text="@string/system_time" />
 
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/gray_fgx" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select"
             android:gravity="center">
 
@@ -113,17 +116,21 @@
                 android:layout_height="@dimen/data_space_size"
                 android:background="@null"
                 android:gravity="top"
-                android:singleLine="true" />
+                android:hint="签到标题"
+                android:maxLength="26"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:singleLine="true"
+                android:textColorHint="@color/edit_hint"
+                android:textSize="14sp" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/gray_fgx" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select">
 
             <EditText
@@ -131,17 +138,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/sign_content"
                 android:background="@null"
-                android:gravity="top" />
+                android:gravity="top"
+                android:hint="签到内容"
+                android:maxLength="200"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:textColorHint="@color/edit_hint"
+                android:textSize="14sp" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/gray_fgx" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select"
             android:orientation="vertical">
 
@@ -155,15 +166,15 @@
 
             <api.view.GridNoScrollView
                 android:id="@+id/grid_view_start"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/time_space"
-                android:columnWidth="@dimen/time_space"
+                android:columnWidth="5dp"
                 android:gravity="center"
                 android:horizontalSpacing="@dimen/time_space"
+                android:listSelector="@color/white"
                 android:numColumns="5"
-                android:stretchMode="columnWidth"
-                android:verticalSpacing="@dimen/time_space"></api.view.GridNoScrollView>
+                android:verticalSpacing="@dimen/time_space" />
         </LinearLayout>
 
 
@@ -179,7 +190,7 @@
                 android:layout_width="@dimen/sign_button"
                 android:layout_height="@dimen/sign_button"
                 android:layout_margin="@dimen/margin_Large_Top_Size"
-                android:background="@drawable/circular_portrait"
+                android:background="@drawable/circular_blue"
                 android:gravity="center"
                 android:text="@string/start_sign_up_button"
                 android:textColor="@color/white" />

@@ -3,17 +3,13 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.contact.FriendDetailActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
@@ -72,6 +68,7 @@ public class SignListActivity extends JwListActivity {
                             helper.setText(R.id.tv_sign_title, item.getSign_title());
                             helper.setText(R.id.tv_name, item.getProuser_name());
                             helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
+                            item.setRead_state("1");
                         }
                     }
                 } else {
@@ -80,6 +77,7 @@ public class SignListActivity extends JwListActivity {
                         helper.setText(R.id.tv_sign_title, item.getSign_title());
                         helper.setText(R.id.tv_name, item.getProuser_name());
                         helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
+                        item.setRead_state("1");
                     }
                 }
             }

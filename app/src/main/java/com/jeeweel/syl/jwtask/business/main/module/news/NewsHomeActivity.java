@@ -12,6 +12,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -75,6 +76,9 @@ public class NewsHomeActivity extends JwActivity {
     private String myphone;
 
     private String orgCode;
+
+    private Users user;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +97,7 @@ public class NewsHomeActivity extends JwActivity {
 
         Users users = JwAppAplication.getInstance().getUsers();
 
-        orgCode = (String)SharedPreferencesUtils.get(getMy(), Contants.org_code,"");
+        orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
 
         if (null != users) {
             myphone = users.getUsername();
@@ -108,6 +112,7 @@ public class NewsHomeActivity extends JwActivity {
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
         JCloudDB jCloudDB;
+        List<Sign> signs;
 
         /**
          * @param context 上下文
@@ -122,20 +127,25 @@ public class NewsHomeActivity extends JwActivity {
 
             String result = "1";
 
+            user = JwAppAplication.getInstance().getUsers();
+
             String phone = params[0].toString();
 
             try {
 
-                if(StrUtils.isEmpty(orgCode)){
+                if (StrUtils.isEmpty(orgCode)) {
                     //取默认组织
                     List<Userorg> userorgs = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(phone) + "ORDER BY create_time");
-                    if(ListUtils.IsNotNull(userorgs)){
-                        SharedPreferencesUtils.save(getMy(),Contants.org_code,userorgs.get(0).getOrg_code());
-                        SharedPreferencesUtils.save(getMy(),Contants.org_name,userorgs.get(0).getOrg_name());
+                    if (ListUtils.IsNotNull(userorgs)) {
+                        SharedPreferencesUtils.save(getMy(), Contants.org_code, userorgs.get(0).getOrg_code());
+                        SharedPreferencesUtils.save(getMy(), Contants.org_name, userorgs.get(0).getOrg_name());
                     }
                 }
-
+               /* //通过receive_code获取sign
+                signs = jCloudDB.findAllByWhere(Sign.class,
+                        "receive_code like"
+                                + StrUtils.QuotedStrLike(user.getUser_code()) + "and read_state=0 " + "ORDER BY create_time DESC");*/
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
                         "user_name=" + StrUtils.QuotedStr(phone) + "and read_state=0 " + "ORDER BY create_time DESC");
@@ -177,6 +187,16 @@ public class NewsHomeActivity extends JwActivity {
                     rlFriendNews.setText("暂无消息");
                     ivFriendNum.setVisibility(View.GONE);
                 }
+
+                /*if (ListUtils.IsNotNull(signs)) {
+                    //如果status的状态为0，则消息未读，提醒
+                    tvSignNews.setText("您有新的签到消息");
+                    ivSignNum.setVisibility(View.VISIBLE);
+                } else {
+                    tvSignNews.setText("暂无消息");
+                    ivSignNum.setVisibility(View.GONE);
+                }*/
+
             } else {
 
             }

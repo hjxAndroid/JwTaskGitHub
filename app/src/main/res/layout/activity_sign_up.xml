@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/gray_f2f2f2">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray_f2f2f2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,6 +13,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/signed_user"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select"
             android:orientation="horizontal">
 
@@ -23,10 +26,10 @@
                 android:layout_height="@dimen/sign_circle"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/margin_Size"
-                android:background="@drawable/circular_portrait"
+                android:background="@drawable/circular_blue"
                 android:gravity="center"
                 android:text="@string/tv_user_head"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -44,14 +47,14 @@
                         style="@style/text_nomor_style"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/tv_userName"/>
+                        android:text="@string/tv_userName" />
 
                     <TextView
                         style="@style/text_nomor_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
-                        android:text="@string/item_sign_title"/>
+                        android:text="@string/item_sign_title" />
 
                     <TextView
                         android:id="@+id/tv_sign_title_det"
@@ -59,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="false"
-                        android:text="@string/home"/>
+                        android:text="@string/home" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -71,20 +74,20 @@
                         style="@style/text_nomor_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/sign_msg"/>
+                        android:text="@string/sign_msg" />
 
                     <TextView
                         android:id="@+id/tv_sign_counts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/counts_value"
-                        android:textSize="@dimen/counts"/>
+                        android:textSize="@dimen/counts" />
 
                     <TextView
                         style="@style/text_nomor_style"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/counts"/>
+                        android:text="@string/counts" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -93,57 +96,64 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/margin_Top_Size"
-            android:background="@color/gray_fgx"/>
+            android:background="@color/gray_fgx" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/user_Layout_Height"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select"
-            android:gravity="center">
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/tv_sign_week"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/time_space"
-                android:drawableLeft="@drawable/cmail_icon_calendar1"
+                android:drawableLeft="@drawable/cmail_calendar"
                 android:drawablePadding="@dimen/time_space"
+                android:gravity="center"
                 android:text="@string/weeks"
-                android:textColor="@color/gray"/>
+                android:textColor="@color/gray" />
 
             <TextView
                 android:id="@+id/tv_sign_date"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginLeft="@dimen/time_space"
                 android:layout_toRightOf="@+id/tv_sign_week"
                 android:drawablePadding="@dimen/time_space"
-                android:text="@string/date"/>
+                android:gravity="center"
+                android:text="@string/date" />
 
             <TextView
                 android:id="@+id/tv_current_time_des"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/time_space"
+                android:layout_height="match_parent"
                 android:layout_toLeftOf="@+id/tv_sign_time"
-                android:drawableLeft="@drawable/alm_cmail_meeting_time"
+                android:drawableLeft="@drawable/ding_remind_terminated"
                 android:drawablePadding="@dimen/time_space"
+                android:gravity="center"
                 android:text="@string/current_time"
-                android:textColor="@color/gray"/>
+                android:textColor="@color/gray" />
 
             <TextView
                 android:id="@+id/tv_sign_time"
-                style="@style/text_nomor_style"
+                style="@style/text_lrk_nomor_style"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_alignParentRight="true"
                 android:layout_marginLeft="@dimen/time_space"
-                android:text="@string/system_time"/>
+                android:layout_marginRight="@dimen/margin_Size"
+                android:gravity="center"
+                android:text="@string/system_time" />
 
         </RelativeLayout>
 
@@ -151,40 +161,33 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginLeft="@dimen/margin_Top_Size"
-            android:background="@color/gray_fgx"/>
+            android:background="@color/gray_fgx" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/whole_map_size"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="@dimen/map_size"
-                android:layout_height="@dimen/map_size"
-                android:layout_margin="@dimen/margin_Size"
-                android:background="@drawable/map"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="@dimen/margin_Size"
+                android:text="签到地址:"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/margin_Large_Top_Size" />
 
-                <TextView
-                    style="@style/text_nomor_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/margin_Size"
-                    android:layout_marginTop="@dimen/margin_Large_Top_Size"
-                    android:text="@string/localtion"/>
-
-                <TextView
-                    style="@style/text_nomor_style"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/margin_Size"
-                    android:text="@string/detail_localtion"/>
-            </LinearLayout>
+            <TextView
+                android:id="@+id/tv_sign_addr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_Size"
+                android:text="@string/detail_localtion"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/margin_Large_Top_Size" />
         </LinearLayout>
 
         <LinearLayout
@@ -199,11 +202,11 @@
                 android:layout_height="@dimen/sign_button"
                 android:layout_gravity="center"
                 android:layout_margin="@dimen/margin_Large_Top_Size"
-                android:background="@drawable/circular_portrait"
+                android:background="@drawable/circular_blue"
                 android:gravity="center"
                 android:text="@string/sign_up_button"
                 android:textColor="@color/white"
-                android:textSize="@dimen/sign_size"/>
+                android:textSize="@dimen/sign_size" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>
