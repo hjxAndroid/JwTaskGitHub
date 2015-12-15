@@ -10,6 +10,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -142,11 +143,13 @@ public class FriendListActivity extends JwListActivity {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Friend.class,
                                 "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" + " limit " + pageStart + "," + pageEnd);
+                        removeDuplicate(list);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Friend.class,
                                 "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" + " limit " + pageStart + "," + pageEnd);
+                        removeDuplicate(list);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
@@ -186,6 +189,21 @@ public class FriendListActivity extends JwListActivity {
         } else {
             pageStart += addNum;
             pageEnd += addNum;
+        }
+    }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<Friend> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getFriend_code().equals(list.get(i).getFriend_code())) {
+                    list.remove(j);
+                }
+            }
         }
     }
 }

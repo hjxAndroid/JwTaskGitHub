@@ -81,11 +81,6 @@ public class CommitListActivity extends JwListActivity {
     void showPlClick() {
         liSend.setVisibility(View.VISIBLE);
         etSned.setFocusable(true);
-        etSned.setFocusableInTouchMode(true);
-        etSned.requestFocus();
-        InputMethodManager inputManager =
-                (InputMethodManager) etSned.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputManager.showSoftInput(etSned, 0);
     }
 
     @OnClick(R.id.bt_send)

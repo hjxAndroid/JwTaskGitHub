@@ -4,6 +4,7 @@ package api.util;
  * Created by asusa on 2015/11/18.
  */
 public class Contants {
+    //http://192.168.0.37:8080/jCloudDB
     //默认整个ip
     public static String All_URL = "http://192.168.0.37:8080/JCloud";
     //整个ip地址
@@ -60,6 +61,8 @@ public class Contants {
     public static String wsh = "未审核";
     //未确认
     public static String ysh = "已审核";
+    //未确认
+    public static String yqsqz = "延期申请中";
     //未确认
     public static String yyq = "已延期";
     //未确认

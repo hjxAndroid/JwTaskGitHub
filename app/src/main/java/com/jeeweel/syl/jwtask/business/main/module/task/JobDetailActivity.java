@@ -26,6 +26,8 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -88,6 +90,7 @@ public class JobDetailActivity extends JwActivity {
      */
     private Task task;
     String flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,7 +103,7 @@ public class JobDetailActivity extends JwActivity {
 
     private void setData() {
         flag = getIntent().getStringExtra("flag");
-        if(StrUtils.IsNotEmpty(flag)){
+        if (StrUtils.IsNotEmpty(flag)) {
             liBt.setVisibility(View.GONE);
         }
 
@@ -126,18 +129,29 @@ public class JobDetailActivity extends JwActivity {
             if (state == 1) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
+                btSqyq.setClickable(true);
             } else if (state == 2) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
+                btSqyq.setClickable(false);
 
                 btDjsh.setText("已递交");
                 btDjsh.setClickable(false);
-            }else if(state!=0){
+                btSqyq.setClickable(false);
+            } else if (state != 0) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
+                btSqyq.setClickable(false);
 
                 btDjsh.setText("已递交");
                 btDjsh.setClickable(false);
+                btSqyq.setClickable(false);
+            }else if(state == 4){
+                btQrjs.setText("已确认");
+                btQrjs.setClickable(false);
+                btSqyq.setText("延期申请中");
+            }else{
+                btSqyq.setClickable(false);
             }
 
             showLoading();
@@ -157,15 +171,21 @@ public class JobDetailActivity extends JwActivity {
         JwStartActivity(SendShActivity.class, task);
     }
 
+    @OnClick(R.id.bt_sqyq)
+    void sqyqClick() {
+        JwStartActivity(ApplyDelayActivity.class, task);
+    }
+
     @OnClick(R.id.tv_pl)
     void commitClick() {
         Intent intent = new Intent(this, CommitListActivity.class);
         intent.putExtra(StaticStrUtils.baseItem, task);
-        if(StrUtils.IsNotEmpty(flag)&&flag.equals("gc")){
-            intent.putExtra("flag","gc");
+        if (StrUtils.IsNotEmpty(flag) && flag.equals("gc")) {
+            intent.putExtra("flag", "gc");
         }
         startActivity(intent);
     }
+
     /**
      * 保存到数据库
      */
@@ -173,6 +193,7 @@ public class JobDetailActivity extends JwActivity {
         private Context context;
         private JCloudDB jCloudDB;
         List<Taskflow> taskflows;
+        List<Task> tasks;
 
         /**
          * @param context 上下文
@@ -189,6 +210,20 @@ public class JobDetailActivity extends JwActivity {
 
 
             try {
+                if (null != task) {
+                    String unid = Utils.getUUid();
+                    String sql = "call get_task_detail('" + unid + "','" + task.getTask_code() + "');";
+                    CloudDB.execSQL(sql);
+
+                    String newSql = "select * from tmp" + unid;
+                    //查找数据
+                    tasks = jCloudDB.findAllBySql(Task.class, newSql);
+
+                    String deletSql = "DROP TABLE tmp" + unid;
+                    CloudDB.execSQL(deletSql);
+                }
+
+
                 taskflows = jCloudDB.findAllByWhere(Taskflow.class,
                         "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
             } catch (CloudServiceException e) {
@@ -203,6 +238,16 @@ public class JobDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                if (ListUtils.IsNotNull(tasks)) {
+                    Task task = tasks.get(0);
+                    tvFbr.setText(task.getPromulgator_nickname());
+                    tvFzr.setText(task.getPrincipal_nickname());
+                    tvShr.setText(task.getAuditor_nickname());
+                    tvCyz.setText(task.getParticipant_nickname());
+                    tvGcz.setText(task.getObserver_nickname());
+                }
+
+
                 CommonAdapter commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                     @Override
                     public void convert(ViewHolder helper, Taskflow item) {
@@ -270,6 +315,7 @@ public class JobDetailActivity extends JwActivity {
             if (result.equals("1")) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
+                btDjsh.setClickable(true);
             } else {
                 ToastShow("操作失败");
             }
@@ -278,116 +324,14 @@ public class JobDetailActivity extends JwActivity {
     }
 
 
-    /**
-     * 获取发布人，审核人等信息
-     */
-    private class getUsersTask extends AsyncTask<String, Void, String> {
-        private Context context;
-        private JCloudDB jCloudDB;
-
-        /**
-         * @param context 上下文
-         */
-        public getUsersTask(Context context) {
-            this.context = context;
-            jCloudDB = new JCloudDB();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String result = "1";
-
-            try {
-                if (null != users) {
-                    if (null != task) {
-                        String unid = Utils.getUUid();
-                        String sql = "call get_task_detail('"+unid+"','"+task.getTask_code()+"');";
-                        CloudDB.execSQL(sql);
-
-                        String newSql = "select * from tmp"+unid;
-                        //查找数据
-                        List<Task> tasks = jCloudDB.findAllBySql(Task.class,newSql);
-                        if(ListUtils.IsNotNull(tasks)){
-                            Task task = tasks.get(0);
-                        }
-                    }
-                }
-            } catch (CloudServiceException e) {
-                result = "0";
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.equals("1")) {
-                btDjsh.setText("已递交");
-                btDjsh.setClickable(false);
-            } else {
-                ToastShow("操作失败");
-            }
-            hideLoading();
-        }
-    }
-
-
-    /**
-     * 递交任务给上级审核
-     */
-    private class changeDjTask extends AsyncTask<String, Void, String> {
-        private Context context;
-        private JCloudDB jCloudDB;
-
-        /**
-         * @param context 上下文
-         */
-        public changeDjTask(Context context) {
-            this.context = context;
-            jCloudDB = new JCloudDB();
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String result = "1";
-
-            try {
-                if (null != users) {
-                    if (null != task) {
-                        String sql = "update task set now_state = 2 , now_state_name = '未审核' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
-                        CloudDB.execSQL(sql);
-
-
-                        //保存到流程表里
-                        Taskflow taskflow = new Taskflow();
-                        taskflow.setTask_code(task.getTask_code());
-                        taskflow.setNow_state(2);
-                        taskflow.setNow_state_name(Contants.wsh);
-                        taskflow.setUser_action(Contants.action_dj);
-                        jCloudDB.save(taskflow);
-
-                    }
-                }
-            } catch (CloudServiceException e) {
-                result = "0";
-                e.printStackTrace();
-            }
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result.equals("1")) {
-                btDjsh.setText("已递交");
-                btDjsh.setClickable(false);
-            } else {
-                ToastShow("操作失败");
-            }
-            hideLoading();
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (msg.equals("job_refresh")) {
+            btDjsh.setText("已递交");
+            btDjsh.setClickable(false);
+        }else if(msg.equals("yyq_refresh")){
+            btSqyq.setText("延期申请中");
         }
     }
 }

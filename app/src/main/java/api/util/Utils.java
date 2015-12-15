@@ -46,4 +46,13 @@ public class Utils {
         String url = Contants.All_URL;
         return url;
     }
+
+    /**
+     * 获取推送servlet
+     */
+    public static String getPushUrl() {
+        String url = Contants.All_URL+"/servlet/PushServlet";
+        return url;
+    }
+
 }
