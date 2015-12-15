@@ -105,7 +105,9 @@ public class PublicyListActivity extends JwListActivity {
                 helper.setText(R.id.tv_name, item.getNickname());
                 helper.setText(R.id.tv_title, item.getPublicity_title());
                 helper.setText(R.id.tv_time, item.getCreate_time());
-                new GetUserPicture(getMy(),helper.getImageView(R.id.iv_xz),item.getPublicity_code()).execute();
+                ImageView iv_photo = helper.getImageView(R.id.iv_xz);
+                JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
+     //           new GetUserPicture(getMy(),helper.getImageView(R.id.iv_xz),item.getPublicity_code()).execute();
             }
         };
 //        Logv("qwqwqw" + item.getPhoto_code());
@@ -233,15 +235,36 @@ public class PublicyListActivity extends JwListActivity {
                                         + " order by create_time desc limit " + pageStart + "," + pageEnd
                         );
                     }
+
+                    if (ListUtils.IsNotNull(list)) {
+                        result = "1";
+                        for(Publicity publicity : list){
+                            //取头像
+                            String publicy_code = publicity.getPublicity_code();
+
+                            String sSql = "pic_code=?";
+                            SqlInfo sqlInfo = new SqlInfo();
+                            sqlInfo.setSql(sSql);
+                            sqlInfo.addValue(publicy_code);
+                            sSql = sqlInfo.getBuildSql();
+                            List<Picture> list = jCloudDB.findAllByWhere(Picture.class, sSql);
+                            if (ListUtils.IsNotNull(list)) {
+                                Picture picture = list.get(0);
+                                String path=picture.getPic_road();
+                                if(StrUtils.IsNotEmpty(path)){
+                                    //存头像
+                                    publicity.setPhoto_code(path);
+                                }
+                            }
+                        }
+                    } else {
+                        result = "0";
+                    }
+
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
 
-                if (ListUtils.IsNotNull(list)) {
-                    result = "1";
-                } else {
-                    result = "0";
-                }
             }
 
             return result;
