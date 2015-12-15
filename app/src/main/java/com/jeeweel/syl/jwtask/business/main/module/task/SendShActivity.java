@@ -62,6 +62,7 @@ import java.util.List;
 import api.photoview.Bimp;
 import api.photoview.FileUtils;
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import api.view.GridNoScrollView;
 import butterknife.Bind;
@@ -252,6 +253,7 @@ public class SendShActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 ToastShow("发布成功");
+                OttUtils.push("job_refresh", "");
                 finish();
             } else {
                 ToastShow("保存失败");

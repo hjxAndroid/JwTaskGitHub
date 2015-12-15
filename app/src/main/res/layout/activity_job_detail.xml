@@ -409,7 +409,8 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="@dimen/textSize_small"
-            android:background="@drawable/bg_button"/>
+            android:background="@drawable/bg_button"
+            android:clickable="false"/>
 
         <View android:layout_width="0.2dp"
             android:layout_height="match_parent"

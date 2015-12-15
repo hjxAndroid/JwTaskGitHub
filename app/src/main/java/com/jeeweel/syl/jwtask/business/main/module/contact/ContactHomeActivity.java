@@ -48,6 +48,7 @@ public class ContactHomeActivity extends JwActivity {
     List<Orgunit> groups = new ArrayList<Orgunit>();
     List<List<Userdept>> childs = new ArrayList<List<Userdept>>();
 
+    List<Userdept> list = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +88,6 @@ public class ContactHomeActivity extends JwActivity {
      */
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
-        List<Userdept> list = null;
 
         /**
          * @param context 上下文
@@ -196,6 +196,8 @@ public class ContactHomeActivity extends JwActivity {
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
         if (StrUtils.IsNotEmpty(msg) && msg.equals("deptAdd_refresh")) {
+            list.clear();
+            groups.clear();
             getDate();
         }
     }

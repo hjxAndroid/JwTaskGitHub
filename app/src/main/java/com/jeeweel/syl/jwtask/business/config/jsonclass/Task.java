@@ -51,6 +51,14 @@ public class Task extends BaseItem{
      */
     private String principal_code;
     /**
+     * 负责人姓名（过个，号隔开）
+     */
+    private String principal_username;
+    /**
+     * 负责人姓名（过个，号隔开）
+     */
+    private String principal_nickname;
+    /**
      * 发布人预留字段
      */
     private int promulgator;
@@ -65,6 +73,10 @@ public class Task extends BaseItem{
     /**
      * 发布人姓名
      */
+    private String promulgator_nickname;
+    /**
+     * 发布人姓名
+     */
     private String nickname;
     /**
      * 审核人预留ID
@@ -75,6 +87,14 @@ public class Task extends BaseItem{
      */
     private String auditor_code;
     /**
+     * 审核人姓名（过个，号隔开）
+     */
+    private String auditor_nickname;
+    /**
+     * 审核人姓名（过个，号隔开）
+     */
+    private String auditor_username;
+    /**
      * 参与者字段,预留
      */
     private String participant;
@@ -83,6 +103,10 @@ public class Task extends BaseItem{
      */
     private String participant_code;
     /**
+     * 参与者姓名（过个，号隔开）
+     */
+    private String participant_nickname;
+    /**
      * 预留字段
      */
     private String observer;
@@ -90,6 +114,10 @@ public class Task extends BaseItem{
      * 观察者（多个）预留字段
      */
     private String observer_code;
+    /**
+     * 观察者姓名（多个）预留字段
+     */
+    private String observer_nickname;
     /**
      * 任务要求
      */
@@ -354,6 +382,62 @@ public class Task extends BaseItem{
 
     public void setConfirm_time(String confirm_time) {
         this.confirm_time = confirm_time;
+    }
+
+    public String getPrincipal_username() {
+        return principal_username;
+    }
+
+    public void setPrincipal_username(String principal_username) {
+        this.principal_username = principal_username;
+    }
+
+    public String getAuditor_username() {
+        return auditor_username;
+    }
+
+    public void setAuditor_username(String auditor_username) {
+        this.auditor_username = auditor_username;
+    }
+
+    public String getParticipant_nickname() {
+        return participant_nickname;
+    }
+
+    public void setParticipant_nickname(String participant_nickname) {
+        this.participant_nickname = participant_nickname;
+    }
+
+    public String getObserver_nickname() {
+        return observer_nickname;
+    }
+
+    public void setObserver_nickname(String observer_nickname) {
+        this.observer_nickname = observer_nickname;
+    }
+
+    public String getPrincipal_nickname() {
+        return principal_nickname;
+    }
+
+    public void setPrincipal_nickname(String principal_nickname) {
+        this.principal_nickname = principal_nickname;
+    }
+
+    public String getAuditor_nickname() {
+        return auditor_nickname;
+    }
+
+    public void setAuditor_nickname(String auditor_nickname) {
+        this.auditor_nickname = auditor_nickname;
+    }
+
+    public String getPromulgator_nickname() {
+        return promulgator_nickname;
+    }
+
+    public void setPromulgator_nickname(String promulgator_nickname) {
+        this.promulgator_nickname = promulgator_nickname;
     }
 }
 

@@ -28,86 +28,41 @@ public class Applydelay {
      */
     private String task_name;
     /**
-     * 任务完成情况和问题
+     * 审核人code
      */
-    private String performance;
+    private String auditor_code;
     /**
-     * 意见反馈
+     * 负责人code
      */
-    private String feedback;
+    private String principal_code;
     /**
-     * 图片ID,预留字段
+     * 申请人code
      */
-    private int photo_id;
+    private String apply_user_code;
     /**
-     * 图片ID,预留字段
+     * 申请人电话号码
      */
-    private String photo_code;
+    private String apply_username;
     /**
-     * 操作状态
+     * 申请人昵称
      */
-    private String evaluate;
+    private String apply_nickname;
     /**
-     * 操作人状态
+     * 申请理由
      */
-    private String operate_state;
+    private String apply_reason;
     /**
-     * 操作人
+     * 申请延期时间
      */
-    private int operator;
+    private String apply_delay_time;
     /**
-     * 操作时间
-     */
-    private Date operate_time;
-    /**
-     * 操作类型，确认接受，递交审核，申请延期，泛起任务，同意任务，驳回，参与人评论
-     */
-    private String operate_type;
-    /**
-     * 评论内容,评论内容
-     */
-    private String commit_content;
-    /**
-     * 起始时间
+     * 开始时间
      */
     private String begin_time;
     /**
      * 结束时间
      */
-    private String end_time;
-    /**
-     * 申请延期结束时间
-     */
-    private String apply_delay_endtime;
-    /**
-     * 理由
-     */
-    private String reason;
-    /**
-     * 审批内容
-     */
-    private String approval_content;
-    /**
-     * 审核人自增ID
-     */
-    private int auditor;
-    /**
-     * 审核人32位ID
-     */
-    private String auditor_id;
-
-    /**
-     * 同意延期时间
-     */
-    private String agree_delay_time;
-    /**
-     * 同意状态（同意或者不同意）
-     */
-    private String agree_state;
-    /**
-     * 备注
-     */
-    private String remark;
+    private String over_time;
     /**
      * 创建时间
      */
@@ -117,7 +72,7 @@ public class Applydelay {
      */
     private String update_time;
 
-
+    private String confirm_time;
     public int getMid() {
         return mid;
     }
@@ -142,76 +97,52 @@ public class Applydelay {
         this.task_name = task_name;
     }
 
-    public String getPerformance() {
-        return performance;
+    public String getPrincipal_code() {
+        return principal_code;
     }
 
-    public void setPerformance(String performance) {
-        this.performance = performance;
+    public void setPrincipal_code(String principal_code) {
+        this.principal_code = principal_code;
     }
 
-    public String getFeedback() {
-        return feedback;
+    public String getApply_user_code() {
+        return apply_user_code;
     }
 
-    public void setFeedback(String feedback) {
-        this.feedback = feedback;
+    public void setApply_user_code(String apply_user_code) {
+        this.apply_user_code = apply_user_code;
     }
 
-    public int getPhoto_id() {
-        return photo_id;
+    public String getApply_username() {
+        return apply_username;
     }
 
-    public void setPhoto_id(int photo_id) {
-        this.photo_id = photo_id;
+    public void setApply_username(String apply_username) {
+        this.apply_username = apply_username;
     }
 
-    public String getEvaluate() {
-        return evaluate;
+    public String getApply_nickname() {
+        return apply_nickname;
     }
 
-    public void setEvaluate(String evaluate) {
-        this.evaluate = evaluate;
+    public void setApply_nickname(String apply_nickname) {
+        this.apply_nickname = apply_nickname;
     }
 
-    public String getOperate_state() {
-        return operate_state;
+    public String getApply_reason() {
+        return apply_reason;
     }
 
-    public void setOperate_state(String operate_state) {
-        this.operate_state = operate_state;
+    public void setApply_reason(String apply_reason) {
+        this.apply_reason = apply_reason;
     }
 
-    public int getOperator() {
-        return operator;
+    public String getApply_delay_time() {
+        return apply_delay_time;
     }
 
-    public void setOperator(int operator) {
-        this.operator = operator;
-    }
-
-    public Date getOperate_time() {
-        return operate_time;
-    }
-
-    public void setOperate_time(Date operate_time) {
-        this.operate_time = operate_time;
-    }
-
-    public String getOperate_type() {
-        return operate_type;
-    }
-
-    public void setOperate_type(String operate_type) {
-        this.operate_type = operate_type;
-    }
-
-    public String getCommit_content() {
-        return commit_content;
-    }
-
-    public void setCommit_content(String commit_content) {
-        this.commit_content = commit_content;
+    public void setApply_delay_time(String apply_delay_time) {
+        this.apply_delay_time = apply_delay_time;
     }
 
     public String getBegin_time() {
@@ -222,76 +153,12 @@ public class Applydelay {
         this.begin_time = begin_time;
     }
 
-    public String getEnd_time() {
-        return end_time;
+    public String getOver_time() {
+        return over_time;
     }
 
-    public void setEnd_time(String end_time) {
-        this.end_time = end_time;
-    }
-
-    public String getApply_delay_endtime() {
-        return apply_delay_endtime;
-    }
-
-    public void setApply_delay_endtime(String apply_delay_endtime) {
-        this.apply_delay_endtime = apply_delay_endtime;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-
-    public String getApproval_content() {
-        return approval_content;
-    }
-
-    public void setApproval_content(String approval_content) {
-        this.approval_content = approval_content;
-    }
-
-    public int getAuditor() {
-        return auditor;
-    }
-
-    public void setAuditor(int auditor) {
-        this.auditor = auditor;
-    }
-
-    public String getAuditor_id() {
-        return auditor_id;
-    }
-
-    public void setAuditor_id(String auditor_id) {
-        this.auditor_id = auditor_id;
-    }
-
-    public String getAgree_delay_time() {
-        return agree_delay_time;
-    }
-
-    public void setAgree_delay_time(String agree_delay_time) {
-        this.agree_delay_time = agree_delay_time;
-    }
-
-    public String getAgree_state() {
-        return agree_state;
-    }
-
-    public void setAgree_state(String agree_state) {
-        this.agree_state = agree_state;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setOver_time(String over_time) {
+        this.over_time = over_time;
     }
 
     public String getCreate_time() {
@@ -310,12 +177,21 @@ public class Applydelay {
         this.update_time = update_time;
     }
 
-    public String getPhoto_code() {
-        return photo_code;
+    public String getConfirm_time() {
+        return confirm_time;
     }
 
-    public void setPhoto_code(String photo_code) {
-        this.photo_code = photo_code;
+    public void setConfirm_time(String confirm_time) {
+        this.confirm_time = confirm_time;
+    }
+
+
+    public String getAuditor_code() {
+        return auditor_code;
+    }
+
+    public void setAuditor_code(String auditor_code) {
+        this.auditor_code = auditor_code;
     }
 }
 

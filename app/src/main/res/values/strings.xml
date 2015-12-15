@@ -93,4 +93,5 @@
     <string name="title_activity_about_version">AboutVersionActivity</string>
     <string name="title_activity_commit_list">CommitListActivity</string>
     <string name="title_activity_dept_select_friend_list">DeptSelectFriendListActivity</string>
+    <string name="title_activity_apply_delay">ApplyDelayActivity</string>
 </resources>
