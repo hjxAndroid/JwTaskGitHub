@@ -284,41 +284,21 @@
             android:src="@drawable/arrow_right" />
     </LinearLayout>
 
-    <LinearLayout
+
+    <EditText android:id="@+id/et_rwyq"
         android:layout_width="fill_parent"
-        android:layout_height="45dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/space_frame"
+        android:layout_height="95dp"
+        android:paddingLeft="10.0dip"
+        android:layout_marginBottom="20dp"
+        android:paddingTop="5dp"
         android:background="@drawable/settings_up_select"
-        android:gravity="center_vertical">
+        android:gravity="top"
+        android:hint="任务要求"
+        android:textColorHint="@color/text_gray"
+        android:textSize="@dimen/textSize_normal"
+        android:textColor="@color/list_text_name_color">
+    </EditText>
 
-        <TextView
-            android:layout_width="65dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10.0dip"
-            android:layout_marginLeft="5.0dip"
-            android:layout_marginTop="10.0dip"
-            android:text="任务要求"
-            android:textColor="@color/list_text_name_color"
-            android:textSize="@dimen/textSize_normal" />
-
-        <EditText
-            android:id="@+id/et_rwyq"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10.0dip"
-            android:layout_weight="1.0"
-            android:background="@null"
-            android:hint="请输入任务要求"
-            android:maxLength="20"
-            android:maxLines="1"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
-            android:textColorHint="@color/text_gray"
-            android:textSize="@dimen/textSize_normal"
-            android:textColor="@color/list_text_name_color"/>
-
-    </LinearLayout>
 
     <LinearLayout android:id="@+id/li_yxj"
         android:layout_width="fill_parent"

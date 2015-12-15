@@ -67,7 +67,7 @@ public class DeptAddFriendListActivity extends JwListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
         setTitle("添加成员");
-        users = JwAppAplication.getInstance().users;
+        users = JwAppAplication.getInstance().getUsers();
         tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
         ButterKnife.bind(this);
         initView();

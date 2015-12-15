@@ -97,7 +97,7 @@ public class AddDeptActivity extends JwActivity {
 
     @OnClick(R.id.fr_add)
     void nextClick() {
-        JwStartActivity(DeptAddFriendListActivity.class, Contants.group);
+        JwStartActivity(DeptSelectFriendListActivity.class, Contants.group);
     }
 
     @OnClick(R.id.bt_ok)

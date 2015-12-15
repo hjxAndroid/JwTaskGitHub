@@ -37,6 +37,7 @@ public class Users {
     private String create_time;
     private String update_time;
     private String email;
+    private String device_token;
 
     public String getPhoto_code() {
         return photo_code;
@@ -172,6 +173,14 @@ public class Users {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getDevice_token() {
+        return device_token;
+    }
+
+    public void setDevice_token(String device_token) {
+        this.device_token = device_token;
     }
 }
 

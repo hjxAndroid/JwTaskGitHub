@@ -21,6 +21,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptAddFriendListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.more.MineActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -134,7 +135,7 @@ public class StartSignUpActivity extends JwActivity {
             sign.setSend_context(etStartContext);
             sign.setReceive_name(fName);
             sign.setReceive_code(buddyCode);
-            sign.setRead_state("0");
+            //sign.setRead_state("0");
             JwStartActivity(SignUpActivity.class);
         } else {
             ToastShow("内容或标题不能为空");
@@ -154,7 +155,7 @@ public class StartSignUpActivity extends JwActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
                 if (postion == friendList.size() - 1) {
-                    JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
+                    JwStartActivity(DeptSelectFriendListActivity.class, Contants.sign);
                 }
             }
         });

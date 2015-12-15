@@ -18,6 +18,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.message.UmengRegistrar;
 
 import net.tsz.afinal.FinalDb;
 
@@ -39,12 +40,14 @@ public class RegisterLastActivity extends JwActivity {
 
     private String phone = "";
     List<Users> list = null;
+    private String device_token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_last);
         ButterKnife.bind(this);
         setTitle("密码设置");
+        device_token = UmengRegistrar.getRegistrationId(getApplicationContext());
         phone = getIntent().getStringExtra(StaticStrUtils.baseItem);
     }
 
@@ -87,22 +90,25 @@ public class RegisterLastActivity extends JwActivity {
 
             String pwd = params[0].toString();
             String phone = params[1].toString();
-            Users usersItem = new Users();
-            usersItem.setPassword(pwd);
-            usersItem.setUsername(phone);
-            usersItem.setUser_code(Utils.getUUid());
+            Users users = new Users();
+            users.setPassword(pwd);
+            users.setUsername(phone);
+            users.setUser_code(Utils.getUUid());
+            if(StrUtils.IsNotEmpty(device_token)){
+                users.setDevice_token(device_token);
+            }
 
             JCloudDB jCloudDB = new JCloudDB();
 
             try {
                 list = jCloudDB.findAllByWhere(Users.class,
-                        "username=" + StrUtils.QuotedStr(usersItem.getUsername()));
+                        "username=" + StrUtils.QuotedStr(users.getUsername()));
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
             if (ListUtils.IsNull(list)) {
                 try {
-                    if(jCloudDB.save(usersItem)){
+                    if(jCloudDB.save(users)){
 
                         result = "1";
                     }

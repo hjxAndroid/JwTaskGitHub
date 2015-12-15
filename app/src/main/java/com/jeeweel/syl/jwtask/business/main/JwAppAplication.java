@@ -170,7 +170,7 @@ public class JwAppAplication extends JeeweelApplication {
                         RemoteViews myNotificationView = new RemoteViews(context.getPackageName(), R.layout.notification_view);
                         myNotificationView.setTextViewText(R.id.notification_title, msg.title);
                         myNotificationView.setTextViewText(R.id.notification_text, msg.text);
-                        myNotificationView.setImageViewBitmap(R.id.notification_large_icon, getLargeIcon(context, msg));
+                      //  myNotificationView.setImageViewBitmap(R.id.notification_large_icon, getLargeIcon(context, msg));
                         myNotificationView.setImageViewResource(R.id.notification_small_icon, getSmallIconId(context, msg));
                         builder.setContent(myNotificationView);
                         builder.setContentTitle(msg.title)

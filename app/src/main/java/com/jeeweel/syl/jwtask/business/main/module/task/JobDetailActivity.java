@@ -23,12 +23,14 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 
 import java.util.List;
 
 import api.util.Contants;
+import api.util.Utils;
 import api.view.ListNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -268,6 +270,62 @@ public class JobDetailActivity extends JwActivity {
             if (result.equals("1")) {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
+            } else {
+                ToastShow("操作失败");
+            }
+            hideLoading();
+        }
+    }
+
+
+    /**
+     * 获取发布人，审核人等信息
+     */
+    private class getUsersTask extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public getUsersTask(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+            try {
+                if (null != users) {
+                    if (null != task) {
+                        String unid = Utils.getUUid();
+                        String sql = "call get_task_detail('"+unid+"','"+task.getTask_code()+"');";
+                        CloudDB.execSQL(sql);
+
+                        String newSql = "select * from tmp"+unid;
+                        //查找数据
+                        List<Task> tasks = jCloudDB.findAllBySql(Task.class,newSql);
+                        if(ListUtils.IsNotNull(tasks)){
+                            Task task = tasks.get(0);
+                        }
+                    }
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                btDjsh.setText("已递交");
+                btDjsh.setClickable(false);
             } else {
                 ToastShow("操作失败");
             }

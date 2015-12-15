@@ -28,7 +28,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
-import com.jeeweel.syl.lib.api.jwlib.baidumaps.InitLocationSign;
+//import com.jeeweel.syl.lib.api.jwlib.baidumaps.InitLocationSign;
 
 import java.util.Date;
 import java.util.List;

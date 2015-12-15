@@ -40,6 +40,7 @@ public class LoginActivity extends JwActivity {
     TextView tvRigster;
 
     private List<Users> list;
+    String device_token = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +48,7 @@ public class LoginActivity extends JwActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         autologin();
-        String device_token = UmengRegistrar.getRegistrationId(getApplicationContext());
+        device_token = UmengRegistrar.getRegistrationId(getApplicationContext());
         //友盟自动更新检查
         UmengUpdateAgent.update(this);
         //允许基站更新
