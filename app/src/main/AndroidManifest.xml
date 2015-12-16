@@ -437,6 +437,10 @@
             android:name=".business.main.module.task.ApplyDelayActivity"
             android:label="@string/title_activity_apply_delay" >
         </activity>
+        <activity
+            android:name=".business.main.module.task.SolveDelayActivity"
+            android:label="@string/title_activity_solve_delay" >
+        </activity>
     </application>
 
 </manifest>

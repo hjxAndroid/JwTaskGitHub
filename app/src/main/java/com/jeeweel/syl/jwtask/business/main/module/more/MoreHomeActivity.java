@@ -32,6 +32,7 @@ public class MoreHomeActivity extends JwActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHideBack(true);
         setContentView(R.layout.activity_more_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.more));

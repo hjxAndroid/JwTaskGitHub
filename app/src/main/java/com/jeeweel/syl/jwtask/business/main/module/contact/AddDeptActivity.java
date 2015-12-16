@@ -195,7 +195,7 @@ public class AddDeptActivity extends JwActivity {
                     Userorg userorg = new Userorg();
                     userorg.setOrg_code(orgUnid);
                     userorg.setOrg_name(orgname);
-                    userdept.setUser_code(friend.getFriend_code());
+                    userorg.setUser_code(friend.getFriend_code());
                     userorg.setUser_name(friend.getFriend_name());
                     userorg.setNickname(friend.getFriend_nickname());
                     jCloudDB.save(userorg);
