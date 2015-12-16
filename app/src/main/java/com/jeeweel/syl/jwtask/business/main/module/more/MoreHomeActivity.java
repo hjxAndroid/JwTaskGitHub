@@ -3,15 +3,15 @@ package com.jeeweel.syl.jwtask.business.main.module.more;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -20,14 +20,16 @@ import butterknife.OnClick;
 public class MoreHomeActivity extends JwActivity {
     @Bind(R.id.tv_user_head)
     TextView tvUserHead;
+    @Bind(R.id.iv_user_head2)
+    ImageView iv_user_head2;
     @Bind(R.id.tv_user_name)
     TextView tvUserName;
-
 
     String userHead;
     String userName;
     String userNick;
-    Users user;
+    String user_code;
+    Users users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +38,26 @@ public class MoreHomeActivity extends JwActivity {
         setContentView(R.layout.activity_more_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.more));
-        initUser();
+
+        users = JwAppAplication.getInstance().users;
+        userName = StrUtils.IfNull(userNick, userName);
+        user_code = users.getUser_code();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        userNick = users.getNickname();
+        userName = users.getUsername();
+        if (StrUtils.IsNotEmpty(userNick)) {
+            userHead = userNick.substring(userNick.length() - 2, userNick.length());
+        } else {
+            userHead = "";
+        }
+        tvUserHead.setText(userHead);
+        tvUserName.setText(userName);
+
+        new GetUserPicture(getMy(),iv_user_head2,user_code).execute();
     }
 
     @Override
@@ -76,20 +97,4 @@ public class MoreHomeActivity extends JwActivity {
         JwStartActivity(FeedbackActivity.class);
     }
 
-    private void initUser() {
-        List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
-        if (list != null && list.size() > 0) {
-            user = list.get(0);
-            userNick = user.getNickname();
-            userName = user.getUsername();
-            if (StrUtils.IsNotEmpty(userNick)) {
-                userHead = userNick.substring(userNick.length() - 2, userNick.length());
-            } else {
-                userHead = "";
-            }
-            userName = StrUtils.IfNull(userNick, userName);
-            tvUserHead.setText(userHead);
-            tvUserName.setText(userName);
-        }
-    }
 }
