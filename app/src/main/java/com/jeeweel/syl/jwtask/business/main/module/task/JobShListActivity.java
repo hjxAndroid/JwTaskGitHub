@@ -17,6 +17,8 @@ import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListVi
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,8 @@ public class JobShListActivity extends JwListActivity {
     TextView tvYzx;
     @Bind(R.id.listview)
     PullToRefreshListView listview;
+    @Bind(R.id.tv_yqsq)
+    TextView tvYqsq;
 
     private CommonAdapter commonAdapter;
 
@@ -46,6 +50,7 @@ public class JobShListActivity extends JwListActivity {
     private Users users;
 
     int flag = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +84,16 @@ public class JobShListActivity extends JwListActivity {
         onListViewHeadRefresh();
     }
 
+    //延期申请
+    @OnClick(R.id.tv_yqsq)
+    void yqsqClick() {
+        resetAll();
+        tvYqsq.setBackgroundResource(R.drawable.shape_blue);
+        tvYqsq.setTextColor(getResources().getColor(R.color.white));
+        dataSourceClear(0, mListItems);
+        flag = 4;
+        onListViewHeadRefresh();
+    }
 
     @Override
     public void initListViewController() {
@@ -98,10 +113,12 @@ public class JobShListActivity extends JwListActivity {
     @Override
     public void onListItemClick(int position) {
         Task task = (Task) commonAdapter.getItem(position);
-        if(flag==2){
+        if (flag == 2) {
             JwStartActivity(FinishShActivity.class, task);
-        }else{
+        } else if(flag == 3){
             JwStartActivity(YshActivity.class, task);
+        }else if(flag == 4){
+            JwStartActivity(SolveDelayActivity.class, task);
         }
 
     }
@@ -160,12 +177,12 @@ public class JobShListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = "+ flag + " limit " + pageStart + "," + pageEnd);
+                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + flag + " limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = "+ flag + " limit " + pageStart + "," + pageEnd);
+                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + flag + " limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
@@ -200,5 +217,17 @@ public class JobShListActivity extends JwListActivity {
         tvWzx.setTextColor(getResources().getColor(R.color.list_text_color));
         tvYzx.setBackgroundResource(R.drawable.shape_white);
         tvYzx.setTextColor(getResources().getColor(R.color.list_text_color));
+        tvYqsq.setBackgroundResource(R.drawable.shape_white);
+        tvYqsq.setTextColor(getResources().getColor(R.color.list_text_color));
+    }
+
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (msg.equals("delay_refresh")) {
+            flag = 4;
+            new FinishRefresh(getMy(), 0).execute();
+        }
     }
 }

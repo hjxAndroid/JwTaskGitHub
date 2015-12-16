@@ -85,6 +85,7 @@ public class NewsHomeActivity extends JwActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHideBack(true);
         setContentView(R.layout.activity_news_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.news));
