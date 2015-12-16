@@ -26,6 +26,7 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
     String str1;
     Users users;
     String phone;
+    String area;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +36,54 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         setUpListener();
         setUpData();
         setTitle("设置地区");
+
         users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
+        area = users.getArea();
+        if(area!=null){
+            String str[]=area.split(",");
+            mCurrentProviceName=str[0];
+            int proviceItem = 0;
+            for(int i = 0; i<mProvinceDatas.length;i++){
+                if(mCurrentProviceName.equals(mProvinceDatas[i])){
+                    proviceItem = i;
+                }
+            }
+            mViewProvince.setCurrentItem(proviceItem);
+
+            mCurrentCityName=str[1];
+            String[] cities = mCitisDatasMap.get(mCurrentProviceName);
+            int cityItem = 0;
+            if (cities == null) {
+                cities = new String[] { "" };
+            }else{
+                for(int i = 0; i<cities.length;i++){
+                    if(mCurrentCityName.equals(cities[i])){
+                        cityItem = i;
+                    }
+                }
+            }
+            mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(this, cities));
+            mViewCity.setCurrentItem(cityItem);
+
+            mCurrentDistrictName=str[2];
+            String[] areas = mDistrictDatasMap.get(mCurrentCityName);
+            int areaItem = 0;
+            if (areas == null) {
+                areas = new String[] { "" };
+            }else{
+                for(int i = 0; i<areas.length;i++){
+                    if(mCurrentDistrictName.equals(areas[i])){
+                        areaItem = i;
+                    }
+                }
+            }
+            mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
+            mViewDistrict.setCurrentItem(areaItem);
+        } else {
+            updateCities();
+            updateAreas();
+        }
     }
 
     private void setUpViews() {
@@ -64,8 +111,6 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         mViewProvince.setVisibleItems(7);
         mViewCity.setVisibleItems(7);
         mViewDistrict.setVisibleItems(7);
-        updateCities();
-        updateAreas();
     }
 
     @Override
@@ -94,6 +139,7 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         }
         mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
         mViewDistrict.setCurrentItem(0);
+        mCurrentDistrictName = mDistrictDatasMap.get(mCurrentCityName)[0];
     }
 
     /**
@@ -117,16 +163,10 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
             case R.id.btn_confirm:
                 str1= mCurrentProviceName+","+mCurrentCityName+","+mCurrentDistrictName;
                 new saveAddress(getMy()).execute();
-//                showSelectedResult();
                 break;
             default:
                 break;
         }
-    }
-
-    private void showSelectedResult() {
-        Toast.makeText(MineAddressActivity.this, "当前选中:"+mCurrentProviceName+","+mCurrentCityName+","
-                +mCurrentDistrictName+","+mCurrentZipCode, Toast.LENGTH_SHORT).show();
     }
 
     private class saveAddress extends AsyncTask<String, Void, String> {

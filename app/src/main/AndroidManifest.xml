@@ -264,7 +264,8 @@
         </activity>
         <activity
             android:name=".business.main.module.more.FeedbackActivity"
-            android:label="@string/title_activity_feedback" >
+            android:label="@string/title_activity_feedback"
+            android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
         <activity
             android:name=".business.main.module.more.MineSexActivity"
