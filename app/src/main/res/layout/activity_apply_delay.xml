@@ -1,20 +1,21 @@
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/li_fb">
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+
+        <LinearLayout android:id="@+id/li_start_time"
             android:layout_width="fill_parent"
             android:layout_height="45dp"
+            android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/space_frame"
             android:background="@drawable/settings_up_select"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:clickable="true">
 
             <TextView
                 android:layout_width="65dp"
@@ -27,7 +28,7 @@
                 android:textSize="@dimen/textSize_normal" />
 
             <TextView
-                android:id="@+id/et_task_name"
+                android:id="@+id/tv_rmw"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10.0dip"
@@ -36,13 +37,86 @@
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
+                android:textColorHint="@color/text_gray"
+                android:textSize="@dimen/textSize_normal"
+                android:textColor="@color/list_text_name_color"/>
+
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/li_end_time"
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/settings_up_select"
+            android:gravity="center_vertical"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginLeft="5.0dip"
+                android:layout_marginTop="10.0dip"
+                android:text="开始时间"
+                android:textColor="@color/list_text_name_color"
+                android:textSize="@dimen/textSize_normal"
+                />
+
+            <TextView
+                android:id="@+id/tv_kssj"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:layout_weight="1.0"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColorHint="@color/text_gray"
                 android:textSize="@dimen/textSize_normal"
                 android:textColor="@color/list_text_name_color"/>
 
         </LinearLayout>
 
 
-        <LinearLayout
+        <LinearLayout android:id="@+id/li_fzr"
+            android:layout_width="fill_parent"
+            android:layout_height="45dp"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/settings_up_select"
+            android:gravity="center_vertical"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginLeft="5.0dip"
+                android:layout_marginTop="10.0dip"
+                android:text="结束时间"
+                android:textColor="@color/list_text_name_color"
+                android:textSize="@dimen/textSize_normal" />
+
+            <TextView
+                android:id="@+id/tv_jiesusj"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:layout_weight="1.0"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColorHint="@color/text_gray"
+                android:textSize="@dimen/textSize_normal"
+                android:textColor="@color/list_text_name_color"/>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout android:id="@+id/li_shr"
             android:layout_width="fill_parent"
             android:layout_height="45dp"
             android:layout_centerHorizontal="true"
@@ -61,7 +135,7 @@
                 android:textSize="@dimen/textSize_normal" />
 
             <TextView
-                android:id="@+id/et_confirm_time"
+                android:id="@+id/tv_jssj"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10.0dip"
@@ -70,148 +144,6 @@
                 android:maxLines="1"
                 android:scrollHorizontally="true"
                 android:singleLine="true"
-                android:textSize="@dimen/textSize_normal"
-                android:textColor="@color/list_text_name_color"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/settings_up_select"
-            android:gravity="center_vertical"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginLeft="5.0dip"
-                android:layout_marginTop="10.0dip"
-                android:text="自我评价"
-                android:textColor="@color/list_text_name_color"
-                android:textSize="@dimen/textSize_normal" />
-
-            <TextView
-                android:id="@+id/tv_zwpj"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10.0dip"
-                android:layout_weight="1.0"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:textSize="@dimen/textSize_normal"
-                android:textColor="@color/list_text_name_color"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/settings_up_select"
-            android:gravity="center_vertical"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginLeft="5.0dip"
-                android:layout_marginTop="10.0dip"
-                android:text="完成情况"
-                android:textColor="@color/list_text_name_color"
-                android:textSize="@dimen/textSize_normal" />
-
-            <TextView
-                android:id="@+id/tv_wcqk"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10.0dip"
-                android:layout_weight="1.0"
-                android:maxLines="5"
-                android:textSize="@dimen/textSize_normal"
-                android:textColor="@color/list_text_name_color"/>
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/settings_up_select"
-            android:gravity="center_vertical"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginLeft="5.0dip"
-                android:layout_marginTop="10.0dip"
-                android:text="意见反馈"
-                android:textColor="@color/list_text_name_color"
-                android:textSize="@dimen/textSize_normal" />
-
-            <TextView
-                android:id="@+id/tv_yjfk"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10.0dip"
-                android:layout_weight="1.0"
-                android:maxLines="5"
-                android:textSize="@dimen/textSize_normal"
-                android:textColor="@color/list_text_name_color"/>
-        </LinearLayout>
-
-
-
-        <api.view.GridNoScrollView
-            android:id="@+id/noScrollgridview"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:horizontalSpacing="3dp"
-            android:numColumns="5"
-            android:scrollbars="none"
-            android:verticalSpacing="5dp" >
-        </api.view.GridNoScrollView>
-
-
-        <LinearLayout android:id="@+id/li_shpj"
-            android:layout_width="fill_parent"
-            android:layout_height="45dp"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/settings_up_select"
-            android:gravity="center_vertical"
-            android:clickable="true">
-
-            <TextView
-                android:layout_width="65dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10.0dip"
-                android:layout_marginLeft="5.0dip"
-                android:layout_marginTop="10.0dip"
-                android:text="审核结论"
-                android:textColor="@color/list_text_name_color"
-                android:textSize="@dimen/textSize_normal" />
-
-            <TextView
-                android:id="@+id/et_shjl"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10.0dip"
-                android:layout_weight="1.0"
-                android:maxLength="20"
-                android:maxLines="1"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:ellipsize="end"
                 android:textColorHint="@color/text_gray"
                 android:textSize="@dimen/textSize_normal"
                 android:textColor="@color/list_text_name_color"/>
@@ -219,9 +151,9 @@
         </LinearLayout>
 
 
-        <LinearLayout
+        <LinearLayout android:id="@+id/li_yqs1"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:layout_centerHorizontal="true"
             android:background="@drawable/settings_up_select"
             android:gravity="center_vertical"
@@ -233,32 +165,46 @@
                 android:layout_marginBottom="10.0dip"
                 android:layout_marginLeft="5.0dip"
                 android:layout_marginTop="10.0dip"
-                android:text="审核评价"
+                android:text="延期时间"
                 android:textColor="@color/list_text_name_color"
                 android:textSize="@dimen/textSize_normal" />
 
             <TextView
-                android:id="@+id/tv_shpj"
+                android:id="@+id/tv_sqyqsj"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10.0dip"
                 android:layout_weight="1.0"
-                android:maxLines="5"
+                android:hint="请选择"
+                android:maxLength="20"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:textColorHint="@color/text_gray"
                 android:textSize="@dimen/textSize_normal"
                 android:textColor="@color/list_text_name_color"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/arrow_right" />
         </LinearLayout>
 
 
-        <api.view.ListNoScrollView
-            android:id="@id/listview"
+        <EditText android:id="@+id/et_sqly"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:cacheColorHint="@color/transparent"
-            android:divider="@color/divider_color"
-            android:dividerHeight="1.0px"
-            android:fadingEdge="none"
-            android:listSelector="@color/transparent"
-            android:scrollbars="none" />
+            android:layout_height="95dp"
+            android:paddingLeft="10.0dip"
+            android:layout_marginBottom="20dp"
+            android:paddingTop="5dp"
+            android:background="@drawable/settings_up_select"
+            android:gravity="top"
+            android:hint="申请理由"
+            android:textColorHint="@color/text_gray"
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color">
+        </EditText>
+
+
     </LinearLayout>
 </ScrollView>

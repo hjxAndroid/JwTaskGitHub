@@ -99,6 +99,8 @@ public class FriendAddListActivity extends JwListActivity {
                                 changeState(item);
                                 textView.setText(getResources().getString(R.string.tongyi));
                                 textView.setTextColor(getResources().getColor(R.color.TextColorGray));
+                                textView.setBackgroundColor(getResources().getColor(R.color.divider_color));
+                                textView.setClickable(false);
                             }
                         });
 

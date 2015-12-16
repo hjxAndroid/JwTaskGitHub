@@ -5,35 +5,25 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
-import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddActivity;
-import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
-import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
-import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
-import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -43,7 +33,6 @@ import api.util.Contants;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class PublicyListActivity extends JwListActivity {
     List<Publicity> mListItems = new ArrayList<Publicity>();
@@ -110,9 +99,6 @@ public class PublicyListActivity extends JwListActivity {
      //           new GetUserPicture(getMy(),helper.getImageView(R.id.iv_xz),item.getPublicity_code()).execute();
             }
         };
-//        Logv("qwqwqw" + item.getPhoto_code());
-//        iv_xz = (ImageView)findViewById(R.id.iv_xz);
-//        Logv("qwqwqw"+R.id.iv_xz);
         setCommonAdapter(commonAdapter);
         super.initListViewController();
     }
@@ -247,9 +233,14 @@ public class PublicyListActivity extends JwListActivity {
                             sqlInfo.setSql(sSql);
                             sqlInfo.addValue(publicy_code);
                             sSql = sqlInfo.getBuildSql();
-                            List<Picture> list = jCloudDB.findAllByWhere(Picture.class, sSql);
-                            if (ListUtils.IsNotNull(list)) {
-                                Picture picture = list.get(0);
+                            List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+                            if (ListUtils.IsNotNull(pictureList)) {
+                                StringBuffer stringBuffer=new StringBuffer();
+                                for(int i=0;i<pictureList.size();i++){
+                                    stringBuffer.append(pictureList.get(i).getPic_road()+",");
+                                }
+                                publicity.setPictureListSting(stringBuffer.toString());
+                                Picture picture = pictureList.get(0);
                                 String path=picture.getPic_road();
                                 if(StrUtils.IsNotEmpty(path)){
                                     //存头像

@@ -4,6 +4,8 @@ import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
+import java.util.List;
+
 /**
  * @author 苏逸龙 317616660@qq.com
  * @ClassName: Alreadyread
@@ -71,6 +73,10 @@ public class Publicity extends BaseItem{
      * 阅读状态
      */
     private int read_state;
+    /**
+     * 图片列表
+     */
+    private String pictureListSting;
 
 
     public String getProuser_code() {
@@ -211,6 +217,14 @@ public class Publicity extends BaseItem{
 
     public void setRead_state(int read_state) {
         this.read_state = read_state;
+    }
+
+    public String getPictureListSting() {
+        return pictureListSting;
+    }
+
+    public void setPictureListSting(String pictureListSting) {
+        this.pictureListSting = pictureListSting;
     }
 
     public void setAccept_org_name(String accept_org_name) {

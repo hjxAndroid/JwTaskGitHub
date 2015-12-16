@@ -15,11 +15,17 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.JwCaptureActivity;
+import com.jeeweel.syl.lib.api.config.ApiUrlUtil;
+import com.jeeweel.syl.lib.api.config.StaticStrUtils;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import api.util.Utils;
@@ -39,6 +45,8 @@ public class FriendAddActivity extends JwActivity {
 
     private int scan_code = 1;
     private String friendphone;
+    String friendCode = "";
+    Users users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +92,7 @@ public class FriendAddActivity extends JwActivity {
     private void save(String friendPhone){
         List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         if (ListUtils.IsNotNull(usersList)) {
-            Users users = usersList.get(0);
+            users = usersList.get(0);
             String nickname = users.getNickname();
             usercode = users.getUser_code();
             String myphone = users.getUsername();
@@ -122,10 +130,7 @@ public class FriendAddActivity extends JwActivity {
             String nickname = params[0].toString();
             String myPhone = params[1].toString();
 
-            String friendCode = "";
             String friendPhone = params[2].toString();
-
-
 
             List<Users> friendsList = null;
             try {
@@ -199,8 +204,8 @@ public class FriendAddActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                pushData();
                 ToastShow("添加好友请求已发出");
-                finish();
             } else if (result.equals("2")) {
                 ToastShow("好友不存在");
             } else {
@@ -208,5 +213,57 @@ public class FriendAddActivity extends JwActivity {
             }
             hideLoading();
         }
+    }
+
+
+    public void pushData() {
+        if(users!=null){
+            if(StrUtils.IsNotEmpty(friendCode)){
+               // users.getNickname()+"请求添加您未好友"
+                String title = users.getNickname();
+                try {
+                    title = URLEncoder.encode(title,"utf-8");
+                    title = URLEncoder.encode(title,"utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                String content = users.getNickname()+"请求添加您未好友";
+                try {
+                    content = URLEncoder.encode(content,"utf-8");
+                    content = URLEncoder.encode(content,"utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                String param = "?user_code=" + friendCode+"&title="+title+"&content="+content;
+                String apiStr = Utils.getPushUrl()+param;
+                JwHttpGet(apiStr, true);
+            }
+        }
+    }
+
+    @Override
+    public void HttpSuccess(ResMsgItem resMsgItem) {
+        if (OUtils.IsNotNull(resMsgItem)) {
+            if (resMsgItem != null) {
+                int error = resMsgItem.getStatus();
+                String sMsg = resMsgItem.getMsg();
+                if (error == 1 || error == 99) {
+                    CroutonINFO(sMsg);
+                } else {
+                }
+            }
+            finish();
+        }
+    }
+
+    @Override
+    public void HttpFail(String strMsg) {
+        super.HttpFail(strMsg);
+    }
+
+    @Override
+    public void HttpFinish() {
+        super.HttpFinish();
     }
 }

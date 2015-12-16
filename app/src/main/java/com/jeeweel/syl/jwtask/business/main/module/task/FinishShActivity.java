@@ -16,7 +16,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
-import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -24,10 +23,8 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Submit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -35,17 +32,14 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
-
-import net.tsz.afinal.FinalDb;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import api.photoview.Bimp;
 import api.util.Contants;
 import api.util.Utils;
 import api.view.GridNoScrollView;
+import api.view.ListNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -73,6 +67,8 @@ public class FinishShActivity extends JwActivity {
 
     Task task;
     Submit submit;
+    @Bind(R.id.listview)
+    ListNoScrollView listview;
 
     private AlertDialog dialog;
     Activity context;
@@ -105,10 +101,10 @@ public class FinishShActivity extends JwActivity {
                 wcqk = liWcqk.getText().toString();
                 shpj = etShpj.getText().toString();
 
-                if (StrUtils.IsNotEmpty(wcqk)&&StrUtils.IsNotEmpty(shpj)) {
+                if (StrUtils.IsNotEmpty(wcqk) && StrUtils.IsNotEmpty(shpj)) {
                     showLoading();
                     new saveRefresh(getMy()).execute();
-                }else{
+                } else {
                     ToastShow("请完成审核内容");
                 }
             }
@@ -140,7 +136,7 @@ public class FinishShActivity extends JwActivity {
         private Context context;
         List<Submit> list;
         List<Picture> pictureList;
-
+        List<Taskflow> taskflows;
         /**
          * @param context 上下文
          */
@@ -161,6 +157,9 @@ public class FinishShActivity extends JwActivity {
 
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
                             "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
+
+                    taskflows = jCloudDB.findAllByWhere(Taskflow.class,
+                            "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -193,7 +192,17 @@ public class FinishShActivity extends JwActivity {
                     noScrollgridview.setAdapter(commonAdapter);
                 }
 
-
+                if (ListUtils.IsNotNull(taskflows)) {
+                    CommonAdapter commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
+                        @Override
+                        public void convert(ViewHolder helper, Taskflow item) {
+                            helper.setText(R.id.tv_nick_name, item.getNickname());
+                            helper.setText(R.id.tv_action, item.getUser_action());
+                            helper.setText(R.id.tv_time, item.getCreate_time());
+                        }
+                    };
+                    listview.setAdapter(commonAdapter);
+                }
             } else {
 
             }
@@ -257,7 +266,7 @@ public class FinishShActivity extends JwActivity {
 
             if (null != submit) {
                 try {
-                    String sqlsubmit = "update submit set audit_content = '"+wcqk+"' , audit_evaluate = '"+shpj+"' where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                    String sqlsubmit = "update submit set audit_content = '" + wcqk + "' , audit_evaluate = '" + shpj + "' where task_code = " + StrUtils.QuotedStr(task.getTask_code());
                     CloudDB.execSQL(sqlsubmit);
 
                     if (null != users) {

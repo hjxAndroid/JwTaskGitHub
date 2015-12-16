@@ -1,26 +1,18 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
-import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
-import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
-import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import api.util.Utils;
 import api.viewpage.CBViewHolderCreator;
 import api.viewpage.ConvenientBanner;
 import api.viewpage.NetworkImageHolderView;
@@ -54,74 +46,31 @@ public class PublicyDetailActivity extends JwActivity {
         setData();
     }
 
-    private void setData(){
-        Publicity publicity = (Publicity)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
-        if(null!=publicity){
+    private void setData() {
+        publicity = (Publicity) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        if (null != publicity) {
             tvTitle.setText(publicity.getPublicity_title());
             tvName.setText(publicity.getNickname());
             tvTime.setText(publicity.getCreate_time());
             tvOrgName.setText(publicity.getAccept_org_name());
             tvContent.setText(publicity.getPublicity_content());
-        }
-    }
 
-    private void getData() {
-        showLoading();
-        new FinishRefresh(getMy()).execute();
-
-        networkImages = new ArrayList<String>();
-        networkImages.add("1");
-        networkImages.add("2");
-        initBanner();
-    }
-    /**
-     * 保存到数据库
-     */
-    private class FinishRefresh extends AsyncTask<String, Void, String> {
-        private Context context;
-
-        /**
-         * @param context 上下文
-         */
-        public FinishRefresh(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            String result = "1";
-
-            JCloudDB jCloudDB = new JCloudDB();
-
-            Users users = JwAppAplication.getInstance().getUsers();
-            if(null!=users){
-                try {
-                    List<Publicity> publicityList = JwAppAplication.getInstance().finalDb.findAll(Publicity.class);
-                    if (ListUtils.IsNotNull(publicityList)) {
-                        publicity = publicityList.get(0);
-                    }
-                    List<Picture> list = jCloudDB.findAllByWhere(Picture.class,
-                            "pic_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()));
-                } catch (CloudServiceException e) {
-                    result = "0";
-                    e.printStackTrace();
+            networkImages = new ArrayList<String>();
+            String path=publicity.getPictureListSting();
+            if(path!=null){
+                String[] st=path.split(",");
+                for(int i=0;i<st.length;i++){
+                    networkImages.add(Utils.getPicUrl() + st[i]);
                 }
-            }
-
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if(result.equals("1")){
-
+                initBanner();
             }else{
-                ToastShow("图片获取出错");
+                LinearLayout li_img=(LinearLayout)findViewById(R.id.li_img);
+                li_img.setVisibility(View.GONE);
             }
-            hideLoading();
+
         }
     }
+
     private void initBanner() {
         // 网络加载例子
         convenientBanner

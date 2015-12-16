@@ -50,7 +50,7 @@
                 android:layout_height="match_parent"
                 android:text="@string/menu2"
                 android:layout_marginTop="0.0dip"
-                android:drawableTop="@drawable/menu4_n"
+                android:drawableTop="@drawable/menu2_n"
                 style="@style/main_tab_bottom2"
                 />
 
