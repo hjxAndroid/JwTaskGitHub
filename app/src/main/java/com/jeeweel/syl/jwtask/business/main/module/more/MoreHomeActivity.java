@@ -26,7 +26,6 @@ public class MoreHomeActivity extends JwActivity {
     TextView tvUserName;
 
     String userHead;
-    String userName;
     String userNick;
     String user_code;
     Users users;
@@ -40,7 +39,6 @@ public class MoreHomeActivity extends JwActivity {
         setTitle(getString(R.string.more));
 
         users = JwAppAplication.getInstance().users;
-        userName = StrUtils.IfNull(userNick, userName);
         user_code = users.getUser_code();
     }
 
@@ -48,14 +46,13 @@ public class MoreHomeActivity extends JwActivity {
     protected void onResume() {
         super.onResume();
         userNick = users.getNickname();
-        userName = users.getUsername();
         if (StrUtils.IsNotEmpty(userNick)) {
             userHead = userNick.substring(userNick.length() - 2, userNick.length());
         } else {
             userHead = "";
         }
         tvUserHead.setText(userHead);
-        tvUserName.setText(userName);
+        tvUserName.setText(userNick);
 
         new GetUserPicture(getMy(),iv_user_head2,user_code).execute();
     }

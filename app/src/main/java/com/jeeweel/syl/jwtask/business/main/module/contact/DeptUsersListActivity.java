@@ -65,12 +65,24 @@ public class DeptUsersListActivity extends JwListActivity {
         setContentView(R.layout.activity_friend_list);
         userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         if(null!=userdept){
-            setTitle(userdept.getOrg_name()+">"+userdept.getDept_name());
+            setTitle(userdept.getDept_name());
         }
         ButterKnife.bind(this);
         initListViewController();
+        initView();
     }
-
+    private void initView() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("添加");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                JwStartActivity(DeptSelectFriendListActivity.class);
+            }
+        });
+        addMenuView(menuTextView);
+    }
     @Override
     public void initListViewController() {
         commonAdapter = new CommonAdapter<Userdept>(getMy(), mListItems, R.layout.item_friend) {
