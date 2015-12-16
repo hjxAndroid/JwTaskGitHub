@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -41,6 +42,7 @@ public class MineEditnameActivity extends JwActivity {
             et.setText(users.getNickname());
         }else if(strtitle.equals("设置邮箱")){
             et.setText(users.getEmail());
+            et.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         }
     }
 

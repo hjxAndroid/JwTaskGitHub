@@ -76,16 +76,16 @@ public class BaseActivity extends JwActivity {
 			// 获取解析出来的数据
 			provinceList = handler.getDataList();
 			//*/ 初始化默认选中的省、市、区
-			if (provinceList!= null && !provinceList.isEmpty()) {
-				mCurrentProviceName = provinceList.get(0).getName();
-				List<CityModel> cityList = provinceList.get(0).getCityList();
-				if (cityList!= null && !cityList.isEmpty()) {
-					mCurrentCityName = cityList.get(0).getName();
-					List<DistrictModel> districtList = cityList.get(0).getDistrictList();
-					mCurrentDistrictName = districtList.get(0).getName();
-					mCurrentZipCode = districtList.get(0).getZipcode();
-				}
-			}
+//			if (provinceList!= null && !provinceList.isEmpty()) {
+//				mCurrentProviceName = provinceList.get(0).getName();
+//				List<CityModel> cityList = provinceList.get(0).getCityList();
+//				if (cityList!= null && !cityList.isEmpty()) {
+//					mCurrentCityName = cityList.get(0).getName();
+//					List<DistrictModel> districtList = cityList.get(0).getDistrictList();
+//					mCurrentDistrictName = districtList.get(0).getName();
+//					mCurrentZipCode = districtList.get(0).getZipcode();
+//				}
+//			}
 			//*/
 			mProvinceDatas = new String[provinceList.size()];
 			for (int i=0; i< provinceList.size(); i++) {
