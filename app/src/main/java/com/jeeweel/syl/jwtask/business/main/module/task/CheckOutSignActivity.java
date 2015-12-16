@@ -1,19 +1,22 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
+import android.app.Notification;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
+import com.jeeweel.syl.lib.api.config.StaticStrUtils;
+import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
@@ -21,78 +24,54 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import java.util.ArrayList;
 import java.util.List;
 
-import api.util.OttUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by Ragn on 2015/12/4.
+ * Created by Ragn on 2015/12/16.
  */
-public class SignListActivity extends JwListActivity {
-    List<Sign> mListItems = new ArrayList<Sign>();
+public class CheckOutSignActivity extends JwListActivity {
+    List<Signed> mListItems = new ArrayList<Signed>();
     @Bind(R.id.listview)
     PullToRefreshListView listview;
-
-
     private CommonAdapter commonAdapter;
-    private String isUserCode;
-    String[] sCodes;
-    String buddyCode;
+    private Users users;
+    private String signedCode;
+
     private int pageStart = 0; //截取的开始
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
 
-    List<Sign> list;
-
-    private Users users;
-
+    List<Signed> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sign_list_view);
+        setContentView(R.layout.activity_check_out_sign);
         ButterKnife.bind(this);
-        setTitle("签到列表");
-        users = JwAppAplication.getInstance().users;
+        getData();
         initListViewController();
+        users = JwAppAplication.getInstance().users;
     }
-
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Sign>(getMy(), mListItems, R.layout.item_sign_information) {
+        commonAdapter = new CommonAdapter<Signed>(getMy(), mListItems, R.layout.item_my_sign) {
             @Override
-            public void convert(ViewHolder helper, Sign item) {
-                buddyCode = item.getReceive_code();
-                if (buddyCode.contains(",")) {
-                    sCodes = buddyCode.split(",");
-                    for (int i = 0; i < sCodes.length; i++) {
-                        isUserCode = sCodes[i];
-                        if (isUserCode.equals(users.getUser_code())) {
-                            helper.setText(R.id.tv_sign_title, item.getSign_title());
-                            helper.setText(R.id.tv_name, item.getProuser_name());
-                            helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
-                        }
-                    }
-                } else {
-                    isUserCode = buddyCode;
-                    if (isUserCode.equals(users.getUser_code())) {
-                        helper.setText(R.id.tv_sign_title, item.getSign_title());
-                        helper.setText(R.id.tv_name, item.getProuser_name());
-                        helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
-                /*new FinishRefreshChangeState(getMy()).execute();*/
-                    }
-                }
+            public void convert(ViewHolder helper, Signed item) {
+                helper.setText(R.id.tv_check_user_pic, item.getSign_title());
+                helper.setText(R.id.tv_check_user_name, users.getNickname());
+                helper.setText(R.id.tv_check_time, item.getCreate_time().substring(11, 16));
+                helper.setText(R.id.tv_check_loc, item.getLocation());
             }
         };
         setCommonAdapter(commonAdapter);
         super.initListViewController();
     }
 
-    @Override
-    public void onListItemClick(int position) {
-        Sign sign = (Sign) commonAdapter.getItem(position);
-        JwStartActivity(SignUpActivity.class, sign.getSign_code());
+    private void getData() {
+        showLoading();
+        signedCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
     }
 
     @Override
@@ -130,10 +109,13 @@ public class SignListActivity extends JwListActivity {
                 try {
                     if (mode == 0) {
                         setPage(true);
-                        list = jCloudDB.findAllByWhere(Sign.class,
-                                "receive_code like"
-                                        + StrUtils.QuotedStrLike(users.getUser_code())
-                                        + " ORDER BY create_time DESC " +
+                        list = jCloudDB.findAllByWhere(Signed.class,
+                                "sign_user_code ="
+                                        + StrUtils.QuotedStr(users.getUser_code())
+                                        + " and " +
+                                        " sign_code = " +
+                                        StrUtils.QuotedStr(signedCode) +
+                                        " ORDER BY create_time DESC " +
                                         " limit " +
                                         pageStart +
                                         "," +
@@ -141,9 +123,12 @@ public class SignListActivity extends JwListActivity {
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        list = jCloudDB.findAllByWhere(Sign.class,
-                                "receive_code like" +
-                                        StrUtils.QuotedStrLike(users.getUser_code()) +
+                        list = jCloudDB.findAllByWhere(Signed.class,
+                                "sign_user_code ="
+                                        + StrUtils.QuotedStr(users.getUser_code())
+                                        + " and " +
+                                        " sign_code = " +
+                                        StrUtils.QuotedStr(signedCode) +
                                         " ORDER BY create_time DESC " +
                                         " limit " +
                                         pageStart +
@@ -183,35 +168,4 @@ public class SignListActivity extends JwListActivity {
             pageEnd += addNum;
         }
     }
-
-
-    private class FinishRefreshChangeState extends AsyncTask<String, Void, String> {
-        private Context context;
-
-        /**
-         * @param context 上下文
-         */
-        public FinishRefreshChangeState(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected String doInBackground(String... params) {
-            String result = "0";
-
-            String sql = "update sign set read_state = '1' where receive_code =" + "\'" + users.getUser_code() + "\'";
-            try {
-                CloudDB.execSQL(sql);
-            } catch (CloudServiceException e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            OttUtils.push("news_refresh", "");
-        }
-    }
 }
-

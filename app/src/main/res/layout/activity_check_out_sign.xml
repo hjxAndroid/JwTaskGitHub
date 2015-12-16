@@ -1,59 +1,46 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray_fgx"
-    android:orientation="vertical">
+    android:background="@color/gray_f2f2f2"
+    tools:context="com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity">
 
     <LinearLayout
+        android:id="@+id/tv_check_date"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:layout_height="50dp"
+        android:layout_marginLeft="@dimen/margin_Size"
+        android:layout_marginRight="@dimen/margin_Size"
+        android:layout_marginTop="@dimen/margin_Size"
+        android:background="@drawable/settings_mid_select"
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_Size"
-            android:text="@string/check_sign_history"
-            android:textSize="@dimen/check_sign" />
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:text="星期四"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:text="2015-12-16"/>
     </LinearLayout>
 
-    <LinearLayout
+
+    <com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView
+        android:id="@id/listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_check_date"
+        android:cacheColorHint="@color/transparent"
+        android:divider="@color/divider_color"
+        android:dividerHeight="1.0px"
+        android:fadingEdge="none"
+        android:listSelector="@color/transparent"
+        android:scrollbars="none"/>
+</RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/checked_sign"
-            android:textSize="@dimen/check_sign" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/signed_count"
-            android:textSize="@dimen/check_sign" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unchecked_sign"
-            android:textSize="@dimen/check_sign" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/unsign_count"
-            android:textSize="@dimen/check_sign" />
-    </LinearLayout>
-
-</LinearLayout>

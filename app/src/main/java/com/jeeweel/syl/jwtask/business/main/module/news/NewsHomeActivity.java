@@ -138,7 +138,6 @@ public class NewsHomeActivity extends JwActivity {
             String phone = params[0].toString();
 
             try {
-
                 if (StrUtils.isEmpty(orgCode)) {
                     //取默认组织
                     List<Userorg> userorgs = jCloudDB.findAllByWhere(Userorg.class,

@@ -90,7 +90,6 @@ public class StartSignUpActivity extends JwActivity {
         initDate();
         initView();
         sign = new Sign();
-
         sign_code = Utils.getUUid();
         sign.setSign_code(sign_code);
         List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
@@ -118,9 +117,16 @@ public class StartSignUpActivity extends JwActivity {
 
     @OnClick(R.id.start_sign_button)
     void startSign() {
+        buddyCode = saveFcode();
+        fName = saveFname();
         etStartTitle = etTitle.getText().toString();
         etStartContext = etContext.getText().toString();
         if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
+            sign.setSign_title(etStartTitle);
+            sign.setSend_context(etStartContext);
+            sign.setRead_state("0");
+            sign.setReceive_name(fName);
+            sign.setReceive_code(buddyCode);
             new saveSignInformaiton(getMy()).execute();
             ToastShow("发起签到成功");
             finish();
@@ -223,38 +229,10 @@ public class StartSignUpActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             jCloudDB = new JCloudDB();
-            buddyCode = saveFcode();
-            fName = saveFname();
-            if (buddyCode.contains(",")) {
-                String[] sCodes = buddyCode.split(",");
-                String[] sName = fName.split(",");
-                for (int i = 0; i < sCodes.length; i++) {
-                    isUserCode = sCodes[i];
-                    receiveName = sName[i];
-                    sign.setSign_title(etStartTitle);
-                    sign.setSend_context(etStartContext);
-                    sign.setRead_state("0");
-                    sign.setReceive_name(receiveName);
-                    sign.setReceive_code(isUserCode);
-                    try {
-                        jCloudDB.save(sign);
-                    } catch (CloudServiceException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } else {
-                isUserCode = buddyCode;
-                receiveName = fName;
-                sign.setSign_title(etStartTitle);
-                sign.setSend_context(etStartContext);
-                sign.setRead_state("0");
-                sign.setReceive_name(receiveName);
-                sign.setReceive_code(isUserCode);
-                try {
-                    jCloudDB.save(sign);
-                } catch (CloudServiceException e) {
-                    e.printStackTrace();
-                }
+            try {
+                jCloudDB.save(sign);
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
             }
             return null;
         }
