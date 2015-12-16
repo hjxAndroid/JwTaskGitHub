@@ -1,9 +1,11 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -23,6 +25,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.JwCaptureActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
@@ -106,7 +109,21 @@ public class SignUpActivity extends JwActivity {
         mLocationClient.registerLocationListener(mMyLocationListener);
         mLocationClient.start();
         initLocation();
+        initRight();
         new FinishRefreshSignedCounts(getMy()).execute();
+    }
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("我的签到");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                JwStartActivity(CheckOutSignActivity.class, signedCode);
+            }
+        });
+        addMenuView(menuTextView);
     }
 
     private void initLocation() {
@@ -194,6 +211,7 @@ public class SignUpActivity extends JwActivity {
         signed.setLongtude(longitude);
         signed.setLocation(address);
         new FinishRefreshSigned(getMy()).execute();
+        ToastShow("签到成功");
     }
 
     private class FinishRefresh extends AsyncTask<String, Void, String> {

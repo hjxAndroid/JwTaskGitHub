@@ -27,5 +27,6 @@
     <string name="title_activity_sign_up">SignUpActivity</string>
     <string name="title_activity_sign_information">SignInformationActivity</string>
     <string name="title_activity_sign_list">SignListActivity</string>
+    <string name="title_activity_check_out_sign">CheckOutSignActivity</string>
     <string name="receive_name">接收者</string>
 </resources>
