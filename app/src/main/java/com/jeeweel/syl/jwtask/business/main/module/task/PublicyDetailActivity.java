@@ -6,9 +6,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,9 +35,13 @@ public class PublicyDetailActivity extends JwActivity {
     TextView tvContent;
     @Bind(R.id.convenientBanner)
     ConvenientBanner convenientBanner;
+    @Bind(R.id.tv_wd)
+    TextView tvWd;
+    @Bind(R.id.tv_yd)
+    TextView tvYd;
 
     private List<String> networkImages;
-    Publicity publicity;
+    V_publicityunread publicity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,7 @@ public class PublicyDetailActivity extends JwActivity {
     }
 
     private void setData() {
-        publicity = (Publicity) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        publicity = (V_publicityunread) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         if (null != publicity) {
             tvTitle.setText(publicity.getPublicity_title());
             tvName.setText(publicity.getNickname());
@@ -56,15 +62,25 @@ public class PublicyDetailActivity extends JwActivity {
             tvContent.setText(publicity.getPublicity_content());
 
             networkImages = new ArrayList<String>();
-            String path=publicity.getPictureListSting();
-            if(path!=null){
-                String[] st=path.split(",");
-                for(int i=0;i<st.length;i++){
+            String path = publicity.getPictureListSting();
+
+            String wd = publicity.getUnread();
+            if(StrUtils.IsNotEmpty(wd)){
+                tvWd.setText(wd+"人未读");
+            }
+            String yd = publicity.getAlread();
+            if(StrUtils.IsNotEmpty(yd)){
+                tvYd.setText(yd+"人未读");
+            }
+
+            if (path != null) {
+                String[] st = path.split(",");
+                for (int i = 0; i < st.length; i++) {
                     networkImages.add(Utils.getPicUrl() + st[i]);
                 }
                 initBanner();
-            }else{
-                LinearLayout li_img=(LinearLayout)findViewById(R.id.li_img);
+            } else {
+                LinearLayout li_img = (LinearLayout) findViewById(R.id.li_img);
                 li_img.setVisibility(View.GONE);
             }
 

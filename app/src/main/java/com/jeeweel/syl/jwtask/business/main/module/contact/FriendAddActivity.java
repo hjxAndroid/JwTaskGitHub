@@ -132,72 +132,75 @@ public class FriendAddActivity extends JwActivity {
 
             String friendPhone = params[2].toString();
 
-            List<Users> friendsList = null;
+            //先判断是否已经添加了好友
+            List<Friend> friendsList = null;
             try {
-                friendsList = jCloudDB.findAllByWhere(Users.class,
-                        "username=" + StrUtils.QuotedStr(friendPhone));
-
-                if(null!=friendsList){
-                    friendCode = friendsList.get(0).getUser_code();
-                }
-
+                friendsList = jCloudDB.findAllByWhere(Friend.class,
+                        "user_name = "+ myPhone +" and friend_name=" + StrUtils.QuotedStr(friendPhone) +"and state = 2");
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
 
-
-            //先判断好友是否存在
-            List<Users> list = null;
-            try {
-                list = jCloudDB.findAllByWhere(Users.class,
-                        "username=" + StrUtils.QuotedStr(friendPhone));
-            } catch (CloudServiceException e) {
-                e.printStackTrace();
-            }
-
-
-            if (ListUtils.IsNotNull(list)) {
-                String friendNickname = list.get(0).getNickname();
-
-                //添加到自己为主体的好友表
-                Friend myself = new Friend();
-                myself.setUnid_code(unid);
-                myself.setUser_code(usercode);
-                myself.setUser_name(myPhone);
-                myself.setUser_nickname(nickname);
-                myself.setFriend_code(friendCode);
-                myself.setFriend_name(friendPhone);
-                myself.setFriend_nickname(friendNickname);
-                myself.setState(0);
-                //发送状态
-                myself.setSend_state(1);
-
+            //尚未添加该好友
+            if(ListUtils.IsNull(friendsList)){
+                //先判断好友是否存在
+                List<Users> list = null;
                 try {
-                    if (jCloudDB.save(myself)) {
-                        //添加到好友为主体的好友表
-                        Friend friend = new Friend();
-                        friend.setUnid_code(unid);
-                        friend.setUser_code(friendCode);
-                        friend.setUser_name(friendPhone);
-                        friend.setUser_nickname(friendNickname);
-                        friend.setFriend_code(usercode);
-                        friend.setFriend_name(myPhone);
-                        friend.setFriend_nickname(nickname);
-                        friend.setState(0);
-                        //接受状态
-                        myself.setSend_state(0);
-                        if (jCloudDB.save(friend)) {
-                            result = "1";
-                        }
+                    list = jCloudDB.findAllByWhere(Users.class,
+                            "username=" + StrUtils.QuotedStr(friendPhone));
+                    if(ListUtils.IsNotNull(list)){
+                        friendCode = list.get(0).getUser_code();
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
 
-            } else {
-                result = "2";
-            }
 
+                if (ListUtils.IsNotNull(list)) {
+                    String friendNickname = list.get(0).getNickname();
+
+                    //添加到自己为主体的好友表
+                    Friend myself = new Friend();
+                    myself.setUnid_code(unid);
+                    myself.setUser_code(usercode);
+                    myself.setUser_name(myPhone);
+                    myself.setUser_nickname(nickname);
+                    myself.setFriend_code(friendCode);
+                    myself.setFriend_name(friendPhone);
+                    myself.setFriend_nickname(friendNickname);
+                    myself.setState(0);
+                    //发送状态
+                    myself.setSend_state(1);
+
+                    try {
+                        if (jCloudDB.save(myself)) {
+                            //添加到好友为主体的好友表
+                            Friend friend = new Friend();
+                            friend.setUnid_code(unid);
+                            friend.setUser_code(friendCode);
+                            friend.setUser_name(friendPhone);
+                            friend.setUser_nickname(friendNickname);
+                            friend.setFriend_code(usercode);
+                            friend.setFriend_name(myPhone);
+                            friend.setFriend_nickname(nickname);
+                            friend.setState(0);
+                            //接受状态
+                            myself.setSend_state(0);
+                            if (jCloudDB.save(friend)) {
+                                result = "1";
+                            }
+                        }
+                    } catch (CloudServiceException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    result = "2";
+                }
+
+            }else{
+                result = "3";
+            }
             return result;
         }
 
@@ -208,7 +211,9 @@ public class FriendAddActivity extends JwActivity {
                 ToastShow("添加好友请求已发出");
             } else if (result.equals("2")) {
                 ToastShow("好友不存在");
-            } else {
+            } else if (result.equals("3")) {
+                ToastShow("该用户已经是您的好友");
+            }else {
                 ToastShow("好友保存出错");
             }
             hideLoading();

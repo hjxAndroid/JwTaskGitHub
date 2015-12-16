@@ -50,7 +50,7 @@
     <application
         android:name=".business.main.JwAppAplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon_logo"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
@@ -440,6 +440,10 @@
         <activity
             android:name=".business.main.module.task.SolveDelayActivity"
             android:label="@string/title_activity_solve_delay" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.JwCaptureActivity"
+            android:label="@string/title_activity_solve_delay">
         </activity>
     </application>
 

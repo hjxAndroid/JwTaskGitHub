@@ -14,6 +14,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -35,7 +36,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class PublicyListActivity extends JwListActivity {
-    List<Publicity> mListItems = new ArrayList<Publicity>();
+    List<V_publicityunread> mListItems = new ArrayList<V_publicityunread>();
 
     @Bind(R.id.listview)
     PullToRefreshListView listview;
@@ -45,7 +46,7 @@ public class PublicyListActivity extends JwListActivity {
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
 
-    List<Publicity> list;
+    List<V_publicityunread> list;
 
     private Users users;
 
@@ -88,15 +89,14 @@ public class PublicyListActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Publicity>(getMy(), mListItems, R.layout.item_publicy) {
+        commonAdapter = new CommonAdapter<V_publicityunread>(getMy(), mListItems, R.layout.item_publicy) {
             @Override
-            public void convert(ViewHolder helper, Publicity item) {
+            public void convert(ViewHolder helper, V_publicityunread item) {
                 helper.setText(R.id.tv_name, item.getNickname());
                 helper.setText(R.id.tv_title, item.getPublicity_title());
                 helper.setText(R.id.tv_time, item.getCreate_time());
                 ImageView iv_photo = helper.getImageView(R.id.iv_xz);
                 JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
-     //           new GetUserPicture(getMy(),helper.getImageView(R.id.iv_xz),item.getPublicity_code()).execute();
             }
         };
         setCommonAdapter(commonAdapter);
@@ -152,7 +152,7 @@ public class PublicyListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
-        Publicity publicity = (Publicity) commonAdapter.getItem(position);
+        V_publicityunread publicity = (V_publicityunread) commonAdapter.getItem(position);
         JwStartActivity(PublicyDetailActivity.class, publicity);
     }
 
@@ -209,14 +209,14 @@ public class PublicyListActivity extends JwListActivity {
                 try {
                     if (mode == 0) {
                         setPage(true);
-                        list = jCloudDB.findAllByWhere(Publicity.class,
+                        list = jCloudDB.findAllByWhere(V_publicityunread.class,
                                 "accept_org_code = " + StrUtils.QuotedStr(orgcode)
                                         + " order by create_time desc limit " + pageStart + "," + pageEnd
                         );
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        list = jCloudDB.findAllByWhere(Publicity.class,
+                        list = jCloudDB.findAllByWhere(V_publicityunread.class,
                                 "accept_org_code = " + StrUtils.QuotedStr(orgcode)
                                         + " order by create_time desc limit " + pageStart + "," + pageEnd
                         );
@@ -224,7 +224,7 @@ public class PublicyListActivity extends JwListActivity {
 
                     if (ListUtils.IsNotNull(list)) {
                         result = "1";
-                        for(Publicity publicity : list){
+                        for(V_publicityunread publicity : list){
                             //取头像
                             String publicy_code = publicity.getPublicity_code();
 
