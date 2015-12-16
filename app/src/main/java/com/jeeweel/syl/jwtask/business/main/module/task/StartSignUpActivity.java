@@ -68,6 +68,7 @@ public class StartSignUpActivity extends JwActivity {
     String sign_code;
     String userNick;
     String buddyCode;
+    String receiveName;
     List<Friend> friends;
     List<Friend> friendList = new ArrayList<Friend>();
     // private CommonAdapter commonAdapter;
@@ -78,6 +79,7 @@ public class StartSignUpActivity extends JwActivity {
     JCloudDB jCloudDB;
     SignAdapter signAdapter;
     String fName;
+    private String isUserCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,19 +120,13 @@ public class StartSignUpActivity extends JwActivity {
     void startSign() {
         etStartTitle = etTitle.getText().toString();
         etStartContext = etContext.getText().toString();
-        buddyCode = saveFcode();
-        fName = saveFname();
         if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
-            sign.setSign_title(etStartTitle);
-            sign.setSend_context(etStartContext);
-            sign.setReceive_name(fName);
-            sign.setReceive_code(buddyCode);
-            sign.setRead_state("0");
-            JwStartActivity(SignUpActivity.class);
+            new saveSignInformaiton(getMy()).execute();
+            ToastShow("发起签到成功");
+            finish();
         } else {
             ToastShow("内容或标题不能为空");
         }
-        new saveSignInformaiton(getMy()).execute();
     }
 
     private void initView() {
@@ -227,10 +223,38 @@ public class StartSignUpActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             jCloudDB = new JCloudDB();
-            try {
-                jCloudDB.save(sign);
-            } catch (CloudServiceException e) {
-                e.printStackTrace();
+            buddyCode = saveFcode();
+            fName = saveFname();
+            if (buddyCode.contains(",")) {
+                String[] sCodes = buddyCode.split(",");
+                String[] sName = fName.split(",");
+                for (int i = 0; i < sCodes.length; i++) {
+                    isUserCode = sCodes[i];
+                    receiveName = sName[i];
+                    sign.setSign_title(etStartTitle);
+                    sign.setSend_context(etStartContext);
+                    sign.setRead_state("0");
+                    sign.setReceive_name(receiveName);
+                    sign.setReceive_code(isUserCode);
+                    try {
+                        jCloudDB.save(sign);
+                    } catch (CloudServiceException e) {
+                        e.printStackTrace();
+                    }
+                }
+            } else {
+                isUserCode = buddyCode;
+                receiveName = fName;
+                sign.setSign_title(etStartTitle);
+                sign.setSend_context(etStartContext);
+                sign.setRead_state("0");
+                sign.setReceive_name(receiveName);
+                sign.setReceive_code(isUserCode);
+                try {
+                    jCloudDB.save(sign);
+                } catch (CloudServiceException e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -240,10 +264,11 @@ public class StartSignUpActivity extends JwActivity {
         }
     }
 
+
     private String saveFcode() {
         String fCode = "";
         for (int i = 0; i < friendList.size() - 1; i++) {
-            fCode = friendList.get(i).getFriend_code() + ",";
+            fCode = fCode + friendList.get(i).getFriend_code() + ",";
         }
         if (StrUtils.IsNotEmpty(fCode)) {
             fCode = fCode.substring(0, fCode.length() - 1);
@@ -254,7 +279,7 @@ public class StartSignUpActivity extends JwActivity {
     private String saveFname() {
         String fName = "";
         for (int i = 0; i < friendList.size() - 1; i++) {
-            fName = friendList.get(i).getFriend_name() + ",";
+            fName = fName + friendList.get(i).getFriend_name() + ",";
         }
         if (StrUtils.IsNotEmpty(fName)) {
             fName = fName.substring(0, fName.length() - 1);

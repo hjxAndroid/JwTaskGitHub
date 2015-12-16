@@ -22,6 +22,7 @@ import com.jeeweel.syl.jwtask.business.main.module.task.PublicyListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.SignListActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
@@ -78,6 +79,8 @@ public class NewsHomeActivity extends JwActivity {
     private String orgCode;
 
     private Users user;
+
+    private Sign sign;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,10 +145,10 @@ public class NewsHomeActivity extends JwActivity {
                         SharedPreferencesUtils.save(getMy(), Contants.org_name, userorgs.get(0).getOrg_name());
                     }
                 }
-               /* //通过receive_code获取sign
+                //通过receive_code获取sign
                 signs = jCloudDB.findAllByWhere(Sign.class,
                         "receive_code like"
-                                + StrUtils.QuotedStrLike(user.getUser_code()) + "and read_state=0 " + "ORDER BY create_time DESC");*/
+                                + StrUtils.QuotedStrLike(user.getUser_code()) + "and read_state=0 " + "ORDER BY create_time DESC");
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
                         "user_name=" + StrUtils.QuotedStr(phone) + "and read_state=0 " + "ORDER BY create_time DESC");
@@ -188,15 +191,20 @@ public class NewsHomeActivity extends JwActivity {
                     ivFriendNum.setVisibility(View.GONE);
                 }
 
-                /*if (ListUtils.IsNotNull(signs)) {
+                if (ListUtils.IsNotNull(signs)) {
+                    sign = signs.get(0);
                     //如果status的状态为0，则消息未读，提醒
-                    tvSignNews.setText("您有新的签到消息");
-                    ivSignNum.setVisibility(View.VISIBLE);
+                    if (OUtils.IsNotNull(sign)) {
+                        tvSignNews.setText(sign.getSign_title());
+                        ivSignNum.setVisibility(View.VISIBLE);
+                    } else {
+                        tvSignNews.setText("您有新的签到消息");
+                        ivSignNum.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     tvSignNews.setText("暂无消息");
                     ivSignNum.setVisibility(View.GONE);
-                }*/
-
+                }
             } else {
 
             }

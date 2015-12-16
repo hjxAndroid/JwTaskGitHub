@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -20,6 +21,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import api.util.OttUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -36,7 +38,6 @@ public class SignListActivity extends JwListActivity {
     private int pageStart = 0; //截取的开始
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
-    private String isUserCode;
 
     List<Sign> list;
 
@@ -47,9 +48,9 @@ public class SignListActivity extends JwListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_list_view);
+        ButterKnife.bind(this);
         setTitle("签到列表");
         users = JwAppAplication.getInstance().users;
-        ButterKnife.bind(this);
         initListViewController();
     }
 
@@ -59,27 +60,10 @@ public class SignListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<Sign>(getMy(), mListItems, R.layout.item_sign_information) {
             @Override
             public void convert(ViewHolder helper, Sign item) {
-                String sCode = item.getReceive_code();
-                if (sCode.contains(",")) {
-                    String[] sCodes = sCode.split(",");
-                    for (int i = 0; i < sCode.length(); i++) {
-                        isUserCode = sCodes[i];
-                        if (isUserCode.equals(users.getUser_code())) {
-                            helper.setText(R.id.tv_sign_title, item.getSign_title());
-                            helper.setText(R.id.tv_name, item.getProuser_name());
-                            helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
-                            item.setRead_state("1");
-                        }
-                    }
-                } else {
-                    isUserCode = sCode;
-                    if (isUserCode.equals(users.getUser_code())) {
-                        helper.setText(R.id.tv_sign_title, item.getSign_title());
-                        helper.setText(R.id.tv_name, item.getProuser_name());
-                        helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
-                      //  item.setRead_state("1");
-                    }
-                }
+                helper.setText(R.id.tv_sign_title, item.getSign_title());
+                helper.setText(R.id.tv_name, item.getProuser_name());
+                helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
+                new FinishRefreshChangeState(getMy()).execute();
             }
         };
         setCommonAdapter(commonAdapter);
@@ -128,9 +112,10 @@ public class SignListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Sign.class,
-                                "receive_code like"
-                                        + StrUtils.QuotedStrLike(users.getUser_code())
-                                        + " limit " +
+                                "receive_code ="
+                                        + StrUtils.QuotedStr(users.getUser_code())
+                                        + "ORDER BY create_time DESC" +
+                                        " limit " +
                                         pageStart +
                                         "," +
                                         pageEnd);
@@ -138,8 +123,9 @@ public class SignListActivity extends JwListActivity {
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Sign.class,
-                                "receive_code like" +
-                                        StrUtils.QuotedStrLike(users.getUser_code()) +
+                                "receive_code =" +
+                                        StrUtils.QuotedStr(users.getUser_code()) +
+                                        "ORDER BY create_time DESC" +
                                         " limit " +
                                         pageStart +
                                         "," +
@@ -178,4 +164,35 @@ public class SignListActivity extends JwListActivity {
             pageEnd += addNum;
         }
     }
+
+
+    private class FinishRefreshChangeState extends AsyncTask<String, Void, String> {
+        private Context context;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshChangeState(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "0";
+
+            String sql = "update sign set read_state = '1' where receive_code =" + "\'" + users.getUser_code() + "\'";
+            try {
+                CloudDB.execSQL(sql);
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            OttUtils.push("news_refresh", "");
+        }
+    }
 }
+
