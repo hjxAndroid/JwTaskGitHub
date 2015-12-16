@@ -15,6 +15,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendListActivity;
@@ -85,6 +86,7 @@ public class NewsHomeActivity extends JwActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHideBack(true);
         setContentView(R.layout.activity_news_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.news));
@@ -115,6 +117,7 @@ public class NewsHomeActivity extends JwActivity {
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
         JCloudDB jCloudDB;
+        List<V_publicityunread> publicityunreads;
         List<Sign> signs;
 
         /**
@@ -140,10 +143,15 @@ public class NewsHomeActivity extends JwActivity {
                     List<Userorg> userorgs = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(phone) + "ORDER BY create_time");
                     if (ListUtils.IsNotNull(userorgs)) {
+                        orgCode = userorgs.get(0).getOrg_code();
                         SharedPreferencesUtils.save(getMy(), Contants.org_code, userorgs.get(0).getOrg_code());
                         SharedPreferencesUtils.save(getMy(), Contants.org_name, userorgs.get(0).getOrg_name());
                     }
                 }
+                //通过receive_code获取公告视图列表
+                publicityunreads = jCloudDB.findAllByWhere(V_publicityunread.class, "accept_org_code = " + StrUtils.QuotedStr(orgCode)
+                        + " order by create_time desc");
+
                 //通过receive_code获取sign
                 signs = jCloudDB.findAllByWhere(Sign.class,
                         "receive_code like"
@@ -162,6 +170,18 @@ public class NewsHomeActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                //公告已读未读
+                if (ListUtils.IsNotNull(publicityunreads)) {
+                    V_publicityunread publicityunread = publicityunreads.get(0);
+                    //如果status的状态为0，则消息未读，提醒
+                    tvSignNews.setText(publicityunread.getPublicity_title());
+                    ivSignNum.setVisibility(View.VISIBLE);
+                } else {
+                    tvSignNews.setText("暂无消息");
+                    ivSignNum.setVisibility(View.GONE);
+                }
+
+
                 //刷新好友列表
                 if (ListUtils.IsNotNull(friendList)) {
                     for (Friend friend : friendList) {

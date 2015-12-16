@@ -52,6 +52,7 @@ public class ContactHomeActivity extends JwActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHideBack(true);
         setContentView(R.layout.activity_contact_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.contact));

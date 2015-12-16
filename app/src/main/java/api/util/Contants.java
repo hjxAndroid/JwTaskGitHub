@@ -66,6 +66,8 @@ public class Contants {
     //未确认
     public static String yyq = "已延期";
     //未确认
+    public static String yqbh = "延期驳回";
+    //未确认
     public static String yfq = "已放弃";
 
 
@@ -79,6 +81,10 @@ public class Contants {
     public static String action_sh = "已审核";
     //发布
     public static String action_sqyq = "申请延期";
+    //发布
+    public static String action_yqtg = "通过延期";
+    //发布
+    public static String action_bhyq = "驳回延期";
     //发布
     public static String action_fq = "放弃";
 }

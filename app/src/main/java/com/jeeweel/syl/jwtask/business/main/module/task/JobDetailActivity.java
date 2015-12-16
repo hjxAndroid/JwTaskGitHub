@@ -138,18 +138,22 @@ public class JobDetailActivity extends JwActivity {
                 btDjsh.setText("已递交");
                 btDjsh.setClickable(false);
                 btSqyq.setClickable(false);
-            } else if (state != 0) {
-                btQrjs.setText("已确认");
-                btQrjs.setClickable(false);
-                btSqyq.setClickable(false);
-
-                btDjsh.setText("已递交");
-                btDjsh.setClickable(false);
-                btSqyq.setClickable(false);
-            }else if(state == 4){
+            } else if(state == 4){
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
                 btSqyq.setText("延期申请中");
+            }else if(state == 5){
+                btQrjs.setText("已确认");
+                btQrjs.setClickable(false);
+
+                btSqyq.setClickable(false);
+                btSqyq.setText("延期通过");
+            }else if(state == 6){
+                btQrjs.setText("已确认");
+                btQrjs.setClickable(false);
+
+                btSqyq.setClickable(false);
+                btSqyq.setText("延期驳回");
             }else{
                 btSqyq.setClickable(false);
             }

@@ -70,6 +70,7 @@ public class TaskHomeActivity extends JwActivity {
     private Activity context;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHideBack(true);
         setContentView(R.layout.activity_task_home);
         setTitle(getString(R.string.任务));
         context = this;
