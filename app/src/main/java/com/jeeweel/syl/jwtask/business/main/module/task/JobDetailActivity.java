@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import java.util.List;
 
 import api.util.Contants;
 import api.util.Utils;
+import api.view.CustomDialog;
 import api.view.ListNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -154,6 +156,27 @@ public class JobDetailActivity extends JwActivity {
 
                 btSqyq.setClickable(false);
                 btSqyq.setText("延期驳回");
+            }else if(state == 7){
+                btFqrw.setClickable(false);
+                btFqrw.setText("放弃申请中");
+                //其他按钮都不可点
+                btQrjs.setClickable(false);
+                btDjsh.setClickable(false);
+                btSqyq.setClickable(false);
+            }else if(state == 8){
+                btFqrw.setClickable(false);
+                btFqrw.setText("任务已放弃");
+                //其他按钮都不可点
+                btQrjs.setClickable(false);
+                btDjsh.setClickable(false);
+                btSqyq.setClickable(false);
+            }else if(state == 9){
+                btFqrw.setClickable(false);
+                btFqrw.setText("放弃驳回");
+                //其他按钮都恢复可点
+                btQrjs.setClickable(true);
+                btDjsh.setClickable(true);
+                btSqyq.setClickable(true);
             }else{
                 btSqyq.setClickable(false);
             }
@@ -178,6 +201,11 @@ public class JobDetailActivity extends JwActivity {
     @OnClick(R.id.bt_sqyq)
     void sqyqClick() {
         JwStartActivity(ApplyDelayActivity.class, task);
+    }
+
+    @OnClick(R.id.bt_fqrw)
+    void fqrwClick() {
+        JwStartActivity(ApplyGiveUpActivity.class, task);
     }
 
     @OnClick(R.id.tv_pl)
@@ -336,6 +364,92 @@ public class JobDetailActivity extends JwActivity {
             btDjsh.setClickable(false);
         }else if(msg.equals("yyq_refresh")){
             btSqyq.setText("延期申请中");
+        }else if(msg.equals("give_refresh")){
+            btFqrw.setText("放弃申请中");
+            btFqrw.setClickable(false);
+        }
+    }
+
+    public void showAlertDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("是否放弃任务");
+        builder.setTitle("提示");
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //设置你的操作事项
+                showLoading();
+                new fqTask(getMy()).execute();
+            }
+        });
+
+        builder.setNegativeButton("取消",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
+
+    }
+
+
+    /**
+     * 改变任务表状态
+     */
+    private class fqTask extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public fqTask(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+            try {
+                if (null != users) {
+                    if (null != task) {
+                        String sql = "update task set now_state = 7 , now_state_name = '放弃申请中'  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
+                        CloudDB.execSQL(sql);
+
+
+                        //保存到流程表里
+                        Taskflow taskflow = new Taskflow();
+                        taskflow.setTask_code(task.getTask_code());
+                        taskflow.setNow_state(7);
+                        taskflow.setNow_state_name(Contants.fqsqz);
+                        taskflow.setUser_action(Contants.action_sqfq);
+                        jCloudDB.save(taskflow);
+
+                    }
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                btFqrw.setText("放弃申请中");
+                btFqrw.setClickable(false);
+            } else {
+                ToastShow("操作失败");
+            }
+            hideLoading();
         }
     }
 }

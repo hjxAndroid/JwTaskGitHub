@@ -2,29 +2,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/bg_color">
+    android:background="@color/bg_color"
+    android:orientation="vertical">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_height"
-        android:background="@color/view_line"/>
+        android:background="@color/view_line" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_top_size"
         android:background="@color/white">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/view_height"
-            android:background="@color/view_line"/>
+            android:background="@color/view_line" />
+
         <EditText
             android:id="@+id/et_name"
             android:layout_width="300dp"
             android:layout_height="40dp"
             android:layout_marginLeft="5dp"
+            android:background="@null"
             android:maxLength="15"
-            android:singleLine="true"
-            android:background="@null"/>
+            android:singleLine="true" />
+
         <Button
             android:id="@+id/btn_del"
             android:layout_width="20dp"
@@ -32,21 +37,24 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:background="@drawable/cmail_delete_icon"/>
+            android:background="@drawable/cmail_delete_icon" />
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/view_height"
-        android:background="@color/view_line"/>
-    <Button  android:id="@+id/btn_sub"
+        android:background="@color/view_line" />
+
+    <Button
+        android:id="@+id/btn_sub"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginTop="20dp"
+        android:layout_below="@+id/li"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_below="@+id/li"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textSize_large"
+        android:layout_marginTop="20dp"
         android:background="@drawable/bg_button"
-        android:text="@string/submit"/>
+        android:text="@string/submit"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_large" />
 </LinearLayout>

@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.basic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
@@ -12,6 +13,8 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.more.MineEditnameActivity;
+import com.jeeweel.syl.jwtask.business.main.module.more.MineQRCodeActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -75,7 +78,7 @@ public class RegisterLastActivity extends JwActivity {
      */
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
-
+        Users users = new Users();
         /**
          * @param context 上下文
          */
@@ -86,11 +89,10 @@ public class RegisterLastActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             String pwd = params[0].toString();
             String phone = params[1].toString();
-            Users users = new Users();
             users.setPassword(pwd);
             users.setUsername(phone);
             users.setUser_code(Utils.getUUid());
@@ -108,14 +110,14 @@ public class RegisterLastActivity extends JwActivity {
             }
             if (ListUtils.IsNull(list)) {
                 try {
-                    if(jCloudDB.save(users)){
-
-                        result = "1";
-                    }
+                    jCloudDB.save(users);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    result = "0";
                 }
 
+            }else{
+                result = "2";
             }
 
             return result;
@@ -125,14 +127,22 @@ public class RegisterLastActivity extends JwActivity {
         protected void onPostExecute(String result) {
               if(result.equals("1")){
 
-                  Users users = list.get(0);
                   FinalDb finalDb = JwAppAplication.getInstance().finalDb;
                   finalDb.deleteAll(Users.class);
                   finalDb.save(users);
                   JwAppAplication.getInstance().setUsers(users);
 
                   SharedPreferencesUtils.save(context, "autologin", true);
-                  JwStartActivity(TabHostActivity.class);
+
+                  Intent intent=new Intent();
+                  intent.putExtra("register", true);
+                  intent.putExtra("title", "设置昵称");
+                  intent.setClass(RegisterLastActivity.this, MineEditnameActivity.class);
+                  JwStartActivity(intent);
+        //          JwStartActivity(TabHostActivity.class);
+
+              }else if(result.equals("2")){
+                  ToastShow("用户已存在");
               }else{
                   ToastShow("用户保存出错");
               }

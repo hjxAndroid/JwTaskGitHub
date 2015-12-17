@@ -265,7 +265,7 @@
         <activity
             android:name=".business.main.module.more.FeedbackActivity"
             android:label="@string/title_activity_feedback"
-            android:windowSoftInputMode="stateHidden|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity
             android:name=".business.main.module.more.MineSexActivity"
@@ -444,7 +444,15 @@
         </activity>
         <activity
             android:name=".business.main.module.basic.JwCaptureActivity"
-            android:label="@string/title_activity_solve_delay">
+            android:label="@string/title_activity_solve_delay" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.ApplyGiveUpActivity"
+            android:label="@string/title_activity_apply_give_up" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.SolveGiveUpActivity"
+            android:label="@string/title_activity_solve_give_up" >
         </activity>
     </application>
 

@@ -44,6 +44,7 @@ import api.util.Utils;
 import api.view.LineGridView;
 import api.viewpage.CBViewHolderCreator;
 import api.viewpage.ConvenientBanner;
+import api.viewpage.LocalImageHolderView;
 import api.viewpage.NetworkImageHolderView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -141,9 +142,10 @@ public class TaskHomeActivity extends JwActivity {
         showLoading();
         new FinishRefresh(getMy()).execute();
 
-        networkImages = new ArrayList<String>();
-        networkImages.add("1");
-        networkImages.add("2");
+        int draw1 = R.drawable.home1;
+        int draw2 = R.drawable.home2;
+        localImages.add(draw1);
+        localImages.add(draw2);
         initBanner();
 
 
@@ -152,12 +154,12 @@ public class TaskHomeActivity extends JwActivity {
     private void initBanner() {
         // 网络加载例子
         convenientBanner
-                .setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+                .setPages(new CBViewHolderCreator<LocalImageHolderView>() {
                     @Override
-                    public NetworkImageHolderView createHolder() {
-                        return new NetworkImageHolderView();
+                    public LocalImageHolderView createHolder() {
+                        return new LocalImageHolderView();
                     }
-                }, networkImages) // 设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
+                }, localImages) // 设置两个点图片作为翻页指示器，不设置则没有指示器，可以根据自己需求自行配合自己的指示器,不需要圆点指示器可用不设
                 .setPageIndicator(
                         new int[]{R.drawable.ic_page_indicator,
                                 R.drawable.ic_page_indicator_focused})

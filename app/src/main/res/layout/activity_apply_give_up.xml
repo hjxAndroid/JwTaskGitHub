@@ -1,0 +1,27 @@
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <EditText android:id="@+id/et_fqly"
+            android:layout_width="fill_parent"
+            android:layout_height="95dp"
+            android:paddingLeft="10.0dip"
+            android:layout_marginBottom="20dp"
+            android:paddingTop="5dp"
+            android:background="@drawable/settings_up_select"
+            android:gravity="top"
+            android:hint="放弃理由"
+            android:textColorHint="@color/text_gray"
+            android:textSize="@dimen/textSize_normal"
+            android:textColor="@color/list_text_name_color">
+        </EditText>
+
+
+    </LinearLayout>
+</ScrollView>

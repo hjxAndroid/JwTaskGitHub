@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
+import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -25,12 +27,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MineActivity extends JwActivity {
-    Users users;
-    String phone;
-    String birthday;
-    String str;
-    String user_code;
-
     @Bind(R.id.tv_user_head1)
     TextView tv_user_head1;
     @Bind(R.id.iv_user_head2)
@@ -50,17 +46,46 @@ public class MineActivity extends JwActivity {
     @Bind(R.id.tv_area)
     TextView tv_area;
 
+    Users users;
+    String phone;
+    String birthday;
+    String str;
+    String user_code;
+    boolean register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent=getIntent();
+        register=intent.getBooleanExtra("register", false);
+        if(register==true){
+            setHideBack(true);
+        }
+
         setContentView(R.layout.activity_mine);
         ButterKnife.bind(this);
         setTitle(getString(R.string.mineinformation));
+        if(register==true) {
+            initRight();
+        }
 
         users  = JwAppAplication.getInstance().users;
         phone = users.getUsername();
         user_code = users.getUser_code();
+    }
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("完成");
+        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                finish();
+                JwStartActivity(TabHostActivity.class);
+            }
+        });
+        addMenuView(menuTextView);
     }
 
     @Override

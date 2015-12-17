@@ -20,21 +20,32 @@ public class News {
     /**
      * 消息代码
      */
-    private String msg_code;
+    private String msg_name;
     /**
      * 消息类型
      */
-    private String msg_type;
+    private String readsum;
     /**
      * 消息
      */
-    private String latest_msg;
+    private String alread;
     /**
      * 备注
      */
-    private String remark;
+    private String readstate;
+    private String msg_title;
+    private String msg_content;
+
     private String create_time;
-    private String update_time;
+
+    private String principal_state;
+
+    private String auditor_state;
+
+    private String participant_state;
+
+    private String observer_state;
+
 
     public int getMid() {
         return mid;
@@ -44,36 +55,52 @@ public class News {
         this.mid = mid;
     }
 
-    public String getMsg_code() {
-        return msg_code;
+    public String getMsg_name() {
+        return msg_name;
     }
 
-    public void setMsg_code(String msg_code) {
-        this.msg_code = msg_code;
+    public void setMsg_name(String msg_name) {
+        this.msg_name = msg_name;
     }
 
-    public String getMsg_type() {
-        return msg_type;
+    public String getReadsum() {
+        return readsum;
     }
 
-    public void setMsg_type(String msg_type) {
-        this.msg_type = msg_type;
+    public void setReadsum(String readsum) {
+        this.readsum = readsum;
     }
 
-    public String getLatest_msg() {
-        return latest_msg;
+    public String getAlread() {
+        return alread;
     }
 
-    public void setLatest_msg(String latest_msg) {
-        this.latest_msg = latest_msg;
+    public void setAlread(String alread) {
+        this.alread = alread;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getReadstate() {
+        return readstate;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setReadstate(String readstate) {
+        this.readstate = readstate;
+    }
+
+    public String getMsg_title() {
+        return msg_title;
+    }
+
+    public void setMsg_title(String msg_title) {
+        this.msg_title = msg_title;
+    }
+
+    public String getMsg_content() {
+        return msg_content;
+    }
+
+    public void setMsg_content(String msg_content) {
+        this.msg_content = msg_content;
     }
 
     public String getCreate_time() {
@@ -84,12 +111,36 @@ public class News {
         this.create_time = create_time;
     }
 
-    public String getUpdate_time() {
-        return update_time;
+    public String getPrincipal_state() {
+        return principal_state;
     }
 
-    public void setUpdate_time(String update_time) {
-        this.update_time = update_time;
+    public void setPrincipal_state(String principal_state) {
+        this.principal_state = principal_state;
+    }
+
+    public String getAuditor_state() {
+        return auditor_state;
+    }
+
+    public void setAuditor_state(String auditor_state) {
+        this.auditor_state = auditor_state;
+    }
+
+    public String getParticipant_state() {
+        return participant_state;
+    }
+
+    public void setParticipant_state(String participant_state) {
+        this.participant_state = participant_state;
+    }
+
+    public String getObserver_state() {
+        return observer_state;
+    }
+
+    public void setObserver_state(String observer_state) {
+        this.observer_state = observer_state;
     }
 }
 

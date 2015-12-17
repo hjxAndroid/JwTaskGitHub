@@ -157,8 +157,11 @@ public class Task extends BaseItem{
      * @return
      */
     private String confirm_time;
-
-
+    /**
+     * 放弃原因
+     * @return
+     */
+    private String give_up_content;
 
     public String getPhoto_code() {
         return photo_code;
@@ -438,6 +441,14 @@ public class Task extends BaseItem{
 
     public void setPromulgator_nickname(String promulgator_nickname) {
         this.promulgator_nickname = promulgator_nickname;
+    }
+
+    public String getGive_up_content() {
+        return give_up_content;
+    }
+
+    public void setGive_up_content(String give_up_content) {
+        this.give_up_content = give_up_content;
     }
 }
 
