@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/gray_f2f2f2"
+              android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_Size"
+        android:layout_marginTop="@dimen/margin_Large_Top_Size"
+        android:text="查看签到人数:"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/margin_Large_Top_Size"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/margin_Size"
+        android:layout_marginRight="@dimen/margin_Size"
+        android:layout_marginTop="@dimen/margin_Size"
+        android:background="@drawable/settings_mid_select"
+        android:gravity="center">
+
+        <TextView
+            style="@style/text_lrk_nomor_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="已经签到"
+            android:textSize="@dimen/margin_Large_Top_Size"/>
+
+        <TextView
+            android:id="@+id/already_signed_counts"
+            style="@style/text_lrk_nomor_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="0"
+            android:textSize="@dimen/margin_Large_Top_Size"/>
+
+        <TextView
+            style="@style/text_lrk_nomor_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="人"
+            android:textSize="@dimen/margin_Large_Top_Size"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="@dimen/margin_Size"
+        android:layout_marginRight="@dimen/margin_Size"
+        android:background="@drawable/settings_mid_select"
+        android:gravity="center">
+
+        <TextView
+            style="@style/text_lrk_nomor_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="还未签到"
+            android:textSize="@dimen/margin_Large_Top_Size"/>
+
+        <TextView
+            android:id="@+id/unsign_counts"
+            style="@style/text_lrk_nomor_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="0"
+            android:textSize="@dimen/margin_Large_Top_Size"/>
+
+        <TextView
+            style="@style/text_lrk_nomor_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="人"
+            android:textSize="@dimen/margin_Large_Top_Size"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
