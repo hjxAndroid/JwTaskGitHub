@@ -1,19 +1,29 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import api.util.Contants;
 import api.util.Utils;
 import api.viewpage.CBViewHolderCreator;
 import api.viewpage.ConvenientBanner;
@@ -43,12 +53,16 @@ public class PublicyDetailActivity extends JwActivity {
     private List<String> networkImages;
     V_publicityunread publicity;
 
+    Users users;
+    String orgCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publicy_detail);
         ButterKnife.bind(this);
         setTitle("公告详情");
+        users = JwAppAplication.getInstance().getUsers();
+        orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         setData();
     }
 
@@ -112,4 +126,53 @@ public class PublicyDetailActivity extends JwActivity {
         convenientBanner.stopTurning();
     }
 
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+
+                try {
+
+                    if(null!=users){
+                        List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                                "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and password=" + StrUtils.QuotedStr(users.getUser_code()) + "and username=" + StrUtils.QuotedStr(orgCode));
+                    }
+
+
+                } catch (CloudServiceException e) {
+                    result = "0";
+                    e.printStackTrace();
+                }
+
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                ToastShow("任务发布成功");
+                finish();
+            } else {
+                ToastShow("保存失败");
+            }
+            hideLoading();
+        }
+    }
 }

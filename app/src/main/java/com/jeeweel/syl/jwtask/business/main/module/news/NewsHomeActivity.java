@@ -4,32 +4,37 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
-import com.jeeweel.syl.jwtask.business.main.module.contact.FriendListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.service.Helper;
 import com.jeeweel.syl.jwtask.business.main.module.task.PublicyListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.SignListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.task.TaskJobHomeActivity;
+import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
+import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
@@ -40,34 +45,11 @@ import butterknife.OnClick;
 
 public class NewsHomeActivity extends JwActivity {
 
-    @Bind(R.id.tv_publicy_news)
-    TextView tvPublicyNews;
-    @Bind(R.id.rl_publicy)
-    RelativeLayout rlPublicy;
-    @Bind(R.id.tv_sign_news)
-    TextView tvSignNews;
-    @Bind(R.id.rl_sign)
-    RelativeLayout rlSign;
-    @Bind(R.id.tv_task_news)
-    TextView tvTaskNews;
-    @Bind(R.id.rl_task)
-    RelativeLayout rlTask;
+
+    @Bind(R.id.listview)
+    ListView listview;
     @Bind(R.id.rl_friend_news)
     TextView rlFriendNews;
-    @Bind(R.id.rl_friend)
-    RelativeLayout rlFriend;
-    @Bind(R.id.tv_pulicy_time)
-    TextView tvPulicyTime;
-    @Bind(R.id.iv_publicy_num)
-    ImageView ivPublicyNum;
-    @Bind(R.id.tv_sign_time)
-    TextView tvSignTime;
-    @Bind(R.id.iv_sign_num)
-    ImageView ivSignNum;
-    @Bind(R.id.tv_task_time)
-    TextView tvTaskTime;
-    @Bind(R.id.iv_task_num)
-    ImageView ivTaskNum;
     @Bind(R.id.tv_friend_time)
     TextView tvFriendTime;
     @Bind(R.id.iv_friend_num)
@@ -79,10 +61,11 @@ public class NewsHomeActivity extends JwActivity {
 
     private String orgCode;
 
-    private Users user;
+    private Users users;
 
-    private Sign sign;
+    List<News> allList = new ArrayList<News>();
 
+    CommonAdapter commonAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,17 +73,65 @@ public class NewsHomeActivity extends JwActivity {
         setContentView(R.layout.activity_news_home);
         ButterKnife.bind(this);
         setTitle(getString(R.string.news));
+        initView();
         getData();
+    }
+
+    private void initView(){
+        commonAdapter = new CommonAdapter<News>(getMy(), allList, R.layout.item_news) {
+            @Override
+            public void convert(ViewHolder helper, News item) {
+                String title = item.getMsg_title();
+                String readstate = item.getReadstate();
+
+                //类型
+                helper.setText(R.id.task, item.getMsg_name());
+
+                //是否有未读
+                ImageView ivnum = helper.getImageView(R.id.iv_task_num);
+                if(StrUtils.IsNotEmpty(readstate)&&readstate.equals("0")){
+                    ivnum.setVisibility(View.VISIBLE);
+                }
+
+                //消息标题
+                if(StrUtils.IsNotEmpty(title)){
+                    helper.setText(R.id.tv_task_news, item.getMsg_title());
+                    helper.setText(R.id.tv_task_time, item.getCreate_time());
+                }else{
+                    helper.setText(R.id.tv_task_news, "暂无消息");
+                }
+
+
+            }
+        };
+        listview.setAdapter(commonAdapter);
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                switch (position){
+                    case 0 :
+                        JwStartActivity(PublicyListActivity.class);
+                        break;
+                    case 1 :
+                        JwStartActivity(SignListActivity.class);
+                        break;
+                    case 2 :
+                        JwStartActivity(TaskJobHomeActivity.class);
+                        break;
+                    default :
+                        break;
+                }
+
+            }
+        });
     }
 
     private void getData() {
         String time = Utils.getHourAndM();
         tvFriendTime.setText(time);
-        tvTaskTime.setText(time);
-        tvSignTime.setText(time);
-        tvPulicyTime.setText(time);
 
-        Users users = JwAppAplication.getInstance().getUsers();
+        users = JwAppAplication.getInstance().getUsers();
 
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
 
@@ -117,8 +148,7 @@ public class NewsHomeActivity extends JwActivity {
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
         JCloudDB jCloudDB;
-        List<V_publicityunread> publicityunreads;
-        List<Sign> signs;
+        List<News> newsList = new ArrayList<News>();
 
         /**
          * @param context 上下文
@@ -133,8 +163,6 @@ public class NewsHomeActivity extends JwActivity {
 
             String result = "1";
 
-            user = JwAppAplication.getInstance().getUsers();
-
             String phone = params[0].toString();
 
             try {
@@ -148,14 +176,17 @@ public class NewsHomeActivity extends JwActivity {
                         SharedPreferencesUtils.save(getMy(), Contants.org_name, userorgs.get(0).getOrg_name());
                     }
                 }
-                //通过receive_code获取公告视图列表
-                publicityunreads = jCloudDB.findAllByWhere(V_publicityunread.class, "accept_org_code = " + StrUtils.QuotedStr(orgCode)
-                        + " order by create_time desc");
+                //通过存储过程获取消息列表，用完删除
+                String sql = "call get_msg_list('" + users.getUser_code() + "','" + orgCode + "');";
+                CloudDB.execSQL(sql);
 
-                //通过receive_code获取sign
-                signs = jCloudDB.findAllByWhere(Sign.class,
-                        "receive_code like"
-                                + StrUtils.QuotedStrLike(user.getUser_code()) + "and read_state=0 " + "ORDER BY create_time DESC");
+                String newSql = "select * from tmp" + users.getUser_code();
+                //查找数据
+                newsList = jCloudDB.findAllBySql(News.class, newSql);
+
+                String deletSql = "DROP TABLE tmp" + users.getUser_code();
+                CloudDB.execSQL(deletSql);
+
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
                         "user_name=" + StrUtils.QuotedStr(phone) + "and read_state=0 " + "ORDER BY create_time DESC");
@@ -170,15 +201,10 @@ public class NewsHomeActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                //公告已读未读
-                if (ListUtils.IsNotNull(publicityunreads)) {
-                    V_publicityunread publicityunread = publicityunreads.get(0);
-                    //如果status的状态为0，则消息未读，提醒
-                    tvSignNews.setText(publicityunread.getPublicity_title());
-                    ivSignNum.setVisibility(View.VISIBLE);
-                } else {
-                    tvSignNews.setText("暂无消息");
-                    ivSignNum.setVisibility(View.GONE);
+
+                if (ListUtils.IsNotNull(newsList)) {
+                    allList.addAll(newsList);
+                    commonAdapter.notifyDataSetChanged();
                 }
 
 
@@ -193,6 +219,7 @@ public class NewsHomeActivity extends JwActivity {
                             if (state == 0) {
                                 rlFriendNews.setText(friend.getFriend_nickname() + "请求添加您为好友");
                                 ivFriendNum.setVisibility(View.VISIBLE);
+                                tvFriendTime.setText(friend.getCreate_time());
                                 break;
                             }
                             //假如是发送者，提醒好友通过
@@ -201,6 +228,7 @@ public class NewsHomeActivity extends JwActivity {
                             if (state == 2) {
                                 rlFriendNews.setText("您已经成功添加" + friend.getFriend_nickname() + "为好友");
                                 ivFriendNum.setVisibility(View.VISIBLE);
+                                tvFriendTime.setText(friend.getCreate_time());
                                 break;
                             }
                         }
@@ -210,22 +238,8 @@ public class NewsHomeActivity extends JwActivity {
                     ivFriendNum.setVisibility(View.GONE);
                 }
 
-                if (ListUtils.IsNotNull(signs)) {
-                    sign = signs.get(0);
-                    //如果status的状态为0，则消息未读，提醒
-                    if (OUtils.IsNotNull(sign)) {
-                        tvSignNews.setText(sign.getSign_title());
-                        ivSignNum.setVisibility(View.VISIBLE);
-                    } else {
-                        tvSignNews.setText("您有新的签到消息");
-                        ivSignNum.setVisibility(View.VISIBLE);
-                    }
-                } else {
-                    tvSignNews.setText("暂无消息");
-                    ivSignNum.setVisibility(View.GONE);
-                }
             } else {
-
+                ToastShow("请求出错");
             }
             hideLoading();
         }
@@ -237,20 +251,11 @@ public class NewsHomeActivity extends JwActivity {
         JwStartActivity(FriendAddListActivity.class);
     }
 
-    @OnClick(R.id.rl_sign)
-    void signInformationClick() {
-        JwStartActivity(SignListActivity.class);
-    }
-
-    @OnClick(R.id.rl_publicy)
-    void publicyClick() {
-        JwStartActivity(PublicyListActivity.class);
-    }
-
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
         if (msg.equals("news_refresh")) {
+            allList.clear();
             new FinishRefresh(getMy()).execute(myphone);
         }
     }

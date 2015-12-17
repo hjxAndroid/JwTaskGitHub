@@ -92,5 +92,7 @@ public class Contants {
     //发布
     public static String action_sqfq = "申请放弃";
     //发布
-    public static String action_fq = "放弃";
+    public static String action_tyfq = "同意放弃";
+    //发布
+    public static String action_fqbh = "放弃驳回";
 }

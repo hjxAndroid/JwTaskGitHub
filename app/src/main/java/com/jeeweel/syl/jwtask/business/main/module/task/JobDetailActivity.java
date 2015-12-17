@@ -156,6 +156,27 @@ public class JobDetailActivity extends JwActivity {
 
                 btSqyq.setClickable(false);
                 btSqyq.setText("延期驳回");
+            }else if(state == 7){
+                btFqrw.setClickable(false);
+                btFqrw.setText("放弃申请中");
+                //其他按钮都不可点
+                btQrjs.setClickable(false);
+                btDjsh.setClickable(false);
+                btSqyq.setClickable(false);
+            }else if(state == 8){
+                btFqrw.setClickable(false);
+                btFqrw.setText("任务已放弃");
+                //其他按钮都不可点
+                btQrjs.setClickable(false);
+                btDjsh.setClickable(false);
+                btSqyq.setClickable(false);
+            }else if(state == 9){
+                btFqrw.setClickable(false);
+                btFqrw.setText("放弃驳回");
+                //其他按钮都恢复可点
+                btQrjs.setClickable(true);
+                btDjsh.setClickable(true);
+                btSqyq.setClickable(true);
             }else{
                 btSqyq.setClickable(false);
             }

@@ -96,4 +96,5 @@
     <string name="title_activity_apply_delay">ApplyDelayActivity</string>
     <string name="title_activity_solve_delay">SolveDelayActivity</string>
     <string name="title_activity_apply_give_up">ApplyGiveUpActivity</string>
+    <string name="title_activity_solve_give_up">SolveGiveUpActivity</string>
 </resources>

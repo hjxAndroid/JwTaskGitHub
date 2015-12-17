@@ -132,8 +132,8 @@ public class JobShListActivity extends JwListActivity {
             JwStartActivity(YshActivity.class, task);
         } else if (flag == 4) {
             JwStartActivity(SolveDelayActivity.class, task);
-        }else if (flag == 6) {
-            JwStartActivity(SolveDelayActivity.class, task);
+        }else if (flag == 7) {
+            JwStartActivity(SolveGiveUpActivity.class, task);
         }
 
     }
@@ -244,6 +244,9 @@ public class JobShListActivity extends JwListActivity {
         String msg = activityMsgEvent.getMsg();
         if (msg.equals("delay_refresh")) {
             flag = 4;
+            new FinishRefresh(getMy(), 0).execute();
+        }else if(msg.equals("give_refresh")){
+            flag = 6;
             new FinishRefresh(getMy(), 0).execute();
         }
     }
