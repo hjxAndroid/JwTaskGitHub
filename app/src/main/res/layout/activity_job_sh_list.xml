@@ -16,7 +16,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="未审批"
-            android:textSize="@dimen/textSize_large"
+            android:textSize="@dimen/textSize_normal"
             android:textColor="@color/white"
             android:background="@drawable/shape_blue"/>
 
@@ -27,7 +27,7 @@
             android:gravity="center"
             android:background="@drawable/shape_white"
             android:textColor="@color/list_text_color"
-            android:textSize="@dimen/textSize_large"
+            android:textSize="@dimen/textSize_normal"
             android:text="已审批"/>
 
         <TextView android:id="@+id/tv_yqsq"
@@ -37,8 +37,18 @@
             android:gravity="center"
             android:background="@drawable/shape_white"
             android:textColor="@color/list_text_color"
-            android:textSize="@dimen/textSize_large"
+            android:textSize="@dimen/textSize_normal"
             android:text="延期申请"/>
+
+        <TextView android:id="@+id/tv_fqrw"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="@drawable/shape_white"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_normal"
+            android:text="放弃任务"/>
     </LinearLayout>
 
     <com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView

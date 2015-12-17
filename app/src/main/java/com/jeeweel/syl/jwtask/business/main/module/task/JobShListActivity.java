@@ -38,6 +38,8 @@ public class JobShListActivity extends JwListActivity {
     PullToRefreshListView listview;
     @Bind(R.id.tv_yqsq)
     TextView tvYqsq;
+    @Bind(R.id.tv_fqrw)
+    TextView tvFqrw;
 
     private CommonAdapter commonAdapter;
 
@@ -95,6 +97,17 @@ public class JobShListActivity extends JwListActivity {
         onListViewHeadRefresh();
     }
 
+    //放弃任务
+    @OnClick(R.id.tv_fqrw)
+    void fqrwClick() {
+        resetAll();
+        tvFqrw.setBackgroundResource(R.drawable.shape_blue);
+        tvFqrw.setTextColor(getResources().getColor(R.color.white));
+        dataSourceClear(0, mListItems);
+        flag = 7;
+        onListViewHeadRefresh();
+    }
+
     @Override
     public void initListViewController() {
         commonAdapter = new CommonAdapter<Task>(getMy(), mListItems, R.layout.item_job_list) {
@@ -115,9 +128,11 @@ public class JobShListActivity extends JwListActivity {
         Task task = (Task) commonAdapter.getItem(position);
         if (flag == 2) {
             JwStartActivity(FinishShActivity.class, task);
-        } else if(flag == 3){
+        } else if (flag == 3) {
             JwStartActivity(YshActivity.class, task);
-        }else if(flag == 4){
+        } else if (flag == 4) {
+            JwStartActivity(SolveDelayActivity.class, task);
+        }else if (flag == 6) {
             JwStartActivity(SolveDelayActivity.class, task);
         }
 
@@ -219,6 +234,8 @@ public class JobShListActivity extends JwListActivity {
         tvYzx.setTextColor(getResources().getColor(R.color.list_text_color));
         tvYqsq.setBackgroundResource(R.drawable.shape_white);
         tvYqsq.setTextColor(getResources().getColor(R.color.list_text_color));
+        tvFqrw.setBackgroundResource(R.drawable.shape_white);
+        tvFqrw.setTextColor(getResources().getColor(R.color.list_text_color));
     }
 
 
