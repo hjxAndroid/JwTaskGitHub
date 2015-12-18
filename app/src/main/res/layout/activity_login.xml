@@ -83,7 +83,8 @@
                 android:background="@null"
                 android:hint="请输入密码"
                 android:textColor="@color/list_text_color"
-                android:textSize="@dimen/textSize_normal" />
+                android:textSize="@dimen/textSize_normal"
+                android:password="true"/>
 
         </LinearLayout>
     </LinearLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
+import com.jeeweel.syl.jcloudlib.db.callback.FindAllListener;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
@@ -14,7 +15,6 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
 import java.util.List;
@@ -54,9 +54,80 @@ public class CheckSignPersonActivity extends JwActivity {
 
 
     private void getData() {
-        showLoading();
         signedCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
-        new FinishRefresh(getMy()).execute();
+        SqlInfo sqlInfo = new SqlInfo();
+        sqlInfo.setSql("SELECT " +
+                " sign_code, " +
+                " sign_user_code " +
+                " FROM " +
+                " signed " +
+                " where sign_code= ? " +
+                " GROUP BY " +
+                " sign_code, " +
+                " sign_user_code ");
+        sqlInfo.addValue(signedCode);
+        String sql = sqlInfo.getBuildSql();
+        JCloudDB jCloudDB = new JCloudDB();
+        jCloudDB.findAllBySql(sql, new FindAllListener<Signed>() {
+            @Override
+            public void onStart() {
+                showLoading();
+            }
+
+            @Override
+            public void onSuccess(List<Signed> t) {
+                if (ListUtils.IsNotNull(t)) {
+                    alreadySigned = t.size();
+                    tvAlreadySigned = "" + alreadySigned;
+                } else {
+                    tvAlreadySigned = "0";
+                }
+                alreadySignedCounts.setText(tvAlreadySigned);
+
+            }
+
+            @Override
+            public void onFinish() {
+                hideLoading();
+            }
+        });
+
+        String sqlSign = " sign_code = " +
+                StrUtils.QuotedStr(signedCode);
+        jCloudDB.findAllByWhere(sqlSign, new FindAllListener<Sign>() {
+            @Override
+            public void onStart() {
+                showLoading();
+            }
+
+            @Override
+            public void onSuccess(List<Sign> t) {
+                if (ListUtils.IsNotNull(t)) {
+                    sign = t.get(0);
+                    String receiceCode = sign.getReceive_code();
+                    if (receiceCode.contains(",")) {
+                        sumReceiver = receiceCode.split(",");
+                        sum = sumReceiver.length;
+                        unSign = sum - alreadySigned;
+                        tvUnsign = "" + unSign;
+                    } else {
+                        sum = 1;
+                        unSign = sum - alreadySigned;
+                        tvUnsign = "" + unSign;
+                    }
+                }
+                unsignCounts.setText(tvUnsign);
+            }
+
+            @Override
+            public void onFinish() {
+                hideLoading();
+            }
+        });
+
+
+
+        /*new FinishRefresh(getMy()).execute();*/
     }
 
     private class FinishRefresh extends AsyncTask<String, Void, String> {
@@ -70,6 +141,7 @@ public class CheckSignPersonActivity extends JwActivity {
             this.context = context;
             jCloudDB = new JCloudDB();
         }
+
 
         @Override
         protected String doInBackground(String... params) {

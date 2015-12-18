@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -100,7 +101,12 @@ public class DeptUsersListActivity extends JwListActivity {
     @Override
     public void onListItemClick(int position){
         Userdept userdept = (Userdept)commonAdapter.getItem(position);
-        JwStartActivity(FriendDetailActivity.class,userdept.getUsername());
+        Intent intent = new Intent();
+        intent.putExtra("flag",true);
+        intent.putExtra(StaticStrUtils.baseItem, userdept.getUsername());
+        intent.setClass(DeptUsersListActivity.this,FriendDetailActivity.class);
+        JwStartActivity(intent);
+   //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
     }
 
     @Override
