@@ -17,6 +17,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
@@ -55,6 +56,7 @@ public class PublicyDetailActivity extends JwActivity {
 
     Users users;
     String orgCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,12 +81,12 @@ public class PublicyDetailActivity extends JwActivity {
             String path = publicity.getPictureListSting();
 
             String wd = publicity.getUnread();
-            if(StrUtils.IsNotEmpty(wd)){
-                tvWd.setText(wd+"人未读");
+            if (StrUtils.IsNotEmpty(wd)) {
+                tvWd.setText(wd + "人未读");
             }
             String yd = publicity.getAlread();
-            if(StrUtils.IsNotEmpty(yd)){
-                tvYd.setText(yd+"人未读");
+            if (StrUtils.IsNotEmpty(yd)) {
+                tvYd.setText(yd + "人未读");
             }
 
             if (path != null) {
@@ -147,18 +149,27 @@ public class PublicyDetailActivity extends JwActivity {
             String result = "1";
 
 
-                try {
+            try {
 
-                    if(null!=users){
-                        List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
-                                "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and password=" + StrUtils.QuotedStr(users.getUser_code()) + "and username=" + StrUtils.QuotedStr(orgCode));
+                if (null != users && null != publicity) {
+                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                            "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                    if(ListUtils.IsNotNull(alreadyreadList)&&alreadyreadList.size()>=1){
+                        //已读表未插入
+                        //插入到已读表
+                        Alreadyread alreadyread = new Alreadyread();
+                        alreadyread.setTask_code(publicity.getPublicity_code());
+                        alreadyread.setOperator_code(users.getUser_code());
+                        alreadyread.setOrg_code(orgCode);
+                        jCloudDB.save(alreadyread);
                     }
-
-
-                } catch (CloudServiceException e) {
-                    result = "0";
-                    e.printStackTrace();
                 }
+
+
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
 
 
             return result;
