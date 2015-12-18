@@ -69,12 +69,17 @@ public class PublicyDetailActivity extends JwActivity {
     }
 
     private void setData() {
+        showLoading();
         publicity = (V_publicityunread) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         if (null != publicity) {
             tvTitle.setText(publicity.getPublicity_title());
             tvName.setText(publicity.getNickname());
             tvTime.setText(publicity.getCreate_time());
-            tvOrgName.setText(publicity.getAccept_org_name());
+            String org_name = publicity.getAccept_org_name();
+            if(StrUtils.isEmpty(org_name)){
+                org_name = (String) SharedPreferencesUtils.get(getMy(), Contants.org_name, "");
+            }
+            tvOrgName.setText(org_name);
             tvContent.setText(publicity.getPublicity_content());
 
             networkImages = new ArrayList<String>();
@@ -86,7 +91,7 @@ public class PublicyDetailActivity extends JwActivity {
             }
             String yd = publicity.getAlread();
             if (StrUtils.IsNotEmpty(yd)) {
-                tvYd.setText(yd + "人未读");
+                tvYd.setText(yd + "人已读");
             }
 
             if (path != null) {
@@ -99,6 +104,7 @@ public class PublicyDetailActivity extends JwActivity {
                 LinearLayout li_img = (LinearLayout) findViewById(R.id.li_img);
                 li_img.setVisibility(View.GONE);
             }
+            new FinishRefresh(getMy()).execute();
 
         }
     }
@@ -118,14 +124,6 @@ public class PublicyDetailActivity extends JwActivity {
                         // 设置翻页的效果，不需要翻页效果可用不设
                 .setPageTransformer(ConvenientBanner.Transformer.DefaultTransformer);
         convenientBanner.startTurning(2000);
-    }
-
-    // 停止自动翻页
-    @Override
-    public void onPause() {
-        super.onPause();
-        // 停止翻页
-        convenientBanner.stopTurning();
     }
 
     /**
@@ -154,9 +152,8 @@ public class PublicyDetailActivity extends JwActivity {
                 if (null != users && null != publicity) {
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
                             "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
-                    if(ListUtils.IsNotNull(alreadyreadList)&&alreadyreadList.size()>=1){
-                        //已读表未插入
-                        //插入到已读表
+                    if (ListUtils.IsNull(alreadyreadList)){
+                        //已读表未插入，插入到已读表
                         Alreadyread alreadyread = new Alreadyread();
                         alreadyread.setTask_code(publicity.getPublicity_code());
                         alreadyread.setOperator_code(users.getUser_code());
@@ -177,12 +174,6 @@ public class PublicyDetailActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.equals("1")) {
-                ToastShow("任务发布成功");
-                finish();
-            } else {
-                ToastShow("保存失败");
-            }
             hideLoading();
         }
     }

@@ -277,7 +277,8 @@
         </activity>
         <activity
             android:name=".business.main.module.task.StartSignUpActivity"
-            android:label="@string/title_activity_start_sign_up" >
+            android:label="@string/title_activity_start_sign_up"
+            android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
         <activity
             android:name=".business.main.module.more.SettingActivity"
@@ -453,6 +454,22 @@
         <activity
             android:name=".business.main.module.task.SolveGiveUpActivity"
             android:label="@string/title_activity_solve_give_up" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.SignOptionsActivity"
+            android:label="@string/title_activity_sign_options">
+        </activity>
+        <activity
+            android:name=".business.main.module.task.MyStartSignUpActivity"
+            android:label="@string/title_activity_my_start_sign_up">
+        </activity>
+        <activity
+            android:name=".business.main.module.task.CheckSignPersonActivity"
+            android:label="@string/title_activity_check_sign_person">
+        </activity>
+        <activity
+            android:name=".business.main.module.task.CheckOutSignActivity"
+            android:label="@string/title_activity_check_out_sign">
         </activity>
     </application>
 

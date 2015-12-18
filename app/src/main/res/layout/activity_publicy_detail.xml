@@ -26,11 +26,16 @@
         android:layout_marginTop="10dp"
         android:text="关于周列会调整的通知" />
 
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_fgx"
+        android:layout_marginTop="3dp"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:orientation="horizontal">
 
         <TextView
@@ -51,24 +56,34 @@
             android:textSize="@dimen/textSize_normal" />
     </LinearLayout>
 
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_fgx"
+        android:layout_marginTop="3dp"/>
+
     <TextView
         android:id="@+id/tv_org_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="3dp"
         android:text="泉州市捷微信息科技有限公司"
         android:textColor="@color/gray"
         android:textSize="@dimen/textSize_normal" />
 
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_fgx"
+        android:layout_marginTop="3dp"/>
+
     <LinearLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="3dp">
         <TextView android:id="@+id/tv_wd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
             android:text="12人未读"
             android:textColor="@color/gray"
             android:textSize="@dimen/textSize_normal" />
@@ -77,7 +92,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="5dp"
             android:text="8人已读"
             android:textColor="@color/gray"
             android:textSize="@dimen/textSize_normal" />
