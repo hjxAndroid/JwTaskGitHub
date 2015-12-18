@@ -11,8 +11,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:cacheColorHint="@color/transparent"
-        android:divider="@color/divider_color"
-        android:dividerHeight="0.6px"
+        android:divider="@color/gray_fgx"
+        android:dividerHeight="0.5px"
         android:fadingEdge="none"
         android:listSelector="@color/transparent"
         android:scrollbars="none" />
@@ -24,9 +24,9 @@
         android:background="@drawable/settings_mid_select"
         android:clickable="true">
 
-        <ImageView android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/profile_bottom_message"
+        <ImageView android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/freind"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:id="@+id/imageView4" />
@@ -51,7 +51,9 @@
             android:layout_below="@+id/dept_name"
             android:layout_alignLeft="@+id/dept_name"
             android:textSize="13dp"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/gray"
+            android:singleLine="true"
+            android:ellipsize="end"/>
 
 
 

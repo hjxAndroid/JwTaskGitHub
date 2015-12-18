@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import api.viewpage.CBViewHolderCreator;
 import api.viewpage.ConvenientBanner;
@@ -158,6 +159,7 @@ public class PublicyDetailActivity extends JwActivity {
                         alreadyread.setTask_code(publicity.getPublicity_code());
                         alreadyread.setOperator_code(users.getUser_code());
                         alreadyread.setOrg_code(orgCode);
+                        alreadyread.setOperate_type("0");
                         jCloudDB.save(alreadyread);
                     }
                 }
@@ -174,6 +176,9 @@ public class PublicyDetailActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            if(result.equals("1")){
+                OttUtils.push("news_refresh","");
+            }
             hideLoading();
         }
     }

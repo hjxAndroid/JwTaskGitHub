@@ -20,6 +20,7 @@ import com.jeeweel.syl.jcloudlib.db.jsonclass.ResMsgItem;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.LSignedCountItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
@@ -31,11 +32,14 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 //import com.jeeweel.syl.lib.api.jwlib.baidumaps.InitLocationSign;
 
 import java.util.Date;
 import java.util.List;
 
+import api.util.Contants;
+import api.util.OttUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -94,7 +98,7 @@ public class SignUpActivity extends JwActivity {
     LocationClient mLocationClient;
     MyLocationListener mMyLocationListener;
 
-
+    String orgCode = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,6 +200,7 @@ public class SignUpActivity extends JwActivity {
     //得到signedCode用于查找签到次数
     private void getData() {
         showLoading();
+        orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         signedCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
         new FinishRefresh(getMy()).execute();
     }
@@ -295,12 +300,13 @@ public class SignUpActivity extends JwActivity {
 
     private class FinishRefreshSignedCounts extends AsyncTask<String, Void, String> {
         private Context context;
-
+        JCloudDB jCloudDB;
         /**
          * @param context 上下文
          */
         public FinishRefreshSignedCounts(Context context) {
             this.context = context;
+            jCloudDB = new JCloudDB();
         }
 
         @Override
@@ -315,6 +321,7 @@ public class SignUpActivity extends JwActivity {
             sqlInfo.addValue(signUserCode);
             String sql = sqlInfo.getBuildSql();
             try {
+                //查看已签次数
                 res = CloudDB.queryRes(sql);
                 JsonElement element = res.getData();
                 String eleStr = element.toString();
@@ -323,6 +330,20 @@ public class SignUpActivity extends JwActivity {
                                 LSignedCountItem.class);
                 lSignedCounts = items.get(0);
                 signCounts = lSignedCounts.getMycount();
+
+                if (null != user) {
+                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                            "task_code=" + StrUtils.QuotedStr(signedCode) + "and operator_code=" + StrUtils.QuotedStr(user.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                    if (ListUtils.IsNull(alreadyreadList)){
+                        //已读表未插入，插入到已读表
+                        Alreadyread alreadyread = new Alreadyread();
+                        alreadyread.setTask_code(signedCode);
+                        alreadyread.setOperator_code(user.getUser_code());
+                        alreadyread.setOrg_code(orgCode);
+                        alreadyread.setOperate_type("1");
+                        jCloudDB.save(alreadyread);
+                    }
+                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -333,6 +354,7 @@ public class SignUpActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            OttUtils.push("news_refresh", "");
             tvSignCounts.setText(StrUtils.StrIfNull(signCounts));
         }
     }

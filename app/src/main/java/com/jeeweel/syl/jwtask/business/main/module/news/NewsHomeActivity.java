@@ -89,18 +89,21 @@ public class NewsHomeActivity extends JwActivity {
 
                 //是否有未读
                 ImageView ivnum = helper.getImageView(R.id.iv_task_num);
+
                 if(StrUtils.IsNotEmpty(readstate)&&readstate.equals("0")){
                     ivnum.setVisibility(View.VISIBLE);
-                }
-
-                //消息标题
-                if(StrUtils.IsNotEmpty(title)){
-                    helper.setText(R.id.tv_task_news, item.getMsg_title());
-                    helper.setText(R.id.tv_task_time, item.getCreate_time());
+                    //消息标题
+                    if(StrUtils.IsNotEmpty(title)){
+                        helper.setText(R.id.tv_task_news, item.getMsg_title());
+                        helper.setText(R.id.tv_task_time, item.getCreate_time());
+                    }
                 }else{
+                    ivnum.setVisibility(View.GONE);
                     helper.setText(R.id.tv_task_news, "暂无消息");
+                    helper.setText(R.id.tv_task_time, "");
                 }
-
+                ImageView ivhead = helper.getImageView(R.id.iv_head);
+                ivhead.setBackgroundResource(item.getDraw_id());
 
             }
         };
@@ -117,7 +120,8 @@ public class NewsHomeActivity extends JwActivity {
                         JwStartActivity(SignListActivity.class);
                         break;
                     case 2 :
-                        JwStartActivity(TaskJobHomeActivity.class);
+                        News news = (News)commonAdapter.getItem(position);
+                        JwStartActivity(TaskJobHomeActivity.class,news);
                         break;
                     default :
                         break;
@@ -128,8 +132,6 @@ public class NewsHomeActivity extends JwActivity {
     }
 
     private void getData() {
-        String time = Utils.getHourAndM();
-        tvFriendTime.setText(time);
 
         users = JwAppAplication.getInstance().getUsers();
 
@@ -203,6 +205,9 @@ public class NewsHomeActivity extends JwActivity {
             if (result.equals("1")) {
 
                 if (ListUtils.IsNotNull(newsList)) {
+                    newsList.get(0).setDraw_id(R.drawable.publicy);
+                    newsList.get(1).setDraw_id(R.drawable.sign);
+                    newsList.get(2).setDraw_id(R.drawable.task);
                     allList.addAll(newsList);
                     commonAdapter.notifyDataSetChanged();
                 }
@@ -256,6 +261,7 @@ public class NewsHomeActivity extends JwActivity {
         String msg = activityMsgEvent.getMsg();
         if (msg.equals("news_refresh")) {
             allList.clear();
+            showLoading();
             new FinishRefresh(getMy()).execute(myphone);
         }
     }

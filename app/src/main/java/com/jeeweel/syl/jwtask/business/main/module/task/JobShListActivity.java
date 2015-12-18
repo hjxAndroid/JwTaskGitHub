@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -17,12 +18,14 @@ import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListVi
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import api.util.Contants;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -53,12 +56,15 @@ public class JobShListActivity extends JwListActivity {
 
     int flag = 2;
 
+    String orgCode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_sh_list);
         setTitle("我审核的");
         users = JwAppAplication.getInstance().getUsers();
+        orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         ButterKnife.bind(this);
         initListViewController();
     }
@@ -132,7 +138,7 @@ public class JobShListActivity extends JwListActivity {
             JwStartActivity(YshActivity.class, task);
         } else if (flag == 4) {
             JwStartActivity(SolveDelayActivity.class, task);
-        }else if (flag == 7) {
+        } else if (flag == 7) {
             JwStartActivity(SolveGiveUpActivity.class, task);
         }
 
@@ -199,14 +205,27 @@ public class JobShListActivity extends JwListActivity {
                         list = jCloudDB.findAllByWhere(Task.class,
                                 "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + flag + " limit " + pageStart + "," + pageEnd);
                     }
+
+                    if (ListUtils.IsNotNull(list)) {
+                        for (Task task : list) {
+                            List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                                    "task_code=" + StrUtils.QuotedStr(task.getTask_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                            if (ListUtils.IsNull(alreadyreadList)) {
+                                //已读表未插入，插入到已读表
+                                Alreadyread alreadyread = new Alreadyread();
+                                alreadyread.setTask_code(task.getTask_code());
+                                alreadyread.setOperator_code(users.getUser_code());
+                                alreadyread.setOrg_code(orgCode);
+                                alreadyread.setOperate_type("2");
+                                jCloudDB.save(alreadyread);
+                            }
+                        }
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
-                }
-
-                if (ListUtils.IsNotNull(list)) {
-                    result = "1";
-                } else {
-                    result = "0";
                 }
             }
 
@@ -245,8 +264,11 @@ public class JobShListActivity extends JwListActivity {
         if (msg.equals("delay_refresh")) {
             flag = 4;
             new FinishRefresh(getMy(), 0).execute();
-        }else if(msg.equals("give_refresh")){
+        } else if (msg.equals("give_refresh")) {
             flag = 6;
+            new FinishRefresh(getMy(), 0).execute();
+        } else if (msg.equals("sh_refresh")) {
+            flag = 2;
             new FinishRefresh(getMy(), 0).execute();
         }
     }

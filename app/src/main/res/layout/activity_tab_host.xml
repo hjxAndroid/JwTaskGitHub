@@ -33,7 +33,8 @@
             android:layout_height="49dp"
             android:layout_gravity="bottom"
             android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="@color/bottom_background">
 
             <RadioButton
                 android:id="@id/menu1"

@@ -175,7 +175,7 @@ public class JobAddActivity extends JwActivity{
 
         String cyz = tvCyz.getText().toString();
         if (StrUtils.IsNotEmpty(cyz) && StrUtils.IsNotEmpty(cyzCode)) {
-            task.setObserver_code(cyzCode);
+            task.setParticipant_code(cyzCode);
         }
 
 

@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import api.view.GridNoScrollView;
 import api.view.ListNoScrollView;
@@ -294,6 +295,7 @@ public class FinishShActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 ToastShow("发布成功");
+                OttUtils.push("sh_refresh","");
                 finish();
             } else {
                 ToastShow("保存失败");

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
@@ -58,13 +59,14 @@ public class JobGcListActivity extends JwListActivity {
 
     private Users users;
 
-
+    String orgCode = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_list);
         setTitle("我观察的");
         users = JwAppAplication.getInstance().getUsers();
+        orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         ButterKnife.bind(this);
         initListViewController();
     }
@@ -89,7 +91,7 @@ public class JobGcListActivity extends JwListActivity {
         Task task = (Task) commonAdapter.getItem(position);
         Intent intent = new Intent(getMy(), JobDetailActivity.class);
         intent.putExtra(StaticStrUtils.baseItem, task);
-        intent.putExtra("flag","gc");
+        intent.putExtra("flag", "gc");
         startActivity(intent);
     }
 
@@ -154,14 +156,27 @@ public class JobGcListActivity extends JwListActivity {
                         list = jCloudDB.findAllByWhere(Task.class,
                                 "observer_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                     }
+
+                    if (ListUtils.IsNotNull(list)) {
+                        for (Task task : list) {
+                            List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                                    "task_code=" + StrUtils.QuotedStr(task.getTask_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                            if (ListUtils.IsNull(alreadyreadList)) {
+                                //已读表未插入，插入到已读表
+                                Alreadyread alreadyread = new Alreadyread();
+                                alreadyread.setTask_code(task.getTask_code());
+                                alreadyread.setOperator_code(users.getUser_code());
+                                alreadyread.setOrg_code(orgCode);
+                                alreadyread.setOperate_type("2");
+                                jCloudDB.save(alreadyread);
+                            }
+                        }
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
-                }
-
-                if (ListUtils.IsNotNull(list)) {
-                    result = "1";
-                } else {
-                    result = "0";
                 }
             }
 

@@ -5,12 +5,13 @@
     android:orientation="horizontal"
     android:background="@drawable/settings_mid_select">
 
-    <ImageView android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/profile_bottom_message"
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/freind"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:id="@+id/imageView3" />
+        android:id="@+id/iv_head" />
 
 
 
@@ -20,8 +21,8 @@
         android:textColor="@color/list_text_color"
         android:textSize="@dimen/textSize_normal"
         android:id="@+id/task"
-        android:layout_alignTop="@+id/imageView3"
-        android:layout_toRightOf="@+id/imageView3"
+        android:layout_alignTop="@+id/iv_head"
+        android:layout_toRightOf="@+id/iv_head"
         android:layout_marginLeft="8dp"/>
 
     <TextView android:id="@+id/tv_task_news"
@@ -30,16 +31,19 @@
         android:layout_below="@+id/task"
         android:layout_alignLeft="@+id/task"
         android:textSize="13dp"
-        android:textColor="@color/gray"/>
+        android:textColor="@color/gray"
+        android:ellipsize="end"
+        android:singleLine="true"/>
 
     <TextView android:id="@+id/tv_task_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/imageView3"
+        android:layout_alignTop="@+id/iv_head"
         android:layout_marginRight="10dp"
         android:textSize="13dp"
-        android:textColor="@color/gray" />
+        android:textColor="@color/gray"
+        />
 
     <ImageView android:id="@+id/iv_task_num"
         android:layout_width="wrap_content"

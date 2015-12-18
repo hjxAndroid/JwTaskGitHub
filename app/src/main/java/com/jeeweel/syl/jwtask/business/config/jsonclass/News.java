@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
 /**
  * @author 苏逸龙 317616660@qq.com
@@ -11,7 +12,7 @@ import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
  */
 
 @Table(name = "news")
-public class News {
+public class News extends BaseItem{
     /**
      * mid
      */
@@ -46,6 +47,7 @@ public class News {
 
     private String observer_state;
 
+    private int draw_id;
 
     public int getMid() {
         return mid;
@@ -141,6 +143,14 @@ public class News {
 
     public void setObserver_state(String observer_state) {
         this.observer_state = observer_state;
+    }
+
+    public int getDraw_id() {
+        return draw_id;
+    }
+
+    public void setDraw_id(int draw_id) {
+        this.draw_id = draw_id;
     }
 }
 

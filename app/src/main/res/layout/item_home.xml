@@ -8,7 +8,17 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/icon_org"/>
+
+    <ImageView android:id="@+id/iv_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/mode_im"
+        android:layout_toRightOf="@+id/mode_im"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/new_point"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/mode_tv"
@@ -19,6 +29,7 @@
         android:layout_below="@+id/mode_im"
         android:layout_marginTop="10dp"
         android:textColor="@color/list_text_color"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:text="12"/>
 
 </RelativeLayout>

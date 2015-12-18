@@ -336,4 +336,8 @@
     <color name="dialog_bg">#ffe74c3c</color>
     <color name="blue_middle">#aa029be9</color>
     <color name="circle_background">#fff2f2f2</color>
+
+
+    <!--底部蓝色-->
+    <color name="bottom_background">#f9f9f9</color>
 </resources>

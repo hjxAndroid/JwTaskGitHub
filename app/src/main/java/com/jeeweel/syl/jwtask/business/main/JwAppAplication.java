@@ -53,8 +53,8 @@ public class JwAppAplication extends JeeweelApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
-        PublicColors.setNavicationBarColorRID(R.color.ios7blue);
-        PublicColors.setTextColorRID(R.color.white);
+        PublicColors.setNavicationBarColorRID(R.color.bottom_background);
+        PublicColors.setTextColorRID(R.color.black);
         //短信验证
         SMSSDK.initSDK(this, APPKEY, APPSECRET);
         finalDb = FinalDb.create(this);

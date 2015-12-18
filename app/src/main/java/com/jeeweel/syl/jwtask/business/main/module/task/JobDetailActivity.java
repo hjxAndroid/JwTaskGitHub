@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +34,7 @@ import com.squareup.otto.Subscribe;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.ListNoScrollView;
@@ -140,7 +142,13 @@ public class JobDetailActivity extends JwActivity {
                 btDjsh.setText("已递交");
                 btDjsh.setClickable(false);
                 btSqyq.setClickable(false);
-            } else if(state == 4){
+            } else if(state == 3){
+                //已审核,任务已完结
+                btQrjs.setVisibility(View.GONE);
+                btDjsh.setVisibility(View.GONE);
+                btSqyq.setVisibility(View.GONE);
+                btFqrw.setVisibility(View.GONE);
+            }else if(state == 4){
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
                 btSqyq.setText("延期申请中");
@@ -289,6 +297,12 @@ public class JobDetailActivity extends JwActivity {
                     }
                 };
                 listview.setAdapter(commonAdapter);
+                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        //commonAdapter.getItem(position);
+                    }
+                });
             } else {
                 ToastShow("保存失败");
             }
@@ -323,7 +337,7 @@ public class JobDetailActivity extends JwActivity {
                         String sql = "update task set now_state = 1 , now_state_name = '已确认',confirm_time =" + StrUtils.QuotedStr(DateHelper.getCurDateTime()) + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
 
-
+                        task.setConfirm_time(DateHelper.getCurDateTime());
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
                         taskflow.setTask_code(task.getTask_code());
@@ -348,6 +362,10 @@ public class JobDetailActivity extends JwActivity {
                 btQrjs.setText("已确认");
                 btQrjs.setClickable(false);
                 btDjsh.setClickable(true);
+                btSqyq.setClickable(true);
+
+                //通知列表更新
+                OttUtils.push("fz_refresh","");
             } else {
                 ToastShow("操作失败");
             }
