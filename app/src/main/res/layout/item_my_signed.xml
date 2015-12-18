@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="100dp"
                 android:layout_marginLeft="@dimen/margin_Size"
                 android:layout_marginRight="@dimen/margin_Size"
                 android:layout_marginTop="@dimen/margin_Size"
