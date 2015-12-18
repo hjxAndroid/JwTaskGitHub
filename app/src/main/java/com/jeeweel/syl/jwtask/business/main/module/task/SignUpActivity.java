@@ -186,7 +186,7 @@ public class SignUpActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(userNick)) {
             signUserPic = userNick.substring(userNick.length() - 2, userNick.length());
         } else {
-            signUserPic = "";
+            signUserPic = "姓名";
         }
         signUserName = StrUtils.IfNull(userNick, userPhone);
         tvSignUserPic.setText(signUserPic);

@@ -49,12 +49,12 @@ public class MoreHomeActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(userNick)) {
             userHead = userNick.substring(userNick.length() - 2, userNick.length());
         } else {
-            userHead = "";
+            userHead = "姓名";
         }
         tvUserHead.setText(userHead);
         tvUserName.setText(userNick);
 
-        new GetUserPicture(getMy(),iv_user_head2,user_code).execute();
+        new GetUserPicture(getMy(), iv_user_head2, user_code).execute();
     }
 
     @Override

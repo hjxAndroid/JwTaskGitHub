@@ -17,5 +17,3 @@
         android:listSelector="@color/transparent"
         android:scrollbars="none"/>
 </RelativeLayout>
-
-

@@ -124,7 +124,7 @@ public class TaskHomeActivity extends JwActivity {
                         break;
                     case 1:
                         //签到
-                        JwStartActivity(StartSignUpActivity.class);
+                        JwStartActivity(SignOptionsActivity.class);
                         break;
                     case 2:
                         //任务
