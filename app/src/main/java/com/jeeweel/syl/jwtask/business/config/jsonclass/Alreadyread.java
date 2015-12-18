@@ -21,7 +21,7 @@ public class Alreadyread {
     /**
      * 已读任务或者公告ID
      */
-    private String task_id;
+    private String task_code;
     /**
      * 已读任务或者公告名称
      */
@@ -58,7 +58,12 @@ public class Alreadyread {
     /**
      * 操作时间
      */
-    private Date operate_time;
+    private String operator_code;
+    /**
+     * 操作时间
+     */
+    private String org_code;
+
     /**
      * 操作类型
      */
@@ -89,12 +94,12 @@ public class Alreadyread {
         this.mid = mid;
     }
 
-    public String getTask_id() {
-        return task_id;
+    public String getTask_code() {
+        return task_code;
     }
 
-    public void setTask_id(String task_id) {
-        this.task_id = task_id;
+    public void setTask_code(String task_code) {
+        this.task_code = task_code;
     }
 
     public String getTask_name() {
@@ -129,6 +134,14 @@ public class Alreadyread {
         this.photo_id = photo_id;
     }
 
+    public String getPhoto_code() {
+        return photo_code;
+    }
+
+    public void setPhoto_code(String photo_code) {
+        this.photo_code = photo_code;
+    }
+
     public String getEvaluate() {
         return evaluate;
     }
@@ -153,12 +166,20 @@ public class Alreadyread {
         this.operator = operator;
     }
 
-    public Date getOperate_time() {
-        return operate_time;
+    public String getOperator_code() {
+        return operator_code;
     }
 
-    public void setOperate_time(Date operate_time) {
-        this.operate_time = operate_time;
+    public void setOperator_code(String operator_code) {
+        this.operator_code = operator_code;
+    }
+
+    public String getOrg_code() {
+        return org_code;
+    }
+
+    public void setOrg_code(String org_code) {
+        this.org_code = org_code;
     }
 
     public String getOperate_type() {
@@ -197,17 +218,8 @@ public class Alreadyread {
         return update_time;
     }
 
-
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
-    }
-
-    public String getPhoto_code() {
-        return photo_code;
-    }
-
-    public void setPhoto_code(String photo_code) {
-        this.photo_code = photo_code;
     }
 }
 
