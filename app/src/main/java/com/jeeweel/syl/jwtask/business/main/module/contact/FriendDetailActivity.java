@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
@@ -17,6 +18,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.module.more.MineActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
@@ -52,6 +54,8 @@ public class FriendDetailActivity extends JwActivity {
     TextView tvArea;
     @Bind(R.id.listview)
     ListNoScrollView listview;
+    @Bind(R.id.iv)
+    ImageView iv;
 
     private List<Users> usersList;
 
@@ -74,6 +78,8 @@ public class FriendDetailActivity extends JwActivity {
         if(flag==true){
             initView();
         }
+        String friend_code=intent.getStringExtra("friend_code");
+        new GetUserPicture(getMy(),iv,friend_code).execute();
     }
 
     private void initView(){

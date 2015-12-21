@@ -73,7 +73,7 @@ public class TaskHomeActivity extends JwActivity {
         super.onCreate(savedInstanceState);
         setHideBack(true);
         setContentView(R.layout.activity_task_home);
-        setTitle(getString(R.string.任务));
+        setTitle("任务");
         context = this;
         ButterKnife.bind(this);
         initView();

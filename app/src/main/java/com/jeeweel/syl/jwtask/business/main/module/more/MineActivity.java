@@ -95,8 +95,12 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(str)) {
             tv_nickname.setText(str);
             if (!StrUtils.IsNotEmpty(users.getPhoto_code())) {
-                str = str.substring(str.length() - 2, str.length());
-                tv_user_head1.setText(str);
+                if(str.length()>2){
+                    str = str.substring(str.length() - 2, str.length());
+                    tv_user_head1.setText(str);
+                }else{
+                    tv_user_head1.setText(str);
+                }
             }
         }
         str = users.getEmail();
