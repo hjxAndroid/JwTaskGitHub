@@ -1,5 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.more;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +24,8 @@ import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+
+import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -218,21 +223,59 @@ public class MineActivity extends JwActivity {
         protected void onPostExecute(String result) {
             hideLoading();
             if(result.equals("1")){
-                birthday = tv_birthday.getText().toString();
                 users.setBirthday(birthday);
-
                 JwAppAplication.getFinalDb().update(users);
             }else{
                 ToastShow("数据保存失败");
             }
         }
     }
+    /**
+     * 创建日期及时间选择对话框
+     */
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Dialog dialog = null;
 
+        if (StrUtils.IsNotEmpty(birthday)) {
+            String[] data=birthday.split("-");
+            int year=Integer.parseInt(data[0]);
+            int mouth=Integer.parseInt(data[1]);
+            int day=Integer.parseInt(data[2]);
+            dialog = new DatePickerDialog(
+                    this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year,int month, int dayOfMonth) {
+                            tv_birthday.setText("" + year + "-" + (month+1) + "-" + dayOfMonth);
+                            birthday = tv_birthday.getText().toString();
+                            new saveBirthday(getMy()).execute();
+                        }
+                    },
+                    year, // 传入年份
+                    mouth, // 传入月份
+                    day // 传入天数
+            );
+        }else{
+            Calendar c = Calendar.getInstance();
+            dialog = new DatePickerDialog(
+                    this,
+                    new DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year,int month, int dayOfMonth) {
+                            tv_birthday.setText("" + year + "-" + (month+1) + "-" + dayOfMonth);
+                            birthday = tv_birthday.getText().toString();
+                            new saveBirthday(getMy()).execute();
+                        }
+                    },
+                    c.get(Calendar.YEAR), // 传入年份
+                    c.get(Calendar.MONTH), // 传入月份
+                    c.get(Calendar.DAY_OF_MONTH) // 传入天数
+            );
+        }
+        return dialog;
+    }
     @OnClick(R.id.ll_birthday)
     void editMyBirthdayClick() {
-        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                MineActivity.this, birthday);
-        dateTimePicKDialog.dateTimePicKDialog(tv_birthday);
+        showDialog(0);
     }
 
     @OnClick(R.id.ll_address)
@@ -256,14 +299,14 @@ public class MineActivity extends JwActivity {
         JwStartActivity(intent);
     }
 
-    @Subscribe
-    public void dateTimeSelect(ActivityMsgEvent activityMsgEvent) {
-        if (activityMsgEvent.getMsg().equals("dateTimePick")) {
-            birthday = activityMsgEvent.getJson();
-            if (StrUtils.IsNotEmpty(birthday)) {
-                tv_birthday.setText(birthday);
-                new saveBirthday(getMy()).execute();
-            }
-        }
-    }
+//    @Subscribe
+//    public void dateTimeSelect(ActivityMsgEvent activityMsgEvent) {
+//        if (activityMsgEvent.getMsg().equals("dateTimePick")) {
+//            birthday = activityMsgEvent.getJson();
+//            if (StrUtils.IsNotEmpty(birthday)) {
+//                tv_birthday.setText(birthday);
+//                new saveBirthday(getMy()).execute();
+//            }
+//        }
+//    }
 }
