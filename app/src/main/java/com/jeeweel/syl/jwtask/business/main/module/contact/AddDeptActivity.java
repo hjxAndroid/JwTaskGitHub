@@ -74,7 +74,7 @@ public class AddDeptActivity extends JwActivity {
         orgname = getIntent().getStringExtra(StaticStrUtils.baseItem);
         org_code = getIntent().getStringExtra("org_code");
         ButterKnife.bind(this);
-        jCloudDB = JwAppAplication.getInstance().getjCloudDB();
+        jCloudDB = new JCloudDB();
         initView();
     }
 

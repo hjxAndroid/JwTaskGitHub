@@ -79,7 +79,11 @@ public class DeptUsersListActivity extends JwListActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                JwStartActivity(DeptSelectFriendListActivity.class);
+                Intent intent = new Intent(getMy(),DeptSelectFriendListActivity.class);
+                intent.putExtra("userdept",userdept);
+                intent.putExtra(StaticStrUtils.baseItem,Contants.dept_add_friend);
+                startActivity(intent);
+                finish();
             }
         });
         addMenuView(menuTextView);

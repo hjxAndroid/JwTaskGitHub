@@ -64,6 +64,7 @@ public class PublicyContactHomeActivity extends JwActivity {
     @OnClick(R.id.rl_friend)
     void friendClick() {
         JwStartActivity(DeptSelectFriendListActivity.class, tag);
+        finish();
     }
 
 

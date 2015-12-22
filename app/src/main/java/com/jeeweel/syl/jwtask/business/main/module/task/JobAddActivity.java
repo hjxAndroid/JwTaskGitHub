@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -25,18 +27,20 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.more.DateTimePickDialogUtil;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 
 import com.squareup.otto.Subscribe;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -99,6 +103,9 @@ public class JobAddActivity extends JwActivity {
     int timeFlag = 0;
 
     DegreeItem item;
+
+    String timeData = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,6 +193,8 @@ public class JobAddActivity extends JwActivity {
         String rwyq = etRwyq.getText().toString();
         if (StrUtils.IsNotEmpty(rwyq)) {
             task.setTask_request(rwyq);
+        } else {
+            return null;
         }
 
 
@@ -198,7 +207,7 @@ public class JobAddActivity extends JwActivity {
         String khbz = etKhbz.getText().toString();
         if (StrUtils.IsNotEmpty(khbz)) {
             task.setDegree(khbz);
-            if(null!=item){
+            if (null != item) {
                 task.setDegree_score(item.getDegree_score());
             }
         }
@@ -206,14 +215,61 @@ public class JobAddActivity extends JwActivity {
         return task;
     }
 
+
+    /**
+     * 创建日期及时间选择对话框
+     */
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Dialog dialog = null;
+
+        if (StrUtils.IsNotEmpty(timeData)) {
+            String[] data = timeData.split("-");
+            int year = Integer.parseInt(data[0]);
+            int mouth = Integer.parseInt(data[1]);
+            int day = Integer.parseInt(data[2]);
+            dialog = new android.app.DatePickerDialog(
+                    this,
+                    new android.app.DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            if (timeFlag == 0) {
+                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            } else {
+                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            }
+                        }
+                    },
+                    year, // 传入年份
+                    mouth, // 传入月份
+                    day // 传入天数
+            );
+        } else {
+            Calendar c = Calendar.getInstance();
+            dialog = new android.app.DatePickerDialog(
+                    this,
+                    new android.app.DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            if (timeFlag == 0) {
+                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            } else {
+                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            }
+                        }
+                    },
+                    c.get(Calendar.YEAR), // 传入年份
+                    c.get(Calendar.MONTH), // 传入月份
+                    c.get(Calendar.DAY_OF_MONTH) // 传入天数
+            );
+        }
+        return dialog;
+    }
+
     //开始时间
     @OnClick(R.id.li_start_time)
     void starttimeClick() {
         timeFlag = 0;
-        String starttime = etStartTime.getText().toString();
-        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                JobAddActivity.this, starttime);
-        dateTimePicKDialog.dateTimePicKDialog(etStartTime);
+        timeData = etStartTime.getText().toString();
+        showDialog(0);
     }
 
 
@@ -221,10 +277,8 @@ public class JobAddActivity extends JwActivity {
     @OnClick(R.id.li_end_time)
     void endtimeClick() {
         timeFlag = 1;
-        String endtiem = etEndTime.getText().toString();
-        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                JobAddActivity.this, endtiem);
-        dateTimePicKDialog.dateTimePicKDialog(etEndTime);
+        timeData = etEndTime.getText().toString();
+        showDialog(0);
     }
 
 
@@ -367,16 +421,17 @@ public class JobAddActivity extends JwActivity {
         List<Userdept> userdepts;
         String msg = activityMsgEvent.getMsg();
         String json = activityMsgEvent.getParam1();
-        if(StrUtils.IsNotEmpty(json)){
+        if (StrUtils.IsNotEmpty(json)) {
             userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
-        }else{
+        } else {
             json = activityMsgEvent.getParam();
             List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
             userdepts = new ArrayList<>();
-            for(Friend friend : friends){
+            for (Friend friend : friends) {
                 Userdept userdept = new Userdept();
                 userdept.setUser_code(friend.getFriend_code());
                 userdept.setNickname(friend.getFriend_nickname());
+                userdepts.add(userdept);
             }
         }
 
@@ -516,6 +571,7 @@ public class JobAddActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                pushData();
                 ToastShow("任务发布成功");
                 finish();
             } else {
@@ -539,4 +595,71 @@ public class JobAddActivity extends JwActivity {
         }
     }
 
+
+    public void pushData() {
+        if (task != null) {
+            String title = task.getTask_name();
+            String content = task.getTask_request();
+
+            String all_code = "";
+            String fzr = task.getPrincipal_code();
+            String shr = task.getAuditor_code();
+            String cyz = task.getParticipant_code();
+            String gcz = task.getObserver_code();
+
+            if(StrUtils.IsNotEmpty(fzr)){
+                all_code += fzr;
+            }
+
+            if(StrUtils.IsNotEmpty(shr)){
+                all_code += ","+shr;
+            }
+
+            if(StrUtils.IsNotEmpty(cyz)){
+                all_code += ","+cyz;
+            }
+
+            if(StrUtils.IsNotEmpty(gcz)){
+                all_code += ","+gcz;
+            }
+
+            if (StrUtils.IsNotEmpty(title) && StrUtils.IsNotEmpty(content)) {
+                try {
+                    title = URLEncoder.encode(URLEncoder.encode(title, "utf-8"), "utf-8");
+                    content = URLEncoder.encode(URLEncoder.encode(content, "utf-8"), "utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String param = "?all_code=" + all_code + "&title=" + title + "&content=" + content;
+            String apiStr = Utils.getPushUrl() + param;
+            JwHttpGet(apiStr, true);
+        }
+    }
+
+    @Override
+    public void HttpSuccess(ResMsgItem resMsgItem) {
+        if (OUtils.IsNotNull(resMsgItem)) {
+            if (resMsgItem != null) {
+                int error = resMsgItem.getStatus();
+                String sMsg = resMsgItem.getMsg();
+                if (error == 1 || error == 99) {
+                    CroutonINFO(sMsg);
+                } else {
+                }
+            }
+            finish();
+        }
+    }
+
+    @Override
+    public void HttpFail(String strMsg) {
+        super.HttpFail(strMsg);
+    }
+
+    @Override
+    public void HttpFinish() {
+        super.HttpFinish();
+    }
 }

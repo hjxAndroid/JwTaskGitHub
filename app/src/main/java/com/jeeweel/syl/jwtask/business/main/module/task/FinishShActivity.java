@@ -71,6 +71,8 @@ public class FinishShActivity extends JwActivity {
     Submit submit;
     @Bind(R.id.listview)
     ListNoScrollView listview;
+    @Bind(R.id.tv_rwnd)
+    TextView tvRwnd;
 
     private AlertDialog dialog;
     Activity context;
@@ -108,14 +110,14 @@ public class FinishShActivity extends JwActivity {
                 if (StrUtils.IsNotEmpty(wcqk) && StrUtils.IsNotEmpty(shpj)) {
                     showLoading();
                     double sco = 0.01;
-                    if(shpj.equals("优秀")){
-                        sco = task.getDegree_score()*1;
-                    }else if(shpj.equals("良好")){
-                        sco = task.getDegree_score()*(0.5);
-                    }else if(shpj.equals("未完成")){
-                        sco = task.getDegree_score()*(-0.5);
+                    if (shpj.equals("优秀")) {
+                        sco = task.getDegree_score() * 1;
+                    } else if (shpj.equals("良好")) {
+                        sco = task.getDegree_score() * (0.5);
+                    } else if (shpj.equals("未完成")) {
+                        sco = task.getDegree_score() * (-0.5);
                     }
-                    score = (int)sco;
+                    score = (int) sco;
 
                     new saveRefresh(getMy()).execute();
                 } else {
@@ -151,6 +153,7 @@ public class FinishShActivity extends JwActivity {
         List<Submit> list;
         List<Picture> pictureList;
         List<Taskflow> taskflows;
+
         /**
          * @param context 上下文
          */
@@ -190,6 +193,7 @@ public class FinishShActivity extends JwActivity {
                     submit = list.get(0);
                     etTaskName.setText(StrUtils.IsNull(submit.getTask_name()));
                     etConfirmTime.setText(StrUtils.IsNull(task.getConfirm_time()));
+                    tvRwnd.setText(StrUtils.IsNull(task.getDegree()));
                     tvWcqk.setText(StrUtils.IsNull(submit.getPerformance()));
                     tvYjfk.setText(StrUtils.IsNull(submit.getFeedback()));
                     tvZwpj.setText(StrUtils.IsNull(submit.getEvaluate()));
@@ -310,7 +314,7 @@ public class FinishShActivity extends JwActivity {
 
             if (null != submit) {
                 try {
-                    String sqlsubmit = "update submit set audit_content = '" + wcqk + "' , audit_evaluate = '" + shpj + "',score = "+score +" where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                    String sqlsubmit = "update submit set audit_content = '" + wcqk + "' , audit_evaluate = '" + shpj + "',score = " + score + " where task_code = " + StrUtils.QuotedStr(task.getTask_code());
                     CloudDB.execSQL(sqlsubmit);
 
                     if (null != users) {
@@ -338,7 +342,7 @@ public class FinishShActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 ToastShow("发布成功");
-                OttUtils.push("sh_refresh","");
+                OttUtils.push("sh_refresh", "");
                 finish();
             } else {
                 ToastShow("保存失败");

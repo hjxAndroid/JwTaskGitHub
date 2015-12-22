@@ -20,12 +20,15 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptAddFriendListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -129,8 +132,6 @@ public class StartSignUpActivity extends JwActivity {
             sign.setReceive_name(fName);
             sign.setReceive_code(buddyCode);
             new saveSignInformaiton(getMy()).execute();
-            ToastShow("发起签到成功");
-            finish();
         } else {
             ToastShow("内容或标题不能为空");
         }
@@ -219,7 +220,7 @@ public class StartSignUpActivity extends JwActivity {
 
     private class saveSignInformaiton extends AsyncTask<String, Void, String> {
         private Context context;
-
+        String result = "1";
         /**
          * @param context 上下文
          */
@@ -233,13 +234,19 @@ public class StartSignUpActivity extends JwActivity {
             try {
                 jCloudDB.save(sign);
             } catch (CloudServiceException e) {
+                result = "0";
                 e.printStackTrace();
             }
-            return null;
+            return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
+            if(result.equals("1")){
+                pushData();
+                ToastShow("发起签到成功");
+                finish();
+            }
         }
     }
 
@@ -264,5 +271,54 @@ public class StartSignUpActivity extends JwActivity {
             fName = fName.substring(0, fName.length() - 1);
         }
         return fName;
+    }
+
+
+
+    public void pushData() {
+        if (sign != null) {
+            String title = sign.getSign_title();
+            String content = sign.getSend_context();
+
+            String all_code = sign.getReceive_code();
+
+            if (StrUtils.IsNotEmpty(title) && StrUtils.IsNotEmpty(content)) {
+                try {
+                    title = URLEncoder.encode(URLEncoder.encode(title, "utf-8"), "utf-8");
+                    content = URLEncoder.encode(URLEncoder.encode(content, "utf-8"), "utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String param = "?all_code=" + all_code + "&title=" + title + "&content=" + content;
+            String apiStr = Utils.getPushUrl() + param;
+            JwHttpGet(apiStr, true);
+        }
+    }
+
+    @Override
+    public void HttpSuccess(ResMsgItem resMsgItem) {
+        if (OUtils.IsNotNull(resMsgItem)) {
+            if (resMsgItem != null) {
+                int error = resMsgItem.getStatus();
+                String sMsg = resMsgItem.getMsg();
+                if (error == 1 || error == 99) {
+                    CroutonINFO(sMsg);
+                } else {
+                }
+            }
+            finish();
+        }
+    }
+
+    @Override
+    public void HttpFail(String strMsg) {
+        super.HttpFail(strMsg);
+    }
+
+    @Override
+    public void HttpFinish() {
+        super.HttpFinish();
     }
 }

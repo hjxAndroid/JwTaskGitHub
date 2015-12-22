@@ -19,6 +19,9 @@ public class Contants {
     //后台数据库
     public static String WEB_DB="jwtask";
 
+    //组织添加好友
+    public static String dept_add_friend = "dept_add_friend";
+
     //团队传递参数
     public static String group = "group";
 
