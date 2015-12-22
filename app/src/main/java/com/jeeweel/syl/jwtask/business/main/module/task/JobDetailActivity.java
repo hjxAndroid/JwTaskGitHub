@@ -16,6 +16,7 @@ import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -28,6 +29,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 
@@ -96,7 +98,7 @@ public class JobDetailActivity extends JwActivity {
     String flag;
     CommonAdapter commonAdapter;
     List<Taskflow> taskflows;
-
+    String orgCode;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +115,7 @@ public class JobDetailActivity extends JwActivity {
             liBt.setVisibility(View.GONE);
         }
 
+        orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
 
         task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         if (null != task) {
@@ -269,6 +272,19 @@ public class JobDetailActivity extends JwActivity {
 
                     String deletSql = "DROP TABLE tmp" + unid;
                     CloudDB.execSQL(deletSql);
+
+
+                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                            "task_code=" + StrUtils.QuotedStr(task.getTask_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                    if (ListUtils.IsNull(alreadyreadList)) {
+                        //已读表未插入，插入到已读表
+                        Alreadyread alreadyread = new Alreadyread();
+                        alreadyread.setTask_code(task.getTask_code());
+                        alreadyread.setOperator_code(users.getUser_code());
+                        alreadyread.setOrg_code(orgCode);
+                        alreadyread.setOperate_type("2");
+                        jCloudDB.save(alreadyread);
+                    }
                 }
 
 
@@ -286,6 +302,8 @@ public class JobDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                OttUtils.push("news_refresh","");
+
                 if (ListUtils.IsNotNull(tasks)) {
                     Task task = tasks.get(0);
                     tvFbr.setText(task.getPromulgator_nickname());

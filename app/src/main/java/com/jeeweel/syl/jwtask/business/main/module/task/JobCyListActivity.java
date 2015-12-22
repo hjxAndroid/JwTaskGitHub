@@ -143,7 +143,7 @@ public class JobCyListActivity extends JwListActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             if (null != users) {
                 try {
@@ -158,25 +158,8 @@ public class JobCyListActivity extends JwListActivity {
                                 "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
                     }
 
-                    if (ListUtils.IsNotNull(list)) {
-                        for (Task task : list) {
-                            List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
-                                    "task_code=" + StrUtils.QuotedStr(task.getTask_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
-                            if (ListUtils.IsNull(alreadyreadList)) {
-                                //已读表未插入，插入到已读表
-                                Alreadyread alreadyread = new Alreadyread();
-                                alreadyread.setTask_code(task.getTask_code());
-                                alreadyread.setOperator_code(users.getUser_code());
-                                alreadyread.setOrg_code(orgCode);
-                                alreadyread.setOperate_type("2");
-                                jCloudDB.save(alreadyread);
-                            }
-                        }
-                        result = "1";
-                    } else {
-                        result = "0";
-                    }
                 } catch (CloudServiceException e) {
+                    result = "0";
                     e.printStackTrace();
                 }
             }
@@ -189,7 +172,6 @@ public class JobCyListActivity extends JwListActivity {
             if (result.equals("1")) {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
-                OttUtils.push("news_refresh","");
             } else {
                 //没有加载到数据
             }

@@ -246,7 +246,6 @@ public class StartSignUpActivity extends JwActivity {
             if(result.equals("1")){
                 pushData();
                 ToastShow("发起签到成功");
-                finish();
             }
         }
     }
@@ -293,33 +292,25 @@ public class StartSignUpActivity extends JwActivity {
             }
 
             String param = "?all_code=" + all_code + "&title=" + title + "&content=" + content;
-            String apiStr = Utils.getPushUrl() + param;
+            String apiStr = Utils.getPublicUrl() + param;
             JwHttpGet(apiStr, true);
         }
     }
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-        if (OUtils.IsNotNull(resMsgItem)) {
-            if (resMsgItem != null) {
-                int error = resMsgItem.getStatus();
-                String sMsg = resMsgItem.getMsg();
-                if (error == 1 || error == 99) {
-                    CroutonINFO(sMsg);
-                } else {
-                }
-            }
-            finish();
-        }
+        finish();
     }
 
     @Override
     public void HttpFail(String strMsg) {
+        finish();
         super.HttpFail(strMsg);
     }
 
     @Override
     public void HttpFinish() {
+        finish();
         super.HttpFinish();
     }
 }

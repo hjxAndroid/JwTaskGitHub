@@ -573,11 +573,11 @@ public class JobAddActivity extends JwActivity {
             if (result.equals("1")) {
                 pushData();
                 ToastShow("任务发布成功");
-                finish();
             } else {
                 ToastShow("保存失败");
             }
             hideLoading();
+
         }
     }
 
@@ -633,33 +633,25 @@ public class JobAddActivity extends JwActivity {
             }
 
             String param = "?all_code=" + all_code + "&title=" + title + "&content=" + content;
-            String apiStr = Utils.getPushUrl() + param;
+            String apiStr = Utils.getPublicUrl() + param;
             JwHttpGet(apiStr, true);
         }
     }
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-        if (OUtils.IsNotNull(resMsgItem)) {
-            if (resMsgItem != null) {
-                int error = resMsgItem.getStatus();
-                String sMsg = resMsgItem.getMsg();
-                if (error == 1 || error == 99) {
-                    CroutonINFO(sMsg);
-                } else {
-                }
-            }
-            finish();
-        }
+        finish();
     }
 
     @Override
     public void HttpFail(String strMsg) {
         super.HttpFail(strMsg);
+        finish();
     }
 
     @Override
     public void HttpFinish() {
         super.HttpFinish();
+        finish();
     }
 }

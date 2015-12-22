@@ -5,10 +5,11 @@
 
     <ImageView
         android:id="@+id/notification_large_icon"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="54dp"
+        android:layout_height="54dp"
+        android:layout_marginLeft="10dp"
         android:scaleType="fitXY"
-        android:src="@drawable/voice_send_press" />
+        android:src="@mipmap/ic_launcher" />
 
     <TextView
         android:id="@+id/notification_title"

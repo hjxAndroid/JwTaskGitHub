@@ -55,4 +55,20 @@ public class Utils {
         return url;
     }
 
+    /**
+     * 多个推送servlet
+     */
+    public static String getPublicUrl() {
+        String url = Contants.All_URL+"/servlet/PublicServlet";
+        return url;
+    }
+
+    /**
+     * 全组推送servlet
+     */
+    public static String getOrgUrl() {
+        String url = Contants.All_URL+"/servlet/OrgServlet";
+        return url;
+    }
+
 }

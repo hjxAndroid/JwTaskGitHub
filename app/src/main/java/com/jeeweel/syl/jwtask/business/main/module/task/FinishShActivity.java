@@ -20,6 +20,7 @@ import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Submit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
@@ -33,6 +34,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +85,7 @@ public class FinishShActivity extends JwActivity {
     String shpj;
     CommonAdapter commonAdapter;
     int score;
+    String orgCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,7 @@ public class FinishShActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle("任务完成审核");
         context = this;
+        orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         users = JwAppAplication.getInstance().getUsers();
         initRight();
         getData();
@@ -177,6 +181,18 @@ public class FinishShActivity extends JwActivity {
 
                     taskflows = jCloudDB.findAllByWhere(Taskflow.class,
                             "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
+
+                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                            "task_code=" + StrUtils.QuotedStr(task.getTask_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                    if (ListUtils.IsNull(alreadyreadList)) {
+                        //已读表未插入，插入到已读表
+                        Alreadyread alreadyread = new Alreadyread();
+                        alreadyread.setTask_code(task.getTask_code());
+                        alreadyread.setOperator_code(users.getUser_code());
+                        alreadyread.setOrg_code(orgCode);
+                        alreadyread.setOperate_type("2");
+                        jCloudDB.save(alreadyread);
+                    }
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -189,6 +205,7 @@ public class FinishShActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                OttUtils.push("news_refresh","");
                 if (ListUtils.IsNotNull(list)) {
                     submit = list.get(0);
                     etTaskName.setText(StrUtils.IsNull(submit.getTask_name()));

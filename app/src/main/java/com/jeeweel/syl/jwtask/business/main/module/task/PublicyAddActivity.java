@@ -85,7 +85,7 @@ public class PublicyAddActivity extends JwActivity {
 
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("下一步");
+        menuTextView.setText("发布");
         menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -429,7 +429,6 @@ public class PublicyAddActivity extends JwActivity {
                 OttUtils.push("publicy_refresh","");
                 pushData();
                 ToastShow("保存成功");
-                finish();
             } else {
                ToastShow("保存失败");
             }
@@ -455,33 +454,25 @@ public class PublicyAddActivity extends JwActivity {
             }
 
             String param = "?org_code=" + org_code + "&title=" + title + "&content=" + content;
-            String apiStr = Utils.getPushUrl() + param;
+            String apiStr = Utils.getOrgUrl() + param;
             JwHttpGet(apiStr, true);
         }
     }
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-        if (OUtils.IsNotNull(resMsgItem)) {
-            if (resMsgItem != null) {
-                int error = resMsgItem.getStatus();
-                String sMsg = resMsgItem.getMsg();
-                if (error == 1 || error == 99) {
-                    CroutonINFO(sMsg);
-                } else {
-                }
-            }
-            finish();
-        }
+        finish();
     }
 
     @Override
     public void HttpFail(String strMsg) {
         super.HttpFail(strMsg);
+        finish();
     }
 
     @Override
     public void HttpFinish() {
         super.HttpFinish();
+        finish();
     }
 }

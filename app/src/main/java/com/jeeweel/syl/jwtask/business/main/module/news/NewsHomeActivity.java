@@ -82,7 +82,6 @@ public class NewsHomeActivity extends JwActivity {
         commonAdapter = new CommonAdapter<News>(getMy(), allList, R.layout.item_news) {
             @Override
             public void convert(ViewHolder helper, News item) {
-                String title = item.getMsg_title();
                 String readstate = item.getReadstate();
 
                 //类型
@@ -93,6 +92,7 @@ public class NewsHomeActivity extends JwActivity {
                 TextView tv_time = helper.getView(R.id.tv_task_time);
                 if (StrUtils.IsNotEmpty(readstate) && readstate.equals("0")) {
                     ivnum.setVisibility(View.VISIBLE);
+                    tv_time.setVisibility(View.VISIBLE);
                     tv_time.setText(item.getCreate_time());
                     //消息标题
                     helper.setText(R.id.tv_task_news, StrUtils.IsNull(item.getMsg_title()));
@@ -181,12 +181,12 @@ public class NewsHomeActivity extends JwActivity {
                 String sql = "call get_msg_list('" + users.getUser_code() + "','" + orgCode + "');";
                 CloudDB.execSQL(sql);
 
-                String newSql = "select * from tmp" + users.getUser_code();
+                String newSql = "select * from  v_tmp" + users.getUser_code();
                 //查找数据
                 newsList = jCloudDB.findAllBySql(News.class, newSql);
 
-                String deletSql = "DROP TABLE tmp" + users.getUser_code();
-                CloudDB.execSQL(deletSql);
+               // String deletSql = "DROP TABLE tmp" + users.getUser_code();
+               //cv CloudDB.execSQL(deletSql);
 
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
