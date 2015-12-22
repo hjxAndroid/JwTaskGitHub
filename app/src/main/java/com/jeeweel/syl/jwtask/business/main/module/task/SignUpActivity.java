@@ -99,6 +99,7 @@ public class SignUpActivity extends JwActivity {
     MyLocationListener mMyLocationListener;
 
     String orgCode = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +121,7 @@ public class SignUpActivity extends JwActivity {
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("我的签到");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.black));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -215,6 +216,8 @@ public class SignUpActivity extends JwActivity {
         signed.setLatitude(latitude);
         signed.setLongtude(longitude);
         signed.setLocation(address);
+        signed.setNickname(userNick);
+
         new FinishRefreshSigned(getMy()).execute();
         ToastShow("签到成功");
     }
@@ -301,6 +304,7 @@ public class SignUpActivity extends JwActivity {
     private class FinishRefreshSignedCounts extends AsyncTask<String, Void, String> {
         private Context context;
         JCloudDB jCloudDB;
+
         /**
          * @param context 上下文
          */
@@ -334,7 +338,7 @@ public class SignUpActivity extends JwActivity {
                 if (null != user) {
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
                             "task_code=" + StrUtils.QuotedStr(signedCode) + "and operator_code=" + StrUtils.QuotedStr(user.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
-                    if (ListUtils.IsNull(alreadyreadList)){
+                    if (ListUtils.IsNull(alreadyreadList)) {
                         //已读表未插入，插入到已读表
                         Alreadyread alreadyread = new Alreadyread();
                         alreadyread.setTask_code(signedCode);

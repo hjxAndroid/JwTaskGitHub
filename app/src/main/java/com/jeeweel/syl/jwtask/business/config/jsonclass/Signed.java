@@ -58,11 +58,24 @@ public class Signed {
      */
     private String sign_user_code;
     /**
+     * 签到人昵称
+     */
+    private String nickname;
+    /**
      * 备注
      */
     private String remark;
     private String create_time;
     private String update_time;
+
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public int getMid() {
         return mid;

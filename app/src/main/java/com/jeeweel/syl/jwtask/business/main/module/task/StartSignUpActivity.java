@@ -106,6 +106,7 @@ public class StartSignUpActivity extends JwActivity {
         userName = StrUtils.IfNull(userNick, userPhone);
         tvUserPic.setText(userPic);
         tvUserName.setText(userName);
+        
         sign.setProuser_name(userName);
         sign.setProuser_code(user.getUser_code());
     }
