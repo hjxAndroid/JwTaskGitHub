@@ -9,7 +9,7 @@
     <dimen name="sign_button">100dp</dimen>
     <dimen name="sign_size">20dp</dimen>
     <dimen name="data_size">15sp</dimen>
-    <dimen name="whole_map_size">120dp</dimen>
+    <dimen name="whole_map_size">140dp</dimen>
     <dimen name="map_size">100dp</dimen>
     <dimen name="data_space_size">30dp</dimen>
     <dimen name="check_sign">20sp</dimen>
