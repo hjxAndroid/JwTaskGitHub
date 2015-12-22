@@ -92,6 +92,11 @@ public class Friend {
      */
     private String choose = "0";
 
+    /**
+     * 图片代码
+     */
+    private String photo_code;
+
     public int getMid() {
         return mid;
     }
@@ -226,6 +231,14 @@ public class Friend {
 
     public void setChoose(String choose) {
         this.choose = choose;
+    }
+
+    public String getPhoto_code() {
+        return photo_code;
+    }
+
+    public void setPhoto_code(String photo_code) {
+        this.photo_code = photo_code;
     }
 }
 

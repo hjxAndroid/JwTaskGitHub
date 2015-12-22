@@ -1,25 +1,32 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
@@ -88,8 +95,22 @@ public class FriendListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_friend) {
             @Override
             public void convert(ViewHolder helper, Friend item) {
+                String friend_nickname=item.getFriend_nickname();
                 helper.setText(R.id.tv_name, item.getFriend_name());
-                helper.setText(R.id.tv_nick_name, item.getFriend_nickname());
+                helper.setText(R.id.tv_nick_name, friend_nickname);
+
+                if(item.getPhoto_code()!=null){
+                    ImageView iv_photo = helper.getImageView(R.id.iv_xz);
+               //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
+                    JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
+                }else {
+                    if (friend_nickname.length()>2) {
+                        friend_nickname = friend_nickname.substring(friend_nickname.length() - 2, friend_nickname.length());
+                        helper.setText(R.id.tv_user_head1,friend_nickname);
+                    }else{
+                        helper.setText(R.id.tv_user_head1,friend_nickname);
+                    }
+                }
             }
         };
         setCommonAdapter(commonAdapter);
@@ -100,7 +121,12 @@ public class FriendListActivity extends JwListActivity {
     @Override
     public void onListItemClick(int position) {
         Friend friend = (Friend) commonAdapter.getItem(position);
-        JwStartActivity(FriendDetailActivity.class, friend.getFriend_name());
+        Intent intent = new Intent();
+        intent.putExtra("friend_code",friend.getFriend_code());
+        intent.putExtra(StaticStrUtils.baseItem, friend.getFriend_name());
+        intent.setClass(FriendListActivity.this, FriendDetailActivity.class);
+        JwStartActivity(intent);
+   //     JwStartActivity(FriendDetailActivity.class, friend.getFriend_name());
     }
 
     @Override
@@ -151,14 +177,33 @@ public class FriendListActivity extends JwListActivity {
                                 "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" + " limit " + pageStart + "," + pageEnd);
                         removeDuplicate(list);
                     }
+
+                    if (ListUtils.IsNotNull(list)) {
+                        result = "1";
+                        for(Friend friend : list){
+                            //取头像
+                            String friend_code = friend.getFriend_code();
+
+                            String sSql = "pic_code=?";
+                            SqlInfo sqlInfo = new SqlInfo();
+                            sqlInfo.setSql(sSql);
+                            sqlInfo.addValue(friend_code);
+                            sSql = sqlInfo.getBuildSql();
+                            List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+                            if (ListUtils.IsNotNull(pictureList)) {
+                                Picture picture = pictureList.get(0);
+                                String path=picture.getPic_road();
+                                if(StrUtils.IsNotEmpty(path)){
+                                    //存头像
+                                    friend.setPhoto_code(path);
+                                }
+                            }
+                        }
+                    } else {
+                        result = "0";
+                    }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
-                }
-
-                if (ListUtils.IsNotNull(list)) {
-                    result = "1";
-                } else {
-                    result = "0";
                 }
             }
 
