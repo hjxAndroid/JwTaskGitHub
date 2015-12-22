@@ -17,6 +17,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.update.UmengUpdateAgent;
 
@@ -129,7 +130,7 @@ public class LoginActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if(result.equals("1")){
-                SharedPreferencesUtils.save(context,"autologin",true);
+                SharedPreferencesUtils.save(context, "autologin", true);
 
                 if(ListUtils.IsNotNull(list)){
                     Users users = list.get(0);
@@ -137,6 +138,7 @@ public class LoginActivity extends JwActivity {
                     finalDb.deleteAll(Users.class);
                     finalDb.save(users);
                     JwAppAplication.getInstance().setUsers(users);
+                    MobclickAgent.onProfileSignIn(users.getUsername());
                 }
                 JwStartActivity(TabHostActivity.class);
                 finish();
