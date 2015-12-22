@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -78,6 +79,8 @@ public class FinishShActivity extends JwActivity {
 
     String wcqk;
     String shpj;
+    CommonAdapter commonAdapter;
+    int score;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,7 @@ public class FinishShActivity extends JwActivity {
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -104,6 +107,16 @@ public class FinishShActivity extends JwActivity {
 
                 if (StrUtils.IsNotEmpty(wcqk) && StrUtils.IsNotEmpty(shpj)) {
                     showLoading();
+                    double sco = 0.01;
+                    if(shpj.equals("优秀")){
+                        sco = task.getDegree_score()*1;
+                    }else if(shpj.equals("良好")){
+                        sco = task.getDegree_score()*(0.5);
+                    }else if(shpj.equals("未完成")){
+                        sco = task.getDegree_score()*(-0.5);
+                    }
+                    score = (int)sco;
+
                     new saveRefresh(getMy()).execute();
                 } else {
                     ToastShow("请完成审核内容");
@@ -122,7 +135,7 @@ public class FinishShActivity extends JwActivity {
     @OnClick(R.id.li_shpj)
     void shpjClick() {
         List<String> mListItems = new ArrayList<>();
-        String[] data = getResources().getStringArray(R.array.zwpj_array);
+        String[] data = getResources().getStringArray(R.array.shpj_array);
 
         for (int i = 0; i < data.length; i++) {
             mListItems.add(data[i]);
@@ -183,18 +196,18 @@ public class FinishShActivity extends JwActivity {
                 }
 
                 if (ListUtils.IsNotNull(pictureList)) {
-                    CommonAdapter commonAdapter = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
+                    CommonAdapter commonAdapter1 = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
                         @Override
                         public void convert(ViewHolder helper, Picture item) {
                             ImageView imageView = helper.getImageView(R.id.img);
                             JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
                         }
                     };
-                    noScrollgridview.setAdapter(commonAdapter);
+                    noScrollgridview.setAdapter(commonAdapter1);
                 }
 
                 if (ListUtils.IsNotNull(taskflows)) {
-                    CommonAdapter commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
+                    commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                         @Override
                         public void convert(ViewHolder helper, Taskflow item) {
                             helper.setText(R.id.tv_nick_name, item.getNickname());
@@ -203,6 +216,36 @@ public class FinishShActivity extends JwActivity {
                         }
                     };
                     listview.setAdapter(commonAdapter);
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            Taskflow taskflow = (Taskflow) commonAdapter.getItem(position);
+                            int state = taskflow.getNow_state();
+                            switch (state) {
+                                case 2:
+                                    //已递交，未审核，查看自己提交的完成情况信息
+                                    JwStartActivity(MyJobDetailActivity.class, taskflow.getTask_code());
+                                    break;
+                                case 3:
+                                    //已审核，查看审核情况
+                                    JwStartActivity(YshActivity.class, taskflow.getTask_code());
+                                    break;
+                                case 4:
+                                    //延期申请中，查看自己的延期信息
+                                    JwStartActivity(SolveDelayActivity.class, taskflow.getTask_code());
+                                    break;
+                                case 7:
+                                    //放弃申请中，查看自己的放弃信息
+                                    Intent intent = new Intent(getMy(), SolveGiveUpActivity.class);
+                                    intent.putExtra("flag", "1");
+                                    intent.putExtra(StaticStrUtils.baseItem, task);
+                                    startActivity(intent);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
                 }
             } else {
 
@@ -267,7 +310,7 @@ public class FinishShActivity extends JwActivity {
 
             if (null != submit) {
                 try {
-                    String sqlsubmit = "update submit set audit_content = '" + wcqk + "' , audit_evaluate = '" + shpj + "' where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                    String sqlsubmit = "update submit set audit_content = '" + wcqk + "' , audit_evaluate = '" + shpj + "',score = "+score +" where task_code = " + StrUtils.QuotedStr(task.getTask_code());
                     CloudDB.execSQL(sqlsubmit);
 
                     if (null != users) {

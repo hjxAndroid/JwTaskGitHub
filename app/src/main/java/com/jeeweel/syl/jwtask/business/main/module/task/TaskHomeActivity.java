@@ -73,7 +73,7 @@ public class TaskHomeActivity extends JwActivity {
         super.onCreate(savedInstanceState);
         setHideBack(true);
         setContentView(R.layout.activity_task_home);
-        setTitle(getString(R.string.任务));
+        setTitle("工作");
         context = this;
         ButterKnife.bind(this);
         initView();
@@ -85,7 +85,7 @@ public class TaskHomeActivity extends JwActivity {
     private void initRight(){
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("切换");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {

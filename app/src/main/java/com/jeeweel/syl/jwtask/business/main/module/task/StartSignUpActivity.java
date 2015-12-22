@@ -19,6 +19,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptAddFriendListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
@@ -147,7 +148,7 @@ public class StartSignUpActivity extends JwActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
                 if (postion == friendList.size() - 1) {
-                    JwStartActivity(DeptAddFriendListActivity.class, Contants.sign);
+                    JwStartActivity(DeptSelectFriendListActivity.class, Contants.sign);
                 }
             }
         });

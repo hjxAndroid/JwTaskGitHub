@@ -357,7 +357,7 @@
             android:layout_marginBottom="10.0dip"
             android:layout_marginLeft="5.0dip"
             android:layout_marginTop="10.0dip"
-            android:text="考核标准"
+            android:text="任务难度"
             android:textColor="@color/list_text_name_color"
             android:textSize="@dimen/textSize_normal" />
 

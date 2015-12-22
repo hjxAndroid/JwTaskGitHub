@@ -66,6 +66,7 @@ public class NewsHomeActivity extends JwActivity {
     List<News> allList = new ArrayList<News>();
 
     CommonAdapter commonAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +78,7 @@ public class NewsHomeActivity extends JwActivity {
         getData();
     }
 
-    private void initView(){
+    private void initView() {
         commonAdapter = new CommonAdapter<News>(getMy(), allList, R.layout.item_news) {
             @Override
             public void convert(ViewHolder helper, News item) {
@@ -89,18 +90,16 @@ public class NewsHomeActivity extends JwActivity {
 
                 //是否有未读
                 ImageView ivnum = helper.getImageView(R.id.iv_task_num);
-
-                if(StrUtils.IsNotEmpty(readstate)&&readstate.equals("0")){
+                TextView tv_time = helper.getView(R.id.tv_task_time);
+                if (StrUtils.IsNotEmpty(readstate) && readstate.equals("0")) {
                     ivnum.setVisibility(View.VISIBLE);
+                    tv_time.setText(item.getCreate_time());
                     //消息标题
-                    if(StrUtils.IsNotEmpty(title)){
-                        helper.setText(R.id.tv_task_news, item.getMsg_title());
-                        helper.setText(R.id.tv_task_time, item.getCreate_time());
-                    }
-                }else{
+                    helper.setText(R.id.tv_task_news, StrUtils.IsNull(item.getMsg_title()));
+                } else {
                     ivnum.setVisibility(View.GONE);
+                    tv_time.setVisibility(View.GONE);
                     helper.setText(R.id.tv_task_news, "暂无消息");
-                    helper.setText(R.id.tv_task_time, "");
                 }
                 ImageView ivhead = helper.getImageView(R.id.iv_head);
                 ivhead.setBackgroundResource(item.getDraw_id());
@@ -112,18 +111,18 @@ public class NewsHomeActivity extends JwActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                switch (position){
-                    case 0 :
+                switch (position) {
+                    case 0:
                         JwStartActivity(PublicyListActivity.class);
                         break;
-                    case 1 :
+                    case 1:
                         JwStartActivity(SignListActivity.class);
                         break;
-                    case 2 :
-                        News news = (News)commonAdapter.getItem(position);
-                        JwStartActivity(TaskJobHomeActivity.class,news);
+                    case 2:
+                        News news = (News) commonAdapter.getItem(position);
+                        JwStartActivity(TaskJobHomeActivity.class, news);
                         break;
-                    default :
+                    default:
                         break;
                 }
 

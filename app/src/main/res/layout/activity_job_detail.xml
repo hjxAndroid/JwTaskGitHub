@@ -36,8 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="@+id/iv_xz"
             android:layout_marginTop="3dp"
-            android:layout_toRightOf="@+id/iv_xz"
-            android:text="黄吉祥" />
+            android:layout_toRightOf="@+id/iv_xz" />
 
         <TextView
             android:id="@+id/tv_now_state"
@@ -46,7 +45,6 @@
             android:layout_below="@+id/tv_nickname"
             android:layout_marginTop="4dp"
             android:layout_toRightOf="@+id/iv_xz"
-            android:text="未确认"
             android:textColor="@color/TextColorGray"
             android:textSize="@dimen/textSize_small" />
 
@@ -97,7 +95,6 @@
             <TextView android:id="@+id/tv_task_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="测试任务"
                 android:textSize="13sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/list_text_color"/>
@@ -119,7 +116,6 @@
             <TextView android:id="@+id/tv_start_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2015-10-20"
                 android:textSize="13sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/list_text_color"/>
@@ -142,7 +138,6 @@
             <TextView android:id="@+id/tv_end_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2015-10-20"
                 android:textSize="13sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/list_text_color"/>
@@ -165,7 +160,6 @@
             <TextView android:id="@+id/tv_fbr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="张三"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textSize="13sp"
@@ -190,7 +184,6 @@
             <TextView android:id="@+id/tv_fzr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="张三"
                 android:maxLines="2"
                 android:ellipsize="end"
                 android:textSize="13sp"
@@ -215,7 +208,6 @@
             <TextView android:id="@+id/tv_shr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="张三"
                 android:textSize="13sp"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -240,7 +232,6 @@
             <TextView android:id="@+id/tv_cyz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="张三"
                 android:textSize="13sp"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -264,7 +255,6 @@
             <TextView android:id="@+id/tv_gcz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="张三"
                 android:textSize="13sp"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -288,7 +278,6 @@
             <TextView android:id="@+id/tv_task_yq"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="明天早上上课"
                 android:textSize="13sp"
                 android:maxLines="2"
                 android:ellipsize="end"
@@ -313,7 +302,6 @@
             <TextView android:id="@+id/tv_yxj"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="中"
                 android:textSize="13sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/list_text_color"/>
@@ -338,7 +326,6 @@
             <TextView android:id="@+id/tv_khbz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="8"
                 android:textSize="13sp"
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/list_text_color"/>

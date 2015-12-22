@@ -10,11 +10,25 @@
     android:background="@drawable/linear_item_bg"
     android:orientation="horizontal">
 
-    <View android:id="@+id/view"
-        android:layout_width="0.5dp"
-        android:layout_height="80dp"
-        android:layout_marginRight="20dp"
-        android:background="@color/gray"/>
+    <LinearLayout android:layout_width="wrap_content"
+        android:layout_height="90dp"
+        android:orientation="vertical"
+        android:layout_marginRight="10dp"
+        android:gravity="center_horizontal"
+        android:id="@+id/view">
+
+        <View android:layout_width="0.5dp"
+            android:layout_height="10dp"
+            android:background="@color/gray"/>
+        <ImageView android:id="@+id/iv_logo"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/circle_gray"/>
+        <View android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="@color/gray"/>
+
+    </LinearLayout>
 
 
 

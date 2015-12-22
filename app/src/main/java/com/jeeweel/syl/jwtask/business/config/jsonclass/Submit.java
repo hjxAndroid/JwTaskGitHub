@@ -85,6 +85,11 @@ public class Submit {
      */
     private String audit_evaluate;
 
+    /**
+     * 审核总分
+     */
+    private String score;
+
     public int getMid() {
         return mid;
     }
@@ -236,6 +241,14 @@ public class Submit {
 
     public void setAudit_evaluate(String audit_evaluate) {
         this.audit_evaluate = audit_evaluate;
+    }
+
+    public String getScore() {
+        return score;
+    }
+
+    public void setScore(String score) {
+        this.score = score;
     }
 }
 

@@ -1,17 +1,21 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -29,15 +33,19 @@ import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import api.view.GridNoScrollView;
 import api.view.ListNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class YshActivity extends JwActivity {
+public class MyJobDetailActivity extends JwActivity {
 
     @Bind(R.id.et_task_name)
     TextView etTaskName;
@@ -51,35 +59,27 @@ public class YshActivity extends JwActivity {
     TextView tvYjfk;
     @Bind(R.id.noScrollgridview)
     GridNoScrollView noScrollgridview;
-    @Bind(R.id.et_shjl)
-    TextView etShjl;
-    @Bind(R.id.li_shpj)
-    LinearLayout liShpj;
-    @Bind(R.id.tv_shpj)
-    TextView tvShpj;
-    @Bind(R.id.li_fb)
-    ScrollView liFb;
 
     Task task;
     Submit submit;
-
-    Activity context;
-
-    Users users;
     @Bind(R.id.listview)
     ListNoScrollView listview;
 
-    CommonAdapter commonAdapter;
-    @Bind(R.id.tv_score)
-    TextView tvScore;
+    private AlertDialog dialog;
+    Activity context;
+
+    Users users;
+
+    String wcqk;
+    String shpj;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ysh);
+        setContentView(R.layout.activity_my_job_detail);
         ButterKnife.bind(this);
+        setTitle("任务完成情况");
         context = this;
-        setTitle("审核详情");
         users = JwAppAplication.getInstance().getUsers();
         getData();
     }
@@ -88,16 +88,13 @@ public class YshActivity extends JwActivity {
     private void getData() {
         showLoading();
         String task_code = getIntent().getStringExtra(StaticStrUtils.baseItem);
-        if (StrUtils.IsNotEmpty(task_code)) {
+        if(StrUtils.IsNotEmpty(task_code)){
             task = new Task();
             task.setTask_code(task_code);
-        } else {
-            task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         }
         showLoading();
         new FinishRefresh(getMy()).execute();
     }
-
 
     /**
      * 保存到数据库
@@ -128,9 +125,9 @@ public class YshActivity extends JwActivity {
 
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
                             "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
+
                     taskflows = jCloudDB.findAllByWhere(Taskflow.class,
                             "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
-
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -150,24 +147,21 @@ public class YshActivity extends JwActivity {
                     tvWcqk.setText(StrUtils.IsNull(submit.getPerformance()));
                     tvYjfk.setText(StrUtils.IsNull(submit.getFeedback()));
                     tvZwpj.setText(StrUtils.IsNull(submit.getEvaluate()));
-                    etShjl.setText(StrUtils.IsNull(submit.getAudit_evaluate()));
-                    tvShpj.setText(StrUtils.IsNull(submit.getAudit_content()));
-                    tvScore.setText(StrUtils.IsNull(submit.getScore()));
                 }
 
                 if (ListUtils.IsNotNull(pictureList)) {
-                    CommonAdapter commonAdapter1 = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
+                    CommonAdapter commonAdapter = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
                         @Override
                         public void convert(ViewHolder helper, Picture item) {
                             ImageView imageView = helper.getImageView(R.id.img);
                             JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
                         }
                     };
-                    noScrollgridview.setAdapter(commonAdapter1);
+                    noScrollgridview.setAdapter(commonAdapter);
                 }
 
                 if (ListUtils.IsNotNull(taskflows)) {
-                    commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
+                    CommonAdapter commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                         @Override
                         public void convert(ViewHolder helper, Taskflow item) {
                             helper.setText(R.id.tv_nick_name, item.getNickname());
@@ -176,36 +170,6 @@ public class YshActivity extends JwActivity {
                         }
                     };
                     listview.setAdapter(commonAdapter);
-                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                            Taskflow taskflow = (Taskflow) commonAdapter.getItem(position);
-                            int state = taskflow.getNow_state();
-                            switch (state) {
-                                case 2:
-                                    //已递交，未审核，查看自己提交的完成情况信息
-                                    JwStartActivity(MyJobDetailActivity.class, taskflow.getTask_code());
-                                    break;
-                                case 3:
-                                    //已审核，查看审核情况
-                                    JwStartActivity(YshActivity.class, taskflow.getTask_code());
-                                    break;
-                                case 4:
-                                    //延期申请中，查看自己的延期信息
-                                    JwStartActivity(SolveDelayActivity.class, taskflow.getTask_code());
-                                    break;
-                                case 7:
-                                    //放弃申请中，查看自己的放弃信息
-                                    Intent intent = new Intent(getMy(), SolveGiveUpActivity.class);
-                                    intent.putExtra("flag", "1");
-                                    intent.putExtra(StaticStrUtils.baseItem, task);
-                                    startActivity(intent);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    });
                 }
             } else {
 
@@ -213,6 +177,5 @@ public class YshActivity extends JwActivity {
             hideLoading();
         }
     }
-
 
 }

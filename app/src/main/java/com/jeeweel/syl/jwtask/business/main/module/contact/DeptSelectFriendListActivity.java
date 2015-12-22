@@ -113,7 +113,7 @@ public class DeptSelectFriendListActivity extends JwListActivity {
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -131,11 +131,11 @@ public class DeptSelectFriendListActivity extends JwListActivity {
                 if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.group)){
                     OttUtils.push(Contants.group,json);
                     finish();
-                }
-
-                //签到添加好友请求
-                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.sign)){
+                }else if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.sign)){
                     OttUtils.push(Contants.sign,json);
+                    finish();
+                }else{
+                    OttUtils.push(tag,json);
                     finish();
                 }
             }

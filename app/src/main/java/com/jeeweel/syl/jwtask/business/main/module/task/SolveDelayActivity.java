@@ -3,7 +3,9 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
@@ -17,7 +19,6 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 
 import java.util.List;
 
@@ -50,6 +51,9 @@ public class SolveDelayActivity extends JwActivity {
     Applydelay applydelay;
 
     int flag = 0;
+    @Bind(R.id.li_bt)
+    LinearLayout liBt;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,8 +78,16 @@ public class SolveDelayActivity extends JwActivity {
     }
 
     private void getData() {
-        task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        String task_code = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        if (StrUtils.IsNotEmpty(task_code)) {
+            task = new Task();
+            task.setTask_code(task_code);
+            liBt.setVisibility(View.GONE);
+        } else {
+            task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        }
         if (null != task) {
+            showLoading();
             new FinishRefresh(getMy()).execute();
         }
     }
@@ -159,7 +171,7 @@ public class SolveDelayActivity extends JwActivity {
             try {
                 if (null != applydelay) {
                     String sql = "";
-                    if(flag==0){
+                    if (flag == 0) {
                         sql = "update task set now_state = 5 , now_state_name = '已延期',over_time =" + StrUtils.QuotedStr(applydelay.getApply_delay_time()) + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(task.getAuditor_code());
                         CloudDB.execSQL(sql);
                         //保存到流程表里
@@ -169,7 +181,7 @@ public class SolveDelayActivity extends JwActivity {
                         taskflow.setNow_state_name(Contants.yyq);
                         taskflow.setUser_action(Contants.action_yqtg);
                         jCloudDB.save(taskflow);
-                    }else if(flag==1){
+                    } else if (flag == 1) {
                         sql = "update task set now_state = 6 , now_state_name = '延期驳回' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(task.getAuditor_code());
                         CloudDB.execSQL(sql);
                         //保存到流程表里
@@ -196,7 +208,7 @@ public class SolveDelayActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 ToastShow("操作成功");
-                OttUtils.push("delay_refresh","");
+                OttUtils.push("delay_refresh", "");
                 finish();
             } else {
                 ToastShow("操作失败");

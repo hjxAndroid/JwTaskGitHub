@@ -189,11 +189,7 @@
                     android:textColorHint="@color/text_gray"
                     android:textSize="@dimen/textSize_normal"
                     android:textColor="@color/list_text_name_color"/>
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/arrow_right" />
+/>
             </LinearLayout>
 
         </LinearLayout>

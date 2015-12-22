@@ -78,6 +78,18 @@ public class TaskJobHomeActivity extends JwActivity {
 
         data = getResources().getStringArray(R.array.job_home_array);
 
+        if(news!=null){
+            String readState = news.getReadstate();
+            //已读
+            if(readState.equals("1")){
+                news.setAuditor_state("0");
+                news.setPrincipal_state("0");
+                news.setParticipant_state("0");
+                news.setObserver_state("0");
+            }
+        }
+
+        //从首页过来
         if(null==news){
             news = new News();
             news.setAuditor_state("0");
