@@ -26,6 +26,7 @@ import java.util.List;
 
 import api.util.Contants;
 import cn.smssdk.SMSSDK;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
  * Created by asusa on 2015/11/5.
@@ -53,6 +54,12 @@ public class JwAppAplication extends JeeweelApplication {
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        //设置整个APP的地址
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/RobotoCondensed-Regular.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
         PublicColors.setNavicationBarColorRID(R.color.bottom_background);
         PublicColors.setTextColorRID(R.color.black);
         //短信验证
