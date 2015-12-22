@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -185,6 +186,7 @@ public class JobFzListActivity extends JwListActivity {
             if (result.equals("1")) {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
+                OttUtils.push("news_refresh","");
             } else {
                 //没有加载到数据
             }
@@ -198,6 +200,12 @@ public class JobFzListActivity extends JwListActivity {
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
         if (msg.equals("fz_refresh")) {
+            new FinishRefresh(getMy(), 0).execute();
+        }else if (msg.equals("job_refresh")) {
+            new FinishRefresh(getMy(), 0).execute();
+        }else if (msg.equals("yyq_refresh")){
+            new FinishRefresh(getMy(), 0).execute();
+        }else if (msg.equals("give_refresh")){
             new FinishRefresh(getMy(), 0).execute();
         }
     }

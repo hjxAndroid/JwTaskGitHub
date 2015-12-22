@@ -16,6 +16,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.AddHomeActivity;
+import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptUsersListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendListActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.adapter.ExpandableAdapter;
+import api.util.Contants;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,7 +63,8 @@ public class PublicyContactHomeActivity extends JwActivity {
 
     @OnClick(R.id.rl_friend)
     void friendClick() {
-        JwStartActivity(FriendListActivity.class);
+        JwStartActivity(DeptSelectFriendListActivity.class, tag);
+        finish();
     }
 
 
@@ -142,7 +145,7 @@ public class PublicyContactHomeActivity extends JwActivity {
                             intent.putExtra(StaticStrUtils.baseItem,userdept);
                             intent.putExtra("tag",tag);
                             startActivity(intent);
-
+                            finish();
                             return true;
                         }
                     });

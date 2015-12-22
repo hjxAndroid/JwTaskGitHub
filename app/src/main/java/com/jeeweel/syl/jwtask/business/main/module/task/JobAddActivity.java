@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -18,23 +20,27 @@ import android.widget.TextView;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.DegreeItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.more.DateTimePickDialogUtil;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 
 import com.squareup.otto.Subscribe;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -47,7 +53,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class JobAddActivity extends JwActivity{
+public class JobAddActivity extends JwActivity {
 
 
     @Bind(R.id.et_task_name)
@@ -94,7 +100,12 @@ public class JobAddActivity extends JwActivity{
 
     String orgname;
 
-    int timeFlag= 0;
+    int timeFlag = 0;
+
+    DegreeItem item;
+
+    String timeData = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,7 +123,7 @@ public class JobAddActivity extends JwActivity{
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -182,6 +193,8 @@ public class JobAddActivity extends JwActivity{
         String rwyq = etRwyq.getText().toString();
         if (StrUtils.IsNotEmpty(rwyq)) {
             task.setTask_request(rwyq);
+        } else {
+            return null;
         }
 
 
@@ -193,20 +206,70 @@ public class JobAddActivity extends JwActivity{
 
         String khbz = etKhbz.getText().toString();
         if (StrUtils.IsNotEmpty(khbz)) {
-            task.setAssess_standard(khbz);
+            task.setDegree(khbz);
+            if (null != item) {
+                task.setDegree_score(item.getDegree_score());
+            }
         }
 
         return task;
+    }
+
+
+    /**
+     * 创建日期及时间选择对话框
+     */
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Dialog dialog = null;
+
+        if (StrUtils.IsNotEmpty(timeData)) {
+            String[] data = timeData.split("-");
+            int year = Integer.parseInt(data[0]);
+            int mouth = Integer.parseInt(data[1]);
+            int day = Integer.parseInt(data[2]);
+            dialog = new android.app.DatePickerDialog(
+                    this,
+                    new android.app.DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            if (timeFlag == 0) {
+                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            } else {
+                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            }
+                        }
+                    },
+                    year, // 传入年份
+                    mouth, // 传入月份
+                    day // 传入天数
+            );
+        } else {
+            Calendar c = Calendar.getInstance();
+            dialog = new android.app.DatePickerDialog(
+                    this,
+                    new android.app.DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            if (timeFlag == 0) {
+                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            } else {
+                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            }
+                        }
+                    },
+                    c.get(Calendar.YEAR), // 传入年份
+                    c.get(Calendar.MONTH), // 传入月份
+                    c.get(Calendar.DAY_OF_MONTH) // 传入天数
+            );
+        }
+        return dialog;
     }
 
     //开始时间
     @OnClick(R.id.li_start_time)
     void starttimeClick() {
         timeFlag = 0;
-        String starttime = etStartTime.getText().toString();
-        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                JobAddActivity.this, starttime);
-        dateTimePicKDialog.dateTimePicKDialog(etStartTime);
+        timeData = etStartTime.getText().toString();
+        showDialog(0);
     }
 
 
@@ -214,10 +277,8 @@ public class JobAddActivity extends JwActivity{
     @OnClick(R.id.li_end_time)
     void endtimeClick() {
         timeFlag = 1;
-        String endtiem = etEndTime.getText().toString();
-        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                JobAddActivity.this, endtiem);
-        dateTimePicKDialog.dateTimePicKDialog(etEndTime);
+        timeData = etEndTime.getText().toString();
+        showDialog(0);
     }
 
 
@@ -259,13 +320,27 @@ public class JobAddActivity extends JwActivity{
 
     @OnClick(R.id.li_khbz)
     void khbzClick() {
-        List<String> mListItems = new ArrayList<String>();
-        String[] data = getResources().getStringArray(R.array.khbz_array);
+        List<DegreeItem> mListItems = new ArrayList<DegreeItem>();
+        DegreeItem degreeItem = new DegreeItem();
+        degreeItem.setDegree("简单");
+        degreeItem.setDegree_score(2);
+        mListItems.add(degreeItem);
 
-        for (int i = 0; i < data.length; i++) {
-            mListItems.add(data[i]);
-        }
-        showDialog(1, mListItems);
+        DegreeItem degreeItem1 = new DegreeItem();
+        degreeItem1.setDegree("一般");
+        degreeItem1.setDegree_score(4);
+        mListItems.add(degreeItem1);
+
+        DegreeItem degreeItem2 = new DegreeItem();
+        degreeItem2.setDegree("困难");
+        degreeItem2.setDegree_score(6);
+        mListItems.add(degreeItem2);
+
+        DegreeItem degreeItem3 = new DegreeItem();
+        degreeItem3.setDegree("极难");
+        degreeItem3.setDegree_score(8);
+        mListItems.add(degreeItem3);
+        showDegreeDialog(1, mListItems);
     }
 
 
@@ -307,13 +382,62 @@ public class JobAddActivity extends JwActivity{
         });
     }
 
+    private void showDegreeDialog(final int postion, List<DegreeItem> mListItems) {
+
+        dialog = new AlertDialog.Builder(getMy()).create();// 创建一个AlertDialog对象
+        View view = context.getLayoutInflater().inflate(R.layout.item_task_dialog,
+                null);// 自定义布局
+        dialog.setView(view, 0, 0, 0, 0);// 把自定义的布局设置到dialog中，注意，布局设置一定要在show之前。从第二个参数分别填充内容与边框之间左、上、右、下、的像素
+        dialog.show();// 一定要先show出来再设置dialog的参数，不然就不会改变dialog的大小了
+        int width = context.getWindowManager().getDefaultDisplay().getWidth();// 得到当前显示设备的宽度，单位是像素
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();// 得到这个dialog界面的参数对象
+        params.width = width - (width / 6);// 设置dialog的界面宽度
+        params.height = WindowManager.LayoutParams.WRAP_CONTENT;// 设置dialog高度为包裹内容
+        params.gravity = Gravity.CENTER;// 设置dialog的重心
+        dialog.getWindow().setAttributes(params);// 最后把这个参数对象设置进去，即与dialog绑定
+
+        ListView listView = (ListView) view.findViewById(R.id.listview);
+
+        final CommonAdapter commonAdapter = new CommonAdapter<DegreeItem>(getMy(), mListItems, R.layout.item_friend_detail) {
+            @Override
+            public void convert(ViewHolder helper, DegreeItem item) {
+                helper.setText(R.id.tv_org_name, item.getDegree());
+            }
+        };
+        listView.setAdapter(commonAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                item = (DegreeItem) commonAdapter.getItem(position);
+                //紧急程度
+                etKhbz.setText(item.getDegree());
+                dialog.cancel();
+            }
+        });
+    }
+
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        List<Userdept> userdepts;
         String msg = activityMsgEvent.getMsg();
-        String json = activityMsgEvent.getParam();
+        String json = activityMsgEvent.getParam1();
+        if (StrUtils.IsNotEmpty(json)) {
+            userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+        } else {
+            json = activityMsgEvent.getParam();
+            List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
+            userdepts = new ArrayList<>();
+            for (Friend friend : friends) {
+                Userdept userdept = new Userdept();
+                userdept.setUser_code(friend.getFriend_code());
+                userdept.setNickname(friend.getFriend_nickname());
+                userdepts.add(userdept);
+            }
+        }
+
+
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
             if (StrUtils.IsNotEmpty(json)) {
-                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
                     for (Userdept userdept : userdepts) {
@@ -332,7 +456,6 @@ public class JobAddActivity extends JwActivity{
 
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.shr)) {
             if (StrUtils.IsNotEmpty(json)) {
-                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
                     for (Userdept userdept : userdepts) {
@@ -350,7 +473,6 @@ public class JobAddActivity extends JwActivity{
             }
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.gcz)) {
             if (StrUtils.IsNotEmpty(json)) {
-                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
                     for (Userdept userdept : userdepts) {
@@ -368,7 +490,6 @@ public class JobAddActivity extends JwActivity{
             }
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.cyz)) {
             if (StrUtils.IsNotEmpty(json)) {
-                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
                     for (Userdept userdept : userdepts) {
@@ -411,7 +532,7 @@ public class JobAddActivity extends JwActivity{
             if (null != task) {
                 try {
                     String unid = Utils.getUUid();
-                    if(null!=users){
+                    if (null != users) {
                         task.setTask_code(unid);
                         task.setPromulgator_code(users.getUser_code());
                         task.setPromulgator_name(users.getUsername());
@@ -421,8 +542,8 @@ public class JobAddActivity extends JwActivity{
                         task.setNow_state_name(Contants.wqr);
                     }
 
-                    if(StrUtils.IsNotEmpty(orgcode)){
-                        task.setTask_code(orgcode);
+                    if (StrUtils.IsNotEmpty(orgcode)) {
+                        task.setOrg_code(orgcode);
                         task.setOrg_name(orgname);
                     }
 
@@ -434,7 +555,7 @@ public class JobAddActivity extends JwActivity{
                     taskflow.setTask_code(unid);
                     taskflow.setNow_state(0);
                     taskflow.setNow_state_name(Contants.wqr);
-                    taskflow.setUser_action(Contants.action_qr);
+                    taskflow.setUser_action(Contants.action_fb);
                     jCloudDB.save(taskflow);
 
                 } catch (CloudServiceException e) {
@@ -450,6 +571,7 @@ public class JobAddActivity extends JwActivity{
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                pushData();
                 ToastShow("任务发布成功");
                 finish();
             } else {
@@ -464,13 +586,80 @@ public class JobAddActivity extends JwActivity{
         if (activityMsgEvent.getMsg().equals("dateTimePick")) {
             String birthday = activityMsgEvent.getJson();
             if (StrUtils.IsNotEmpty(birthday)) {
-                if(timeFlag==0){
+                if (timeFlag == 0) {
                     etStartTime.setText(birthday);
-                }else{
+                } else {
                     etEndTime.setText(birthday);
                 }
             }
         }
     }
 
+
+    public void pushData() {
+        if (task != null) {
+            String title = task.getTask_name();
+            String content = task.getTask_request();
+
+            String all_code = "";
+            String fzr = task.getPrincipal_code();
+            String shr = task.getAuditor_code();
+            String cyz = task.getParticipant_code();
+            String gcz = task.getObserver_code();
+
+            if(StrUtils.IsNotEmpty(fzr)){
+                all_code += fzr;
+            }
+
+            if(StrUtils.IsNotEmpty(shr)){
+                all_code += ","+shr;
+            }
+
+            if(StrUtils.IsNotEmpty(cyz)){
+                all_code += ","+cyz;
+            }
+
+            if(StrUtils.IsNotEmpty(gcz)){
+                all_code += ","+gcz;
+            }
+
+            if (StrUtils.IsNotEmpty(title) && StrUtils.IsNotEmpty(content)) {
+                try {
+                    title = URLEncoder.encode(URLEncoder.encode(title, "utf-8"), "utf-8");
+                    content = URLEncoder.encode(URLEncoder.encode(content, "utf-8"), "utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String param = "?all_code=" + all_code + "&title=" + title + "&content=" + content;
+            String apiStr = Utils.getPushUrl() + param;
+            JwHttpGet(apiStr, true);
+        }
+    }
+
+    @Override
+    public void HttpSuccess(ResMsgItem resMsgItem) {
+        if (OUtils.IsNotNull(resMsgItem)) {
+            if (resMsgItem != null) {
+                int error = resMsgItem.getStatus();
+                String sMsg = resMsgItem.getMsg();
+                if (error == 1 || error == 99) {
+                    CroutonINFO(sMsg);
+                } else {
+                }
+            }
+            finish();
+        }
+    }
+
+    @Override
+    public void HttpFail(String strMsg) {
+        super.HttpFail(strMsg);
+    }
+
+    @Override
+    public void HttpFinish() {
+        super.HttpFinish();
+    }
 }

@@ -14,8 +14,11 @@ import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -32,6 +35,7 @@ import api.adapter.CheckAdapter;
 import api.adapter.CheckFriendAdapter;
 import api.util.Contants;
 import api.util.OttUtils;
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -58,12 +62,14 @@ public class DeptSelectFriendListActivity extends JwListActivity {
     private String tag = "";
 
 
-    private Userdept userdept;
+    private Userdept udept;
 
     private int checkNum; // 记录选中的条目数量
     private TextView tv_show;// 用于显示选中的条目数量
 
     Users users;
+
+    List<Friend> friends = new ArrayList<Friend>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +82,9 @@ public class DeptSelectFriendListActivity extends JwListActivity {
 
         users = JwAppAplication.getInstance().getUsers();
         tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.dept_add_friend)) {
+            udept = (Userdept) getIntent().getSerializableExtra("userdept");
+        }
 
         initRight();
         initListView();
@@ -113,29 +122,34 @@ public class DeptSelectFriendListActivity extends JwListActivity {
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                List<Friend> friends = new ArrayList<Friend>();
                 HashMap<Integer, Boolean> isSelected = checkAdapter.getIsSelected();
                 for (int i = 0; i < isSelected.size(); i++) {
-                    if(isSelected.get(i)){
+                    if (isSelected.get(i)) {
                         friends.add(mListItems.get(i));
                     }
                 }
                 Gson gson = new Gson();
                 String json = gson.toJson(friends);
 
-                //部门添加好友请求
-                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.group)){
-                    OttUtils.push(Contants.group,json);
+                //添加自己的好友到部门请求
+                if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.dept_add_friend)) {
+                    showLoading();
+                    new AddRefresh(getMy()).execute();
+                    //部门添加好友请求
+                } else if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.group)) {
+                    OttUtils.push(Contants.group, json);
                     finish();
-                }
-
-                //签到添加好友请求
-                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.sign)){
-                    OttUtils.push(Contants.sign,json);
+                    //签到请求
+                } else if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.sign)) {
+                    OttUtils.push(Contants.sign, json);
+                    finish();
+                } else {
+                    //发布任务请求
+                    OttUtils.push(tag, json);
                     finish();
                 }
             }
@@ -214,6 +228,85 @@ public class DeptSelectFriendListActivity extends JwListActivity {
         } else {
             pageStart += addNum;
             pageEnd += addNum;
+        }
+    }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class AddRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public AddRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+            try {
+                if (null != udept && ListUtils.IsNotNull(friends)) {
+                    //添加到部门用户表
+                    for (Friend friend : friends) {
+
+                        List<Userdept> list = jCloudDB.findAllByWhere(Userdept.class,
+                                "user_code=" + StrUtils.QuotedStr(friend.getFriend_code()));
+                        if (ListUtils.IsNull(list)) {
+
+                            Userdept userdept = new Userdept();
+                            userdept.setOrg_code(udept.getOrg_code());
+                            userdept.setOrg_name(udept.getOrg_name());
+                            userdept.setDept_code(udept.getDept_code());
+                            userdept.setDept_name(udept.getDept_name());
+                            userdept.setUser_code(friend.getFriend_code());
+                            userdept.setUsername(friend.getFriend_name());
+                            userdept.setNickname(friend.getFriend_nickname());
+                            jCloudDB.save(userdept);
+
+                            //添加到组织用户表
+                            Userorg userorg = new Userorg();
+                            userorg.setOrg_code(udept.getOrg_code());
+                            userorg.setOrg_name(udept.getOrg_name());
+                            userorg.setUser_code(friend.getFriend_code());
+                            userorg.setUser_name(friend.getFriend_name());
+                            userorg.setNickname(friend.getFriend_nickname());
+                            jCloudDB.save(userorg);
+
+                        } else {
+                            result = "2";
+                        }
+
+                    }
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            hideLoading();
+            if (result.equals("1")) {
+                ToastShow("创建成功");
+                OttUtils.push("deptAdd_refresh", "");
+                finish();
+            } else if(result.equals("2")){
+                ToastShow("请选择不在该组织的用户");
+            }else {
+                ToastShow("创建失败");
+            }
+
         }
     }
 }

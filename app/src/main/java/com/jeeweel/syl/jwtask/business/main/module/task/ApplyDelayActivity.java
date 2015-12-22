@@ -1,9 +1,11 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,13 +19,14 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.more.DateTimePickDialogUtil;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+
+import java.util.Calendar;
 
 import api.util.Contants;
 import api.util.OttUtils;
@@ -51,6 +54,7 @@ public class ApplyDelayActivity extends JwActivity {
     Applydelay applydelay;
     @Bind(R.id.li_yqs1)
     LinearLayout liYqs1;
+    String timeData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,19 +66,58 @@ public class ApplyDelayActivity extends JwActivity {
         getData();
     }
 
+    /**
+     * 创建日期及时间选择对话框
+     */
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        Dialog dialog = null;
+
+        if (StrUtils.IsNotEmpty(timeData)) {
+            String[] data = timeData.split("-");
+            int year = Integer.parseInt(data[0]);
+            int mouth = Integer.parseInt(data[1]);
+            int day = Integer.parseInt(data[2]);
+            dialog = new android.app.DatePickerDialog(
+                    this,
+                    new android.app.DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            tvSqyqsj.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                        }
+                    },
+                    year, // 传入年份
+                    mouth, // 传入月份
+                    day // 传入天数
+            );
+        } else {
+            Calendar c = Calendar.getInstance();
+            dialog = new android.app.DatePickerDialog(
+                    this,
+                    new android.app.DatePickerDialog.OnDateSetListener() {
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            tvSqyqsj.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                        }
+                    },
+                    c.get(Calendar.YEAR), // 传入年份
+                    c.get(Calendar.MONTH), // 传入月份
+                    c.get(Calendar.DAY_OF_MONTH) // 传入天数
+            );
+        }
+        return dialog;
+    }
+
+
     //开始时间
     @OnClick(R.id.li_yqs1)
     void starttimeClick() {
-        String time = tvSqyqsj.getText().toString();
-        DateTimePickDialogUtil dateTimePicKDialog = new DateTimePickDialogUtil(
-                ApplyDelayActivity.this, time);
-        dateTimePicKDialog.dateTimePicKDialog(tvSqyqsj);
+        timeData = tvSqyqsj.getText().toString();
+        showDialog(0);
     }
 
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -98,7 +141,7 @@ public class ApplyDelayActivity extends JwActivity {
                 applydelay.setApply_delay_time(StrUtils.IsNull(sqyqsj));
                 applydelay.setApply_reason(StrUtils.IsNull(sqly));
 
-                if(null!=users){
+                if (null != users) {
                     applydelay.setApply_user_code(users.getUser_code());
                     applydelay.setApply_username(users.getUsername());
                     applydelay.setApply_nickname(users.getNickname());
@@ -175,7 +218,7 @@ public class ApplyDelayActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 ToastShow("任务发布成功");
-                OttUtils.push("yyq_refresh","");
+                OttUtils.push("yyq_refresh", "");
                 finish();
             } else {
                 ToastShow("保存失败");

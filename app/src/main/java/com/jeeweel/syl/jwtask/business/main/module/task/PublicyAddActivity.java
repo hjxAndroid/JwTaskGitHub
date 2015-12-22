@@ -38,14 +38,17 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.photo.GetPicActivity;
 import com.jeeweel.syl.jwtask.business.main.module.photo.PhotoActivity;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 import api.photoview.Bimp;
 import api.photoview.FileUtils;
@@ -83,7 +86,7 @@ public class PublicyAddActivity extends JwActivity {
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("下一步");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -424,6 +427,7 @@ public class PublicyAddActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 OttUtils.push("publicy_refresh","");
+                pushData();
                 ToastShow("保存成功");
                 finish();
             } else {
@@ -431,5 +435,53 @@ public class PublicyAddActivity extends JwActivity {
             }
             hideLoading();
         }
+    }
+
+
+    public void pushData() {
+        if (publicity != null) {
+            String title = publicity.getPublicity_title();
+            String content = publicity.getPublicity_content();
+
+            String org_code = publicity.getAccept_org_code();
+
+            if (StrUtils.IsNotEmpty(title) && StrUtils.IsNotEmpty(content)) {
+                try {
+                    title = URLEncoder.encode(URLEncoder.encode(title, "utf-8"), "utf-8");
+                    content = URLEncoder.encode(URLEncoder.encode(content, "utf-8"), "utf-8");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            String param = "?org_code=" + org_code + "&title=" + title + "&content=" + content;
+            String apiStr = Utils.getPushUrl() + param;
+            JwHttpGet(apiStr, true);
+        }
+    }
+
+    @Override
+    public void HttpSuccess(ResMsgItem resMsgItem) {
+        if (OUtils.IsNotNull(resMsgItem)) {
+            if (resMsgItem != null) {
+                int error = resMsgItem.getStatus();
+                String sMsg = resMsgItem.getMsg();
+                if (error == 1 || error == 99) {
+                    CroutonINFO(sMsg);
+                } else {
+                }
+            }
+            finish();
+        }
+    }
+
+    @Override
+    public void HttpFail(String strMsg) {
+        super.HttpFail(strMsg);
+    }
+
+    @Override
+    public void HttpFinish() {
+        super.HttpFinish();
     }
 }

@@ -3,22 +3,20 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Applydelay;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
-import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-
-import java.util.List;
 
 import api.util.Contants;
 import api.util.OttUtils;
@@ -45,6 +43,8 @@ public class SolveGiveUpActivity extends JwActivity {
 
     Task task;
     int flag = 0;
+    @Bind(R.id.li_bt)
+    LinearLayout liBt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +71,10 @@ public class SolveGiveUpActivity extends JwActivity {
 
     private void getData() {
         task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        String flag = getIntent().getStringExtra("flag");
+        if (StrUtils.IsNotEmpty(flag)) {
+            liBt.setVisibility(View.GONE);
+        }
         if (null != task) {
             tvRmw.setText(StrUtils.IsNull(task.getTask_name()));
             tvKssj.setText(StrUtils.IsNull(task.getBegin_time()));

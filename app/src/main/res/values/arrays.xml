@@ -54,4 +54,9 @@
         <item>未完成</item>
     </string-array>
 
+    <string-array name="shpj_array">
+        <item>优秀</item>
+        <item>良好</item>
+        <item>未完成</item>
+    </string-array>
 </resources>

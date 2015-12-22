@@ -20,6 +20,8 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.jeeweel.syl.lib.api.core.otto.OttoBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -118,7 +120,12 @@ public class PublicyUsersListActivity extends JwActivity {
                 }
                 Gson gson = new Gson();
                 String json = gson.toJson(userdepts);
-                OttUtils.push(tag,json);
+
+                ActivityMsgEvent activityMsgEvent = new ActivityMsgEvent();
+                activityMsgEvent.setMsg(tag);
+                activityMsgEvent.setParam1(json);
+                OttoBus.getDefault().post(activityMsgEvent);
+
                 finish();
             }
         });

@@ -12,18 +12,15 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
     <!-- 友盟推送 -->
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!-- 可选 -->
@@ -35,7 +32,6 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
 
     <permission
@@ -278,7 +274,7 @@
         <activity
             android:name=".business.main.module.task.StartSignUpActivity"
             android:label="@string/title_activity_start_sign_up"
-            android:windowSoftInputMode="stateHidden|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity
             android:name=".business.main.module.more.SettingActivity"
@@ -437,7 +433,8 @@
         </activity>
         <activity
             android:name=".business.main.module.task.ApplyDelayActivity"
-            android:label="@string/title_activity_apply_delay" >
+            android:label="@string/title_activity_apply_delay"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
         </activity>
         <activity
             android:name=".business.main.module.task.SolveDelayActivity"
@@ -449,27 +446,33 @@
         </activity>
         <activity
             android:name=".business.main.module.task.ApplyGiveUpActivity"
-            android:label="@string/title_activity_apply_give_up" >
+            android:label="@string/title_activity_apply_give_up"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
         </activity>
         <activity
             android:name=".business.main.module.task.SolveGiveUpActivity"
-            android:label="@string/title_activity_solve_give_up" >
+            android:label="@string/title_activity_solve_give_up"
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
         </activity>
         <activity
             android:name=".business.main.module.task.SignOptionsActivity"
-            android:label="@string/title_activity_sign_options">
+            android:label="@string/title_activity_sign_options" >
         </activity>
         <activity
             android:name=".business.main.module.task.MyStartSignUpActivity"
-            android:label="@string/title_activity_my_start_sign_up">
+            android:label="@string/title_activity_my_start_sign_up" >
         </activity>
         <activity
             android:name=".business.main.module.task.CheckSignPersonActivity"
-            android:label="@string/title_activity_check_sign_person">
+            android:label="@string/title_activity_check_sign_person" >
         </activity>
         <activity
             android:name=".business.main.module.task.CheckOutSignActivity"
-            android:label="@string/title_activity_check_out_sign">
+            android:label="@string/title_activity_check_out_sign" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.MyJobDetailActivity"
+            android:label="@string/title_activity_my_job_detail" >
         </activity>
     </application>
 

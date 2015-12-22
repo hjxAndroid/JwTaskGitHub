@@ -61,7 +61,7 @@ public class TaskJobHomeActivity extends JwActivity {
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("发布");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -78,6 +78,18 @@ public class TaskJobHomeActivity extends JwActivity {
 
         data = getResources().getStringArray(R.array.job_home_array);
 
+        if(news!=null){
+            String readState = news.getReadstate();
+            //已读
+            if(readState.equals("1")){
+                news.setAuditor_state("0");
+                news.setPrincipal_state("0");
+                news.setParticipant_state("0");
+                news.setObserver_state("0");
+            }
+        }
+
+        //从首页过来
         if(null==news){
             news = new News();
             news.setAuditor_state("0");

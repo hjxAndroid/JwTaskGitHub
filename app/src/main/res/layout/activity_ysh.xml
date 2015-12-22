@@ -248,6 +248,35 @@
                 android:textColor="@color/list_text_name_color"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/settings_up_select"
+            android:gravity="center_vertical"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10.0dip"
+                android:layout_marginLeft="5.0dip"
+                android:layout_marginTop="10.0dip"
+                android:text="评价总分"
+                android:textColor="@color/list_text_name_color"
+                android:textSize="@dimen/textSize_normal" />
+
+            <TextView
+                android:id="@+id/tv_score"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10.0dip"
+                android:layout_weight="1.0"
+                android:maxLines="5"
+                android:textSize="@dimen/textSize_normal"
+                android:textColor="@color/list_text_name_color"/>
+        </LinearLayout>
+
 
         <api.view.ListNoScrollView
             android:id="@id/listview"

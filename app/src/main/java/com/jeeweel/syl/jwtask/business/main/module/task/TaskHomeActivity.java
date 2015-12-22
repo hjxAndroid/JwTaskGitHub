@@ -69,12 +69,11 @@ public class TaskHomeActivity extends JwActivity {
     List<Userorg> mListItems;
 
     private Activity context;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideBack(true);
         setContentView(R.layout.activity_task_home);
-        setTitle("任务");
+        setTitle("工作");
         context = this;
         ButterKnife.bind(this);
         initView();
@@ -83,10 +82,10 @@ public class TaskHomeActivity extends JwActivity {
 
     }
 
-    private void initRight() {
+    private void initRight(){
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("切换");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -206,9 +205,9 @@ public class TaskHomeActivity extends JwActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Userorg userorg = (Userorg) commonAdapter.getItem(position);
-                SharedPreferencesUtils.save(getMy(), Contants.org_code, userorg.getOrg_code());
-                SharedPreferencesUtils.save(getMy(), Contants.org_name, userorg.getOrg_name());
+                Userorg userorg = (Userorg)commonAdapter.getItem(position);
+                SharedPreferencesUtils.save(getMy(), Contants.org_code,userorg.getOrg_code());
+                SharedPreferencesUtils.save(getMy(), Contants.org_name,userorg.getOrg_name());
                 dialog.cancel();
             }
         });
@@ -236,7 +235,7 @@ public class TaskHomeActivity extends JwActivity {
             JCloudDB jCloudDB = new JCloudDB();
 
             Users users = JwAppAplication.getInstance().getUsers();
-            if (null != users) {
+            if(null!=users){
                 try {
                     mListItems = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(users.getUsername()));
@@ -252,9 +251,9 @@ public class TaskHomeActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.equals("1")) {
+            if(result.equals("1")){
 
-            } else {
+            }else{
                 ToastShow("组织获取出错");
             }
             hideLoading();

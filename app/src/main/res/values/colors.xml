@@ -340,4 +340,6 @@
 
     <!--底部蓝色-->
     <color name="bottom_background">#f9f9f9</color>
+    <!--返回蓝色-->
+    <color name="back_blue">#38adff</color>
 </resources>

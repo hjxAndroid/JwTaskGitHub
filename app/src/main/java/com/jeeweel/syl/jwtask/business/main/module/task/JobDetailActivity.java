@@ -94,6 +94,8 @@ public class JobDetailActivity extends JwActivity {
      */
     private Task task;
     String flag;
+    CommonAdapter commonAdapter;
+    List<Taskflow> taskflows;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,63 +132,70 @@ public class JobDetailActivity extends JwActivity {
             tvKhbz.setText(StrUtils.IsNull(task.getAssess_standard()));
 
             int state = task.getNow_state();
-            if (state == 1) {
-                btQrjs.setText("已确认");
-                btQrjs.setClickable(false);
-                btSqyq.setClickable(true);
-            } else if (state == 2) {
-                btQrjs.setText("已确认");
-                btQrjs.setClickable(false);
-                btSqyq.setClickable(false);
 
-                btDjsh.setText("已递交");
-                btDjsh.setClickable(false);
-                btSqyq.setClickable(false);
-            } else if(state == 3){
-                //已审核,任务已完结
-                btQrjs.setVisibility(View.GONE);
-                btDjsh.setVisibility(View.GONE);
-                btSqyq.setVisibility(View.GONE);
-                btFqrw.setVisibility(View.GONE);
-            }else if(state == 4){
-                btQrjs.setText("已确认");
-                btQrjs.setClickable(false);
-                btSqyq.setText("延期申请中");
-            }else if(state == 5){
-                btQrjs.setText("已确认");
-                btQrjs.setClickable(false);
+            switch (state) {
+                case 0:
+                    btDjsh.setClickable(false);
+                    break;
+                case 1:
+                    btQrjs.setText("已确认");
+                    btQrjs.setClickable(false);
+                    btSqyq.setClickable(true);
+                    break;
+                case 2:
+                    btQrjs.setText("已确认");
+                    btQrjs.setClickable(false);
+                    btSqyq.setClickable(false);
 
-                btSqyq.setClickable(false);
-                btSqyq.setText("延期通过");
-            }else if(state == 6){
-                btQrjs.setText("已确认");
-                btQrjs.setClickable(false);
+                    btDjsh.setText("已递交");
+                    btDjsh.setClickable(false);
+                    btSqyq.setClickable(false);
+                    break;
+                case 3:
+                    //已审核,任务已完结
+                    liBt.setVisibility(View.GONE);
+                    break;
+                case 4:
+                    btQrjs.setText("已确认");
+                    btQrjs.setClickable(false);
+                    btSqyq.setText("延期申请中");
+                    break;
+                case 5:
+                    btQrjs.setText("已确认");
+                    btQrjs.setClickable(false);
 
-                btSqyq.setClickable(false);
-                btSqyq.setText("延期驳回");
-            }else if(state == 7){
-                btFqrw.setClickable(false);
-                btFqrw.setText("放弃申请中");
-                //其他按钮都不可点
-                btQrjs.setClickable(false);
-                btDjsh.setClickable(false);
-                btSqyq.setClickable(false);
-            }else if(state == 8){
-                btFqrw.setClickable(false);
-                btFqrw.setText("任务已放弃");
-                //其他按钮都不可点
-                btQrjs.setClickable(false);
-                btDjsh.setClickable(false);
-                btSqyq.setClickable(false);
-            }else if(state == 9){
-                btFqrw.setClickable(false);
-                btFqrw.setText("放弃驳回");
-                //其他按钮都恢复可点
-                btQrjs.setClickable(true);
-                btDjsh.setClickable(true);
-                btSqyq.setClickable(true);
-            }else{
-                btSqyq.setClickable(false);
+                    btSqyq.setClickable(false);
+                    btSqyq.setText("延期通过");
+                    break;
+                case 6:
+                    btQrjs.setText("已确认");
+                    btQrjs.setClickable(false);
+
+                    btSqyq.setClickable(false);
+                    btSqyq.setText("延期驳回");
+                    break;
+                case 7:
+                    btFqrw.setClickable(false);
+                    btFqrw.setText("放弃申请中");
+                    //其他按钮都不可点
+                    btQrjs.setClickable(false);
+                    btDjsh.setClickable(false);
+                    btSqyq.setClickable(false);
+                    break;
+                case 8:
+                    //任务已放弃
+                    liBt.setVisibility(View.GONE);
+                    break;
+                case 9:
+                    btFqrw.setClickable(false);
+                    btFqrw.setText("放弃驳回");
+                    //其他按钮都恢复可点
+                    btQrjs.setClickable(true);
+                    btDjsh.setClickable(true);
+                    btSqyq.setClickable(true);
+                    break;
+                default:
+                    break;
             }
 
             showLoading();
@@ -232,7 +241,6 @@ public class JobDetailActivity extends JwActivity {
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
         private JCloudDB jCloudDB;
-        List<Taskflow> taskflows;
         List<Task> tasks;
 
         /**
@@ -288,7 +296,7 @@ public class JobDetailActivity extends JwActivity {
                 }
 
 
-                CommonAdapter commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
+                commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                     @Override
                     public void convert(ViewHolder helper, Taskflow item) {
                         helper.setText(R.id.tv_nick_name, item.getNickname());
@@ -300,7 +308,31 @@ public class JobDetailActivity extends JwActivity {
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        //commonAdapter.getItem(position);
+                        Taskflow taskflow = (Taskflow) commonAdapter.getItem(position);
+                        int state = taskflow.getNow_state();
+                        switch (state) {
+                            case 2:
+                                //已递交，未审核，查看自己提交的完成情况信息
+                                JwStartActivity(MyJobDetailActivity.class, taskflow.getTask_code());
+                                break;
+                            case 3:
+                                //已审核，查看审核情况
+                                JwStartActivity(YshActivity.class, taskflow.getTask_code());
+                                break;
+                            case 4:
+                                //延期申请中，查看自己的延期信息
+                                JwStartActivity(SolveDelayActivity.class, taskflow.getTask_code());
+                                break;
+                            case 7:
+                                //放弃申请中，查看自己的放弃信息
+                                Intent intent = new Intent(getMy(), SolveGiveUpActivity.class);
+                                intent.putExtra("flag", "1");
+                                intent.putExtra(StaticStrUtils.baseItem, task);
+                                startActivity(intent);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 });
             } else {
@@ -365,7 +397,7 @@ public class JobDetailActivity extends JwActivity {
                 btSqyq.setClickable(true);
 
                 //通知列表更新
-                OttUtils.push("fz_refresh","");
+                OttUtils.push("fz_refresh", "");
             } else {
                 ToastShow("操作失败");
             }
@@ -380,11 +412,14 @@ public class JobDetailActivity extends JwActivity {
         if (msg.equals("job_refresh")) {
             btDjsh.setText("已递交");
             btDjsh.setClickable(false);
-        }else if(msg.equals("yyq_refresh")){
+            new TaskFlowRefresh(getMy()).execute();
+        } else if (msg.equals("yyq_refresh")) {
             btSqyq.setText("延期申请中");
-        }else if(msg.equals("give_refresh")){
+            new TaskFlowRefresh(getMy()).execute();
+        } else if (msg.equals("give_refresh")) {
             btFqrw.setText("放弃申请中");
             btFqrw.setClickable(false);
+            new TaskFlowRefresh(getMy()).execute();
         }
     }
 
@@ -470,4 +505,54 @@ public class JobDetailActivity extends JwActivity {
             hideLoading();
         }
     }
+
+    /**
+     * 刷新任务流程
+     */
+    private class TaskFlowRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+        List<Taskflow> taskflowNews;
+
+        /**
+         * @param context 上下文
+         */
+        public TaskFlowRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+
+            try {
+                taskflowNews = jCloudDB.findAllByWhere(Taskflow.class,
+                        "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                if (ListUtils.IsNotNull(taskflowNews)) {
+                    taskflows.clear();
+                    taskflowNews.addAll(taskflowNews);
+                    commonAdapter.notifyDataSetChanged();
+                }
+            } else {
+                ToastShow("数据获取失败");
+            }
+            hideLoading();
+        }
+    }
+
 }

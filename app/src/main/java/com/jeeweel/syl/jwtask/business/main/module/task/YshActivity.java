@@ -2,8 +2,11 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -66,6 +69,10 @@ public class YshActivity extends JwActivity {
     @Bind(R.id.listview)
     ListNoScrollView listview;
 
+    CommonAdapter commonAdapter;
+    @Bind(R.id.tv_score)
+    TextView tvScore;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +87,14 @@ public class YshActivity extends JwActivity {
 
     private void getData() {
         showLoading();
-        task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        String task_code = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        if (StrUtils.IsNotEmpty(task_code)) {
+            task = new Task();
+            task.setTask_code(task_code);
+        } else {
+            task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        }
+        showLoading();
         new FinishRefresh(getMy()).execute();
     }
 
@@ -138,21 +152,22 @@ public class YshActivity extends JwActivity {
                     tvZwpj.setText(StrUtils.IsNull(submit.getEvaluate()));
                     etShjl.setText(StrUtils.IsNull(submit.getAudit_evaluate()));
                     tvShpj.setText(StrUtils.IsNull(submit.getAudit_content()));
+                    tvScore.setText(StrUtils.IsNull(submit.getScore()));
                 }
 
                 if (ListUtils.IsNotNull(pictureList)) {
-                    CommonAdapter commonAdapter = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
+                    CommonAdapter commonAdapter1 = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
                         @Override
                         public void convert(ViewHolder helper, Picture item) {
                             ImageView imageView = helper.getImageView(R.id.img);
                             JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
                         }
                     };
-                    noScrollgridview.setAdapter(commonAdapter);
+                    noScrollgridview.setAdapter(commonAdapter1);
                 }
 
                 if (ListUtils.IsNotNull(taskflows)) {
-                    CommonAdapter commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
+                    commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                         @Override
                         public void convert(ViewHolder helper, Taskflow item) {
                             helper.setText(R.id.tv_nick_name, item.getNickname());
@@ -161,6 +176,36 @@ public class YshActivity extends JwActivity {
                         }
                     };
                     listview.setAdapter(commonAdapter);
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            Taskflow taskflow = (Taskflow) commonAdapter.getItem(position);
+                            int state = taskflow.getNow_state();
+                            switch (state) {
+                                case 2:
+                                    //已递交，未审核，查看自己提交的完成情况信息
+                                    JwStartActivity(MyJobDetailActivity.class, taskflow.getTask_code());
+                                    break;
+                                case 3:
+                                    //已审核，查看审核情况
+                                    JwStartActivity(YshActivity.class, taskflow.getTask_code());
+                                    break;
+                                case 4:
+                                    //延期申请中，查看自己的延期信息
+                                    JwStartActivity(SolveDelayActivity.class, taskflow.getTask_code());
+                                    break;
+                                case 7:
+                                    //放弃申请中，查看自己的放弃信息
+                                    Intent intent = new Intent(getMy(), SolveGiveUpActivity.class);
+                                    intent.putExtra("flag", "1");
+                                    intent.putExtra(StaticStrUtils.baseItem, task);
+                                    startActivity(intent);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
                 }
             } else {
 

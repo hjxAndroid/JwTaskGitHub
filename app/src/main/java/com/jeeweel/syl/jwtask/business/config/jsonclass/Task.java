@@ -30,6 +30,8 @@ public class Task extends BaseItem{
      * 预留组织ID
      */
     private int org_id;
+
+    private String org_code;
     /**
      * 预留组织名称
      */
@@ -162,6 +164,18 @@ public class Task extends BaseItem{
      * @return
      */
     private String give_up_content;
+
+    /**
+     * 任务难度
+     * @return
+     */
+    private String degree;
+
+    /**
+     * 对应分数
+     * @return
+     */
+    private int degree_score;
 
     public String getPhoto_code() {
         return photo_code;
@@ -449,6 +463,30 @@ public class Task extends BaseItem{
 
     public void setGive_up_content(String give_up_content) {
         this.give_up_content = give_up_content;
+    }
+
+    public String getOrg_code() {
+        return org_code;
+    }
+
+    public void setOrg_code(String org_code) {
+        this.org_code = org_code;
+    }
+
+    public String getDegree() {
+        return degree;
+    }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    public int getDegree_score() {
+        return degree_score;
+    }
+
+    public void setDegree_score(int degree_score) {
+        this.degree_score = degree_score;
     }
 }
 
