@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main.module.more;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import android.content.Context;
 import android.net.Uri;
@@ -28,12 +29,17 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.umeng.analytics.MobclickAgent;
+
+import net.tsz.afinal.FinalDb;
+
+import api.util.OttUtils;
 
 public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private static final int IMAGE_REQUEST_CODE = 0;
@@ -45,6 +51,7 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private ImageView mImageHeader;
     Users users;
     String sFile;
+    String user_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +62,9 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         initRight();
 
         users = JwAppAplication.getInstance().users;
-        String user_code = users.getUser_code();
+        user_code = users.getUser_code();
         String pic_road=users.getPic_road();
-        if(com.jeeweel.syl.jcloudlib.db.utils.StrUtils.IsNotEmpty(pic_road)){
+        if(StrUtils.IsNotEmpty(pic_road)){
             JwImageLoader.displayImage(pic_road, mImageHeader);
         }
     }
@@ -203,6 +210,7 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
         private JCloudDB jCloudDB;
+        List<Users> list;
 
         /**
          * @param context 上下文
@@ -221,7 +229,6 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         protected String doInBackground(String... params) {
 
             String result = "1";
-            String user_code = users.getUser_code();
             if (StrUtils.IsNotEmpty(user_code)) {
                 try {
                     //保存图片表
@@ -232,6 +239,12 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
                     sSql = sqlInfo.getBuildSql();
                     jCloudDB.deleteByWhere(Picture.class, sSql);
                     CloudFile.upload(sFile, user_code);
+                    String uSql = "SELECT * FROM v_users_pic where user_code=?";
+                    SqlInfo usqlInfo = new SqlInfo();
+                    usqlInfo.setSql(uSql);
+                    usqlInfo.addValue(user_code);
+                    uSql = usqlInfo.getBuildSql();
+                    list = jCloudDB.findAllBySql(Users.class, uSql);
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -243,7 +256,17 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                SharedPreferencesUtils.save(context, "autologin", true);
 
+                if (ListUtils.IsNotNull(list)) {
+                    Users users = list.get(0);
+                    FinalDb finalDb = JwAppAplication.getInstance().finalDb;
+                    finalDb.deleteAll(Users.class);
+                    finalDb.save(users);
+                    JwAppAplication.getInstance().setUsers(users);
+                    MobclickAgent.onProfileSignIn(users.getUsername());
+                    OttUtils.push("photo_refresh","");
+                }
             } else {
                 ToastShow("上传失败");
             }

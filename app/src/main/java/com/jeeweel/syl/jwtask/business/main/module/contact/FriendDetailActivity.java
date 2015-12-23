@@ -80,7 +80,9 @@ public class FriendDetailActivity extends JwActivity {
             initView();
         }
         String friend_code = intent.getStringExtra("friend_code");
-        new GetUserPicture(getMy(), iv, friend_code).execute();
+        if(StrUtils.IsNotEmpty(friend_code)){
+            new GetUserPicture(getMy(), iv, friend_code).execute();
+        }
     }
 
     private void initView() {

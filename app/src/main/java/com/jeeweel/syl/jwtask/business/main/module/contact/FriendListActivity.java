@@ -100,7 +100,7 @@ public class FriendListActivity extends JwListActivity {
                 helper.setText(R.id.tv_nick_name, item.getFriend_name());
                 helper.setText(R.id.tv_name, friend_nickname);
 
-                if (item.getPhoto_code() != null) {
+                if (StrUtils.IsNotEmpty(item.getPhoto_code())) {
                     ImageView iv_photo = helper.getImageView(R.id.iv_xz);
                     //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
                     JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
@@ -123,10 +123,12 @@ public class FriendListActivity extends JwListActivity {
     public void onListItemClick(int position) {
         Friend friend = (Friend) commonAdapter.getItem(position);
         Intent intent = new Intent();
-        intent.putExtra("friend_code", friend.getFriend_code());
-        intent.putExtra(StaticStrUtils.baseItem, friend.getFriend_name());
-        intent.setClass(FriendListActivity.this, FriendDetailActivity.class);
-        JwStartActivity(intent);
+        if(null!=friend){
+            intent.putExtra("friend_code", friend.getFriend_code());
+            intent.putExtra(StaticStrUtils.baseItem, friend.getFriend_name());
+            intent.setClass(FriendListActivity.this, FriendDetailActivity.class);
+            JwStartActivity(intent);
+        }
         //     JwStartActivity(FriendDetailActivity.class, friend.getFriend_name());
     }
 

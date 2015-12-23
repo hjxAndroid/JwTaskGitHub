@@ -13,6 +13,8 @@ import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.Bind;
@@ -107,5 +109,14 @@ public class MoreHomeActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
+    @Subscribe
+    public void changePhoto(ActivityMsgEvent activityMsgEvent) {
+        if (activityMsgEvent.getMsg().equals("photo_refresh")) {
+            users = JwAppAplication.getInstance().users;
+            String pic_road=users.getPic_road();
+            if(StrUtils.IsNotEmpty(pic_road)){
+                JwImageLoader.displayImage(pic_road,iv_user_head2);
+            }
+        }
+    }
 }
