@@ -12,6 +12,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import butterknife.Bind;
@@ -57,9 +58,10 @@ public class MoreHomeActivity extends JwActivity {
                 }
             }
         }
-
-
-        new GetUserPicture(getMy(), iv_user_head2, user_code).execute();
+        String pic_road=users.getPic_road();
+        if(StrUtils.IsNotEmpty(pic_road)){
+            JwImageLoader.displayImage(pic_road, iv_user_head2);
+        }
         MobclickAgent.onResume(this);
     }
 

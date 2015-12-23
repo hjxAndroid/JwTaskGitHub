@@ -1,10 +1,9 @@
 package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
-
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
 
-import java.sql.Date;
+import api.util.Utils;
 
 /**
  * @author 苏逸龙 317616660@qq.com
@@ -38,6 +37,8 @@ public class Users {
     private String update_time;
     private String email;
     private String device_token;
+    private String pic_road;
+    private String pic_exists;
 
     public String getPhoto_code() {
         return photo_code;
@@ -181,6 +182,22 @@ public class Users {
 
     public void setDevice_token(String device_token) {
         this.device_token = device_token;
+    }
+
+    public String getPic_road() {
+        return pic_road;
+    }
+
+    public void setPic_road(String pic_road) {
+        this.pic_road = Utils.getPicUrl()+pic_road;
+    }
+
+    public String isPic_exists() {
+        return pic_exists;
+    }
+
+    public void setPic_exists(String pic_exists) {
+        this.pic_exists = pic_exists;
     }
 }
 

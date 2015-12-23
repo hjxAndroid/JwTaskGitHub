@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -114,8 +115,13 @@ public class LoginActivity extends JwActivity {
             String phone = params[1].toString();
             JCloudDB jCloudDB = new JCloudDB();
             try {
-                list = jCloudDB.findAllByWhere(Users.class,
-                        "username=" + StrUtils.QuotedStr(phone) + "and password=" + StrUtils.QuotedStr(pwd));
+                String sSql = "SELECT * FROM v_users_pic where username=? and password=?";
+                SqlInfo sqlInfo = new SqlInfo();
+                sqlInfo.setSql(sSql);
+                sqlInfo.addValue(phone);
+                sqlInfo.addValue(pwd);
+                sSql = sqlInfo.getBuildSql();
+                list = jCloudDB.findAllBySql(Users.class,sSql);
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
