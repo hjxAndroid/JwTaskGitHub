@@ -244,7 +244,7 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(birthday)) {
             String[] data = birthday.split("-");
             int year = Integer.parseInt(data[0]);
-            int mouth = Integer.parseInt(data[1]);
+            int mouth = Integer.parseInt(data[1])-1;
             int day = Integer.parseInt(data[2]);
             dialog = new DatePickerDialog(
                     this,

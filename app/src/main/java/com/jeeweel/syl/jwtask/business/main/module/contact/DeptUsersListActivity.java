@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -21,6 +24,7 @@ import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListVi
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
@@ -29,7 +33,6 @@ import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,20 +64,18 @@ public class DeptUsersListActivity extends JwListActivity {
 
 
     private Userdept userdept;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
-        userdept = (Userdept) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
-        if (null != userdept) {
+        userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        if(null!=userdept){
             setTitle(userdept.getDept_name());
         }
         ButterKnife.bind(this);
         initListViewController();
         initView();
     }
-
     private void initView() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("添加");
@@ -82,23 +83,36 @@ public class DeptUsersListActivity extends JwListActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
-                intent.putExtra("userdept", userdept);
-                intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
+                Intent intent = new Intent(getMy(),DeptSelectFriendListActivity.class);
+                intent.putExtra("userdept",userdept);
+                intent.putExtra(StaticStrUtils.baseItem,Contants.dept_add_friend);
                 startActivity(intent);
                 finish();
             }
         });
         addMenuView(menuTextView);
     }
-
     @Override
     public void initListViewController() {
         commonAdapter = new CommonAdapter<Userdept>(getMy(), mListItems, R.layout.item_friend) {
             @Override
             public void convert(ViewHolder helper, Userdept item) {
+                String nickname=item.getNickname();
                 helper.setText(R.id.tv_name, item.getUsername());
-                helper.setText(R.id.tv_nick_name, item.getNickname());
+                helper.setText(R.id.tv_nick_name, nickname);
+
+                if(item.getPhoto_code()!=null){
+                    ImageView iv_photo = helper.getImageView(R.id.iv_xz);
+                    //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
+                    JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
+                }else {
+                    if (nickname.length()>2) {
+                        nickname = nickname.substring(nickname.length() - 2, nickname.length());
+                        helper.setText(R.id.tv_user_head1,nickname);
+                    }else{
+                        helper.setText(R.id.tv_user_head1,nickname);
+                    }
+                }
             }
         };
         setCommonAdapter(commonAdapter);
@@ -107,24 +121,25 @@ public class DeptUsersListActivity extends JwListActivity {
 
 
     @Override
-    public void onListItemClick(int position) {
-        Userdept userdept = (Userdept) commonAdapter.getItem(position);
+    public void onListItemClick(int position){
+        Userdept userdept = (Userdept)commonAdapter.getItem(position);
         Intent intent = new Intent();
-        intent.putExtra("flag", true);
+        intent.putExtra("flag",true);
         intent.putExtra(StaticStrUtils.baseItem, userdept.getUsername());
-        intent.setClass(DeptUsersListActivity.this, FriendDetailActivity.class);
+        intent.putExtra("friend_code",userdept.getUser_code());
+        intent.setClass(DeptUsersListActivity.this,FriendDetailActivity.class);
         JwStartActivity(intent);
-        //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
+   //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
     }
 
     @Override
-    public void onListViewHeadRefresh() {
+    public void onListViewHeadRefresh(){
         showLoading();
         new FinishRefresh(getMy(), 0).execute();
     }
 
     @Override
-    public void onListViewFooterRefresh() {
+    public void onListViewFooterRefresh(){
         showLoading();
         new FinishRefresh(getMy(), 1).execute();
     }
@@ -136,11 +151,11 @@ public class DeptUsersListActivity extends JwListActivity {
         private Context context;
         private int mode = 0;
         private JCloudDB jCloudDB;
-
         /**
          * @param context 上下文
          */
-        public FinishRefresh(Context context, int mode) {
+        public FinishRefresh(Context context,int mode)
+        {
             this.context = context;
             this.mode = mode;
             jCloudDB = new JCloudDB();
@@ -151,27 +166,48 @@ public class DeptUsersListActivity extends JwListActivity {
 
             String result = "0";
 
-            if (null != userdept) {
+            if(null!=userdept){
                 try {
-                    if (mode == 0) {
+                    if(mode == 0 ){
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Userdept.class,
-                                "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd);
+                                "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit "+pageStart+","+pageEnd);
                         mListItems.clear();
-                    } else {
+                    }else{
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Userdept.class,
-                                "user_name = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd);
+                                "user_name = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit "+pageStart+","+pageEnd);
                     }
+
+                    if (ListUtils.IsNotNull(list)) {
+                        result = "1";
+                        for (Userdept userdept : list) {
+                            //取头像
+                            String friend_code = userdept.getUser_code();
+
+                            String sSql = "pic_code=?";
+                            SqlInfo sqlInfo = new SqlInfo();
+                            sqlInfo.setSql(sSql);
+                            sqlInfo.addValue(friend_code);
+                            sSql = sqlInfo.getBuildSql();
+                            List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+                            if (ListUtils.IsNotNull(pictureList)) {
+                                Picture picture = pictureList.get(0);
+                                String path = picture.getPic_road();
+                                if (StrUtils.IsNotEmpty(path)) {
+                                    //存头像
+                                    userdept.setPhoto_code(path);
+                                }
+                            }
+                        }
+                        }else{
+                            result = "0";
+                        }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
 
-                if (ListUtils.IsNotNull(list)) {
-                    result = "1";
-                } else {
-                    result = "0";
-                }
+
             }
 
             return result;
@@ -179,10 +215,10 @@ public class DeptUsersListActivity extends JwListActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.equals("1")) {
+            if(result.equals("1")){
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
-            } else {
+            }else{
                 //没有加载到数据
             }
             listview.onRefreshComplete();
@@ -191,28 +227,16 @@ public class DeptUsersListActivity extends JwListActivity {
     }
 
     /**
-     * 分页增数
+     *分页增数
      */
 
-    private void setPage(boolean tag) {
-        if (tag) {
+    private void setPage(boolean tag){
+        if(tag){
             pageStart = 0;
             pageEnd = 10;
-        } else {
+        }else{
             pageStart += addNum;
             pageEnd += addNum;
         }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 }
