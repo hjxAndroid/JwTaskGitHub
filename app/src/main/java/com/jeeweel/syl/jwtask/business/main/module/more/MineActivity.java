@@ -96,6 +96,9 @@ public class MineActivity extends JwActivity {
         addMenuView(menuTextView);
     }
 
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -142,9 +145,8 @@ public class MineActivity extends JwActivity {
         }
         String pic_road=users.getPic_road();
         if(StrUtils.IsNotEmpty(pic_road)){
-            JwImageLoader.displayImage(pic_road,iv_user_head2);
+            JwImageLoader.displayImage(pic_road, iv_user_head2);
         }
-
     }
 
     @Override
@@ -310,16 +312,16 @@ public class MineActivity extends JwActivity {
         JwStartActivity(intent);
     }
 
-    //    @Subscribe
-//    public void dateTimeSelect(ActivityMsgEvent activityMsgEvent) {
-//        if (activityMsgEvent.getMsg().equals("dateTimePick")) {
-//            birthday = activityMsgEvent.getJson();
-//            if (StrUtils.IsNotEmpty(birthday)) {
-//                tv_birthday.setText(birthday);
-//                new saveBirthday(getMy()).execute();
-//            }
-//        }
-//    }
+    @Subscribe
+    public void changePhoto(ActivityMsgEvent activityMsgEvent) {
+        if (activityMsgEvent.getMsg().equals("photo_refresh")) {
+            users = JwAppAplication.getInstance().users;
+            String pic_road=users.getPic_road();
+            if(StrUtils.IsNotEmpty(pic_road)){
+                JwImageLoader.displayImage(pic_road,iv_user_head2);
+            }
+        }
+    }
     @Override
     public void onPause() {
         super.onPause();

@@ -185,11 +185,11 @@ public class Users {
     }
 
     public String getPic_road() {
-        return pic_road;
+        return Utils.getPicUrl()+pic_road;
     }
 
     public void setPic_road(String pic_road) {
-        this.pic_road = Utils.getPicUrl()+pic_road;
+        this.pic_road = pic_road;
     }
 
     public String isPic_exists() {
