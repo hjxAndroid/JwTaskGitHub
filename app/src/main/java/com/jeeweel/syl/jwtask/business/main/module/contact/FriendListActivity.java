@@ -97,8 +97,8 @@ public class FriendListActivity extends JwListActivity {
             @Override
             public void convert(ViewHolder helper, Friend item) {
                 String friend_nickname = item.getFriend_nickname();
-                helper.setText(R.id.tv_name, item.getFriend_name());
-                helper.setText(R.id.tv_nick_name, friend_nickname);
+                helper.setText(R.id.tv_nick_name, item.getFriend_name());
+                helper.setText(R.id.tv_name, friend_nickname);
 
                 if (item.getPhoto_code() != null) {
                     ImageView iv_photo = helper.getImageView(R.id.iv_xz);

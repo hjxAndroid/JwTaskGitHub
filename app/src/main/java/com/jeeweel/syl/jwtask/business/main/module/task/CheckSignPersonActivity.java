@@ -131,77 +131,77 @@ public class CheckSignPersonActivity extends JwListActivity {
 
     private void getData() {
         signedCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
-        SqlInfo sqlInfo = new SqlInfo();
-        sqlInfo.setSql("SELECT " +
-                "*" +
-                " FROM " +
-                " signed " +
-                " where sign_code= ? " +
-                " GROUP BY " +
-                " sign_code, " +
-                " sign_user_code ");
-        sqlInfo.addValue(signedCode);
-        String sql = sqlInfo.getBuildSql();
-        JCloudDB jCloudDB = new JCloudDB();
-        jCloudDB.findAllBySql(sql, new FindAllListener<Signed>() {
-            @Override
-            public void onStart() {
-                showLoading();
-            }
+//        SqlInfo sqlInfo = new SqlInfo();
+//        sqlInfo.setSql("SELECT " +
+//                "*" +
+//                " FROM " +
+//                " signed " +
+//                " where sign_code= ? " +
+//                " GROUP BY " +
+//                " sign_code, " +
+//                " sign_user_code ");
+//        sqlInfo.addValue(signedCode);
+//        String sql = sqlInfo.getBuildSql();
+//        JCloudDB jCloudDB = new JCloudDB();
+//        jCloudDB.findAllBySql(sql, new FindAllListener<Signed>() {
+//            @Override
+//            public void onStart() {
+//                showLoading();
+//            }
+//
+//            @Override
+//            public void onSuccess(List<Signed> t) {
+//                if (ListUtils.IsNotNull(t)) {
+//                    alreadySigned = t.size();
+//                    tvAlreadySigned = "" + alreadySigned;
+//
+//                } else {
+//                    tvAlreadySigned = "0";
+//                }
+//                alreadySignedCounts.setText("已签到" + tvAlreadySigned + "人");
+//
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                hideLoading();
+//            }
+//        });
+//
+//        String sqlSign = " sign_code = " +
+//                StrUtils.QuotedStr(signedCode);
+//        jCloudDB.findAllByWhere(sqlSign, new FindAllListener<Sign>() {
+//            @Override
+//            public void onStart() {
+//                showLoading();
+//            }
+//
+//            @Override
+//            public void onSuccess(List<Sign> t) {
+//                if (ListUtils.IsNotNull(t)) {
+//                    sign = t.get(0);
+//                    String receiceCode = sign.getReceive_code();
+//                    if (receiceCode.contains(",")) {
+//                        sumReceiver = receiceCode.split(",");
+//                        sum = sumReceiver.length;
+//                        unSign = sum - alreadySigned;
+//                        tvUnsign = "" + unSign;
+//                    } else {
+//                        sum = 1;
+//                        unSign = sum - alreadySigned;
+//                        tvUnsign = "" + unSign;
+//                    }
+//                }
+//                unsignCounts.setText("未签到" + tvUnsign + "人");
+//            }
+//
+//            @Override
+//            public void onFinish() {
+//                hideLoading();
+//            }
+//        });
 
-            @Override
-            public void onSuccess(List<Signed> t) {
-                if (ListUtils.IsNotNull(t)) {
-                    alreadySigned = t.size();
-                    tvAlreadySigned = "" + alreadySigned;
-
-                } else {
-                    tvAlreadySigned = "0";
-                }
-                alreadySignedCounts.setText("已经签到" + tvAlreadySigned + "人");
-
-            }
-
-            @Override
-            public void onFinish() {
-                hideLoading();
-            }
-        });
-
-        String sqlSign = " sign_code = " +
-                StrUtils.QuotedStr(signedCode);
-        jCloudDB.findAllByWhere(sqlSign, new FindAllListener<Sign>() {
-            @Override
-            public void onStart() {
-                showLoading();
-            }
-
-            @Override
-            public void onSuccess(List<Sign> t) {
-                if (ListUtils.IsNotNull(t)) {
-                    sign = t.get(0);
-                    String receiceCode = sign.getReceive_code();
-                    if (receiceCode.contains(",")) {
-                        sumReceiver = receiceCode.split(",");
-                        sum = sumReceiver.length;
-                        unSign = sum - alreadySigned;
-                        tvUnsign = "" + unSign;
-                    } else {
-                        sum = 1;
-                        unSign = sum - alreadySigned;
-                        tvUnsign = "" + unSign;
-                    }
-                }
-                unsignCounts.setText("未签到" + tvUnsign + "人");
-            }
-
-            @Override
-            public void onFinish() {
-                hideLoading();
-            }
-        });
-
-        /*new FinishRefreshCounts(getMy()).execute();*/
+        new FinishRefreshCounts(getMy()).execute();
     }
 
 
@@ -383,8 +383,8 @@ public class CheckSignPersonActivity extends JwListActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            alreadySignedCounts.setText(tvAlreadySigned);
-            unsignCounts.setText(tvUnsign);
+            alreadySignedCounts.setText("已签到" + tvAlreadySigned + "人");
+            unsignCounts.setText("未签到" + tvUnsign + "人");
             hideLoading();
         }
     }

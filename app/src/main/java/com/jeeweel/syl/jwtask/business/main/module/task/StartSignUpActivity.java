@@ -104,9 +104,13 @@ public class StartSignUpActivity extends JwActivity {
         userNick = user.getNickname();
         userPhone = user.getUsername();
         if (StrUtils.IsNotEmpty(userNick)) {
-            userPic = userNick.substring(userNick.length() - 2, userNick.length());
+            if (userNick.length() > 2) {
+                userPic = userNick.substring(userNick.length() - 2, userNick.length());
+            } else {
+                userPic = userNick;
+            }
         } else {
-            userPic = "";
+            userPic = "姓名";
         }
         userName = StrUtils.IfNull(userNick, userPhone);
         tvUserPic.setText(userPic);
@@ -167,17 +171,18 @@ public class StartSignUpActivity extends JwActivity {
             if (StrUtils.IsNotEmpty(json)) {
                 friends = JwJSONUtils.getParseArray(json, Friend.class);
 
-                if (friendList.size() == 1) {
-                    friendList.remove(0);
-                } else {
-                    friendList.remove(friendList.size() - 1);
-                }
+//                if (friendList.size() == 1) {
+//                    friendList.remove(0);
+//                } else {
+//                    friendList.remove(friendList.size() - 1);
+//
+//                }
+                friendList.clear();
                 friendList.addAll(friends);
                 Friend friend = new Friend();
                 friend.setContent("1");
                 friend.setFriend_nickname("123");
                 friendList.add(friend);
-
                 signAdapter.notifyDataSetChanged();
             }
         }
