@@ -21,6 +21,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.message.UmengRegistrar;
 
 import net.tsz.afinal.FinalDb;
@@ -44,6 +45,7 @@ public class RegisterLastActivity extends JwActivity {
     private String phone = "";
     List<Users> list = null;
     private String device_token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,14 +61,14 @@ public class RegisterLastActivity extends JwActivity {
         String pwd = etPwd.getText().toString();
         String confirmPwd = etConfirm.getText().toString();
 
-        if(StrUtils.IsNotEmpty(pwd)&&StrUtils.IsNotEmpty(confirmPwd)){
-            if(pwd.equals(confirmPwd)){
+        if (StrUtils.IsNotEmpty(pwd) && StrUtils.IsNotEmpty(confirmPwd)) {
+            if (pwd.equals(confirmPwd)) {
                 showLoading();
-                new FinishRefresh(getMy()).execute(pwd,phone);
-            }else{
+                new FinishRefresh(getMy()).execute(pwd, phone);
+            } else {
                 ToastShow("两次密码不一样");
             }
-        }else{
+        } else {
             ToastShow("请完善密码信息");
         }
 
@@ -79,6 +81,7 @@ public class RegisterLastActivity extends JwActivity {
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
         Users users = new Users();
+
         /**
          * @param context 上下文
          */
@@ -96,7 +99,7 @@ public class RegisterLastActivity extends JwActivity {
             users.setPassword(pwd);
             users.setUsername(phone);
             users.setUser_code(Utils.getUUid());
-            if(StrUtils.IsNotEmpty(device_token)){
+            if (StrUtils.IsNotEmpty(device_token)) {
                 users.setDevice_token(device_token);
             }
 
@@ -116,7 +119,7 @@ public class RegisterLastActivity extends JwActivity {
                     result = "0";
                 }
 
-            }else{
+            } else {
                 result = "2";
             }
 
@@ -125,30 +128,41 @@ public class RegisterLastActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-              if(result.equals("1")){
+            if (result.equals("1")) {
 
-                  FinalDb finalDb = JwAppAplication.getInstance().finalDb;
-                  finalDb.deleteAll(Users.class);
-                  finalDb.save(users);
-                  JwAppAplication.getInstance().setUsers(users);
+                FinalDb finalDb = JwAppAplication.getInstance().finalDb;
+                finalDb.deleteAll(Users.class);
+                finalDb.save(users);
+                JwAppAplication.getInstance().setUsers(users);
 
-                  SharedPreferencesUtils.save(context, "autologin", true);
+                SharedPreferencesUtils.save(context, "autologin", true);
 
-                  Intent intent=new Intent();
-                  intent.putExtra("register", true);
-                  intent.putExtra("title", "设置昵称");
-                  intent.setClass(RegisterLastActivity.this, MineEditnameActivity.class);
-                  JwStartActivity(intent);
-        //          JwStartActivity(TabHostActivity.class);
+                Intent intent = new Intent();
+                intent.putExtra("register", true);
+                intent.putExtra("title", "设置昵称");
+                intent.setClass(RegisterLastActivity.this, MineEditnameActivity.class);
+                JwStartActivity(intent);
+                //          JwStartActivity(TabHostActivity.class);
 
-              }else if(result.equals("2")){
-                  ToastShow("用户已存在");
-              }else{
-                  ToastShow("用户保存出错");
-              }
+            } else if (result.equals("2")) {
+                ToastShow("用户已存在");
+            } else {
+                ToastShow("用户保存出错");
+            }
             hideLoading();
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 }

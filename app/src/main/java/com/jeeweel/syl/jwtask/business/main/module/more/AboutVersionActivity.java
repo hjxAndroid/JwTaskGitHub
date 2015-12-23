@@ -6,6 +6,7 @@ import android.view.MenuItem;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 public class AboutVersionActivity extends JwActivity {
 
@@ -36,5 +37,17 @@ public class AboutVersionActivity extends JwActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

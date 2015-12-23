@@ -29,6 +29,7 @@ import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,18 +61,20 @@ public class DeptUsersListActivity extends JwListActivity {
 
 
     private Userdept userdept;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
-        userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
-        if(null!=userdept){
+        userdept = (Userdept) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        if (null != userdept) {
             setTitle(userdept.getDept_name());
         }
         ButterKnife.bind(this);
         initListViewController();
         initView();
     }
+
     private void initView() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("添加");
@@ -79,15 +82,16 @@ public class DeptUsersListActivity extends JwListActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                Intent intent = new Intent(getMy(),DeptSelectFriendListActivity.class);
-                intent.putExtra("userdept",userdept);
-                intent.putExtra(StaticStrUtils.baseItem,Contants.dept_add_friend);
+                Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
+                intent.putExtra("userdept", userdept);
+                intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
                 startActivity(intent);
                 finish();
             }
         });
         addMenuView(menuTextView);
     }
+
     @Override
     public void initListViewController() {
         commonAdapter = new CommonAdapter<Userdept>(getMy(), mListItems, R.layout.item_friend) {
@@ -103,24 +107,24 @@ public class DeptUsersListActivity extends JwListActivity {
 
 
     @Override
-    public void onListItemClick(int position){
-        Userdept userdept = (Userdept)commonAdapter.getItem(position);
+    public void onListItemClick(int position) {
+        Userdept userdept = (Userdept) commonAdapter.getItem(position);
         Intent intent = new Intent();
-        intent.putExtra("flag",true);
+        intent.putExtra("flag", true);
         intent.putExtra(StaticStrUtils.baseItem, userdept.getUsername());
-        intent.setClass(DeptUsersListActivity.this,FriendDetailActivity.class);
+        intent.setClass(DeptUsersListActivity.this, FriendDetailActivity.class);
         JwStartActivity(intent);
-   //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
+        //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
     }
 
     @Override
-    public void onListViewHeadRefresh(){
+    public void onListViewHeadRefresh() {
         showLoading();
         new FinishRefresh(getMy(), 0).execute();
     }
 
     @Override
-    public void onListViewFooterRefresh(){
+    public void onListViewFooterRefresh() {
         showLoading();
         new FinishRefresh(getMy(), 1).execute();
     }
@@ -132,11 +136,11 @@ public class DeptUsersListActivity extends JwListActivity {
         private Context context;
         private int mode = 0;
         private JCloudDB jCloudDB;
+
         /**
          * @param context 上下文
          */
-        public FinishRefresh(Context context,int mode)
-        {
+        public FinishRefresh(Context context, int mode) {
             this.context = context;
             this.mode = mode;
             jCloudDB = new JCloudDB();
@@ -147,25 +151,25 @@ public class DeptUsersListActivity extends JwListActivity {
 
             String result = "0";
 
-            if(null!=userdept){
+            if (null != userdept) {
                 try {
-                    if(mode == 0 ){
+                    if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Userdept.class,
-                                "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit "+pageStart+","+pageEnd);
+                                "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
-                    }else{
+                    } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Userdept.class,
-                                "user_name = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit "+pageStart+","+pageEnd);
+                                "user_name = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
 
-                if(ListUtils.IsNotNull(list)){
+                if (ListUtils.IsNotNull(list)) {
                     result = "1";
-                }else{
+                } else {
                     result = "0";
                 }
             }
@@ -175,10 +179,10 @@ public class DeptUsersListActivity extends JwListActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 //没有加载到数据
             }
             listview.onRefreshComplete();
@@ -187,16 +191,28 @@ public class DeptUsersListActivity extends JwListActivity {
     }
 
     /**
-     *分页增数
+     * 分页增数
      */
 
-    private void setPage(boolean tag){
-        if(tag){
+    private void setPage(boolean tag) {
+        if (tag) {
             pageStart = 0;
             pageEnd = 10;
-        }else{
+        } else {
             pageStart += addNum;
             pageEnd += addNum;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

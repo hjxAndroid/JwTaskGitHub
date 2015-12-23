@@ -32,6 +32,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +89,7 @@ public class MyJobDetailActivity extends JwActivity {
     private void getData() {
         showLoading();
         String task_code = getIntent().getStringExtra(StaticStrUtils.baseItem);
-        if(StrUtils.IsNotEmpty(task_code)){
+        if (StrUtils.IsNotEmpty(task_code)) {
             task = new Task();
             task.setTask_code(task_code);
         }
@@ -176,6 +177,18 @@ public class MyJobDetailActivity extends JwActivity {
             }
             hideLoading();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

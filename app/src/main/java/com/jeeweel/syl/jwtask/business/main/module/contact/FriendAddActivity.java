@@ -24,6 +24,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.net.URLEncoder;
 import java.util.List;
@@ -47,6 +48,7 @@ public class FriendAddActivity extends JwActivity {
     private String friendphone;
     String friendCode = "";
     Users users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,17 +91,17 @@ public class FriendAddActivity extends JwActivity {
         save(friendPhone);
     }
 
-    private void save(String friendPhone){
+    private void save(String friendPhone) {
         List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
         if (ListUtils.IsNotNull(usersList)) {
             users = usersList.get(0);
             String nickname = users.getNickname();
             usercode = users.getUser_code();
             String myphone = users.getUsername();
-            if (StrUtils.IsNotEmpty(friendPhone)&&StrUtils.IsNotEmpty(nickname)) {
+            if (StrUtils.IsNotEmpty(friendPhone) && StrUtils.IsNotEmpty(nickname)) {
                 showLoading();
                 new FinishRefresh(getMy()).execute(nickname, myphone, friendPhone);
-            }else{
+            } else {
                 ToastShow("您要先完善信息，才能添加好友");
             }
         }
@@ -136,19 +138,19 @@ public class FriendAddActivity extends JwActivity {
             List<Friend> friendsList = null;
             try {
                 friendsList = jCloudDB.findAllByWhere(Friend.class,
-                        "user_name = "+ myPhone +" and friend_name=" + StrUtils.QuotedStr(friendPhone) +"and state = 2");
+                        "user_name = " + myPhone + " and friend_name=" + StrUtils.QuotedStr(friendPhone) + "and state = 2");
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
 
             //尚未添加该好友
-            if(ListUtils.IsNull(friendsList)){
+            if (ListUtils.IsNull(friendsList)) {
                 //先判断好友是否存在
                 List<Users> list = null;
                 try {
                     list = jCloudDB.findAllByWhere(Users.class,
                             "username=" + StrUtils.QuotedStr(friendPhone));
-                    if(ListUtils.IsNotNull(list)){
+                    if (ListUtils.IsNotNull(list)) {
                         friendCode = list.get(0).getUser_code();
                     }
                 } catch (CloudServiceException e) {
@@ -198,7 +200,7 @@ public class FriendAddActivity extends JwActivity {
                     result = "2";
                 }
 
-            }else{
+            } else {
                 result = "3";
             }
             return result;
@@ -213,7 +215,7 @@ public class FriendAddActivity extends JwActivity {
                 ToastShow("好友不存在");
             } else if (result.equals("3")) {
                 ToastShow("该用户已经是您的好友");
-            }else {
+            } else {
                 ToastShow("好友保存出错");
             }
             hideLoading();
@@ -222,26 +224,26 @@ public class FriendAddActivity extends JwActivity {
 
 
     public void pushData() {
-        if(users!=null){
-            if(StrUtils.IsNotEmpty(friendCode)){
-               // users.getNickname()+"请求添加您未好友"
+        if (users != null) {
+            if (StrUtils.IsNotEmpty(friendCode)) {
+                // users.getNickname()+"请求添加您未好友"
                 String title = users.getNickname();
                 try {
-                    title = URLEncoder.encode(title,"utf-8");
-                    title = URLEncoder.encode(title,"utf-8");
+                    title = URLEncoder.encode(title, "utf-8");
+                    title = URLEncoder.encode(title, "utf-8");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                String content = users.getNickname()+"请求添加您未好友";
+                String content = users.getNickname() + "请求添加您未好友";
                 try {
-                    content = URLEncoder.encode(content,"utf-8");
-                    content = URLEncoder.encode(content,"utf-8");
+                    content = URLEncoder.encode(content, "utf-8");
+                    content = URLEncoder.encode(content, "utf-8");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
-                String param = "?user_code=" + friendCode+"&title="+title+"&content="+content;
-                String apiStr = Utils.getPushUrl()+param;
+                String param = "?user_code=" + friendCode + "&title=" + title + "&content=" + content;
+                String apiStr = Utils.getPushUrl() + param;
                 JwHttpGet(apiStr, true);
             }
         }
@@ -271,4 +273,17 @@ public class FriendAddActivity extends JwActivity {
     public void HttpFinish() {
         super.HttpFinish();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }
+

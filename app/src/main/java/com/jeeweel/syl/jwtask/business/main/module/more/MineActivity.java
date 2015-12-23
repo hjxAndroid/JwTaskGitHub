@@ -24,6 +24,7 @@ import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.Calendar;
 
@@ -61,20 +62,20 @@ public class MineActivity extends JwActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent=getIntent();
-        register=intent.getBooleanExtra("register", false);
-        if(register==true){
+        Intent intent = getIntent();
+        register = intent.getBooleanExtra("register", false);
+        if (register == true) {
             setHideBack(true);
         }
 
         setContentView(R.layout.activity_mine);
         ButterKnife.bind(this);
         setTitle(getString(R.string.mineinformation));
-        if(register==true) {
+        if (register == true) {
             initRight();
         }
 
-        users  = JwAppAplication.getInstance().users;
+        users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
         user_code = users.getUser_code();
     }
@@ -100,13 +101,14 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(str)) {
             tv_nickname.setText(str);
             if (!StrUtils.IsNotEmpty(users.getPhoto_code())) {
-                if(str.length()>2){
+                if (str.length() > 2) {
                     str = str.substring(str.length() - 2, str.length());
                     tv_user_head1.setText(str);
-                }else{
+                } else {
                     tv_user_head1.setText(str);
                 }
             }
+            MobclickAgent.onResume(this);
         }
         str = users.getEmail();
         if (StrUtils.IsNotEmpty(str)) {
@@ -116,16 +118,16 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(str)) {
             tv_sex.setText(str);
         }
-        str= users.getStrong_point();
+        str = users.getStrong_point();
         if (StrUtils.IsNotEmpty(str)) {
             tv_strong_point.setText(str);
-        }else {
+        } else {
             tv_strong_point.setText("未设置");
         }
         str = users.getSign();
         if (StrUtils.IsNotEmpty(str)) {
             tv_sign.setText(str);
-        }else {
+        } else {
             tv_sign.setText("未设置");
         }
         str = users.getArea();
@@ -136,7 +138,7 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(birthday)) {
             tv_birthday.setText(birthday);
         }
-        new GetUserPicture(getMy(),iv_user_head2,user_code).execute();
+        new GetUserPicture(getMy(), iv_user_head2, user_code).execute();
     }
 
     @Override
@@ -169,7 +171,7 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.ll_nickname)
     void editNameClick() {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.putExtra("title", "设置昵称");
         intent.setClass(MineActivity.this, MineEditnameActivity.class);
         JwStartActivity(intent);
@@ -177,7 +179,7 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.ll_email)
     void editEmailClick() {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.putExtra("title", "设置邮箱");
         intent.setClass(MineActivity.this, MineEditnameActivity.class);
         JwStartActivity(intent);
@@ -185,7 +187,7 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.ll_qrcode)
     void editQRCdoeClick() {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.putExtra("phone", phone);
         intent.setClass(MineActivity.this, MineQRCodeActivity.class);
         JwStartActivity(intent);
@@ -198,6 +200,7 @@ public class MineActivity extends JwActivity {
 
     private class saveBirthday extends AsyncTask<String, Void, String> {
         private Context context;
+
         public saveBirthday(Context context) {
             this.context = context;
         }
@@ -210,10 +213,10 @@ public class MineActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             String result = "1";
-            String sql="UPDATE users SET birthday ='"+birthday+"'WHERE username ='"+phone+"'";
-            try{
+            String sql = "UPDATE users SET birthday ='" + birthday + "'WHERE username ='" + phone + "'";
+            try {
                 CloudDB.execSQL(sql);
-            }catch (CloudServiceException e){
+            } catch (CloudServiceException e) {
                 result = "0";
             }
             return result;
@@ -222,14 +225,15 @@ public class MineActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             hideLoading();
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 users.setBirthday(birthday);
                 JwAppAplication.getFinalDb().update(users);
-            }else{
+            } else {
                 ToastShow("数据保存失败");
             }
         }
     }
+
     /**
      * 创建日期及时间选择对话框
      */
@@ -238,15 +242,15 @@ public class MineActivity extends JwActivity {
         Dialog dialog = null;
 
         if (StrUtils.IsNotEmpty(birthday)) {
-            String[] data=birthday.split("-");
-            int year=Integer.parseInt(data[0]);
-            int mouth=Integer.parseInt(data[1]);
-            int day=Integer.parseInt(data[2]);
+            String[] data = birthday.split("-");
+            int year = Integer.parseInt(data[0]);
+            int mouth = Integer.parseInt(data[1]);
+            int day = Integer.parseInt(data[2]);
             dialog = new DatePickerDialog(
                     this,
                     new DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker dp, int year,int month, int dayOfMonth) {
-                            tv_birthday.setText("" + year + "-" + (month+1) + "-" + dayOfMonth);
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            tv_birthday.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
                             birthday = tv_birthday.getText().toString();
                             new saveBirthday(getMy()).execute();
                         }
@@ -255,13 +259,13 @@ public class MineActivity extends JwActivity {
                     mouth, // 传入月份
                     day // 传入天数
             );
-        }else{
+        } else {
             Calendar c = Calendar.getInstance();
             dialog = new DatePickerDialog(
                     this,
                     new DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker dp, int year,int month, int dayOfMonth) {
-                            tv_birthday.setText("" + year + "-" + (month+1) + "-" + dayOfMonth);
+                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+                            tv_birthday.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
                             birthday = tv_birthday.getText().toString();
                             new saveBirthday(getMy()).execute();
                         }
@@ -273,6 +277,7 @@ public class MineActivity extends JwActivity {
         }
         return dialog;
     }
+
     @OnClick(R.id.ll_birthday)
     void editMyBirthdayClick() {
         showDialog(0);
@@ -285,7 +290,7 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.ll_strong_point)
     void editSpecialtyClick() {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.putExtra("title", "特长、兴趣");
         intent.setClass(MineActivity.this, MineEditActivity.class);
         JwStartActivity(intent);
@@ -293,13 +298,13 @@ public class MineActivity extends JwActivity {
 
     @OnClick(R.id.ll_sign)
     void editSignatureClick() {
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.putExtra("title", "个性签名");
         intent.setClass(MineActivity.this, MineEditActivity.class);
         JwStartActivity(intent);
     }
 
-//    @Subscribe
+    //    @Subscribe
 //    public void dateTimeSelect(ActivityMsgEvent activityMsgEvent) {
 //        if (activityMsgEvent.getMsg().equals("dateTimePick")) {
 //            birthday = activityMsgEvent.getJson();
@@ -309,4 +314,9 @@ public class MineActivity extends JwActivity {
 //            }
 //        }
 //    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }

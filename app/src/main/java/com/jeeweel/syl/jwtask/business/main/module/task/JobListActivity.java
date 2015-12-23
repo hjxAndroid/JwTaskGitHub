@@ -32,6 +32,7 @@ import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,7 +90,7 @@ public class JobListActivity extends JwListActivity {
         Task task = (Task) commonAdapter.getItem(position);
         Intent intent = new Intent(getMy(), JobDetailActivity.class);
         intent.putExtra(StaticStrUtils.baseItem, task);
-        intent.putExtra("flag","fb");
+        intent.putExtra("flag", "fb");
         startActivity(intent);
     }
 
@@ -181,5 +182,16 @@ public class JobListActivity extends JwListActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 }

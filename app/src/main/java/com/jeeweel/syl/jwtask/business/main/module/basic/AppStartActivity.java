@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 
 public class AppStartActivity extends JwActivity {
@@ -55,5 +56,17 @@ public class AppStartActivity extends JwActivity {
         //noinspection SimplifiableIfStatement
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

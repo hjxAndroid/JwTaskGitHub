@@ -33,6 +33,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 //import com.jeeweel.syl.lib.api.jwlib.baidumaps.InitLocationSign;
 
 import java.util.Date;
@@ -377,5 +378,17 @@ public class SignUpActivity extends JwActivity {
                 tvSignAddr.setText(StrUtils.IfNull(address, "地址有误！！！"));
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

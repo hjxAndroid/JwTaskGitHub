@@ -17,6 +17,7 @@ import android.widget.ImageView;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -151,5 +152,15 @@ public class WelcomActivity extends JwActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 }

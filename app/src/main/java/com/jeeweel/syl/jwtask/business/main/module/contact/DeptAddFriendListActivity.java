@@ -29,6 +29,7 @@ import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class DeptAddFriendListActivity extends JwListActivity {
     private String tag = "";
 
     List<Integer> integers = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +76,7 @@ public class DeptAddFriendListActivity extends JwListActivity {
         initListViewController();
     }
 
-    private void initView(){
+    private void initView() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
         menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
@@ -82,8 +84,8 @@ public class DeptAddFriendListActivity extends JwListActivity {
             @Override
             public void onClick(View arg0) {
                 List<Friend> friendcds = new ArrayList<>();
-                for(Friend friend : mListItems){
-                    if(friend.getChoose().equals("1")){
+                for (Friend friend : mListItems) {
+                    if (friend.getChoose().equals("1")) {
                         friendcds.add(friend);
                     }
                 }
@@ -92,14 +94,14 @@ public class DeptAddFriendListActivity extends JwListActivity {
                 String json = new Gson().toJson(friendcds);
 
                 //部门添加好友请求
-                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.group)){
-                    OttUtils.push(Contants.group,json);
+                if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.group)) {
+                    OttUtils.push(Contants.group, json);
                     finish();
                 }
 
                 //签到添加好友请求
-                if(StrUtils.IsNotEmpty(tag)&&tag.equals(Contants.sign)){
-                    OttUtils.push(Contants.sign,json);
+                if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.sign)) {
+                    OttUtils.push(Contants.sign, json);
                     finish();
                 }
             }
@@ -116,15 +118,16 @@ public class DeptAddFriendListActivity extends JwListActivity {
                 final CheckBox choose = helper.getView(R.id.ck_choose);
                 choose.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
-                    public void onCheckedChanged(CompoundButton arg0, boolean arg1) {int position = helper.getPosition();
+                    public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+                        int position = helper.getPosition();
 
-                       if(choose.isChecked()){
-                           Friend friend = mListItems.get(position);
-                           friend.setChoose("1");
-                       }else{
-                           Friend friend = mListItems.get(position);
-                           friend.setChoose("0");
-                       }
+                        if (choose.isChecked()) {
+                            Friend friend = mListItems.get(position);
+                            friend.setChoose("1");
+                        } else {
+                            Friend friend = mListItems.get(position);
+                            friend.setChoose("0");
+                        }
                     }
                 });
             }
@@ -135,18 +138,18 @@ public class DeptAddFriendListActivity extends JwListActivity {
 
 
     @Override
-    public void onListItemClick(int position){
+    public void onListItemClick(int position) {
 
     }
 
     @Override
-    public void onListViewHeadRefresh(){
+    public void onListViewHeadRefresh() {
         showLoading();
         new FinishRefresh(getMy(), 0).execute();
     }
 
     @Override
-    public void onListViewFooterRefresh(){
+    public void onListViewFooterRefresh() {
         showLoading();
         new FinishRefresh(getMy(), 1).execute();
     }
@@ -158,11 +161,11 @@ public class DeptAddFriendListActivity extends JwListActivity {
         private Context context;
         private int mode = 0;
         private JCloudDB jCloudDB;
+
         /**
          * @param context 上下文
          */
-        public FinishRefresh(Context context,int mode)
-        {
+        public FinishRefresh(Context context, int mode) {
             this.context = context;
             this.mode = mode;
             jCloudDB = new JCloudDB();
@@ -173,25 +176,25 @@ public class DeptAddFriendListActivity extends JwListActivity {
 
             String result = "0";
 
-            if(null!=users){
+            if (null != users) {
                 try {
-                    if(mode == 0 ){
+                    if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" +" limit "+pageStart+","+pageEnd);
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" + " limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
-                    }else{
+                    } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" +" limit "+pageStart+","+pageEnd);
+                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" + " limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
 
-                if(ListUtils.IsNotNull(list)){
+                if (ListUtils.IsNotNull(list)) {
                     result = "1";
-                }else{
+                } else {
                     result = "0";
                 }
             }
@@ -201,10 +204,10 @@ public class DeptAddFriendListActivity extends JwListActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 //没有加载到数据
             }
             listview.onRefreshComplete();
@@ -213,16 +216,28 @@ public class DeptAddFriendListActivity extends JwListActivity {
     }
 
     /**
-     *分页增数
+     * 分页增数
      */
 
-    private void setPage(boolean tag){
-        if(tag){
+    private void setPage(boolean tag) {
+        if (tag) {
             pageStart = 0;
             pageEnd = 10;
-        }else{
+        } else {
             pageStart += addNum;
             pageEnd += addNum;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

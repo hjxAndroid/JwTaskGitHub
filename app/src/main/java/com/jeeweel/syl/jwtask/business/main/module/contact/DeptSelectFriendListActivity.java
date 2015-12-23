@@ -26,6 +26,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -301,12 +302,24 @@ public class DeptSelectFriendListActivity extends JwListActivity {
                 ToastShow("创建成功");
                 OttUtils.push("deptAdd_refresh", "");
                 finish();
-            } else if(result.equals("2")){
+            } else if (result.equals("2")) {
                 ToastShow("请选择不在该组织的用户");
-            }else {
+            } else {
                 ToastShow("创建失败");
             }
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

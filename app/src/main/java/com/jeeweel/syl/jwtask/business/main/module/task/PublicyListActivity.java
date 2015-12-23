@@ -26,6 +26,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class PublicyListActivity extends JwListActivity {
         private String photo_code;
         private ViewHolder helper;
 
-        public GetUrl(Context context,ViewHolder helper,String photo_code) {
+        public GetUrl(Context context, ViewHolder helper, String photo_code) {
             this.context = context;
             this.photo_code = photo_code;
             this.helper = helper;
@@ -142,10 +143,10 @@ public class PublicyListActivity extends JwListActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("0")){
+            if (result.equals("0")) {
 
-            }else{
-                helper.setImageByUrl(R.id.iv_xz,result);
+            } else {
+                helper.setImageByUrl(R.id.iv_xz, result);
             }
         }
     }
@@ -224,7 +225,7 @@ public class PublicyListActivity extends JwListActivity {
 
                     if (ListUtils.IsNotNull(list)) {
                         result = "1";
-                        for(V_publicityunread publicity : list){
+                        for (V_publicityunread publicity : list) {
                             //取头像
                             String publicy_code = publicity.getPublicity_code();
 
@@ -235,14 +236,14 @@ public class PublicyListActivity extends JwListActivity {
                             sSql = sqlInfo.getBuildSql();
                             List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
                             if (ListUtils.IsNotNull(pictureList)) {
-                                StringBuffer stringBuffer=new StringBuffer();
-                                for(int i=0;i<pictureList.size();i++){
-                                    stringBuffer.append(pictureList.get(i).getPic_road()+",");
+                                StringBuffer stringBuffer = new StringBuffer();
+                                for (int i = 0; i < pictureList.size(); i++) {
+                                    stringBuffer.append(pictureList.get(i).getPic_road() + ",");
                                 }
                                 publicity.setPictureListSting(stringBuffer.toString());
                                 Picture picture = pictureList.get(0);
-                                String path=picture.getPic_road();
-                                if(StrUtils.IsNotEmpty(path)){
+                                String path = picture.getPic_road();
+                                if (StrUtils.IsNotEmpty(path)) {
                                     //存头像
                                     publicity.setPhoto_code(path);
                                 }
@@ -329,6 +330,18 @@ public class PublicyListActivity extends JwListActivity {
         if (StrUtils.IsNotEmpty(msg) && msg.equals("publicy_refresh")) {
             new FinishRefresh(getMy(), 0).execute();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

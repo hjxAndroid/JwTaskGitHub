@@ -20,6 +20,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class PublicyDetailActivity extends JwActivity {
             tvName.setText(publicity.getNickname());
             tvTime.setText(publicity.getCreate_time());
             String org_name = publicity.getAccept_org_name();
-            if(StrUtils.isEmpty(org_name)){
+            if (StrUtils.isEmpty(org_name)) {
                 org_name = (String) SharedPreferencesUtils.get(getMy(), Contants.org_name, "");
             }
             tvOrgName.setText(org_name);
@@ -153,7 +154,7 @@ public class PublicyDetailActivity extends JwActivity {
                 if (null != users && null != publicity) {
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
                             "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
-                    if (ListUtils.IsNull(alreadyreadList)){
+                    if (ListUtils.IsNull(alreadyreadList)) {
                         //已读表未插入，插入到已读表
                         Alreadyread alreadyread = new Alreadyread();
                         alreadyread.setTask_code(publicity.getPublicity_code());
@@ -176,10 +177,22 @@ public class PublicyDetailActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
-                OttUtils.push("news_refresh","");
+            if (result.equals("1")) {
+                OttUtils.push("news_refresh", "");
             }
             hideLoading();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

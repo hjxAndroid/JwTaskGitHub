@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,5 +32,17 @@ public class AddHomeActivity extends JwActivity {
     @OnClick(R.id.rl_org)
     void orgClick() {
         JwStartActivity(AddOrgActivity.class);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

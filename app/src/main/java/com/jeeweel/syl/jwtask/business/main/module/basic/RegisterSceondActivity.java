@@ -13,6 +13,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,6 +32,7 @@ public class RegisterSceondActivity extends JwActivity implements Handler.Callba
     private Context mContext;
 
     private String phone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +46,7 @@ public class RegisterSceondActivity extends JwActivity implements Handler.Callba
 
     private void sendSMSS() {
         phone = getIntent().getStringExtra(StaticStrUtils.baseItem);
-        if(StrUtils.IsNotEmpty(phone)){
+        if (StrUtils.IsNotEmpty(phone)) {
             tvPhone.setText(phone);
         }
         SMSSDK.getVerificationCode("86", phone);
@@ -53,9 +55,9 @@ public class RegisterSceondActivity extends JwActivity implements Handler.Callba
     @OnClick(R.id.bt_next)
     void nextClick() {
         String yzm = etYzm.getText().toString();
-        if(StrUtils.IsNotEmpty(yzm)&&StrUtils.IsNotEmpty(phone)){
-            SMSSDK.submitVerificationCode("86", phone,yzm);
-        }else{
+        if (StrUtils.IsNotEmpty(yzm) && StrUtils.IsNotEmpty(phone)) {
+            SMSSDK.submitVerificationCode("86", phone, yzm);
+        } else {
             ToastShow("请输入验证码");
         }
 
@@ -99,7 +101,7 @@ public class RegisterSceondActivity extends JwActivity implements Handler.Callba
             if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
                 Toast.makeText(mContext, "验证成功", Toast.LENGTH_SHORT).show();
                 //注册用户
-                JwStartActivity(RegisterLastActivity.class,phone);
+                JwStartActivity(RegisterLastActivity.class, phone);
             } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -118,5 +120,17 @@ public class RegisterSceondActivity extends JwActivity implements Handler.Callba
             });
         }
         return false;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

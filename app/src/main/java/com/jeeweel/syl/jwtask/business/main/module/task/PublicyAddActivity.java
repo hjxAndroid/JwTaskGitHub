@@ -44,6 +44,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,6 +72,7 @@ public class PublicyAddActivity extends JwActivity {
     Context context;
     Publicity publicity = new Publicity();
     Users users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -401,7 +403,7 @@ public class PublicyAddActivity extends JwActivity {
                     if (StrUtils.IsNotEmpty(orgcode)) {
                         publicity.setAccept_org_code(orgcode);
                     }
-                    if(users!=null){
+                    if (users != null) {
                         publicity.setProuser_code(users.getUser_code());
                         publicity.setProuser_name(users.getUsername());
                         publicity.setNickname(users.getNickname());
@@ -411,7 +413,7 @@ public class PublicyAddActivity extends JwActivity {
                     //保存图片表
                     for (String sFile : Bimp.drr) {
                         // File file = new File(sFile);
-                        CloudFile.upload(sFile,unid);
+                        CloudFile.upload(sFile, unid);
                     }
                 } catch (CloudServiceException e) {
                     result = "0";
@@ -426,11 +428,11 @@ public class PublicyAddActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                OttUtils.push("publicy_refresh","");
+                OttUtils.push("publicy_refresh", "");
                 pushData();
                 ToastShow("保存成功");
             } else {
-               ToastShow("保存失败");
+                ToastShow("保存失败");
             }
             hideLoading();
         }
@@ -474,5 +476,17 @@ public class PublicyAddActivity extends JwActivity {
     public void HttpFinish() {
         super.HttpFinish();
         finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

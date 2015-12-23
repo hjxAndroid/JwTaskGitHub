@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main.module.more;
 /**
  * Created by Administrator on 2015/12/7.
  */
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -19,6 +20,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 import com.jeeweel.syl.jwtask.R;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * 圆形ImageView，可设置最多两个宽度不同且颜色不同的圆形边框。
@@ -53,15 +55,15 @@ public class RoundImageView extends ImageView {
     }
 
     private void setCustomAttributes(AttributeSet attrs) {
-        TypedArray a = mContext.obtainStyledAttributes(attrs,R.styleable.roundedimageview);
+        TypedArray a = mContext.obtainStyledAttributes(attrs, R.styleable.roundedimageview);
         mBorderThickness = a.getDimensionPixelSize(R.styleable.roundedimageview_border_thickness, 0);
-        mBorderOutsideColor = a.getColor(R.styleable.roundedimageview_border_outside_color,defaultColor);
+        mBorderOutsideColor = a.getColor(R.styleable.roundedimageview_border_outside_color, defaultColor);
         mBorderInsideColor = a.getColor(R.styleable.roundedimageview_border_inside_color, defaultColor);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
-        Drawable drawable = getDrawable() ;
+        Drawable drawable = getDrawable();
         if (drawable == null) {
             return;
         }
@@ -83,7 +85,7 @@ public class RoundImageView extends ImageView {
         if (mBorderInsideColor != defaultColor && mBorderOutsideColor != defaultColor) {// 定义画两个边框，分别为外圆边框和内圆边框
             radius = (defaultWidth < defaultHeight ? defaultWidth : defaultHeight) / 2 - 2 * mBorderThickness;
             // 画内圆
-            drawCircleBorder(canvas, radius + mBorderThickness / 2,mBorderInsideColor);
+            drawCircleBorder(canvas, radius + mBorderThickness / 2, mBorderInsideColor);
             // 画外圆
             drawCircleBorder(canvas, radius + mBorderThickness + mBorderThickness / 2, mBorderOutsideColor);
         } else if (mBorderInsideColor != defaultColor && mBorderOutsideColor == defaultColor) {// 定义画一个边框
@@ -101,6 +103,7 @@ public class RoundImageView extends ImageView {
 
     /**
      * 获取裁剪后的圆形图片
+     *
      * @param
      */
     public Bitmap getCroppedRoundBitmap(Bitmap bmp, int radius) {
@@ -137,7 +140,7 @@ public class RoundImageView extends ImageView {
         Canvas canvas = new Canvas(output);
 
         Paint paint = new Paint();
-        Rect rect = new Rect(0, 0, scaledSrcBmp.getWidth(),scaledSrcBmp.getHeight());
+        Rect rect = new Rect(0, 0, scaledSrcBmp.getWidth(), scaledSrcBmp.getHeight());
 
         paint.setAntiAlias(true);
         paint.setFilterBitmap(true);

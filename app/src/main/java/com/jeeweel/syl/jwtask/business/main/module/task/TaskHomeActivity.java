@@ -32,6 +32,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import net.tsz.afinal.FinalDb;
 
@@ -69,6 +70,7 @@ public class TaskHomeActivity extends JwActivity {
     List<Userorg> mListItems;
 
     private Activity context;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideBack(true);
@@ -82,7 +84,7 @@ public class TaskHomeActivity extends JwActivity {
 
     }
 
-    private void initRight(){
+    private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("切换");
         menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
@@ -174,6 +176,7 @@ public class TaskHomeActivity extends JwActivity {
         super.onPause();
         // 停止翻页
         convenientBanner.stopTurning();
+        MobclickAgent.onPause(this);
     }
 
 
@@ -205,9 +208,9 @@ public class TaskHomeActivity extends JwActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Userorg userorg = (Userorg)commonAdapter.getItem(position);
-                SharedPreferencesUtils.save(getMy(), Contants.org_code,userorg.getOrg_code());
-                SharedPreferencesUtils.save(getMy(), Contants.org_name,userorg.getOrg_name());
+                Userorg userorg = (Userorg) commonAdapter.getItem(position);
+                SharedPreferencesUtils.save(getMy(), Contants.org_code, userorg.getOrg_code());
+                SharedPreferencesUtils.save(getMy(), Contants.org_name, userorg.getOrg_name());
                 dialog.cancel();
             }
         });
@@ -235,7 +238,7 @@ public class TaskHomeActivity extends JwActivity {
             JCloudDB jCloudDB = new JCloudDB();
 
             Users users = JwAppAplication.getInstance().getUsers();
-            if(null!=users){
+            if (null != users) {
                 try {
                     mListItems = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(users.getUsername()));
@@ -251,9 +254,9 @@ public class TaskHomeActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
+            if (result.equals("1")) {
 
-            }else{
+            } else {
                 ToastShow("组织获取出错");
             }
             hideLoading();
@@ -274,4 +277,11 @@ public class TaskHomeActivity extends JwActivity {
             }
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
 }

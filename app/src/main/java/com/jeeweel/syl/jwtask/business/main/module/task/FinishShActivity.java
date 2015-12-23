@@ -35,6 +35,7 @@ import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -205,7 +206,7 @@ public class FinishShActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                OttUtils.push("news_refresh","");
+                OttUtils.push("news_refresh", "");
                 if (ListUtils.IsNotNull(list)) {
                     submit = list.get(0);
                     etTaskName.setText(StrUtils.IsNull(submit.getTask_name()));
@@ -366,5 +367,17 @@ public class FinishShActivity extends JwActivity {
             }
             hideLoading();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

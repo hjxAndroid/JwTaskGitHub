@@ -5,6 +5,7 @@ import android.widget.Button;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +38,18 @@ public class SignOptionsActivity extends JwActivity {
     @OnClick(R.id.btn_check_my_start_sign)
     void clickCheckMyStartSign() {
         JwStartActivity(MyStartSignUpActivity.class);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

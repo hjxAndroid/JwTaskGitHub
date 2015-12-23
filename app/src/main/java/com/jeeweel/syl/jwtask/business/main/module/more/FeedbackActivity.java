@@ -15,6 +15,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Feedback;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import api.util.Utils;
 import butterknife.ButterKnife;
@@ -26,6 +27,7 @@ public class FeedbackActivity extends JwActivity {
     Users users;
     String user_code;
     JCloudDB jCloudDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +35,7 @@ public class FeedbackActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle("帮助与反馈");
 
-        et_content= (EditText) findViewById(R.id.et_content);
+        et_content = (EditText) findViewById(R.id.et_content);
         users = JwAppAplication.getInstance().getUsers();
         user_code = users.getUser_code();
         jCloudDB = new JCloudDB();
@@ -110,5 +112,17 @@ public class FeedbackActivity extends JwActivity {
     public void feedbackClick() {
         content = StrUtils.StrIfNull(et_content.getText().toString());
         new saveContent(getMy()).execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

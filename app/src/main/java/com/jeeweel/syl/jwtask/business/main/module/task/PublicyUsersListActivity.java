@@ -22,6 +22,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.jeeweel.syl.lib.api.core.otto.OttoBus;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,7 +115,7 @@ public class PublicyUsersListActivity extends JwActivity {
                 List<Userdept> userdepts = new ArrayList<Userdept>();
                 HashMap<Integer, Boolean> isSelected = checkAdapter.getIsSelected();
                 for (int i = 0; i < isSelected.size(); i++) {
-                    if(isSelected.get(i)){
+                    if (isSelected.get(i)) {
                         userdepts.add(mListItems.get(i));
                     }
                 }
@@ -203,5 +204,17 @@ public class PublicyUsersListActivity extends JwActivity {
             pageStart += addNum;
             pageEnd += addNum;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

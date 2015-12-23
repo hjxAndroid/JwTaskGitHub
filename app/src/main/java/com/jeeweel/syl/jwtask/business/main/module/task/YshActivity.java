@@ -28,6 +28,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -212,6 +213,18 @@ public class YshActivity extends JwActivity {
             }
             hideLoading();
         }
+    }
+
+    @Override
+    public void HttpFinish() {
+        finish();
+        super.HttpFinish();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 

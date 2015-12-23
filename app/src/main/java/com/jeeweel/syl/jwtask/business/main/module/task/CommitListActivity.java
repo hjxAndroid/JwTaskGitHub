@@ -28,6 +28,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,7 @@ public class CommitListActivity extends JwListActivity {
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
     String content;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +73,7 @@ public class CommitListActivity extends JwListActivity {
         users = JwAppAplication.getInstance().getUsers();
         task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         String flag = getIntent().getStringExtra("flag");
-        if(StrUtils.IsNotEmpty(flag)){
+        if (StrUtils.IsNotEmpty(flag)) {
             tvXpl.setVisibility(View.GONE);
         }
         initListViewController();
@@ -86,10 +88,10 @@ public class CommitListActivity extends JwListActivity {
     @OnClick(R.id.bt_send)
     void sendClick() {
         content = etSned.getText().toString();
-        if(StrUtils.IsNotEmpty(content)){
+        if (StrUtils.IsNotEmpty(content)) {
             showLoading();
             new SavehRefresh(getMy()).execute();
-        }else{
+        } else {
             ToastShow("请输入评论内容");
         }
     }
@@ -208,6 +210,7 @@ public class CommitListActivity extends JwListActivity {
         private Context context;
         private JCloudDB jCloudDB;
         Taskcommit taskcommit;
+
         /**
          * @param context 上下文
          */
@@ -222,12 +225,12 @@ public class CommitListActivity extends JwListActivity {
             String result = "1";
 
             try {
-                if(null!=task){
+                if (null != task) {
                     taskcommit = new Taskcommit();
                     taskcommit.setTask_code(task.getTask_code());
                     taskcommit.setContent(content);
                     taskcommit.setContent(content);
-                    if(null!=users){
+                    if (null != users) {
                         taskcommit.setUser_code(users.getUser_code());
                         taskcommit.setUser_name(users.getUsername());
                         taskcommit.setNickname(users.getNickname());
@@ -254,5 +257,17 @@ public class CommitListActivity extends JwListActivity {
             listview.onRefreshComplete();
             hideLoading();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

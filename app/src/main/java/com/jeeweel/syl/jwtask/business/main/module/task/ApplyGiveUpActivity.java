@@ -19,6 +19,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import api.util.Contants;
 import api.util.OttUtils;
@@ -91,7 +92,7 @@ public class ApplyGiveUpActivity extends JwActivity {
             try {
                 if (null != users) {
                     if (null != task) {
-                        String sql = "update task set now_state = 7 , now_state_name = '放弃申请中',give_up_content="+StrUtils.QuotedStr(task.getGive_up_content())+"  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
+                        String sql = "update task set now_state = 7 , now_state_name = '放弃申请中',give_up_content=" + StrUtils.QuotedStr(task.getGive_up_content()) + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
 
                         //保存到流程表里
@@ -115,7 +116,7 @@ public class ApplyGiveUpActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                OttUtils.push("give_refresh","");
+                OttUtils.push("give_refresh", "");
                 ToastShow("操作成功");
                 finish();
             } else {
@@ -125,7 +126,17 @@ public class ApplyGiveUpActivity extends JwActivity {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 
 }

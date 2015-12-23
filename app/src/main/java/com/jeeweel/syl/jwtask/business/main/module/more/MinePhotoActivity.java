@@ -32,6 +32,7 @@ import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 public class MinePhotoActivity extends JwActivity implements OnClickListener {
     private static final int IMAGE_REQUEST_CODE = 0;
@@ -52,9 +53,9 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
         setupViews();
         initRight();
 
-        users  = JwAppAplication.getInstance().users;
+        users = JwAppAplication.getInstance().users;
         String user_code = users.getUser_code();
-        new GetUserPicture(getMy(),mImageHeader,user_code).execute();
+        new GetUserPicture(getMy(), mImageHeader, user_code).execute();
     }
 
     private void initRight() {
@@ -160,9 +161,9 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
             Bitmap photo = extras.getParcelable("data");
             Drawable drawable = new BitmapDrawable(photo);
             mImageHeader.setImageDrawable(drawable);
-            try{
+            try {
                 saveFile(photo);
-            }catch (IOException e){
+            } catch (IOException e) {
 
             }
         }
@@ -174,12 +175,13 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
     }
 
     private String getImagePath() {
-     //   return Utils.getPicUrl() + StoreUtils.getSDPath() + IMAGE_FILE_NAME;
+        //   return Utils.getPicUrl() + StoreUtils.getSDPath() + IMAGE_FILE_NAME;
         return StoreUtils.getSDPath() + IMAGE_FILE_NAME;
     }
 
     /**
      * 保存文件
+     *
      * @param bm
      * @throws IOException
      */
@@ -224,7 +226,7 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
                     sqlInfo.setSql(sSql);
                     sqlInfo.addValue(user_code);
                     sSql = sqlInfo.getBuildSql();
-                    jCloudDB.deleteByWhere(Picture.class,sSql);
+                    jCloudDB.deleteByWhere(Picture.class, sSql);
                     CloudFile.upload(sFile, user_code);
                 } catch (CloudServiceException e) {
                     result = "0";
@@ -244,5 +246,17 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
             hideLoading();
             MinePhotoActivity.this.finish();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

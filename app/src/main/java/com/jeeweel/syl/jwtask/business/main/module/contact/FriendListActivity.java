@@ -35,6 +35,7 @@ import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,20 +96,20 @@ public class FriendListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_friend) {
             @Override
             public void convert(ViewHolder helper, Friend item) {
-                String friend_nickname=item.getFriend_nickname();
+                String friend_nickname = item.getFriend_nickname();
                 helper.setText(R.id.tv_name, item.getFriend_name());
                 helper.setText(R.id.tv_nick_name, friend_nickname);
 
-                if(item.getPhoto_code()!=null){
+                if (item.getPhoto_code() != null) {
                     ImageView iv_photo = helper.getImageView(R.id.iv_xz);
-               //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
+                    //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
                     JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
-                }else {
-                    if (friend_nickname.length()>2) {
+                } else {
+                    if (friend_nickname.length() > 2) {
                         friend_nickname = friend_nickname.substring(friend_nickname.length() - 2, friend_nickname.length());
-                        helper.setText(R.id.tv_user_head1,friend_nickname);
-                    }else{
-                        helper.setText(R.id.tv_user_head1,friend_nickname);
+                        helper.setText(R.id.tv_user_head1, friend_nickname);
+                    } else {
+                        helper.setText(R.id.tv_user_head1, friend_nickname);
                     }
                 }
             }
@@ -122,11 +123,11 @@ public class FriendListActivity extends JwListActivity {
     public void onListItemClick(int position) {
         Friend friend = (Friend) commonAdapter.getItem(position);
         Intent intent = new Intent();
-        intent.putExtra("friend_code",friend.getFriend_code());
+        intent.putExtra("friend_code", friend.getFriend_code());
         intent.putExtra(StaticStrUtils.baseItem, friend.getFriend_name());
         intent.setClass(FriendListActivity.this, FriendDetailActivity.class);
         JwStartActivity(intent);
-   //     JwStartActivity(FriendDetailActivity.class, friend.getFriend_name());
+        //     JwStartActivity(FriendDetailActivity.class, friend.getFriend_name());
     }
 
     @Override
@@ -180,7 +181,7 @@ public class FriendListActivity extends JwListActivity {
 
                     if (ListUtils.IsNotNull(list)) {
                         result = "1";
-                        for(Friend friend : list){
+                        for (Friend friend : list) {
                             //取头像
                             String friend_code = friend.getFriend_code();
 
@@ -192,8 +193,8 @@ public class FriendListActivity extends JwListActivity {
                             List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
                             if (ListUtils.IsNotNull(pictureList)) {
                                 Picture picture = pictureList.get(0);
-                                String path=picture.getPic_road();
-                                if(StrUtils.IsNotEmpty(path)){
+                                String path = picture.getPic_road();
+                                if (StrUtils.IsNotEmpty(path)) {
                                     //存头像
                                     friend.setPhoto_code(path);
                                 }
@@ -251,4 +252,17 @@ public class FriendListActivity extends JwListActivity {
             }
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
 }

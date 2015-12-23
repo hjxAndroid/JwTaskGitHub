@@ -3,9 +3,11 @@ package com.jeeweel.syl.jwtask.business.main.module.basic;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+
 import com.jeeweel.syl.jwtask.R;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.CompoundBarcodeView;
+import com.umeng.analytics.MobclickAgent;
 
 public class JwCaptureActivity extends Activity {
 
@@ -18,7 +20,7 @@ public class JwCaptureActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.activity_jw_capture);
-        this.barcodeScannerView = (CompoundBarcodeView)this.findViewById(R.id.zxing_barcode_scanner);
+        this.barcodeScannerView = (CompoundBarcodeView) this.findViewById(R.id.zxing_barcode_scanner);
         this.capture = new CaptureManager(this, this.barcodeScannerView);
         this.capture.initializeFromIntent(this.getIntent(), savedInstanceState);
         this.capture.decode();
@@ -27,11 +29,13 @@ public class JwCaptureActivity extends Activity {
     protected void onResume() {
         super.onResume();
         this.capture.onResume();
+        MobclickAgent.onResume(this);
     }
 
     protected void onPause() {
         super.onPause();
         this.capture.onPause();
+        MobclickAgent.onResume(this);
     }
 
     protected void onDestroy() {

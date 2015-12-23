@@ -42,6 +42,7 @@ public class LoginActivity extends JwActivity {
 
     private List<Users> list;
     String device_token = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,15 +57,15 @@ public class LoginActivity extends JwActivity {
         UmengUpdateAgent.setUpdateOnlyWifi(false);
     }
 
-    private void autologin(){
+    private void autologin() {
         //boolean autu = false;
-        boolean autu = (boolean)SharedPreferencesUtils.get(getMy(),"autologin",false);
-        if(autu){
+        boolean autu = (boolean) SharedPreferencesUtils.get(getMy(), "autologin", false);
+        if (autu) {
             JwStartActivity(TabHostActivity.class);
             finish();
-        }else{
+        } else {
             Users users = JwAppAplication.getInstance().users;
-            if(null!=users){
+            if (null != users) {
                 String phone = users.getUsername();
                 etPhone.setText(phone);
             }
@@ -76,10 +77,10 @@ public class LoginActivity extends JwActivity {
         String phone = etPhone.getText().toString();
         String pwd = etPwd.getText().toString();
 
-        if(StrUtils.IsNotEmpty(phone)&&StrUtils.IsNotEmpty(pwd)){
+        if (StrUtils.IsNotEmpty(phone) && StrUtils.IsNotEmpty(pwd)) {
             showLoading();
-            new FinishRefresh(getMy()).execute(pwd,phone);
-        }else{
+            new FinishRefresh(getMy()).execute(pwd, phone);
+        } else {
             ToastShow("请输入用户名密码");
         }
 
@@ -118,9 +119,9 @@ public class LoginActivity extends JwActivity {
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
-            if(ListUtils.IsNotNull(list)){
+            if (ListUtils.IsNotNull(list)) {
                 result = "1";
-            }else{
+            } else {
                 result = "0";
             }
 
@@ -129,10 +130,10 @@ public class LoginActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 SharedPreferencesUtils.save(context, "autologin", true);
 
-                if(ListUtils.IsNotNull(list)){
+                if (ListUtils.IsNotNull(list)) {
                     Users users = list.get(0);
                     FinalDb finalDb = JwAppAplication.getInstance().finalDb;
                     finalDb.deleteAll(Users.class);
@@ -142,10 +143,22 @@ public class LoginActivity extends JwActivity {
                 }
                 JwStartActivity(TabHostActivity.class);
                 finish();
-            }else{
+            } else {
                 ToastShow("用户名或密码出错");
             }
             hideLoading();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

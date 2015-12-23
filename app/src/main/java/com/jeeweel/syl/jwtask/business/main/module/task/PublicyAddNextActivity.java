@@ -19,6 +19,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -66,20 +67,31 @@ public class PublicyAddNextActivity extends JwActivity {
     }
 
 
-
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
         if (StrUtils.IsNotEmpty(msg) && msg.equals("pulbicy_users")) {
             String json = activityMsgEvent.getParam();
-            if(StrUtils.IsNotEmpty(json)){
+            if (StrUtils.IsNotEmpty(json)) {
                 List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
-                if(ListUtils.IsNotNull(userdepts)){
+                if (ListUtils.IsNotNull(userdepts)) {
                     int size = userdepts.size();
                     tvNum.setText(IntUtils.toStr(size));
                 }
             }
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

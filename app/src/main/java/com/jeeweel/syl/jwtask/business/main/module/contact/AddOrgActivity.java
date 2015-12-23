@@ -8,6 +8,7 @@ import android.widget.EditText;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import api.util.Contants;
 import butterknife.Bind;
@@ -32,10 +33,22 @@ public class AddOrgActivity extends JwActivity {
     @OnClick(R.id.bt_ok)
     void nextClick() {
         String orgname = etOrgName.getText().toString();
-        if(StrUtils.IsNotEmpty(orgname)){
+        if (StrUtils.IsNotEmpty(orgname)) {
             JwStartActivity(AddDeptActivity.class, orgname);
-        }else{
+        } else {
             ToastShow("请输入组织名称");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

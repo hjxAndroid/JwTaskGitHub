@@ -8,6 +8,7 @@ import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.LoginActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
 
 import net.tsz.afinal.FinalDb;
@@ -46,9 +47,21 @@ public class SettingActivity extends JwActivity {
         FinalDb finalDb = JwAppAplication.getInstance().finalDb;
         finalDb.deleteAll(Users.class);
         //清空组织
-        SharedPreferencesUtils.remove(getMy(),Contants.org_code);
-        SharedPreferencesUtils.remove(getMy(),Contants.org_name);
+        SharedPreferencesUtils.remove(getMy(), Contants.org_code);
+        SharedPreferencesUtils.remove(getMy(), Contants.org_name);
         JwStartActivity(LoginActivity.class);
         finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

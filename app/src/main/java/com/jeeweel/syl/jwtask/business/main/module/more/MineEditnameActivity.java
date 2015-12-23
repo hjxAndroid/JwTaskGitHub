@@ -18,6 +18,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import api.view.CustomDialog;
 import butterknife.ButterKnife;
@@ -36,16 +37,16 @@ public class MineEditnameActivity extends JwActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mine_editname);
         ButterKnife.bind(this);
-        Intent intent=getIntent();
-        strtitle=intent.getStringExtra("title");
-        register=intent.getBooleanExtra("register", false);
-        et= (EditText) findViewById(R.id.et_name);
+        Intent intent = getIntent();
+        strtitle = intent.getStringExtra("title");
+        register = intent.getBooleanExtra("register", false);
+        et = (EditText) findViewById(R.id.et_name);
         users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
         setTitle(strtitle);
-        if(strtitle.equals("设置昵称")){
+        if (strtitle.equals("设置昵称")) {
             et.setText(users.getNickname());
-        }else if(strtitle.equals("设置邮箱")){
+        } else if (strtitle.equals("设置邮箱")) {
             et.setText(users.getEmail());
             et.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         }
@@ -61,7 +62,7 @@ public class MineEditnameActivity extends JwActivity {
                 dialog.dismiss();
                 //设置你的操作事项
                 finish();
-                Intent intent=new Intent();
+                Intent intent = new Intent();
                 intent.putExtra("register", true);
                 intent.setClass(MineEditnameActivity.this, MineActivity.class);
                 JwStartActivity(intent);
@@ -105,6 +106,7 @@ public class MineEditnameActivity extends JwActivity {
 
     private class saveNickName extends AsyncTask<String, Void, String> {
         private Context context;
+
         public saveNickName(Context context) {
             this.context = context;
         }
@@ -117,17 +119,17 @@ public class MineEditnameActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             String result = "1";
-            String sql="";
-            if(strtitle.equals("设置昵称")){
+            String sql = "";
+            if (strtitle.equals("设置昵称")) {
                 users.setNickname(str1);
-                sql="UPDATE users SET nickname='"+str1+"'WHERE username ='"+phone+"'";
-            }else if(strtitle.equals("设置邮箱")){
+                sql = "UPDATE users SET nickname='" + str1 + "'WHERE username ='" + phone + "'";
+            } else if (strtitle.equals("设置邮箱")) {
                 users.setEmail(str1);
-                sql="UPDATE users SET email='"+str1+"'WHERE username ='"+phone+"'";
+                sql = "UPDATE users SET email='" + str1 + "'WHERE username ='" + phone + "'";
             }
-            try{
+            try {
                 CloudDB.execSQL(sql);
-            }catch (CloudServiceException e){
+            } catch (CloudServiceException e) {
                 result = "0";
             }
             return result;
@@ -136,15 +138,15 @@ public class MineEditnameActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             hideLoading();
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 JwAppAplication.getFinalDb().update(users);
                 JwAppAplication.setUsers(users);
-                if(register==true){
+                if (register == true) {
                     showAlertDialog();
-                }else {
+                } else {
                     MineEditnameActivity.this.finish();
                 }
-            }else{
+            } else {
                 ToastShow("数据保存失败");
                 MineEditnameActivity.this.finish();
             }
@@ -156,13 +158,25 @@ public class MineEditnameActivity extends JwActivity {
         str1 = et.getText().toString();
         if (StrUtils.IsNotEmpty(str1)) {
             new saveNickName(getMy()).execute();
-        }else{
+        } else {
             ToastShow("内容不能为空（T T）");
         }
     }
 
     @OnClick(R.id.btn_del)
-    void delclick(){
+    void delclick() {
         et.setText("");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

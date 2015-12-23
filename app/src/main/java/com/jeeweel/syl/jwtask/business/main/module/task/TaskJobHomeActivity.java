@@ -20,6 +20,7 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class TaskJobHomeActivity extends JwActivity {
     News news;
 
     Users users;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_job_home);
@@ -78,10 +80,10 @@ public class TaskJobHomeActivity extends JwActivity {
 
         data = getResources().getStringArray(R.array.job_home_array);
 
-        if(news!=null){
+        if (news != null) {
             String readState = news.getReadstate();
             //已读
-            if(readState.equals("1")){
+            if (readState.equals("1")) {
                 news.setAuditor_state("0");
                 news.setPrincipal_state("0");
                 news.setParticipant_state("0");
@@ -90,7 +92,7 @@ public class TaskJobHomeActivity extends JwActivity {
         }
 
         //从首页过来
-        if(null==news){
+        if (null == news) {
             news = new News();
             news.setAuditor_state("0");
             news.setPrincipal_state("0");
@@ -122,7 +124,6 @@ public class TaskJobHomeActivity extends JwActivity {
         jobItem4.setData(data[4]);
         jobItem4.setNews_state(news.getObserver_state());
         jobItems.add(jobItem4);
-
 
 
         TypedArray imagesArrays = getResources().obtainTypedArray(
@@ -163,6 +164,16 @@ public class TaskJobHomeActivity extends JwActivity {
         });
     }
 
+    @Override
+    public void HttpFinish() {
+        finish();
+        super.HttpFinish();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 }

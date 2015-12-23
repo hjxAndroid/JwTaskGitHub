@@ -25,6 +25,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class PublicyContactHomeActivity extends JwActivity {
     List<List<Userdept>> childs = new ArrayList<List<Userdept>>();
 
     String tag = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,9 +143,9 @@ public class PublicyContactHomeActivity extends JwActivity {
                         @Override
                         public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
                             Userdept userdept = expandableAdapter.getList().get(groupPosition).getChilds().get(childPosition);
-                            Intent intent = new Intent(getMy(),PublicyUsersListActivity.class);
-                            intent.putExtra(StaticStrUtils.baseItem,userdept);
-                            intent.putExtra("tag",tag);
+                            Intent intent = new Intent(getMy(), PublicyUsersListActivity.class);
+                            intent.putExtra(StaticStrUtils.baseItem, userdept);
+                            intent.putExtra("tag", tag);
                             startActivity(intent);
                             finish();
                             return true;
@@ -171,5 +173,17 @@ public class PublicyContactHomeActivity extends JwActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

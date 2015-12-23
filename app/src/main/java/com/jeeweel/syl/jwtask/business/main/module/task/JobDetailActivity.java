@@ -32,6 +32,7 @@ import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.List;
 
@@ -99,6 +100,7 @@ public class JobDetailActivity extends JwActivity {
     CommonAdapter commonAdapter;
     List<Taskflow> taskflows;
     String orgCode;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -302,7 +304,7 @@ public class JobDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                OttUtils.push("news_refresh","");
+                OttUtils.push("news_refresh", "");
 
                 if (ListUtils.IsNotNull(tasks)) {
                     Task task = tasks.get(0);
@@ -572,5 +574,18 @@ public class JobDetailActivity extends JwActivity {
             hideLoading();
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
 
 }

@@ -26,6 +26,7 @@ import com.jeeweel.syl.lib.api.jwlib.baidumaps.BaiduLocationServiceImpl;
 import com.jeeweel.syl.lib.api.jwlib.baidumaps.ILocationCallback;
 import com.jeeweel.syl.lib.api.jwlib.baidumaps.LocationInfo;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,9 +59,8 @@ public class JwTabActivity extends ActivityGroup {
 
     //首页,自动更新相关
     private String downloadPath = "";
-//    private String downloadPath = "http://192.168.0.45:8080/";
+    //    private String downloadPath = "http://192.168.0.45:8080/";
     private String appVsrsion = "android_version.json";
-
 
 
     @Override
@@ -134,7 +134,7 @@ public class JwTabActivity extends ActivityGroup {
 
     // 定位相关,持续获取持续广播
     public void initLocation() {
-         baiduLocationService = new BaiduLocationServiceImpl(this, new ILocationCallback() {
+        baiduLocationService = new BaiduLocationServiceImpl(this, new ILocationCallback() {
             @Override
             public void callback(LocationInfo locationInfo) {
                 OttoBus.getDefault().post(new LocInfoEvent(StaticStrUtils.loc, locationInfo));
@@ -148,7 +148,7 @@ public class JwTabActivity extends ActivityGroup {
         baiduLocationServiceOne = new BaiduLocationServiceImpl(this, new ILocationCallback() {
             @Override
             public void callback(LocationInfo locationInfo) {
-                OttoBus.getDefault().post(new LocInfoEvent(StaticStrUtils.locone,locationInfo));
+                OttoBus.getDefault().post(new LocInfoEvent(StaticStrUtils.locone, locationInfo));
                 baiduLocationServiceOne.locateStop();
                 isLoc = true;
             }
@@ -159,6 +159,7 @@ public class JwTabActivity extends ActivityGroup {
     void startLocation() {
         baiduLocationService.locate();
     }
+
     void stopLocation() {
         baiduLocationService.locateStop();
     }
@@ -177,7 +178,7 @@ public class JwTabActivity extends ActivityGroup {
         } else if (msg.equals(StaticStrUtils.locone)) { //定位成功获取到地址后关闭定位
             startLocationOne();
         } else if (msg.equals(StaticStrUtils.locstop)) {
-           stopLocation();
+            stopLocation();
         }
     }
 
@@ -186,7 +187,7 @@ public class JwTabActivity extends ActivityGroup {
     public boolean dispatchKeyEvent(KeyEvent event) {
         if (event.getKeyCode() == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_DOWN
-                && event.getRepeatCount() == 0 )   {
+                && event.getRepeatCount() == 0) {
             if ((System.currentTimeMillis() - exitTime) > 2000) {
                 // Toast提示再按一次退出程序
                 Toast.makeText(
@@ -205,7 +206,6 @@ public class JwTabActivity extends ActivityGroup {
         }
         return super.dispatchKeyEvent(event);
     }
-
 
 
     /**
@@ -233,7 +233,7 @@ public class JwTabActivity extends ActivityGroup {
 
     private void setRadioButtondrawableTop(RadioButton radioButton,
                                            Drawable drawableTop) {
-        if (radioButton!=null) {
+        if (radioButton != null) {
             drawableTop.setBounds(0, 0, drawableTop.getIntrinsicWidth(),
                     drawableTop.getIntrinsicHeight());
             radioButton.setCompoundDrawables(null, drawableTop, null, null);
@@ -504,5 +504,17 @@ public class JwTabActivity extends ActivityGroup {
         // as you specify a parent activity in AndroidManifest.xml.
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

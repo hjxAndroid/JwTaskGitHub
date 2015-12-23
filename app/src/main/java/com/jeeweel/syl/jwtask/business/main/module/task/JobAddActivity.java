@@ -39,6 +39,7 @@ import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -607,20 +608,20 @@ public class JobAddActivity extends JwActivity {
             String cyz = task.getParticipant_code();
             String gcz = task.getObserver_code();
 
-            if(StrUtils.IsNotEmpty(fzr)){
+            if (StrUtils.IsNotEmpty(fzr)) {
                 all_code += fzr;
             }
 
-            if(StrUtils.IsNotEmpty(shr)){
-                all_code += ","+shr;
+            if (StrUtils.IsNotEmpty(shr)) {
+                all_code += "," + shr;
             }
 
-            if(StrUtils.IsNotEmpty(cyz)){
-                all_code += ","+cyz;
+            if (StrUtils.IsNotEmpty(cyz)) {
+                all_code += "," + cyz;
             }
 
-            if(StrUtils.IsNotEmpty(gcz)){
-                all_code += ","+gcz;
+            if (StrUtils.IsNotEmpty(gcz)) {
+                all_code += "," + gcz;
             }
 
             if (StrUtils.IsNotEmpty(title) && StrUtils.IsNotEmpty(content)) {
@@ -653,5 +654,17 @@ public class JobAddActivity extends JwActivity {
     public void HttpFinish() {
         super.HttpFinish();
         finish();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

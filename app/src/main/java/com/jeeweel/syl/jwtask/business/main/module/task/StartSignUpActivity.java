@@ -27,6 +27,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class StartSignUpActivity extends JwActivity {
         userName = StrUtils.IfNull(userNick, userPhone);
         tvUserPic.setText(userPic);
         tvUserName.setText(userName);
-        
+
         sign.setProuser_name(userName);
         sign.setProuser_code(user.getUser_code());
     }
@@ -118,6 +119,7 @@ public class StartSignUpActivity extends JwActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        MobclickAgent.onResume(this);
     }
 
     @OnClick(R.id.start_sign_button)
@@ -222,6 +224,7 @@ public class StartSignUpActivity extends JwActivity {
     private class saveSignInformaiton extends AsyncTask<String, Void, String> {
         private Context context;
         String result = "1";
+
         /**
          * @param context 上下文
          */
@@ -243,7 +246,7 @@ public class StartSignUpActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 pushData();
                 ToastShow("发起签到成功");
             }
@@ -272,7 +275,6 @@ public class StartSignUpActivity extends JwActivity {
         }
         return fName;
     }
-
 
 
     public void pushData() {
@@ -312,5 +314,11 @@ public class StartSignUpActivity extends JwActivity {
     public void HttpFinish() {
         finish();
         super.HttpFinish();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

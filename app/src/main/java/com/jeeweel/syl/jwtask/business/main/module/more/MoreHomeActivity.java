@@ -12,6 +12,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,10 +49,10 @@ public class MoreHomeActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(userNick)) {
             tvUserName.setText(userNick);
             if (!StrUtils.IsNotEmpty(users.getPhoto_code())) {
-                if(userNick.length()>2){
+                if (userNick.length() > 2) {
                     userNick = userNick.substring(userNick.length() - 2, userNick.length());
                     tvUserHead.setText(userNick);
-                }else{
+                } else {
                     tvUserHead.setText(userNick);
                 }
             }
@@ -59,6 +60,7 @@ public class MoreHomeActivity extends JwActivity {
 
 
         new GetUserPicture(getMy(), iv_user_head2, user_code).execute();
+        MobclickAgent.onResume(this);
     }
 
     @Override
@@ -96,6 +98,12 @@ public class MoreHomeActivity extends JwActivity {
     @OnClick(R.id.lineHelp)
     void helpClick() {
         JwStartActivity(FeedbackActivity.class);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

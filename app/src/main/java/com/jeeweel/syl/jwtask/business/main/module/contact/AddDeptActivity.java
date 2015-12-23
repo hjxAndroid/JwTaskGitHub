@@ -27,6 +27,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class AddDeptActivity extends JwActivity {
 
     private String orgname = "";
 
-    private String org_code="";
+    private String org_code = "";
 
     private String deptName = "";
 
@@ -143,10 +144,10 @@ public class AddDeptActivity extends JwActivity {
             //将组织，团队，和成员保存到数据库
             try {
                 String orgUnid = "";
-                if(StrUtils.IsNotEmpty(org_code)){
+                if (StrUtils.IsNotEmpty(org_code)) {
                     orgUnid = org_code;
                     //本来已经有，就不必再添加组织表
-                }else {
+                } else {
                     orgUnid = Utils.getUUid();
 
                     //添加到组织表
@@ -215,12 +216,24 @@ public class AddDeptActivity extends JwActivity {
             hideLoading();
             if (result.equals("1")) {
                 ToastShow("创建成功");
-                OttUtils.push("deptAdd_refresh","");
+                OttUtils.push("deptAdd_refresh", "");
                 finish();
             } else {
                 ToastShow("创建失败");
             }
 
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

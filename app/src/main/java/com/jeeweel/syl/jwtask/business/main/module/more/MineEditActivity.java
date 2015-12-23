@@ -14,6 +14,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,14 +31,14 @@ public class MineEditActivity extends JwActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_edit);
         ButterKnife.bind(this);
-        Intent intent=getIntent();
-        strtitle=intent.getStringExtra("title");
+        Intent intent = getIntent();
+        strtitle = intent.getStringExtra("title");
         setTitle(strtitle);
-        et= (EditText) findViewById(R.id.et_word);
-        users  = JwAppAplication.getInstance().users;
-        if(strtitle.equals("特长、兴趣")){
+        et = (EditText) findViewById(R.id.et_word);
+        users = JwAppAplication.getInstance().users;
+        if (strtitle.equals("特长、兴趣")) {
             et.setText(users.getStrong_point());
-        }else if(strtitle.equals("个性签名")){
+        } else if (strtitle.equals("个性签名")) {
             et.setText(users.getSign());
         }
     }
@@ -66,6 +67,7 @@ public class MineEditActivity extends JwActivity {
 
     private class saveData extends AsyncTask<String, Void, String> {
         private Context context;
+
         public saveData(Context context) {
             this.context = context;
         }
@@ -78,17 +80,17 @@ public class MineEditActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             String result = "1";
-            String sql="";
-            if(strtitle.equals("特长、兴趣")){
+            String sql = "";
+            if (strtitle.equals("特长、兴趣")) {
                 users.setStrong_point(str1);
-                sql="UPDATE users SET strong_point='"+str1+"'WHERE username ='"+phone+"'";
-            }else if(strtitle.equals("个性签名")){
+                sql = "UPDATE users SET strong_point='" + str1 + "'WHERE username ='" + phone + "'";
+            } else if (strtitle.equals("个性签名")) {
                 users.setSign(str1);
-                sql="UPDATE users SET sign='"+str1+"'WHERE username ='"+phone+"'";
+                sql = "UPDATE users SET sign='" + str1 + "'WHERE username ='" + phone + "'";
             }
-            try{
+            try {
                 CloudDB.execSQL(sql);
-            }catch (CloudServiceException e){
+            } catch (CloudServiceException e) {
                 result = "0";
             }
             return result;
@@ -97,9 +99,9 @@ public class MineEditActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             hideLoading();
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 JwAppAplication.getFinalDb().update(users);
-            }else{
+            } else {
                 ToastShow("数据保存失败");
             }
             MineEditActivity.this.finish();
@@ -108,9 +110,21 @@ public class MineEditActivity extends JwActivity {
 
     @OnClick(R.id.btnsub)
     void editClick() {
-        phone= users.getUsername();
+        phone = users.getUsername();
         str1 = et.getText().toString();
         new saveData(getMy()).execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

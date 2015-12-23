@@ -9,6 +9,7 @@ import com.jeeweel.syl.jwtask.business.main.module.more.cascade.BaseActivity;
 import com.jeeweel.syl.jwtask.business.main.module.more.cascade.widget.OnWheelChangedListener;
 import com.jeeweel.syl.jwtask.business.main.module.more.cascade.widget.WheelView;
 import com.jeeweel.syl.jwtask.business.main.module.more.cascade.widget.adapters.ArrayWheelAdapter;
+import com.umeng.analytics.MobclickAgent;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -40,25 +41,25 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
         area = users.getArea();
-        if(area!=null){
-            String str[]=area.split(",");
-            mCurrentProviceName=str[0];
+        if (area != null) {
+            String str[] = area.split(",");
+            mCurrentProviceName = str[0];
             int proviceItem = 0;
-            for(int i = 0; i<mProvinceDatas.length;i++){
-                if(mCurrentProviceName.equals(mProvinceDatas[i])){
+            for (int i = 0; i < mProvinceDatas.length; i++) {
+                if (mCurrentProviceName.equals(mProvinceDatas[i])) {
                     proviceItem = i;
                 }
             }
             mViewProvince.setCurrentItem(proviceItem);
 
-            mCurrentCityName=str[1];
+            mCurrentCityName = str[1];
             String[] cities = mCitisDatasMap.get(mCurrentProviceName);
             int cityItem = 0;
             if (cities == null) {
-                cities = new String[] { "" };
-            }else{
-                for(int i = 0; i<cities.length;i++){
-                    if(mCurrentCityName.equals(cities[i])){
+                cities = new String[]{""};
+            } else {
+                for (int i = 0; i < cities.length; i++) {
+                    if (mCurrentCityName.equals(cities[i])) {
                         cityItem = i;
                     }
                 }
@@ -66,14 +67,14 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
             mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(this, cities));
             mViewCity.setCurrentItem(cityItem);
 
-            mCurrentDistrictName=str[2];
+            mCurrentDistrictName = str[2];
             String[] areas = mDistrictDatasMap.get(mCurrentCityName);
             int areaItem = 0;
             if (areas == null) {
-                areas = new String[] { "" };
-            }else{
-                for(int i = 0; i<areas.length;i++){
-                    if(mCurrentDistrictName.equals(areas[i])){
+                areas = new String[]{""};
+            } else {
+                for (int i = 0; i < areas.length; i++) {
+                    if (mCurrentDistrictName.equals(areas[i])) {
                         areaItem = i;
                     }
                 }
@@ -135,7 +136,7 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         String[] areas = mDistrictDatasMap.get(mCurrentCityName);
 
         if (areas == null) {
-            areas = new String[] { "" };
+            areas = new String[]{""};
         }
         mViewDistrict.setViewAdapter(new ArrayWheelAdapter<String>(this, areas));
         mViewDistrict.setCurrentItem(0);
@@ -150,7 +151,7 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         mCurrentProviceName = mProvinceDatas[pCurrent];
         String[] cities = mCitisDatasMap.get(mCurrentProviceName);
         if (cities == null) {
-            cities = new String[] { "" };
+            cities = new String[]{""};
         }
         mViewCity.setViewAdapter(new ArrayWheelAdapter<String>(this, cities));
         mViewCity.setCurrentItem(0);
@@ -161,7 +162,7 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_confirm:
-                str1= mCurrentProviceName+","+mCurrentCityName+","+mCurrentDistrictName;
+                str1 = mCurrentProviceName + "," + mCurrentCityName + "," + mCurrentDistrictName;
                 new saveAddress(getMy()).execute();
                 break;
             default:
@@ -171,6 +172,7 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
 
     private class saveAddress extends AsyncTask<String, Void, String> {
         private Context context;
+
         public saveAddress(Context context) {
             this.context = context;
         }
@@ -184,10 +186,10 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         protected String doInBackground(String... params) {
             String result = "1";
             users.setArea(str1);
-            String sql="UPDATE users SET area='"+str1+"'WHERE username ='"+phone+"'";
-            try{
+            String sql = "UPDATE users SET area='" + str1 + "'WHERE username ='" + phone + "'";
+            try {
                 CloudDB.execSQL(sql);
-            }catch (CloudServiceException e){
+            } catch (CloudServiceException e) {
                 result = "0";
             }
             return result;
@@ -196,12 +198,24 @@ public class MineAddressActivity extends BaseActivity implements OnClickListener
         @Override
         protected void onPostExecute(String result) {
             hideLoading();
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 JwAppAplication.getFinalDb().update(users);
-            }else{
+            } else {
                 ToastShow("数据保存失败");
             }
             MineAddressActivity.this.finish();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

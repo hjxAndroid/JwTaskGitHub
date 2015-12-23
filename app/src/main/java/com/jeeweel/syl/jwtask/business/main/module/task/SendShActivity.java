@@ -53,6 +53,7 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.io.File;
 import java.io.IOException;
@@ -96,6 +97,7 @@ public class SendShActivity extends JwActivity {
     Activity context;
 
     Users users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +113,7 @@ public class SendShActivity extends JwActivity {
     }
 
     private void setData() {
-        if(null!=task){
+        if (null != task) {
             etTaskName.setText(StrUtils.IsNull(task.getTask_name()));
             etConfirmTime.setText(StrUtils.IsNull(task.getConfirm_time()));
         }
@@ -136,17 +138,17 @@ public class SendShActivity extends JwActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                 save();
+                save();
             }
         });
         addMenuView(menuTextView);
     }
 
-    private void save(){
+    private void save() {
         String wcqk = liWcqk.getText().toString();
         String yjfk = etYjfk.getText().toString();
         String zwpj = etZwpj.getText().toString();
-        if(StrUtils.IsNotEmpty(wcqk)){
+        if (StrUtils.IsNotEmpty(wcqk)) {
             showLoading();
 
             submit = new Submit();
@@ -157,7 +159,7 @@ public class SendShActivity extends JwActivity {
             submit.setEvaluate(StrUtils.IsNull(zwpj));
 
             new FinishRefresh(getMy()).execute();
-        }else{
+        } else {
             ToastShow("请输入完成情况");
         }
     }
@@ -227,8 +229,8 @@ public class SendShActivity extends JwActivity {
                     }
 
 
-                    if(null!=users){
-                        String sql = "update task set now_state = 2 , now_state_name = '未审核' where task_code = "+ StrUtils.QuotedStr(task.getTask_code()) +"and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
+                    if (null != users) {
+                        String sql = "update task set now_state = 2 , now_state_name = '未审核' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
                     }
 
@@ -522,5 +524,17 @@ public class SendShActivity extends JwActivity {
         Bimp.drr.clear();
         Bimp.max = 0;
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

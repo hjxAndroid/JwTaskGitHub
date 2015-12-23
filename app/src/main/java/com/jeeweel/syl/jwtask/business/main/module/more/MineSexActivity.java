@@ -15,6 +15,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -33,15 +34,15 @@ public class MineSexActivity extends JwActivity {
         setTitle(getString(R.string.minesex));
         ButterKnife.bind(this);
 
-        users  = JwAppAplication.getInstance().users;
+        users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
         iv_selm = (ImageView) findViewById(R.id.iv_selm);
         iv_selw = (ImageView) findViewById(R.id.iv_selw);
-        String str= users.getSex();
+        String str = users.getSex();
         if (StrUtils.IsNotEmpty(str)) {
-            if(str.equals("男")){
+            if (str.equals("男")) {
                 iv_selm.setVisibility(View.VISIBLE);
-            }else if(str.equals("女")){
+            } else if (str.equals("女")) {
                 iv_selw.setVisibility(View.VISIBLE);
             }
         }
@@ -49,6 +50,7 @@ public class MineSexActivity extends JwActivity {
 
     private class saveSex extends AsyncTask<String, Void, String> {
         private Context context;
+
         public saveSex(Context context) {
             this.context = context;
         }
@@ -61,10 +63,10 @@ public class MineSexActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             String result = "1";
-            String sql="UPDATE users SET sex='"+str1+"'WHERE username ='"+phone+"'";
-            try{
+            String sql = "UPDATE users SET sex='" + str1 + "'WHERE username ='" + phone + "'";
+            try {
                 CloudDB.execSQL(sql);
-            }catch (CloudServiceException e){
+            } catch (CloudServiceException e) {
                 result = "0";
             }
             return result;
@@ -73,10 +75,10 @@ public class MineSexActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             hideLoading();
-            if(result.equals("1")){
+            if (result.equals("1")) {
                 users.setSex(str1);
                 JwAppAplication.getFinalDb().update(users);
-            }else{
+            } else {
                 ToastShow("数据保存失败");
             }
             MineSexActivity.this.finish();
@@ -115,5 +117,17 @@ public class MineSexActivity extends JwActivity {
     void womanClick() {
         str1 = "女";
         new saveSex(getMy()).execute();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }

@@ -21,6 +21,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,7 @@ public class ContactHomeActivity extends JwActivity {
     List<List<Userdept>> childs = new ArrayList<List<Userdept>>();
 
     List<Userdept> list = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,7 +148,7 @@ public class ContactHomeActivity extends JwActivity {
                         @Override
                         public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
                             Userdept userdept = expandableAdapter.getList().get(groupPosition).getChilds().get(childPosition);
-                            JwStartActivity(DeptUsersListActivity.class,userdept);
+                            JwStartActivity(DeptUsersListActivity.class, userdept);
                             return true;
                         }
                     });
@@ -156,9 +158,9 @@ public class ContactHomeActivity extends JwActivity {
                         public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
                             Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
 
-                            Intent intent = new Intent(getMy(),AddDeptActivity.class);
-                            intent.putExtra(StaticStrUtils.baseItem,orgunit.getOrg_name());
-                            intent.putExtra("org_code",orgunit.getOrg_code());
+                            Intent intent = new Intent(getMy(), AddDeptActivity.class);
+                            intent.putExtra(StaticStrUtils.baseItem, orgunit.getOrg_name());
+                            intent.putExtra("org_code", orgunit.getOrg_code());
                             startActivity(intent);
 
                             return true;
@@ -196,6 +198,18 @@ public class ContactHomeActivity extends JwActivity {
             groups.clear();
             getDate();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
 }

@@ -7,6 +7,7 @@ import com.jeeweel.syl.jwtask.business.main.module.contact.ContactHomeActivity;
 import com.jeeweel.syl.jwtask.business.main.module.more.MoreHomeActivity;
 import com.jeeweel.syl.jwtask.business.main.module.news.NewsHomeActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.TaskHomeActivity;
+import com.umeng.analytics.MobclickAgent;
 
 //import com.special.ResideMenu.ResideMenu;
 //import com.special.ResideMenu.ResideMenuItem;
@@ -15,6 +16,7 @@ import com.jeeweel.syl.jwtask.business.main.module.task.TaskHomeActivity;
 public class TabHostActivity extends JwTabActivity {
 
     public static TabHostActivity self;
+
     //ResideMenu resideMenu;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,5 +97,16 @@ public class TabHostActivity extends JwTabActivity {
         return resideMenu.dispatchTouchEvent(ev);
     }*/
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
 
 }

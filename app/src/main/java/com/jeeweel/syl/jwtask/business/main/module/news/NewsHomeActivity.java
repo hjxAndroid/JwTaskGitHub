@@ -33,6 +33,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,8 +186,8 @@ public class NewsHomeActivity extends JwActivity {
                 //查找数据
                 newsList = jCloudDB.findAllBySql(News.class, newSql);
 
-               // String deletSql = "DROP TABLE tmp" + users.getUser_code();
-               //cv CloudDB.execSQL(deletSql);
+                // String deletSql = "DROP TABLE tmp" + users.getUser_code();
+                //cv CloudDB.execSQL(deletSql);
 
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
@@ -263,5 +264,17 @@ public class NewsHomeActivity extends JwActivity {
             showLoading();
             new FinishRefresh(getMy()).execute(myphone);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
