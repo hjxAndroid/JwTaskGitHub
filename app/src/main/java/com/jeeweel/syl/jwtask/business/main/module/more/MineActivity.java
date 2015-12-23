@@ -16,12 +16,14 @@ import android.widget.TextView;
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
+import com.jeeweel.syl.jcloudlib.db.utils.Utils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
@@ -138,7 +140,11 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(birthday)) {
             tv_birthday.setText(birthday);
         }
-        new GetUserPicture(getMy(), iv_user_head2, user_code).execute();
+        String pic_road=users.getPic_road();
+        if(StrUtils.IsNotEmpty(pic_road)){
+            JwImageLoader.displayImage(pic_road,iv_user_head2);
+        }
+
     }
 
     @Override
@@ -244,7 +250,7 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(birthday)) {
             String[] data = birthday.split("-");
             int year = Integer.parseInt(data[0]);
-            int mouth = Integer.parseInt(data[1]);
+            int mouth = Integer.parseInt(data[1])-1;
             int day = Integer.parseInt(data[2]);
             dialog = new DatePickerDialog(
                     this,

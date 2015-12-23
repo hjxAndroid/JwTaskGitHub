@@ -30,6 +30,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -55,13 +56,16 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
 
         users = JwAppAplication.getInstance().users;
         String user_code = users.getUser_code();
-        new GetUserPicture(getMy(), mImageHeader, user_code).execute();
+        String pic_road=users.getPic_road();
+        if(com.jeeweel.syl.jcloudlib.db.utils.StrUtils.IsNotEmpty(pic_road)){
+            JwImageLoader.displayImage(pic_road, mImageHeader);
+        }
     }
 
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.white));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
