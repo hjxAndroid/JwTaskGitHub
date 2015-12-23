@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape android:shape="rectangle"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/ios7blue"/>
+    <corners android:radius="5.0sp" />
+</shape>
+<!-- From: file:/D:/studioSpace/hospital180/app/src/main/res/drawable/shape_orange_edge_p.xml -->

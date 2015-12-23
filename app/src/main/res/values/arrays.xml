@@ -8,9 +8,9 @@
     </string-array>
 
     <string-array name="home_image_array">
-        <item>@drawable/chat_app_log_btn_normal</item>
-        <item>@drawable/chat_app_mail_btn_normal</item>
-        <item>@drawable/chat_app_namecard_btn_normal</item>
+        <item>@drawable/job_publicy</item>
+        <item>@drawable/job_sign</item>
+        <item>@drawable/job_task</item>
     </string-array>
 
     <string-array name="job_home_array">

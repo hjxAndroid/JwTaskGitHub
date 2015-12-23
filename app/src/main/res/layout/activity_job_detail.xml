@@ -319,7 +319,7 @@
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="考核标准:"
+                android:text="任务难度:"
                 android:textSize="13sp"
                 android:textColor="@color/gray"/>
 

@@ -265,7 +265,7 @@
     <!--钢兰色 -->
     <color name="royalblue">#4169E1</color>
     <!--IOS7深蓝 -->
-    <color name="ios7blue">#007aff</color>
+    <color name="ios7blue">#38adff</color>
     <!--皇家蓝 -->
     <color name="turquoise">#40E0D0</color>
     <!--青绿色 -->
@@ -342,4 +342,9 @@
     <color name="bottom_background">#f9f9f9</color>
     <!--返回蓝色-->
     <color name="back_blue">#38adff</color>
+    <!--浅灰-->
+    <color name="login_bg">#f0f5f8</color>
+
+
+
 </resources>

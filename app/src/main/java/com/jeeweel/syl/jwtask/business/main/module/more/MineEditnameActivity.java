@@ -139,8 +139,8 @@ public class MineEditnameActivity extends JwActivity {
         protected void onPostExecute(String result) {
             hideLoading();
             if (result.equals("1")) {
-                JwAppAplication.getFinalDb().update(users);
-                JwAppAplication.setUsers(users);
+                JwAppAplication.getInstance().getFinalDb().update(users);
+                JwAppAplication.getInstance().setUsers(users);
                 if (register == true) {
                     showAlertDialog();
                 } else {

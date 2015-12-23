@@ -96,7 +96,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/bg_button"
-        android:text="进入任务管理"
+        android:text="设置昵称"
         android:textColor="@color/white"
         android:textSize="16sp"/>
 

@@ -134,7 +134,7 @@ public class JobDetailActivity extends JwActivity {
 
             tvTaskYq.setText(StrUtils.IsNull(task.getTask_request()));
             tvYxj.setText(StrUtils.IsNull(task.getPriority()));
-            tvKhbz.setText(StrUtils.IsNull(task.getAssess_standard()));
+            tvKhbz.setText(StrUtils.IsNull(task.getDegree()));
 
             int state = task.getNow_state();
 
@@ -565,7 +565,7 @@ public class JobDetailActivity extends JwActivity {
             if (result.equals("1")) {
                 if (ListUtils.IsNotNull(taskflowNews)) {
                     taskflows.clear();
-                    taskflowNews.addAll(taskflowNews);
+                    taskflows.addAll(taskflowNews);
                     commonAdapter.notifyDataSetChanged();
                 }
             } else {

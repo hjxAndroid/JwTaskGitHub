@@ -92,9 +92,8 @@ public class FriendAddActivity extends JwActivity {
     }
 
     private void save(String friendPhone) {
-        List<Users> usersList = JwAppAplication.getInstance().finalDb.findAll(Users.class);
-        if (ListUtils.IsNotNull(usersList)) {
-            users = usersList.get(0);
+        Users users = JwAppAplication.getInstance().getUsers();
+        if (null!=users) {
             String nickname = users.getNickname();
             usercode = users.getUser_code();
             String myphone = users.getUsername();
