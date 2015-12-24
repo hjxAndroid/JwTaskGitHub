@@ -14,6 +14,8 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
@@ -46,6 +48,7 @@ public class SolveGiveUpActivity extends JwActivity {
     int flag = 0;
     @Bind(R.id.li_bt)
     LinearLayout liBt;
+    Users users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class SolveGiveUpActivity extends JwActivity {
         setContentView(R.layout.activity_solve_give_up);
         ButterKnife.bind(this);
         setTitle("放弃审核");
+        users = JwAppAplication.getInstance().getUsers();
         getData();
     }
 
@@ -114,6 +118,7 @@ public class SolveGiveUpActivity extends JwActivity {
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
                         taskflow.setTask_code(task.getTask_code());
+                        taskflow.setNickname(users.getNickname());
                         taskflow.setNow_state(8);
                         taskflow.setNow_state_name(Contants.yfq);
                         taskflow.setUser_action(Contants.action_tyfq);
@@ -123,6 +128,7 @@ public class SolveGiveUpActivity extends JwActivity {
                         CloudDB.execSQL(sql);
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setNickname(users.getNickname());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNow_state(9);
                         taskflow.setNow_state_name(Contants.fqbh);

@@ -22,11 +22,11 @@
     </string-array>
 
     <string-array name="job_home_image_array">
-        <item>@drawable/icon_friends</item>
-        <item>@drawable/icon_customer</item>
-        <item>@drawable/icon_group_conversation</item>
-        <item>@drawable/icon_dept</item>
-        <item>@drawable/icon_org</item>
+        <item>@drawable/job_wfb</item>
+        <item>@drawable/job_shr</item>
+        <item>@drawable/job_fzr</item>
+        <item>@drawable/job_cyz</item>
+        <item>@drawable/job_gcz</item>
     </string-array>
 
 

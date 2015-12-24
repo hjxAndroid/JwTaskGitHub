@@ -45,6 +45,7 @@ public class RegisterActivity extends JwActivity {
         String phone = etPhone.getText().toString();
         if (StrUtils.IsNotEmpty(phone)) {
             JwStartActivity(RegisterSceondActivity.class, phone);
+            finish();
         } else {
             ToastShow("请输入手机号码");
         }

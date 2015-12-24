@@ -142,6 +142,7 @@ public class RegisterLastActivity extends JwActivity {
                 intent.putExtra("title", "设置昵称");
                 intent.setClass(RegisterLastActivity.this, MineEditnameActivity.class);
                 JwStartActivity(intent);
+                finish();
                 //          JwStartActivity(TabHostActivity.class);
 
             } else if (result.equals("2")) {

@@ -553,6 +553,7 @@ public class JobAddActivity extends JwActivity {
 
                     //保存到流程表里
                     Taskflow taskflow = new Taskflow();
+                    taskflow.setNickname(users.getNickname());
                     taskflow.setTask_code(unid);
                     taskflow.setNow_state(0);
                     taskflow.setNow_state_name(Contants.wqr);

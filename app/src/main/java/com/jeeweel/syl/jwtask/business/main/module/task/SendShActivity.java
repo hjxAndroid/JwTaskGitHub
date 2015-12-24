@@ -237,6 +237,7 @@ public class SendShActivity extends JwActivity {
 
                     //保存到流程表里
                     Taskflow taskflow = new Taskflow();
+                    taskflow.setNickname(users.getNickname());
                     taskflow.setTask_code(task.getTask_code());
                     taskflow.setNow_state(2);
                     taskflow.setNow_state_name(Contants.wsh);

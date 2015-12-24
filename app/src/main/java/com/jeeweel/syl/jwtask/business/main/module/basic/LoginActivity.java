@@ -90,6 +90,7 @@ public class LoginActivity extends JwActivity {
     @OnClick(R.id.tv_rigster)
     void registerClick() {
         JwStartActivity(RegisterActivity.class);
+        finish();
     }
 
 

@@ -319,7 +319,7 @@ public class JobDetailActivity extends JwActivity {
                 commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                     @Override
                     public void convert(ViewHolder helper, Taskflow item) {
-                        helper.setText(R.id.tv_nick_name, item.getNickname());
+                        helper.setText(R.id.tv_nickname, item.getNickname());
                         helper.setText(R.id.tv_action, item.getUser_action());
                         helper.setText(R.id.tv_time, item.getCreate_time());
                     }
@@ -392,6 +392,7 @@ public class JobDetailActivity extends JwActivity {
                         task.setConfirm_time(DateHelper.getCurDateTime());
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setNickname(users.getNickname());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNow_state(1);
                         taskflow.setNow_state_name(Contants.yqr);
@@ -498,6 +499,7 @@ public class JobDetailActivity extends JwActivity {
 
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setNickname(users.getNickname());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNow_state(7);
                         taskflow.setNow_state_name(Contants.fqsqz);

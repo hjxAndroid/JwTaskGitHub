@@ -15,6 +15,8 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Applydelay;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
@@ -55,12 +57,14 @@ public class SolveDelayActivity extends JwActivity {
     @Bind(R.id.li_bt)
     LinearLayout liBt;
 
+    Users users;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solve_delay);
         ButterKnife.bind(this);
         setTitle("延期审核");
+        users = JwAppAplication.getInstance().getUsers();
         getData();
     }
 
@@ -177,6 +181,7 @@ public class SolveDelayActivity extends JwActivity {
                         CloudDB.execSQL(sql);
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setNickname(users.getNickname());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNow_state(5);
                         taskflow.setNow_state_name(Contants.yyq);
@@ -187,6 +192,7 @@ public class SolveDelayActivity extends JwActivity {
                         CloudDB.execSQL(sql);
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setNickname(users.getNickname());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNow_state(6);
                         taskflow.setNow_state_name(Contants.yqbh);

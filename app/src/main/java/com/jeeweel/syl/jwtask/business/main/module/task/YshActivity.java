@@ -171,7 +171,7 @@ public class YshActivity extends JwActivity {
                     commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                         @Override
                         public void convert(ViewHolder helper, Taskflow item) {
-                            helper.setText(R.id.tv_nick_name, item.getNickname());
+                            helper.setText(R.id.tv_nickname, item.getNickname());
                             helper.setText(R.id.tv_action, item.getUser_action());
                             helper.setText(R.id.tv_time, item.getCreate_time());
                         }

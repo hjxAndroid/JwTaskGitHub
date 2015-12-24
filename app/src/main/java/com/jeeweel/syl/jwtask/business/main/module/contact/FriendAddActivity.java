@@ -250,26 +250,18 @@ public class FriendAddActivity extends JwActivity {
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-        if (OUtils.IsNotNull(resMsgItem)) {
-            if (resMsgItem != null) {
-                int error = resMsgItem.getStatus();
-                String sMsg = resMsgItem.getMsg();
-                if (error == 1 || error == 99) {
-                    CroutonINFO(sMsg);
-                } else {
-                }
-            }
-            finish();
-        }
+        finish();
     }
 
     @Override
     public void HttpFail(String strMsg) {
+        finish();
         super.HttpFail(strMsg);
     }
 
     @Override
     public void HttpFinish() {
+        finish();
         super.HttpFinish();
     }
 
