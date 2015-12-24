@@ -315,9 +315,9 @@ public class PublicyListActivity extends JwListActivity {
             if (result.equals("1")) {
                 if (ListUtils.IsNotNull(orgunits)) {
                     JwStartActivity(PublicyAddActivity.class, orgunits.get(0));
+                }else {
+                    ToastShow("您不是管理员，没有权限发布公告");
                 }
-            } else {
-                ToastShow("您不是管理员，没有权限发布公告");
             }
             hideLoading();
         }

@@ -440,6 +440,7 @@ public class JobAddActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
             if (StrUtils.IsNotEmpty(json)) {
                 if (ListUtils.IsNotNull(userdepts)) {
+                    fzrCode = "";
                     String fzr = "";
                     for (Userdept userdept : userdepts) {
                         fzr += userdept.getNickname() + ",";
@@ -459,6 +460,7 @@ public class JobAddActivity extends JwActivity {
             if (StrUtils.IsNotEmpty(json)) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
+                    shrCode = "";
                     for (Userdept userdept : userdepts) {
                         fzr += userdept.getNickname() + ",";
                         shrCode += userdept.getUser_code() + ",";
@@ -476,6 +478,7 @@ public class JobAddActivity extends JwActivity {
             if (StrUtils.IsNotEmpty(json)) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
+                    gczCode = "";
                     for (Userdept userdept : userdepts) {
                         fzr += userdept.getNickname() + ",";
                         gczCode += userdept.getUser_code() + ",";
@@ -493,6 +496,7 @@ public class JobAddActivity extends JwActivity {
             if (StrUtils.IsNotEmpty(json)) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
+                    cyzCode = "";
                     for (Userdept userdept : userdepts) {
                         fzr += userdept.getNickname() + ",";
                         cyzCode += userdept.getUser_code() + ",";
