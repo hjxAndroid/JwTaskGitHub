@@ -25,6 +25,7 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
@@ -158,6 +159,9 @@ public class AddDeptActivity extends JwActivity {
                     orgunit.setFounder_name(users.getUsername());
                     orgunit.setNickname(users.getNickname());
                     jCloudDB.save(orgunit);
+
+                    SharedPreferencesUtils.save(getMy(), Contants.org_code, orgUnid);
+                    SharedPreferencesUtils.save(getMy(), Contants.org_name, orgname);
                 }
 
                 String deptUnid = Utils.getUUid();

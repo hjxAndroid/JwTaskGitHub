@@ -89,34 +89,34 @@ public class DeptSelectFriendListActivity extends JwListActivity {
 
         initRight();
         initListView();
-        cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
+            cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
 
-                if (cbAll.isChecked()) {
-                    // 遍历list的长度，将MyAdapter中的map值全部设为true
-                    for (int i = 0; i < list.size(); i++) {
-                        checkAdapter.getIsSelected().put(i, true);
-                    }
-                    // 数量设为list的长度
-                    checkNum = list.size();
-                    // 刷新listview和TextView的显示
-                    checkAdapter.notifyDataSetChanged();
-
-                } else {
-                    // 遍历list的长度，将已选的按钮设为未选
-                    for (int i = 0; i < list.size(); i++) {
-                        if (checkAdapter.getIsSelected().get(i)) {
-                            checkAdapter.getIsSelected().put(i, false);
-                            checkNum--;// 数量减1
+                    if (cbAll.isChecked()) {
+                        // 遍历list的长度，将MyAdapter中的map值全部设为true
+                        for (int i = 0; i < list.size(); i++) {
+                            checkAdapter.getIsSelected().put(i, true);
                         }
-                    }
-                    // 刷新listview和TextView的显示
-                    checkAdapter.notifyDataSetChanged();
+                        // 数量设为list的长度
+                        checkNum = list.size();
+                        // 刷新listview和TextView的显示
+                        checkAdapter.notifyDataSetChanged();
 
+                    } else {
+                        // 遍历list的长度，将已选的按钮设为未选
+                        for (int i = 0; i < list.size(); i++) {
+                            if (checkAdapter.getIsSelected().get(i)) {
+                                checkAdapter.getIsSelected().put(i, false);
+                                checkNum--;// 数量减1
+                            }
+                        }
+                        // 刷新listview和TextView的显示
+                        checkAdapter.notifyDataSetChanged();
+
+                    }
                 }
-            }
-        });
+            });
     }
 
 
@@ -212,7 +212,7 @@ public class DeptSelectFriendListActivity extends JwListActivity {
                 checkAdapter = new CheckFriendAdapter(mListItems, getMy());
                 listview.setAdapter(checkAdapter);
             } else {
-                //没有加载到数据
+                cbAll.setClickable(false);
             }
             hideLoading();
         }

@@ -67,6 +67,7 @@ public class CheckSignPersonActivity extends JwListActivity {
     V_sign_users v_sign_nickname;
     Signed signed;
     Sign sign;
+    List<Signed> arrList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,6 +274,7 @@ public class CheckSignPersonActivity extends JwListActivity {
             try {
                 listSum = jCloudDB.findAllBySql(V_sign_users.class, sql2);
                 handadd = new ArrayList<Signed>();
+                arrList = new ArrayList<Signed>();
                 for (int i = 0; i < listSum.size(); i++) {
                     v_sign_nickname = listSum.get(i);
                     signed = new Signed();
@@ -280,8 +282,9 @@ public class CheckSignPersonActivity extends JwListActivity {
                     signed.setCreate_time("");
                     signed.setLocation("");
                     handadd.add(signed);
+                    arrList.add(signed);
                 }
-                listRemain = removeList(handadd, list);
+                listRemain = removeList(handadd, list, arrList);
                 mListItems.clear();
             } catch (CloudServiceException e) {
                 e.printStackTrace();
@@ -400,9 +403,9 @@ public class CheckSignPersonActivity extends JwListActivity {
         unsignCounts.setTextColor(getResources().getColor(R.color.list_text_color));
     }
 
-    private List<Signed> removeList(List<Signed> list1, List<Signed> list2) {
-        for (int i = 0; i < list1.size(); i++) {
-            Signed signed1 = list1.get(i);
+    private List<Signed> removeList(List<Signed> list1, List<Signed> list2, List<Signed> list3) {
+        for (int i = 0; i < list3.size(); i++) {
+            Signed signed1 = list3.get(i);
             for (int j = 0; j < list2.size(); j++) {
                 Signed signed2 = list2.get(j);
                 if (signed1.getNickname().equals(signed2.getNickname())) {
