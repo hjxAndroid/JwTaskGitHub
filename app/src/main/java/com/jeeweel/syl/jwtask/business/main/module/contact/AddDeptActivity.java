@@ -215,7 +215,7 @@ public class AddDeptActivity extends JwActivity {
         protected void onPostExecute(String result) {
             hideLoading();
             if (result.equals("1")) {
-                ToastShow("创建成功");
+                ToastShow("添加成功");
                 OttUtils.push("deptAdd_refresh", "");
                 finish();
             } else {

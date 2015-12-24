@@ -264,7 +264,10 @@ public class CheckSignPersonActivity extends JwListActivity {
                     " create_time " +
                     " FROM " +
                     " v_sign_users " +
-                    " where sign_code= ? ");
+                    " where sign_code= ? " +
+                    " GROUP BY " +
+                    " sign_code, " +
+                    " sign_user_code ");
             sqlInfo2.addValue(signedCode);
             String sql2 = sqlInfo2.getBuildSql();
             try {
@@ -397,10 +400,12 @@ public class CheckSignPersonActivity extends JwListActivity {
         unsignCounts.setTextColor(getResources().getColor(R.color.list_text_color));
     }
 
-    public List<Signed> removeList(List<Signed> list1, List<Signed> list2) {
+    private List<Signed> removeList(List<Signed> list1, List<Signed> list2) {
         for (int i = 0; i < list1.size(); i++) {
+            Signed signed1 = list1.get(i);
             for (int j = 0; j < list2.size(); j++) {
-                if (list1.get(i).getNickname().equals(list2.get(j).getNickname())) {
+                Signed signed2 = list2.get(j);
+                if (signed1.getNickname().equals(signed2.getNickname())) {
                     list1.remove(i);
                 }
             }
