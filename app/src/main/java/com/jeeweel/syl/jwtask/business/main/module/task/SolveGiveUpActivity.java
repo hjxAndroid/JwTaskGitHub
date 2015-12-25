@@ -85,17 +85,17 @@ public class SolveGiveUpActivity extends JwActivity {
     void fzClick() {
         List<DegreeItem> mListItems = new ArrayList<DegreeItem>();
         DegreeItem degreeItem = new DegreeItem();
-        degreeItem.setDegree("简单");
+        degreeItem.setDegree("2");
         degreeItem.setDegree_score(2);
         mListItems.add(degreeItem);
 
         DegreeItem degreeItem1 = new DegreeItem();
-        degreeItem1.setDegree("一般");
+        degreeItem1.setDegree("4");
         degreeItem1.setDegree_score(4);
         mListItems.add(degreeItem1);
 
         DegreeItem degreeItem2 = new DegreeItem();
-        degreeItem2.setDegree("困难");
+        degreeItem2.setDegree("6");
         degreeItem2.setDegree_score(6);
         mListItems.add(degreeItem2);
 
