@@ -116,6 +116,11 @@ public class DeptUsersListActivity extends JwListActivity {
                         helper.setText(R.id.tv_user_head1, nickname);
                     }
                 }
+
+                if("1".equals(item.getAdmin_state())){
+                    ImageView tv_name = helper.getImageView(R.id.iv_admin);
+                    tv_name.setVisibility(View.VISIBLE);
+                }
             }
         };
         setCommonAdapter(commonAdapter);
@@ -208,10 +213,7 @@ public class DeptUsersListActivity extends JwListActivity {
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
-
-
             }
-
             return result;
         }
 
