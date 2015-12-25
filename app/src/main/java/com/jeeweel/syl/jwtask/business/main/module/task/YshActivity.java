@@ -74,6 +74,8 @@ public class YshActivity extends JwActivity {
     CommonAdapter commonAdapter;
     @Bind(R.id.tv_score)
     TextView tvScore;
+    @Bind(R.id.tv_rwnd)
+    TextView tvRwnd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,9 +132,10 @@ public class YshActivity extends JwActivity {
 
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
                             "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
-                    taskflows = jCloudDB.findAllByWhere(Taskflow.class,
-                            "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
+                    String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code());
+                    //查找数据
+                    taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -148,6 +151,7 @@ public class YshActivity extends JwActivity {
                 if (ListUtils.IsNotNull(list)) {
                     submit = list.get(0);
                     etTaskName.setText(StrUtils.IsNull(submit.getTask_name()));
+                    tvRwnd.setText(StrUtils.IsNull(task.getDegree()));
                     etConfirmTime.setText(StrUtils.IsNull(task.getConfirm_time()));
                     tvWcqk.setText(StrUtils.IsNull(submit.getPerformance()));
                     tvYjfk.setText(StrUtils.IsNull(submit.getFeedback()));
@@ -159,7 +163,7 @@ public class YshActivity extends JwActivity {
 
                 if (ListUtils.IsNotNull(pictureList)) {
                     final String imgs[] = new String[pictureList.size()];
-                    for(int i = 0; i<pictureList.size();i++){
+                    for (int i = 0; i < pictureList.size(); i++) {
                         imgs[i] = Utils.getPicUrl() + pictureList.get(i).getPic_road();
                     }
 
@@ -193,6 +197,9 @@ public class YshActivity extends JwActivity {
                             helper.setText(R.id.tv_nickname, item.getNickname());
                             helper.setText(R.id.tv_action, item.getUser_action());
                             helper.setText(R.id.tv_time, item.getCreate_time());
+
+                            ImageView imageView = helper.getImageView(R.id.iv_xz);
+                            JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
                         }
                     };
                     listview.setAdapter(commonAdapter);
