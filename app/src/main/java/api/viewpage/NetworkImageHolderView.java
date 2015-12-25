@@ -1,13 +1,17 @@
 package api.viewpage;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
+import api.util.Utils;
 
 /**
  * Created by Sai on 15/8/4.
@@ -39,11 +43,15 @@ public class NetworkImageHolderView implements CBPageAdapter.Holder<String>{
     	//imageView.setImageResource(R.drawable.ic_default_adimage);
 		final String[] datas = data.split(",");
 		ImageLoader.getInstance().displayImage(datas[0],imageView,options);
-		if(datas!=null&&datas.length>1){
+		if(datas!=null&&datas.length>=1){
 			imageView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
-
+					Intent intent = new Intent(context, ImagePagerActivity.class);
+					// 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
+					intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, datas);
+					intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+					context.startActivity(intent);
 				}
 			});
 		}

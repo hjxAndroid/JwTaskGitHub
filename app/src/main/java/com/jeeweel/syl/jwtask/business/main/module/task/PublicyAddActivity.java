@@ -95,6 +95,7 @@ public class PublicyAddActivity extends JwActivity {
                 String title = etTitle.getText().toString();
                 String content = etContent.getText().toString();
                 if (StrUtils.IsNotEmpty(title) && StrUtils.IsNotEmpty(content)) {
+                    showLoading();
                     publicity.setPublicity_title(title);
                     publicity.setPublicity_content(content);
                     //公告不选人，直接推送到组织

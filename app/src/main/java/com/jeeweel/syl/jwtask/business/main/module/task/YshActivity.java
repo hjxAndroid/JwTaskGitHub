@@ -20,6 +20,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Submit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -157,6 +158,11 @@ public class YshActivity extends JwActivity {
                 }
 
                 if (ListUtils.IsNotNull(pictureList)) {
+                    final String imgs[] = new String[pictureList.size()];
+                    for(int i = 0; i<pictureList.size();i++){
+                        imgs[i] = Utils.getPicUrl() + pictureList.get(i).getPic_road();
+                    }
+
                     CommonAdapter commonAdapter1 = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
                         @Override
                         public void convert(ViewHolder helper, Picture item) {
@@ -165,6 +171,19 @@ public class YshActivity extends JwActivity {
                         }
                     };
                     noScrollgridview.setAdapter(commonAdapter1);
+
+                    noScrollgridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if (imgs.length != 0) {
+                                Intent intent = new Intent(getMy(), ImagePagerActivity.class);
+                                // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
+                                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imgs);
+                                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+                                getMy().startActivity(intent);
+                            }
+                        }
+                    });
                 }
 
                 if (ListUtils.IsNotNull(taskflows)) {
