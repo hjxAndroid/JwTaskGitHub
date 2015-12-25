@@ -117,7 +117,7 @@ public class DeptUsersListActivity extends JwListActivity {
                     }
                 }
 
-                if("1".equals(item.getAdmin_state())){
+                if(item.getAdmin_state()==1){
                     ImageView tv_name = helper.getImageView(R.id.iv_admin);
                     tv_name.setVisibility(View.VISIBLE);
                 }
