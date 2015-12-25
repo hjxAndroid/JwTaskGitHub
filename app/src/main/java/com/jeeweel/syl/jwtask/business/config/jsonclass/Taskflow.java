@@ -48,6 +48,15 @@ public class Taskflow extends BaseItem {
      * 所做操作
      */
     private String user_action;
+    /**
+     * 所做操作
+     */
+    private String pic_code;
+    /**
+     * 所做操作
+     */
+    private String pic_road;
+
 
     public int getMid() {
         return mid;
@@ -128,5 +137,21 @@ public class Taskflow extends BaseItem {
 
     public void setUser_action(String user_action) {
         this.user_action = user_action;
+    }
+
+    public String getPic_code() {
+        return pic_code;
+    }
+
+    public void setPic_code(String pic_code) {
+        this.pic_code = pic_code;
+    }
+
+    public String getPic_road() {
+        return pic_road;
+    }
+
+    public void setPic_road(String pic_road) {
+        this.pic_road = pic_road;
     }
 }
