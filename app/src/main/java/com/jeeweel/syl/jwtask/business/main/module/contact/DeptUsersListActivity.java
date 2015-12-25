@@ -186,12 +186,11 @@ public class DeptUsersListActivity extends JwListActivity {
                         result = "1";
                         for (Userdept userdept : list) {
                             //取头像
-                            String friend_code = userdept.getUser_code();
-
+                            String user_code = userdept.getUser_code();
                             String sSql = "pic_code=?";
                             SqlInfo sqlInfo = new SqlInfo();
                             sqlInfo.setSql(sSql);
-                            sqlInfo.addValue(friend_code);
+                            sqlInfo.addValue(user_code);
                             sSql = sqlInfo.getBuildSql();
                             List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
                             if (ListUtils.IsNotNull(pictureList)) {

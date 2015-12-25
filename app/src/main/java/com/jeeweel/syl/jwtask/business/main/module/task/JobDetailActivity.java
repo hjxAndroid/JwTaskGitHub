@@ -17,15 +17,18 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
+import com.jeeweel.syl.jwtask.business.main.module.service.Helper;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
@@ -289,9 +292,9 @@ public class JobDetailActivity extends JwActivity {
                     }
                 }
 
-
-                taskflows = jCloudDB.findAllByWhere(Taskflow.class,
-                        "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
+                String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code());
+                //查找数据
+                taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -322,6 +325,9 @@ public class JobDetailActivity extends JwActivity {
                         helper.setText(R.id.tv_nickname, item.getNickname());
                         helper.setText(R.id.tv_action, item.getUser_action());
                         helper.setText(R.id.tv_time, item.getCreate_time());
+
+                        ImageView imageView = helper.getImageView(R.id.iv_xz);
+                       // JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl());
                     }
                 };
                 listview.setAdapter(commonAdapter);
