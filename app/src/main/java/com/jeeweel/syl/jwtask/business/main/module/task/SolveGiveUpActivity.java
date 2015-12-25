@@ -128,6 +128,7 @@ public class SolveGiveUpActivity extends JwActivity {
                         CloudDB.execSQL(sql);
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setUser_code(users.getUser_code());
                         taskflow.setNickname(users.getNickname());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNow_state(9);
