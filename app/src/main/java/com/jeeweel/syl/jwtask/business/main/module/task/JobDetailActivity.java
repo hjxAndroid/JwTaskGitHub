@@ -356,6 +356,12 @@ public class JobDetailActivity extends JwActivity {
                                 intent.putExtra(StaticStrUtils.baseItem, task);
                                 startActivity(intent);
                                 break;
+                            case 8:
+                                JwStartActivity(SolveGiveUpDetail.class, task);
+                                break;
+                            case 9:
+                                JwStartActivity(SolveGiveUpDetail.class, task);
+                                break;
                             default:
                                 break;
                         }
@@ -502,7 +508,6 @@ public class JobDetailActivity extends JwActivity {
                     if (null != task) {
                         String sql = "update task set now_state = 7 , now_state_name = '放弃申请中'  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
-
 
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();

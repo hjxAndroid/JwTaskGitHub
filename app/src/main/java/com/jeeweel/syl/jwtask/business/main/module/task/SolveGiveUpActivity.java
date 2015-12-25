@@ -18,7 +18,6 @@ import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.DegreeItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -41,34 +40,43 @@ import butterknife.OnClick;
 
 public class SolveGiveUpActivity extends JwActivity {
 
+    Task task;
+    int flag = 0;
+    Users users;
     @Bind(R.id.tv_rmw)
     TextView tvRmw;
+    @Bind(R.id.li_start_time)
+    LinearLayout liStartTime;
     @Bind(R.id.tv_kssj)
     TextView tvKssj;
+    @Bind(R.id.li_end_time)
+    LinearLayout liEndTime;
     @Bind(R.id.tv_jiesusj)
     TextView tvJiesusj;
     @Bind(R.id.tv_rwyq)
     TextView tvRwyq;
     @Bind(R.id.tv_fqly)
     TextView tvFqly;
-    @Bind(R.id.btn_ty)
-    Button btnTy;
-    @Bind(R.id.btn_jj)
-    Button btnJj;
-
-    Task task;
-    int flag = 0;
-    @Bind(R.id.li_bt)
-    LinearLayout liBt;
-    Users users;
     @Bind(R.id.et_bhly)
     EditText etBhly;
     @Bind(R.id.degree_score)
     TextView degreeScore;
+    @Bind(R.id.li_degree_score)
+    LinearLayout liDegreeScore;
+    @Bind(R.id.btn_ty)
+    Button btnTy;
+    @Bind(R.id.btn_jj)
+    Button btnJj;
+    @Bind(R.id.li_bt)
+    LinearLayout liBt;
+
 
     private String bhly;
+    private String score;
 
     private AlertDialog dialog;
+
+    private String[] data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,37 +91,24 @@ public class SolveGiveUpActivity extends JwActivity {
     //绩效分值
     @OnClick(R.id.li_degree_score)
     void fzClick() {
-        List<DegreeItem> mListItems = new ArrayList<DegreeItem>();
-        DegreeItem degreeItem = new DegreeItem();
-        degreeItem.setDegree("2");
-        degreeItem.setDegree_score(2);
-        mListItems.add(degreeItem);
-
-        DegreeItem degreeItem1 = new DegreeItem();
-        degreeItem1.setDegree("4");
-        degreeItem1.setDegree_score(4);
-        mListItems.add(degreeItem1);
-
-        DegreeItem degreeItem2 = new DegreeItem();
-        degreeItem2.setDegree("6");
-        degreeItem2.setDegree_score(6);
-        mListItems.add(degreeItem2);
-
-        DegreeItem degreeItem3 = new DegreeItem();
-        degreeItem3.setDegree("极难");
-        degreeItem3.setDegree_score(8);
-        mListItems.add(degreeItem3);
+        data = getResources().getStringArray(R.array.khbz_array);
+        List<String> stringList = new ArrayList<>();
+        for (int i = 0; i < data.length; i++) {
+            stringList.add(data[i]);
+        }
+        showDialog(stringList);
     }
 
     //同意
     @OnClick(R.id.btn_ty)
     void tyClick() {
         flag = 0;
+        score = degreeScore.getText().toString();
         bhly = etBhly.getText().toString();
-        if (StrUtils.IsNotEmpty(bhly)) {
+        if (StrUtils.IsNotEmpty(bhly) && StrUtils.IsNotEmpty(score)) {
             new changeTask(getMy()).execute();
         } else {
-            ToastShow("请填写理由");
+            ToastShow("请填写信息");
         }
     }
 
@@ -125,7 +120,7 @@ public class SolveGiveUpActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(bhly)) {
             new changeTask(getMy()).execute();
         } else {
-            ToastShow("请填写理由");
+            ToastShow("请填写信息");
         }
     }
 
@@ -134,6 +129,8 @@ public class SolveGiveUpActivity extends JwActivity {
         String flag = getIntent().getStringExtra("flag");
         if (StrUtils.IsNotEmpty(flag)) {
             liBt.setVisibility(View.GONE);
+            etBhly.setVisibility(View.GONE);
+            degreeScore.setVisibility(View.GONE);
         }
         if (null != task) {
             tvRmw.setText(StrUtils.IsNull(task.getTask_name()));
@@ -168,10 +165,11 @@ public class SolveGiveUpActivity extends JwActivity {
                 if (null != task) {
                     String sql = "";
                     if (flag == 0) {
-                        sql = "update task set now_state = 8 , now_state_name = '已放弃',reject_content = " + StrUtils.QuotedStr(bhly) + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(task.getAuditor_code());
+                        sql = "update task set now_state = 8 , now_state_name = '已放弃',reject_content = " + StrUtils.QuotedStr(bhly) + ",degree_score = " + score + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(task.getAuditor_code());
                         CloudDB.execSQL(sql);
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setUser_code(users.getUser_code());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNickname(users.getNickname());
                         taskflow.setNow_state(8);
@@ -179,7 +177,7 @@ public class SolveGiveUpActivity extends JwActivity {
                         taskflow.setUser_action(Contants.action_tyfq);
                         jCloudDB.save(taskflow);
                     } else if (flag == 1) {
-                        sql = "update task set now_state = 9 , now_state_name = '放弃驳回',reject_content = " + StrUtils.QuotedStr(bhly) + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(task.getAuditor_code());
+                        sql = "update task set now_state = 9 , now_state_name = '放弃驳回',reject_content = " + StrUtils.QuotedStr(bhly) + ",degree_score = " + score + "  where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(task.getAuditor_code());
                         CloudDB.execSQL(sql);
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
@@ -230,7 +228,7 @@ public class SolveGiveUpActivity extends JwActivity {
     }
 
 
-    private void showDegreeDialog(final int postion, List<DegreeItem> mListItems) {
+    private void showDialog(List<String> mListItems) {
 
         dialog = new AlertDialog.Builder(getMy()).create();// 创建一个AlertDialog对象
         View view = SolveGiveUpActivity.this.getLayoutInflater().inflate(R.layout.item_task_dialog,
@@ -246,19 +244,18 @@ public class SolveGiveUpActivity extends JwActivity {
 
         ListView listView = (ListView) view.findViewById(R.id.listview);
 
-        final CommonAdapter commonAdapter = new CommonAdapter<DegreeItem>(getMy(), mListItems, R.layout.item_friend_detail) {
+        final CommonAdapter commonAdapter = new CommonAdapter<String>(getMy(), mListItems, R.layout.item_friend_detail) {
             @Override
-            public void convert(ViewHolder helper, DegreeItem item) {
-                helper.setText(R.id.tv_org_name, item.getDegree());
+            public void convert(ViewHolder helper, String item) {
+                helper.setText(R.id.tv_org_name, item);
             }
         };
         listView.setAdapter(commonAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                DegreeItem item = (DegreeItem) commonAdapter.getItem(position);
-                //紧急程度
-                degreeScore.setText(item.getDegree());
+                String item = (String) commonAdapter.getItem(position);
+                degreeScore.setText(item);
                 dialog.cancel();
             }
         });

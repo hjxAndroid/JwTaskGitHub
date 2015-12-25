@@ -17,7 +17,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <!-- 友盟推送 -->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
@@ -477,6 +477,10 @@
         <activity
             android:name=".business.imagedemo.image.ImagePagerActivity"
             android:label="@string/title_activity_my_job_detail" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.SolveGiveUpDetail"
+            android:label="@string/title_activity_solve_give_up_detail" >
         </activity>
     </application>
 

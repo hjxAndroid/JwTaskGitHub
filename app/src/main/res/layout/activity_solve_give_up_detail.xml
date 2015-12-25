@@ -192,20 +192,7 @@
             </LinearLayout>
 
 
-            <EditText android:id="@+id/et_bhly"
-                android:layout_width="fill_parent"
-                android:layout_height="95dp"
-                android:paddingLeft="10.0dip"
-                android:paddingTop="5dp"
-                android:background="@drawable/settings_up_select"
-                android:gravity="top"
-                android:hint="驳回理由"
-                android:textColorHint="@color/text_gray"
-                android:textSize="@dimen/textSize_normal"
-                android:textColor="@color/list_text_name_color">
-            </EditText>
-
-            <LinearLayout android:id="@+id/li_degree_score"
+            <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="45dp"
                 android:layout_centerHorizontal="true"
@@ -229,9 +216,42 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10.0dip"
                     android:layout_weight="1.0"
-                    android:hint="请选择"
                     android:maxLength="20"
                     android:maxLines="1"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:textColorHint="@color/text_gray"
+                    android:textSize="@dimen/textSize_normal"
+                    android:textColor="@color/list_text_name_color"/>
+
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/li_degree_score"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/settings_up_select"
+                android:gravity="center_vertical"
+                android:clickable="true">
+
+                <TextView
+                    android:layout_width="65dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10.0dip"
+                    android:layout_marginLeft="5.0dip"
+                    android:layout_marginTop="10.0dip"
+                    android:text="驳回理由"
+                    android:textColor="@color/list_text_name_color"
+                    android:textSize="@dimen/textSize_normal" />
+
+                <TextView
+                    android:id="@+id/tv_bhly"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10.0dip"
+                    android:layout_weight="1.0"
+                    android:maxLength="20"
+                    android:maxLines="3"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
                     android:textColorHint="@color/text_gray"
@@ -242,34 +262,5 @@
         </LinearLayout>
     </ScrollView>
 
-
-    <LinearLayout android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentBottom="true"
-        android:gravity="center_vertical"
-        android:id="@+id/li_bt"
-        android:orientation="horizontal"
-        android:layout_marginBottom="5dp">
-        <Button
-            android:id="@+id/btn_ty"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/selector_gary_edge"
-            android:gravity="center"
-            android:text="同意"
-            android:textColor="@color/list_text_orange_color"
-            android:textSize="@dimen/textSize_normal" />
-        <Button
-            android:id="@+id/btn_jj"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:background="@drawable/selector_gary_edge"
-            android:gravity="center"
-            android:text="拒绝"
-            android:textColor="@color/list_text_color"
-            android:textSize="@dimen/textSize_normal" />
-    </LinearLayout>
 
 </RelativeLayout>
