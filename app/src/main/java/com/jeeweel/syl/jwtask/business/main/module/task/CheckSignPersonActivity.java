@@ -67,7 +67,6 @@ public class CheckSignPersonActivity extends JwListActivity {
     V_sign_users v_sign_nickname;
     Signed signed;
     Sign sign;
-    List<Signed> arrList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -265,16 +264,12 @@ public class CheckSignPersonActivity extends JwListActivity {
                     " create_time " +
                     " FROM " +
                     " v_sign_users " +
-                    " where sign_code= ? " +
-                    " GROUP BY " +
-                    " sign_code, " +
-                    " sign_user_code ");
+                    " where sign_code= ? ");
             sqlInfo2.addValue(signedCode);
             String sql2 = sqlInfo2.getBuildSql();
             try {
                 listSum = jCloudDB.findAllBySql(V_sign_users.class, sql2);
                 handadd = new ArrayList<Signed>();
-                arrList = new ArrayList<Signed>();
                 for (int i = 0; i < listSum.size(); i++) {
                     v_sign_nickname = listSum.get(i);
                     signed = new Signed();
@@ -282,9 +277,8 @@ public class CheckSignPersonActivity extends JwListActivity {
                     signed.setCreate_time("");
                     signed.setLocation("");
                     handadd.add(signed);
-                    arrList.add(signed);
                 }
-                listRemain = removeList(handadd, list, arrList);
+                listRemain = removeList(handadd, list);
                 mListItems.clear();
             } catch (CloudServiceException e) {
                 e.printStackTrace();
@@ -403,12 +397,10 @@ public class CheckSignPersonActivity extends JwListActivity {
         unsignCounts.setTextColor(getResources().getColor(R.color.list_text_color));
     }
 
-    private List<Signed> removeList(List<Signed> list1, List<Signed> list2, List<Signed> list3) {
-        for (int i = 0; i < list3.size(); i++) {
-            Signed signed1 = list3.get(i);
+    public List<Signed> removeList(List<Signed> list1, List<Signed> list2) {
+        for (int i = 0; i < list1.size(); i++) {
             for (int j = 0; j < list2.size(); j++) {
-                Signed signed2 = list2.get(j);
-                if (signed1.getNickname().equals(signed2.getNickname())) {
+                if (list1.get(i).getNickname().equals(list2.get(j).getNickname())) {
                     list1.remove(i);
                 }
             }

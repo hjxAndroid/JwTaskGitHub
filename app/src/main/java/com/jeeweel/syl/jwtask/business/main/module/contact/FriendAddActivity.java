@@ -56,7 +56,6 @@ public class FriendAddActivity extends JwActivity {
         setTitle("添加好友");
         ButterKnife.bind(this);
         initRight();
-        users = JwAppAplication.getInstance().getUsers();
     }
 
 
@@ -93,6 +92,7 @@ public class FriendAddActivity extends JwActivity {
     }
 
     private void save(String friendPhone) {
+        Users users = JwAppAplication.getInstance().getUsers();
         if (null!=users) {
             String nickname = users.getNickname();
             usercode = users.getUser_code();

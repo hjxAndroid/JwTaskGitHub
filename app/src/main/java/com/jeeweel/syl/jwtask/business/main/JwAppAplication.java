@@ -14,6 +14,9 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.lib.api.core.base.JeeweelApplication;
 import com.jeeweel.syl.lib.api.core.base.PublicColors;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UTrack;
 import com.umeng.message.UmengMessageHandler;
@@ -66,6 +69,10 @@ public class JwAppAplication extends JeeweelApplication {
         SMSSDK.initSDK(this, APPKEY, APPSECRET);
         finalDb = FinalDb.create(this);
 
+        //初始ImageLoader
+        initImagloader();
+
+        //初始友盟
         initUmeng();
 
         jCloudDB = new JCloudDB();
@@ -125,6 +132,26 @@ public class JwAppAplication extends JeeweelApplication {
     public static void setUsers(Users users) {
         JwAppAplication.users = users;
     }
+
+
+    private void initImagloader(){
+        DisplayImageOptions defaultOptions = new DisplayImageOptions
+                .Builder()
+                .showImageForEmptyUri(R.drawable.empty_photo)
+                .showImageOnFail(R.drawable.empty_photo)
+                .cacheInMemory(true)
+                .cacheOnDisc(true)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration
+                .Builder(getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .discCacheSize(50 * 1024 * 1024)//
+                .discCacheFileCount(100)//缓存一百张图片
+                .writeDebugLogs()
+                .build();
+        ImageLoader.getInstance().init(config);
+    }
+
 
     private void initUmeng(){
 
