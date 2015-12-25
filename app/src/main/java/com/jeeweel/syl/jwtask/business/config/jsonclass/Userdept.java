@@ -38,6 +38,7 @@ public class Userdept extends BaseItem{
     private String create_time;
     private String update_time;
     private String photo_code;
+    private int admin_state;
 
     public int getMid() {
         return mid;
@@ -133,6 +134,14 @@ public class Userdept extends BaseItem{
 
     public void setPhoto_code(String photo_code) {
         this.photo_code = photo_code;
+    }
+
+    public int getAdmin_state() {
+        return admin_state;
+    }
+
+    public void setAdmin_state(int admin_state) {
+        this.admin_state = admin_state;
     }
 }
 

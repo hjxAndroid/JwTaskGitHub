@@ -327,7 +327,7 @@ public class JobDetailActivity extends JwActivity {
                         helper.setText(R.id.tv_time, item.getCreate_time());
 
                         ImageView imageView = helper.getImageView(R.id.iv_xz);
-                       // JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl());
+                        JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
                     }
                 };
                 listview.setAdapter(commonAdapter);
@@ -398,6 +398,7 @@ public class JobDetailActivity extends JwActivity {
                         task.setConfirm_time(DateHelper.getCurDateTime());
                         //保存到流程表里
                         Taskflow taskflow = new Taskflow();
+                        taskflow.setUser_code(users.getUser_code());
                         taskflow.setNickname(users.getNickname());
                         taskflow.setTask_code(task.getTask_code());
                         taskflow.setNow_state(1);
@@ -557,8 +558,9 @@ public class JobDetailActivity extends JwActivity {
 
 
             try {
-                taskflowNews = jCloudDB.findAllByWhere(Taskflow.class,
-                        "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
+                String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code());
+                //查找数据
+                taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();

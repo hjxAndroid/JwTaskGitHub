@@ -181,8 +181,9 @@ public class FinishShActivity extends JwActivity {
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
                             "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
-                    taskflows = jCloudDB.findAllByWhere(Taskflow.class,
-                            "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
+                    String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code());
+                    //查找数据
+                    taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
 
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
                             "task_code=" + StrUtils.QuotedStr(task.getTask_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
@@ -253,6 +254,9 @@ public class FinishShActivity extends JwActivity {
                             helper.setText(R.id.tv_nickname, item.getNickname());
                             helper.setText(R.id.tv_action, item.getUser_action());
                             helper.setText(R.id.tv_time, item.getCreate_time());
+
+                            ImageView imageView = helper.getImageView(R.id.iv_xz);
+                            JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
                         }
                     };
                     listview.setAdapter(commonAdapter);
@@ -379,7 +383,7 @@ public class FinishShActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                ToastShow("发布成功");
+                ToastShow("审核成功");
                 OttUtils.push("sh_refresh", "");
                 finish();
             } else {

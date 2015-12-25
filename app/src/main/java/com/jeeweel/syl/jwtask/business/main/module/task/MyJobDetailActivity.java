@@ -168,6 +168,9 @@ public class MyJobDetailActivity extends JwActivity {
                             helper.setText(R.id.tv_nick_name, item.getNickname());
                             helper.setText(R.id.tv_action, item.getUser_action());
                             helper.setText(R.id.tv_time, item.getCreate_time());
+
+                            ImageView imageView = helper.getImageView(R.id.iv_xz);
+                            JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
                         }
                     };
                     listview.setAdapter(commonAdapter);

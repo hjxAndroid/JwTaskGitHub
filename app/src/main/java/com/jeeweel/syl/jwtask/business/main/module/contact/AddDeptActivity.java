@@ -162,11 +162,22 @@ public class AddDeptActivity extends JwActivity {
 
                 String deptUnid = Utils.getUUid();
 
-                Friend myfriend = new Friend();
-                myfriend.setFriend_code(users.getUser_code());
-                myfriend.setFriend_name(users.getUsername());
-                myfriend.setFriend_nickname(users.getNickname());
-                friendList.add(myfriend);
+                Userdept adminuserdept = new Userdept();
+                adminuserdept.setOrg_code(orgUnid);
+                adminuserdept.setOrg_name(orgname);
+                adminuserdept.setDept_code(deptUnid);
+                adminuserdept.setDept_name(deptName);
+                adminuserdept.setUser_code(users.getUser_code());
+                adminuserdept.setUsername(users.getUsername());
+                adminuserdept.setNickname(users.getNickname());
+                adminuserdept.setAdmin_state(1);
+                jCloudDB.save(adminuserdept);
+
+//                Friend myfriend = new Friend();
+//                myfriend.setFriend_code(users.getUser_code());
+//                myfriend.setFriend_name(users.getUsername());
+//                myfriend.setFriend_nickname(users.getNickname());
+//                friendList.add(myfriend);
 
                 //添加到部门表
                 Dept dept = new Dept();
