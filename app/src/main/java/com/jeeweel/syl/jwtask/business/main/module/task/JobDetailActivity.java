@@ -126,7 +126,7 @@ public class JobDetailActivity extends JwActivity {
         if (null != task) {
 
             if (users != null) {
-                new GetUserPicture(getMy(), ivXz, task.getPromulgator_code()).execute();
+                new GetUserPicture(getMy(), ivXz, users.getUser_code()).execute();
             }
 
             tvNickname.setText(StrUtils.IsNull(task.getNickname()));

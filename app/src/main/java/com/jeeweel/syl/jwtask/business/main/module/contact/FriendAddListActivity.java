@@ -66,7 +66,6 @@ public class FriendAddListActivity extends JwListActivity {
         ButterKnife.bind(this);
         initView();
         initListViewController();
-        OttUtils.push("news_refresh", "");
     }
 
     private void initView() {
