@@ -63,9 +63,8 @@ public class MinePhotoActivity extends JwActivity implements OnClickListener {
 
         users = JwAppAplication.getInstance().users;
         user_code = users.getUser_code();
-        String pic_road=users.getPic_road();
-        if(StrUtils.IsNotEmpty(pic_road)){
-            JwImageLoader.displayImage(pic_road, mImageHeader);
+        if(StrUtils.IsNotEmpty(users.getPic_road())){
+            JwImageLoader.displayImage(users.getPic_all_road(),mImageHeader);
         }
     }
 

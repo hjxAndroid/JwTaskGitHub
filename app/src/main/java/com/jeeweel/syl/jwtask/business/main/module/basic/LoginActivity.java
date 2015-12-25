@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.basic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.more.MineEditnameActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
@@ -138,7 +140,6 @@ public class LoginActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                SharedPreferencesUtils.save(context, "autologin", true);
 
                 if (ListUtils.IsNotNull(list)) {
                     Users users = list.get(0);
@@ -147,9 +148,20 @@ public class LoginActivity extends JwActivity {
                     finalDb.save(users);
                     JwAppAplication.getInstance().setUsers(users);
                     MobclickAgent.onProfileSignIn(users.getUsername());
+
+                    if (StrUtils.IsNotEmpty(users.getNickname())) {
+                        SharedPreferencesUtils.save(context, "autologin", true);
+                        JwStartActivity(TabHostActivity.class);
+                        finish();
+                    }else{
+                        Intent intent = new Intent();
+                        intent.putExtra("register", true);
+                        intent.putExtra("title", "设置昵称");
+                        intent.setClass(LoginActivity.this, MineEditnameActivity.class);
+                        JwStartActivity(intent);
+                       // finish();
+                    }
                 }
-                JwStartActivity(TabHostActivity.class);
-                finish();
             } else {
                 ToastShow("用户名或密码出错");
             }

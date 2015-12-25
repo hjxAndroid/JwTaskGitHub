@@ -60,9 +60,8 @@ public class MoreHomeActivity extends JwActivity {
                 }
             }
         }
-        String pic_road=users.getPic_road();
-        if(StrUtils.IsNotEmpty(pic_road)){
-            JwImageLoader.displayImage(pic_road, iv_user_head2);
+        if(StrUtils.IsNotEmpty(users.getPic_road())){
+            JwImageLoader.displayImage(users.getPic_all_road(),iv_user_head2);
         }
         MobclickAgent.onResume(this);
     }
@@ -113,9 +112,8 @@ public class MoreHomeActivity extends JwActivity {
     public void changePhoto(ActivityMsgEvent activityMsgEvent) {
         if (activityMsgEvent.getMsg().equals("photo_refresh")) {
             users = JwAppAplication.getInstance().users;
-            String pic_road=users.getPic_road();
-            if(StrUtils.IsNotEmpty(pic_road)){
-                JwImageLoader.displayImage(pic_road,iv_user_head2);
+            if(StrUtils.IsNotEmpty(users.getPic_road())){
+                JwImageLoader.displayImage(users.getPic_all_road(),iv_user_head2);
             }
         }
     }

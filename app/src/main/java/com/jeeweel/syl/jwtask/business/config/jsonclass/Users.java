@@ -185,14 +185,19 @@ public class Users {
     }
 
     public String getPic_road() {
-        return Utils.getPicUrl()+pic_road;
+        return pic_road;
     }
 
     public void setPic_road(String pic_road) {
         this.pic_road = pic_road;
     }
 
-    public String isPic_exists() {
+    //获取图片全路径
+    public String getPic_all_road() {
+        return Utils.getPicUrl()+pic_road;
+    }
+
+    public String getPic_exists() {
         return pic_exists;
     }
 
