@@ -13,10 +13,12 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -199,6 +201,32 @@ public class DeptSelectFriendListActivity extends JwListActivity {
                     result = "1";
                 } else {
                     result = "0";
+                }
+
+
+                for (Friend friend : list) {
+                    //取头像
+                    String friend_code = friend.getFriend_code();
+
+                    String sSql = "pic_code=?";
+                    SqlInfo sqlInfo = new SqlInfo();
+                    sqlInfo.setSql(sSql);
+                    sqlInfo.addValue(friend_code);
+                    sSql = sqlInfo.getBuildSql();
+                    List<Picture> pictureList = null;
+                    try {
+                        pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+                    } catch (CloudServiceException e) {
+                        e.printStackTrace();
+                    }
+                    if (ListUtils.IsNotNull(pictureList)) {
+                        Picture picture = pictureList.get(0);
+                        String path = picture.getPic_road();
+                        if (StrUtils.IsNotEmpty(path)) {
+                            //存头像
+                            friend.setPhoto_code(path);
+                        }
+                    }
                 }
             }
 
