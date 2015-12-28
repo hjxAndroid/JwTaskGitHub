@@ -25,6 +25,7 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
@@ -129,7 +130,7 @@ public class AddDeptActivity extends JwActivity {
      */
     private class FinishRefresh extends AsyncTask<String, Void, String> {
         private Context context;
-
+        private String orgUnid;
         /**
          * @param context 上下文
          */
@@ -143,7 +144,6 @@ public class AddDeptActivity extends JwActivity {
             String result = "1";
             //将组织，团队，和成员保存到数据库
             try {
-                String orgUnid = "";
                 if (StrUtils.IsNotEmpty(org_code)) {
                     orgUnid = org_code;
                     //本来已经有，就不必再添加组织表
@@ -226,6 +226,8 @@ public class AddDeptActivity extends JwActivity {
         protected void onPostExecute(String result) {
             hideLoading();
             if (result.equals("1")) {
+                SharedPreferencesUtils.save(getMy(), Contants.org_code, orgUnid);
+                SharedPreferencesUtils.save(getMy(), Contants.org_name, orgname);
                 ToastShow("创建成功");
                 OttUtils.push("deptAdd_refresh", "");
                 finish();
