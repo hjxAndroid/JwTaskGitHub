@@ -56,6 +56,7 @@ public class FriendAddActivity extends JwActivity {
         setTitle("添加好友");
         ButterKnife.bind(this);
         initRight();
+        users = JwAppAplication.getInstance().getUsers();
     }
 
 
@@ -92,7 +93,6 @@ public class FriendAddActivity extends JwActivity {
     }
 
     private void save(String friendPhone) {
-        Users users = JwAppAplication.getInstance().getUsers();
         if (null!=users) {
             String nickname = users.getNickname();
             usercode = users.getUser_code();
@@ -137,7 +137,7 @@ public class FriendAddActivity extends JwActivity {
             List<Friend> friendsList = null;
             try {
                 friendsList = jCloudDB.findAllByWhere(Friend.class,
-                        "user_name = " + myPhone + " and friend_name=" + StrUtils.QuotedStr(friendPhone) + "and state = 2");
+                        "user_name = " + myPhone + " and friend_name=" + StrUtils.QuotedStr(friendPhone));
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
