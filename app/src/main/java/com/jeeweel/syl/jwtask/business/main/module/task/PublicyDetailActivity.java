@@ -89,7 +89,11 @@ public class PublicyDetailActivity extends JwActivity {
 
             String wd = publicity.getUnread();
             if (StrUtils.IsNotEmpty(wd)) {
-                tvWd.setText(wd + "人未读");
+                int intWd = Integer.parseInt(wd);
+                if(intWd<0){
+                    intWd = 0;
+                }
+                tvWd.setText(intWd + "人未读");
             }
             String yd = publicity.getAlread();
             if (StrUtils.IsNotEmpty(yd)) {

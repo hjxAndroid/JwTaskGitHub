@@ -358,7 +358,7 @@ public class FinishShActivity extends JwActivity {
                     CloudDB.execSQL(sqlsubmit);
 
                     if (null != users) {
-                        String sql = "update task set now_state = 3 , now_state_name = '已审核' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
+                        String sql = "update task set now_state = 3 , now_state_name = '已审核' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
                     }
 
