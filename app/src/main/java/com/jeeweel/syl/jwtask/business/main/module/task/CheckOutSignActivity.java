@@ -73,7 +73,11 @@ public class CheckOutSignActivity extends JwListActivity {
     private void initUser() {
         userNick = users.getNickname();
         if (StrUtils.IsNotEmpty(userNick)) {
-            userPic = userNick.substring(userNick.length() - 2, userNick.length());
+            if (userNick.length() > 2) {
+                userPic = userNick.substring(userNick.length() - 2, userNick.length());
+            } else {
+                userPic = userNick;
+            }
         } else {
             userPic = "";
         }

@@ -122,7 +122,7 @@ public class SignUpActivity extends JwActivity {
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("我的签到");
-        menuTextView.setTextColor(getResources().getColor(R.color.black));
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
@@ -190,7 +190,11 @@ public class SignUpActivity extends JwActivity {
         userPhone = user.getUsername();
         signUserCode = user.getUser_code();
         if (StrUtils.IsNotEmpty(userNick)) {
-            signUserPic = userNick.substring(userNick.length() - 2, userNick.length());
+            if (userNick.length() > 2) {
+                signUserPic = userNick.substring(userNick.length() - 2, userNick.length());
+            } else {
+                signUserPic = userNick;
+            }
         } else {
             signUserPic = "姓名";
         }

@@ -10,10 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.main.module.photo.ImageGridActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
+import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+
+import api.util.Utils;
 
 
 public class CheckFriendAdapter extends BaseAdapter {
@@ -25,6 +32,7 @@ public class CheckFriendAdapter extends BaseAdapter {
     private Context context;
     // 用来导入布局
     private LayoutInflater inflater = null;
+    private String friendNickName;
 
     // 构造器
     public CheckFriendAdapter(List<Friend> list, Context context) {
@@ -69,6 +77,8 @@ public class CheckFriendAdapter extends BaseAdapter {
             holder.tv = (TextView) convertView.findViewById(R.id.tv_name);
             holder.nick = (TextView) convertView.findViewById(R.id.tv_nick_name);
             holder.cb = (CheckBox) convertView.findViewById(R.id.item_cb);
+            holder.iv = (ImageView) convertView.findViewById(R.id.iv_head_pic);
+            holder.tv_cir=(TextView)convertView.findViewById(R.id.tv_cir);
             // 为view设置标签
             convertView.setTag(holder);
         } else {
@@ -85,13 +95,25 @@ public class CheckFriendAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 boolean check = holders.cb.isChecked();
-                if(check){
+                if (check) {
                     getIsSelected().put(position, check);
-                }else{
+                } else {
                     getIsSelected().put(position, check);
                 }
             }
         });
+        friendNickName = list.get(position).getFriend_nickname();
+        if (StrUtils.IsNotEmpty(list.get(position).getPhoto_code())) {
+            JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPhoto_code(), holder.iv);
+        } else {
+            holder.tv_cir.setVisibility(View.VISIBLE);
+            if (friendNickName.length() > 2) {
+                friendNickName = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
+                holder.tv_cir.setText(friendNickName);
+            } else {
+                holder.tv_cir.setText(friendNickName);
+            }
+        }
         return convertView;
     }
 
@@ -107,5 +129,7 @@ public class CheckFriendAdapter extends BaseAdapter {
         public TextView tv;
         public TextView nick;
         public CheckBox cb;
+        public TextView tv_cir;
+        public ImageView iv;
     }
 }

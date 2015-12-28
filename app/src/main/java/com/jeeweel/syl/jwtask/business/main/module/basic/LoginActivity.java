@@ -124,7 +124,7 @@ public class LoginActivity extends JwActivity {
                 sqlInfo.addValue(phone);
                 sqlInfo.addValue(pwd);
                 sSql = sqlInfo.getBuildSql();
-                list = jCloudDB.findAllBySql(Users.class,sSql);
+                list = jCloudDB.findAllBySql(Users.class, sSql);
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
@@ -153,13 +153,13 @@ public class LoginActivity extends JwActivity {
                         SharedPreferencesUtils.save(context, "autologin", true);
                         JwStartActivity(TabHostActivity.class);
                         finish();
-                    }else{
+                    } else {
                         Intent intent = new Intent();
                         intent.putExtra("register", true);
                         intent.putExtra("title", "设置昵称");
                         intent.setClass(LoginActivity.this, MineEditnameActivity.class);
                         JwStartActivity(intent);
-                       // finish();
+                        // finish();
                     }
                 }
             } else {
