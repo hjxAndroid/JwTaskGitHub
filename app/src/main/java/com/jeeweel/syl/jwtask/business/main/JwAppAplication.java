@@ -28,6 +28,9 @@ import net.tsz.afinal.FinalDb;
 import java.util.List;
 
 import api.util.Contants;
+
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobSMS;
 import cn.smssdk.SMSSDK;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
@@ -53,6 +56,8 @@ public class JwAppAplication extends JeeweelApplication {
     //友盟推送
     private static final String TAG = JwAppAplication.class.getName();
     private PushAgent mPushAgent;
+
+    private String Bmob_ID = "76b5654046319eb094cbb0b3c0e4c5af";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -75,6 +80,8 @@ public class JwAppAplication extends JeeweelApplication {
         //初始友盟
         initUmeng();
 
+        //Bomb短信验证
+        Bmob.initialize(this, Bmob_ID);
         jCloudDB = new JCloudDB();
 
         try {

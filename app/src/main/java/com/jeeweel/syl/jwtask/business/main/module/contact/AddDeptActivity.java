@@ -173,6 +173,14 @@ public class AddDeptActivity extends JwActivity {
                 adminuserdept.setAdmin_state(1);
                 jCloudDB.save(adminuserdept);
 
+                //添加到组织用户表
+                Userorg adminuserorg = new Userorg();
+                adminuserorg.setOrg_code(orgUnid);
+                adminuserorg.setOrg_name(orgname);
+                adminuserorg.setUser_code(users.getUser_code());
+                adminuserorg.setUser_name(users.getUsername());
+                adminuserorg.setNickname(users.getNickname());
+                jCloudDB.save(adminuserorg);
 //                Friend myfriend = new Friend();
 //                myfriend.setFriend_code(users.getUser_code());
 //                myfriend.setFriend_name(users.getUsername());

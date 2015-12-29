@@ -118,7 +118,7 @@ public class NewsHomeActivity extends JwActivity {
                 if (StrUtils.IsNotEmpty(readSum) && StrUtils.IsNotEmpty(alread)) {
                     unread = Integer.parseInt(readSum) - Integer.parseInt(alread);
                 }
-                if (unread != 0) {
+                if (unread > 0) {
                     tv_news_num.setVisibility(View.VISIBLE);
                     tv_news_num.setText(IntUtils.toStr(unread));
                 } else {

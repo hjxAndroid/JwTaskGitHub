@@ -299,7 +299,7 @@ public class FriendAddListActivity extends JwListActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            String result = "0";
+            String result = "1";
             try {
                 if (null != users) {
                     String myphone = users.getUsername();
@@ -307,6 +307,7 @@ public class FriendAddListActivity extends JwListActivity {
                     CloudDB.execSQL(sql);
                 }
             } catch (CloudServiceException e) {
+                result = "0";
                 e.printStackTrace();
             }
 

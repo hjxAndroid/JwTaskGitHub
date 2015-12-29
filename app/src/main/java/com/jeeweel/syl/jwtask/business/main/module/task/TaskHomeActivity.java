@@ -80,7 +80,6 @@ public class TaskHomeActivity extends JwActivity {
         ButterKnife.bind(this);
         initView();
         initRight();
-        getData();
 
     }
 
@@ -91,7 +90,8 @@ public class TaskHomeActivity extends JwActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                showDialog();
+                showLoading();
+                new FinishRefresh(getMy()).execute();
             }
         });
         addMenuView(menuTextView);
@@ -255,7 +255,7 @@ public class TaskHomeActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-
+                showDialog();
             } else {
                 ToastShow("组织获取出错");
             }

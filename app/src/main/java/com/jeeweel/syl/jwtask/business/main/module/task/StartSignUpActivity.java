@@ -5,10 +5,11 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
@@ -18,12 +19,11 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.contact.DeptAddFriendListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -45,8 +45,6 @@ import butterknife.OnClick;
  * Created by Ragn on 2015/11/27.
  */
 public class StartSignUpActivity extends JwActivity {
-    @Bind(R.id.tv_user_pic)
-    TextView tvUserPic;
     @Bind(R.id.tv_username)
     TextView tvUserName;
     @Bind(R.id.tv_week)
@@ -84,6 +82,8 @@ public class StartSignUpActivity extends JwActivity {
     JCloudDB jCloudDB;
     SignAdapter signAdapter;
     String fName;
+    @Bind(R.id.iv_user_pic)
+    ImageView ivUserPic;
     private String isUserCode;
 
     @Override
@@ -94,30 +94,8 @@ public class StartSignUpActivity extends JwActivity {
         setTitle("发起签到");
         initDate();
         initView();
-        sign = new Sign();
-        sign_code = Utils.getUUid();
-        sign.setSign_code(sign_code);
-        List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
-        if (list != null && list.size() > 0) {
-            user = list.get(0);
-        }
-        userNick = user.getNickname();
-        userPhone = user.getUsername();
-        if (StrUtils.IsNotEmpty(userNick)) {
-            if (userNick.length() > 2) {
-                userPic = userNick.substring(userNick.length() - 2, userNick.length());
-            } else {
-                userPic = userNick;
-            }
-        } else {
-            userPic = "姓名";
-        }
-        userName = StrUtils.IfNull(userNick, userPhone);
-        tvUserPic.setText(userPic);
-        tvUserName.setText(userName);
 
-        sign.setProuser_name(userName);
-        sign.setProuser_code(user.getUser_code());
+
     }
 
     @Override
@@ -190,6 +168,33 @@ public class StartSignUpActivity extends JwActivity {
 
     //日期初始化
     private void initDate() {
+        sign = new Sign();
+        sign_code = Utils.getUUid();
+        sign.setSign_code(sign_code);
+        List<Users> list = JwAppAplication.getInstance().finalDb.findAll(Users.class);
+        if (list != null && list.size() > 0) {
+            user = list.get(0);
+            new GetUserPicture(getMy(), ivUserPic, user.getUser_code()).execute();
+
+            userNick = user.getNickname();
+            userPhone = user.getUsername();
+            if (StrUtils.IsNotEmpty(userNick)) {
+                if (userNick.length() > 2) {
+                    userPic = userNick.substring(userNick.length() - 2, userNick.length());
+                } else {
+                    userPic = userNick;
+                }
+            } else {
+                userPic = "姓名";
+            }
+            userName = StrUtils.IfNull(userNick, userPhone);
+            tvUserName.setText(userName);
+
+            sign.setProuser_name(userName);
+            sign.setProuser_code(user.getUser_code());
+        }
+
+
         Date date = new Date();
         dayOfWeek = DateHelper.getDayOfWeek(date) - 1;
         tvStartTime = DateHelper.getCurrentTime();

@@ -35,10 +35,14 @@ dependencies {
     compile files('libs/umeng-update-v2.6.0.1.jar')
     //友盟推送
     compile files('libs/com.umeng.message.lib_v2.6.0.jar')
+    //bmob-sms ：Bmob单独为短信服务提供的包
+    compile files('libs/Bmob_Push_V0.6beta_20150408.jar')
+    compile files('libs/BmobSDK_V3.4.5_1111.jar')
     //定位LOC
    // compile files('libs/locSDK_6.13.jar')
     /*    //日期控件
         compile 'com.github.flavienlaurent.datetimepicker:library:0.0.2'*/
     compile files('libs/umeng-analytics-v5.6.4.jar')
-
+    //bmob-sms ：Bmob单独为短信服务提供的包
+   // compile 'cn.bmob.android:bmob-sms:1.0.1'
 }
