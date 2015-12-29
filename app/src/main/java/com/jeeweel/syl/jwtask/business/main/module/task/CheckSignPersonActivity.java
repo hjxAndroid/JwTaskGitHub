@@ -19,10 +19,12 @@ import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListVi
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import butterknife.Bind;
@@ -64,6 +66,7 @@ public class CheckSignPersonActivity extends JwListActivity {
     List<V_sign_users> listSum;
     List<Signed> listRemain;
     List<Signed> handadd;
+    List<Signed> signedList;
     V_sign_users v_sign_nickname;
     Signed signed;
     Sign sign;
@@ -270,6 +273,7 @@ public class CheckSignPersonActivity extends JwListActivity {
             try {
                 listSum = jCloudDB.findAllBySql(V_sign_users.class, sql2);
                 handadd = new ArrayList<Signed>();
+                signedList = new ArrayList<Signed>();
                 for (int i = 0; i < listSum.size(); i++) {
                     v_sign_nickname = listSum.get(i);
                     signed = new Signed();
@@ -277,8 +281,10 @@ public class CheckSignPersonActivity extends JwListActivity {
                     signed.setCreate_time("");
                     signed.setLocation("");
                     handadd.add(signed);
+                    signedList.add(signed);
+
                 }
-                listRemain = removeList(handadd, list);
+                listRemain = removeList(handadd, list, signedList);
                 mListItems.clear();
             } catch (CloudServiceException e) {
                 e.printStackTrace();
@@ -397,15 +403,32 @@ public class CheckSignPersonActivity extends JwListActivity {
         unsignCounts.setTextColor(getResources().getColor(R.color.list_text_color));
     }
 
-    public List<Signed> removeList(List<Signed> list1, List<Signed> list2) {
-        for (int i = 0; i < list1.size(); i++) {
+    public List<Signed> removeList(List<Signed> list1, List<Signed> list2, List<Signed> list3) {
+        List<Signed> list;
+        Signed signed;
+        for (int i = 0; i < list3.size(); i++) {
             for (int j = 0; j < list2.size(); j++) {
-                if (list1.get(i).getNickname().equals(list2.get(j).getNickname())) {
-                    list1.remove(i);
+                if (list3.get(i).getNickname().equals(list2.get(j).getNickname())) {
+                    list1.remove(list3.get(i));
+//                    list1.remove(i);
+//                    signed = new Signed();
+//                    list1.add(i, signed);
                 }
             }
         }
+//        list = clearEmpty(list1);
         return list1;
+    }
+
+    private List<Signed> clearEmpty(List<Signed> list) {
+        Signed signed;
+        Iterator<Signed> listIterator = list.iterator();
+        if (listIterator.hasNext()) {
+            signed=listIterator.next();
+            if(OUtils.IsNull(signed))
+            list.remove(signed);
+        }
+        return list;
     }
 
     @Override
