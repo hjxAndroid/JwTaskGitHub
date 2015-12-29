@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.news;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.JwCaptureActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.PublicyListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.SignListActivity;
@@ -75,7 +77,23 @@ public class NewsHomeActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle(getString(R.string.news));
         initView();
+        initRight();
         getData();
+    }
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("刷新");
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                allList.clear();
+                showLoading();
+                new FinishRefresh(getMy()).execute(myphone);
+            }
+        });
+        addMenuView(menuTextView);
     }
 
     private void initView() {
