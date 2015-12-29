@@ -10,10 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
+
+import api.util.Utils;
 
 
 public class CheckAdapter extends BaseAdapter {
@@ -69,6 +73,7 @@ public class CheckAdapter extends BaseAdapter {
             holder.tv = (TextView) convertView.findViewById(R.id.tv_name);
             holder.nick = (TextView) convertView.findViewById(R.id.tv_nick_name);
             holder.cb = (CheckBox) convertView.findViewById(R.id.item_cb);
+            holder.iv_head_pic = (ImageView) convertView.findViewById(R.id.iv_head_pic);
             // 为view设置标签
             convertView.setTag(holder);
         } else {
@@ -79,6 +84,7 @@ public class CheckAdapter extends BaseAdapter {
         // 设置list中TextView的显示
         holder.tv.setText(list.get(position).getUsername());
         holder.nick.setText(list.get(position).getNickname());
+        JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPhoto_code(), holder.iv_head_pic);
         // 根据isSelected来设置checkbox的选中状况
         holder.cb.setChecked(getIsSelected().get(position));
         holder.cb.setOnClickListener(new View.OnClickListener() {
@@ -107,5 +113,6 @@ public class CheckAdapter extends BaseAdapter {
         public TextView tv;
         public TextView nick;
         public CheckBox cb;
+        public ImageView iv_head_pic;
     }
 }

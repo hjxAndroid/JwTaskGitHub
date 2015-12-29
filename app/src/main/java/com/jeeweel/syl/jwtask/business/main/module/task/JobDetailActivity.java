@@ -292,7 +292,7 @@ public class JobDetailActivity extends JwActivity {
                     }
                 }
 
-                String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code());
+                String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
                 //查找数据
                 taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
             } catch (CloudServiceException e) {

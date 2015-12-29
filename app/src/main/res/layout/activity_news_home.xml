@@ -73,5 +73,18 @@
             android:layout_toRightOf="@+id/dept_name"
             android:background="@drawable/new_point"
             android:visibility="gone"/>
+
+        <TextView android:id="@+id/tv_friend_num"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/tv_friend_time"
+            android:textColor="@color/white"
+            android:gravity="center"
+            android:textSize="11dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/circle_red"
+            android:visibility="visible"/>
     </RelativeLayout>
 </LinearLayout>

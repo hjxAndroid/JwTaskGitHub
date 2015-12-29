@@ -316,7 +316,7 @@ public class FriendAddListActivity extends JwListActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-
+               OttUtils.push("news_refresh","");
             } else {
                 //没有加载到数据
             }

@@ -42,8 +42,20 @@
         android:layout_alignTop="@+id/iv_head"
         android:layout_marginRight="10dp"
         android:textSize="13dp"
-        android:textColor="@color/gray"
-        />
+        android:textColor="@color/gray" />
+
+    <TextView android:id="@+id/tv_news_num"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/tv_task_time"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="11sp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="3dp"
+        android:background="@drawable/circle_red"
+        android:visibility="visible"/>
 
     <ImageView android:id="@+id/iv_task_num"
         android:layout_width="wrap_content"

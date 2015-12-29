@@ -15,19 +15,17 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
-import com.jeeweel.syl.jwtask.business.main.module.service.Helper;
 import com.jeeweel.syl.jwtask.business.main.module.task.PublicyListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.SignListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.TaskJobHomeActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
@@ -39,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
-import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -55,6 +52,8 @@ public class NewsHomeActivity extends JwActivity {
     TextView tvFriendTime;
     @Bind(R.id.iv_friend_num)
     ImageView ivFriendNum;
+    @Bind(R.id.tv_friend_num)
+    TextView tvFriendNum;
 
     private List<Friend> friendList;
 
@@ -90,11 +89,30 @@ public class NewsHomeActivity extends JwActivity {
 
                 //是否有未读
                 ImageView ivnum = helper.getImageView(R.id.iv_task_num);
+                //时间
                 TextView tv_time = helper.getView(R.id.tv_task_time);
+                //未读数量
+                TextView tv_news_num = helper.getView(R.id.tv_news_num);
+
+                String readSum = item.getReadsum();
+                String alread = item.getAlread();
+                int unread = 0;
+                if (StrUtils.IsNotEmpty(readSum) && StrUtils.IsNotEmpty(alread)) {
+                    unread = Integer.parseInt(readSum) - Integer.parseInt(alread);
+                }
+                if (unread != 0) {
+                    tv_news_num.setVisibility(View.VISIBLE);
+                    tv_news_num.setText(IntUtils.toStr(unread));
+                } else {
+                    tv_news_num.setVisibility(View.GONE);
+                }
+
+
                 if (StrUtils.IsNotEmpty(readstate) && readstate.equals("0")) {
                     ivnum.setVisibility(View.VISIBLE);
                     tv_time.setVisibility(View.VISIBLE);
                     tv_time.setText(item.getCreate_time());
+
                     //消息标题
                     helper.setText(R.id.tv_task_news, StrUtils.IsNull(item.getMsg_title()));
                 } else {
@@ -215,6 +233,12 @@ public class NewsHomeActivity extends JwActivity {
 
                 //刷新好友列表
                 if (ListUtils.IsNotNull(friendList)) {
+                    int size = friendList.size();
+                    //好友请求数量
+                    tvFriendNum.setText(IntUtils.toStr(size));
+                    tvFriendNum.setVisibility(View.VISIBLE);
+                    tvFriendTime.setVisibility(View.VISIBLE);
+
                     for (Friend friend : friendList) {
                         int sendState = friend.getSend_state();
                         int state = friend.getState();
@@ -240,7 +264,10 @@ public class NewsHomeActivity extends JwActivity {
                     }
                 } else {
                     rlFriendNews.setText("暂无消息");
+                    tvFriendTime.setVisibility(View.GONE);
                     ivFriendNum.setVisibility(View.GONE);
+                    tvFriendNum.setVisibility(View.GONE);
+
                 }
 
             } else {
