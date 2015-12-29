@@ -73,6 +73,11 @@ public class Sign {
      * 阅读状态
      */
     private String read_state;
+    /**
+     * 发布人头像
+     */
+    private String photo_code;
+
 
     public void setSend_context(String send_context) {
         this.send_context = send_context;
@@ -186,5 +191,13 @@ public class Sign {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getPhoto_code() {
+        return photo_code;
+    }
+
+    public void setPhoto_code(String photo_code) {
+        this.photo_code = photo_code;
     }
 }

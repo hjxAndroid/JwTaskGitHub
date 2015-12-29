@@ -3,11 +3,15 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -15,6 +19,7 @@ import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
+import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -23,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.OttUtils;
+import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -64,6 +70,10 @@ public class SignListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<Sign>(getMy(), mListItems, R.layout.item_sign_information) {
             @Override
             public void convert(ViewHolder helper, Sign item) {
+
+                ImageView imageView = helper.getImageView(R.id.iv_xz);
+                JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), imageView);
+
                 buddyCode = item.getReceive_code();
                 if (buddyCode.contains(",")) {
                     sCodes = buddyCode.split(",");
@@ -151,13 +161,33 @@ public class SignListActivity extends JwListActivity {
                                         "," +
                                         pageEnd);
                     }
-                } catch (CloudServiceException e) {
-                    e.printStackTrace();
-                }
                 if (ListUtils.IsNotNull(list)) {
                     result = "1";
+                    for (Sign sign : list) {
+                        //取头像
+                        String prouser_code = sign.getProuser_code();
+
+                        String sSql = "pic_code=?";
+                        SqlInfo sqlInfo = new SqlInfo();
+                        sqlInfo.setSql(sSql);
+                        sqlInfo.addValue(prouser_code);
+                        sSql = sqlInfo.getBuildSql();
+                        List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+                        if (ListUtils.IsNotNull(pictureList)) {
+                            Picture picture = pictureList.get(0);
+                            String path = picture.getPic_road();
+                            if (StrUtils.IsNotEmpty(path)) {
+                                //存头像
+                                sign.setPhoto_code(path);
+                            }
+                        }
+                    }
+
                 } else {
                     result = "0";
+                }
+                } catch (CloudServiceException e) {
+                    e.printStackTrace();
                 }
             }
 

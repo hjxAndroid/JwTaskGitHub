@@ -80,7 +80,7 @@ public class TaskHomeActivity extends JwActivity {
         ButterKnife.bind(this);
         initView();
         initRight();
-
+        getData();
     }
 
     private void initRight() {
@@ -141,8 +141,6 @@ public class TaskHomeActivity extends JwActivity {
     }
 
     private void getData() {
-        showLoading();
-        new FinishRefresh(getMy()).execute();
 
         int draw1 = R.drawable.home1;
         int draw2 = R.drawable.home2;
