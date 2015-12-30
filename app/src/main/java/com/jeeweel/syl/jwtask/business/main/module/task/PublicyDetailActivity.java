@@ -182,7 +182,7 @@ public class PublicyDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                OttUtils.push("news_refresh", "");
+                OttUtils.push("publicy_refresh", "");
             }
             hideLoading();
         }

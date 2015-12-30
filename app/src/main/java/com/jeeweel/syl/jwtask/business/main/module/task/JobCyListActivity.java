@@ -152,12 +152,12 @@ public class JobCyListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "ORDER BY now_state ASC  limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + " limit " + pageStart + "," + pageEnd);
+                                "participant_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "ORDER BY now_state ASC  limit " + pageStart + "," + pageEnd);
                     }
 
                 } catch (CloudServiceException e) {

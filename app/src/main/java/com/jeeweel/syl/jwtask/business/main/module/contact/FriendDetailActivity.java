@@ -14,9 +14,11 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.module.more.MineActivity;
@@ -27,6 +29,7 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import java.net.URLEncoder;
@@ -66,7 +69,7 @@ public class FriendDetailActivity extends JwActivity {
     String friendCode = "";
     Users users;
     String usercode;
-
+    String friend_code;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,7 +82,7 @@ public class FriendDetailActivity extends JwActivity {
         if (flag == true) {
             initView();
         }
-        String friend_code = intent.getStringExtra("friend_code");
+        friend_code = intent.getStringExtra("friend_code");
         if(StrUtils.IsNotEmpty(friend_code)){
             new GetUserPicture(getMy(), iv, friend_code).execute();
         }
@@ -314,7 +317,7 @@ public class FriendDetailActivity extends JwActivity {
 
                     userorgs = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(phone));
-
+                    removeDuplicate(userorgs);
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -375,4 +378,33 @@ public class FriendDetailActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<Userorg> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getOrg_code().equals(list.get(i).getOrg_code())) {
+                    list.remove(j);
+                }
+            }
+        }
+    }
+
+//    @OnClick(R.id.iv)
+//    void imgClick() {
+//        if(StrUtils.IsNotEmpty(friend_code)){
+//            String[] datas = new String[1];
+//            datas[0] = Utils.getPicUrl()+friend_code;
+//            Intent intent = new Intent(getMy(), ImagePagerActivity.class);
+//            // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
+//            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, datas);
+//            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, 0);
+//            getMy().startActivity(intent);
+//        }
+//
+//    }
 }
