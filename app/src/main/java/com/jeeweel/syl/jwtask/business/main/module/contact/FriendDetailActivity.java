@@ -9,27 +9,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.view.ViewGroup.LayoutParams;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
-import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
-import com.jeeweel.syl.jwtask.business.main.module.more.MineActivity;
-import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-import com.nostra13.universalimageloader.core.ImageLoader;
 import com.umeng.analytics.MobclickAgent;
 
 import java.net.URLEncoder;
@@ -38,6 +33,7 @@ import java.util.List;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.ListNoScrollView;
+import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -61,6 +57,7 @@ public class FriendDetailActivity extends JwActivity {
     @Bind(R.id.iv)
     ImageView iv;
 
+
     private List<Users> usersList;
 
     private List<Userorg> userorgs;
@@ -69,7 +66,8 @@ public class FriendDetailActivity extends JwActivity {
     String friendCode = "";
     Users users;
     String usercode;
-    String friend_code;
+
+    TitlePopup titlePopup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,23 +80,40 @@ public class FriendDetailActivity extends JwActivity {
         if (flag == true) {
             initView();
         }
-        friend_code = intent.getStringExtra("friend_code");
+        String friend_code = intent.getStringExtra("friend_code");
         if(StrUtils.IsNotEmpty(friend_code)){
             new GetUserPicture(getMy(), iv, friend_code).execute();
         }
     }
 
     private void initView() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("加为好友");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+        titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more_vert_32px_1182057_easyicon);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                showAlertDialog();
+            public void onClick(View v) {
+                ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0),"添加");
+                ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0),"解散");
+                titlePopup.addAction(action);
+                titlePopup.addAction(action1);
+                titlePopup.show(v);
             }
         });
-        addMenuView(menuTextView);
+        addMenuView(menuImageView);
+
+//        MenuTextView menuTextView = new MenuTextView(getMy());
+//        menuTextView.setText("加为好友");
+//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+//        menuTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                titlePopup.show(v);
+//                //showAlertDialog();
+//            }
+//        });
+//        addMenuView(menuTextView);
     }
 
     public void showAlertDialog() {
@@ -317,7 +332,7 @@ public class FriendDetailActivity extends JwActivity {
 
                     userorgs = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(phone));
-                    removeDuplicate(userorgs);
+
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -378,33 +393,4 @@ public class FriendDetailActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
-    /**
-     * 去除多余元素
-     *
-     * @param list
-     */
-    public void removeDuplicate(List<Userorg> list) {
-        for (int i = 0; i < list.size() - 1; i++) {
-            for (int j = list.size() - 1; j > i; j--) {
-                if (list.get(j).getOrg_code().equals(list.get(i).getOrg_code())) {
-                    list.remove(j);
-                }
-            }
-        }
-    }
-
-//    @OnClick(R.id.iv)
-//    void imgClick() {
-//        if(StrUtils.IsNotEmpty(friend_code)){
-//            String[] datas = new String[1];
-//            datas[0] = Utils.getPicUrl()+friend_code;
-//            Intent intent = new Intent(getMy(), ImagePagerActivity.class);
-//            // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
-//            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, datas);
-//            intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, 0);
-//            getMy().startActivity(intent);
-//        }
-//
-//    }
 }
