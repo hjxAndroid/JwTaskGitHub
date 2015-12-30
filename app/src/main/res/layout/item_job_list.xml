@@ -48,4 +48,13 @@
         android:textSize="@dimen/textSize_small"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_yxj"
+        android:textSize="@dimen/textSize_small"
+        android:layout_alignTop="@+id/tv_state"
+        android:layout_toRightOf="@+id/tv_state"
+        android:layout_marginLeft="5dp" />
 </RelativeLayout>

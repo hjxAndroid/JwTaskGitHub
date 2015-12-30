@@ -123,6 +123,20 @@ public class JobShListActivity extends JwListActivity {
                 helper.setText(R.id.tv_task_name, item.getTask_name());
                 helper.setText(R.id.tv_state, item.getNow_state_name());
                 helper.setText(R.id.tv_time, item.getCreate_time());
+
+                String priority = item.getPriority();
+                TextView tv_yxj = helper.getView(R.id.tv_yxj);
+                tv_yxj.setText(priority);
+                if(StrUtils.IsNotEmpty(priority)){
+                    if(priority.equals("急")){
+                        tv_yxj.setTextColor(getResources().getColor(R.color.red));
+                    }else if(priority.equals("优先")){
+                        tv_yxj.setTextColor(getResources().getColor(R.color.yellow));
+                    }else{
+                        tv_yxj.setTextColor(getResources().getColor(R.color.green));
+                    }
+                }
+
             }
         };
         setCommonAdapter(commonAdapter);
