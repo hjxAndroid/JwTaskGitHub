@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/li_img"
         android:layout_width="match_parent"
-        android:layout_height="180dp">
+        android:layout_height="220dp">
 
         <api.viewpage.ConvenientBanner
             android:id="@+id/convenientBanner"

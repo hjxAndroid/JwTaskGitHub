@@ -21,6 +21,8 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -198,6 +200,7 @@ public class PublicyDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                OttUtils.push("news_refresh", "");
                 OttUtils.push("publicy_refresh", "");
             }
             hideLoading();
@@ -257,4 +260,5 @@ public class PublicyDetailActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
 }

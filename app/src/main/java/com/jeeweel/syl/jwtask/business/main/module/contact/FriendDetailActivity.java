@@ -88,16 +88,16 @@ public class FriendDetailActivity extends JwActivity {
 
     private void initView() {
         titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0),"添加");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0),"解散");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
 
         MenuImageView menuImageView = new MenuImageView(getMy());
-        menuImageView.setBackgroundResource(R.drawable.more_vert_32px_1182057_easyicon);
+        menuImageView.setBackgroundResource(R.drawable.more);
         menuImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0),"添加");
-                ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0),"解散");
-                titlePopup.addAction(action);
-                titlePopup.addAction(action1);
                 titlePopup.show(v);
             }
         });

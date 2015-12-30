@@ -22,6 +22,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 
 import java.util.List;
 
+import api.util.OttUtils;
 import api.view.GridNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -68,6 +69,7 @@ public class ChangePublicyActivity extends JwActivity {
             public void onClick(View arg0) {
                 title = etTitle.getText().toString();
                 content = etContent.getText().toString();
+                showLoading();
                 new FinishRefreshChangeClick(getMy()).execute();
             }
         });
@@ -162,6 +164,7 @@ public class ChangePublicyActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if ("1".equals(result)) {
+                OttUtils.push("publicy_refresh", "");
                 ToastShow("修改成功");
             } else {
                 ToastShow("修改失败");
