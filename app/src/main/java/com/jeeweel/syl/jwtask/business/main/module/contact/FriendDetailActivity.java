@@ -9,18 +9,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import android.view.ViewGroup.LayoutParams;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
-import com.jeeweel.syl.jwtask.business.main.module.more.MineActivity;
-import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -35,6 +33,7 @@ import java.util.List;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.ListNoScrollView;
+import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -58,6 +57,7 @@ public class FriendDetailActivity extends JwActivity {
     @Bind(R.id.iv)
     ImageView iv;
 
+
     private List<Users> usersList;
 
     private List<Userorg> userorgs;
@@ -67,6 +67,7 @@ public class FriendDetailActivity extends JwActivity {
     Users users;
     String usercode;
 
+    TitlePopup titlePopup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,16 +87,33 @@ public class FriendDetailActivity extends JwActivity {
     }
 
     private void initView() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("加为好友");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+        titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more_vert_32px_1182057_easyicon);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                showAlertDialog();
+            public void onClick(View v) {
+                ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0),"添加");
+                ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0),"解散");
+                titlePopup.addAction(action);
+                titlePopup.addAction(action1);
+                titlePopup.show(v);
             }
         });
-        addMenuView(menuTextView);
+        addMenuView(menuImageView);
+
+//        MenuTextView menuTextView = new MenuTextView(getMy());
+//        menuTextView.setText("加为好友");
+//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+//        menuTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                titlePopup.show(v);
+//                //showAlertDialog();
+//            }
+//        });
+//        addMenuView(menuTextView);
     }
 
     public void showAlertDialog() {

@@ -11,6 +11,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
@@ -55,6 +56,7 @@ public class PublicyDetailActivity extends JwActivity {
 
     private List<String> networkImages;
     V_publicityunread publicity;
+    private List<Orgunit> list;
 
     Users users;
     String orgCode;
@@ -68,6 +70,20 @@ public class PublicyDetailActivity extends JwActivity {
         users = JwAppAplication.getInstance().getUsers();
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         setData();
+        new FinishRefreshIfIsFounder(getMy()).execute();
+    }
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("修改公告");
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                JwStartActivity(ChangePublicyActivity.class, publicity);
+            }
+        });
+        addMenuView(menuTextView);
     }
 
     private void setData() {
@@ -90,7 +106,7 @@ public class PublicyDetailActivity extends JwActivity {
             String wd = publicity.getUnread();
             if (StrUtils.IsNotEmpty(wd)) {
                 int intWd = Integer.parseInt(wd);
-                if(intWd<0){
+                if (intWd < 0) {
                     intWd = 0;
                 }
                 tvWd.setText(intWd + "人未读");
@@ -185,6 +201,48 @@ public class PublicyDetailActivity extends JwActivity {
                 OttUtils.push("news_refresh", "");
             }
             hideLoading();
+        }
+    }
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefreshIfIsFounder extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshIfIsFounder(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "0";
+            try {
+                list = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + "\'" + orgCode + "\'" + " and founder_code = " + "\'" + users.getUser_code() + "\'");
+                if (ListUtils.IsNotNull(list)) {
+                    result = "1";
+                } else {
+                    result = "0";
+                }
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if ("1".equals(result)) {
+                initRight();
+                hideLoading();
+            }
         }
     }
 

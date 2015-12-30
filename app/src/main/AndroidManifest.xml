@@ -482,6 +482,10 @@
             android:name=".business.main.module.task.SolveGiveUpDetail"
             android:label="@string/title_activity_solve_give_up_detail" >
         </activity>
+        <activity
+            android:name=".business.main.module.task.ChangePublicyActivity"
+            android:label="@string/title_activity_change_publicity" >
+        </activity>
     </application>
 
 </manifest>
