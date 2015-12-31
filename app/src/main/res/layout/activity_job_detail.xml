@@ -330,6 +330,20 @@
                 android:layout_marginLeft="5dp"
                 android:textColor="@color/list_text_color"/>
         </LinearLayout>
+
+        <api.view.GridNoScrollView
+            android:id="@+id/noScrollgridview"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:horizontalSpacing="5dp"
+            android:numColumns="5"
+            android:scrollbars="none"
+            android:verticalSpacing="5dp" >
+        </api.view.GridNoScrollView>
     </LinearLayout>
 
     <View

@@ -84,13 +84,13 @@ public class SignAdapter extends BaseAdapter {
                 holder.tv_cir.setVisibility(View.GONE);
             } else {
                 holder.iv_head_pic.setVisibility(View.GONE);
-                String friendPic = "";
-                if (StrUtils.IsNotEmpty(friendNickName)) {
-                    if (friendNickName.length() > 2) {
-                        friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
-                    } else {
-                        friendPic = friendNickName;
-                    }
+                    String friendPic = "";
+                    if (StrUtils.IsNotEmpty(friendNickName)) {
+                        if (friendNickName.length() > 2) {
+                            friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
+                        } else {
+                            friendPic = friendNickName;
+                        }
                 } else {
                     friendPic = "姓名";
                 }
