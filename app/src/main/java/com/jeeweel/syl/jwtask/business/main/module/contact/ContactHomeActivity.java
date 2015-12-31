@@ -46,6 +46,7 @@ public class ContactHomeActivity extends JwActivity {
 
     List<Userdept> list = null;
 
+    ExpandableAdapter expandableAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +75,30 @@ public class ContactHomeActivity extends JwActivity {
             }
         });
         addMenuView(menuTextView);
+
+        expandableAdapter = new ExpandableAdapter(getMy(), groups);
+        elContact.setAdapter(expandableAdapter);
+
+
+        elContact.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
+                Userdept userdept = expandableAdapter.getList().get(groupPosition).getChilds().get(childPosition);
+                JwStartActivity(DeptUsersListActivity.class, userdept);
+                return true;
+            }
+        });
+
+        elContact.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
+                Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
+
+                JwStartActivity(OragDetailActivity.class, orgunit);
+
+                return true;
+            }
+        });
     }
 
     private void getDate() {
@@ -137,32 +162,11 @@ public class ContactHomeActivity extends JwActivity {
                         }
                     }
 
-                    final ExpandableAdapter expandableAdapter = new ExpandableAdapter(getMy(), groups);
-                    elContact.setAdapter(expandableAdapter);
+                }
+                expandableAdapter.notifyDataSetChanged();
 
-                    for (int i = 0; i < expandableAdapter.getGroupCount(); i++) {
-                        elContact.expandGroup(i);
-                    }
-
-                    elContact.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-                        @Override
-                        public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-                            Userdept userdept = expandableAdapter.getList().get(groupPosition).getChilds().get(childPosition);
-                            JwStartActivity(DeptUsersListActivity.class, userdept);
-                            return true;
-                        }
-                    });
-
-                    elContact.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-                        @Override
-                        public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
-                            Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
-
-                            JwStartActivity(OragDetailActivity.class,orgunit);
-
-                            return true;
-                        }
-                    });
+                for (int i = 0; i < expandableAdapter.getGroupCount(); i++) {
+                    elContact.expandGroup(i);
                 }
             } else {
                 ToastShow("数据获取出错");

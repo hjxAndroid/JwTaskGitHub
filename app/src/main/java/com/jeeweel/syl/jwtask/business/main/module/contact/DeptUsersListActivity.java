@@ -182,6 +182,7 @@ public class DeptUsersListActivity extends JwListActivity {
         intent.putExtra("flag", true);
         intent.putExtra(StaticStrUtils.baseItem, userdept.getUsername());
         intent.putExtra("friend_code", userdept.getUser_code());
+        intent.putExtra("org_code", userdept.getOrg_code());
         intent.setClass(DeptUsersListActivity.this, FriendDetailActivity.class);
         JwStartActivity(intent);
         //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
@@ -312,7 +313,7 @@ public class DeptUsersListActivity extends JwListActivity {
                     } else {
                         result = "0";
                     }
-                }else{
+                } else {
                     result = "2";
                 }
 
@@ -329,9 +330,9 @@ public class DeptUsersListActivity extends JwListActivity {
             if (result.equals("1")) {
                 ToastShow("解散成功");
                 OttUtils.push("deptAdd_refresh", "");
-            } else if(result.equals("2")){
+            } else if (result.equals("2")) {
                 ToastShow("您没有权限解散组织");
-            }else{
+            } else {
                 ToastShow("解散失败");
             }
         }
@@ -349,6 +350,15 @@ public class DeptUsersListActivity extends JwListActivity {
         } else {
             pageStart += addNum;
             pageEnd += addNum;
+        }
+    }
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (StrUtils.IsNotEmpty(msg) && msg.equals("deptUsers_refresh")) {
+            list.clear();
+            onListViewHeadRefresh();
         }
     }
 }

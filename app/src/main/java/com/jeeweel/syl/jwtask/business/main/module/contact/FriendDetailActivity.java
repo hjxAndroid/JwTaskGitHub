@@ -17,6 +17,8 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -33,6 +35,7 @@ import java.net.URLEncoder;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.ListNoScrollView;
@@ -68,10 +71,13 @@ public class FriendDetailActivity extends JwActivity {
     private String phone;
 
     String friendCode = "";
+    String friend_code = "";
     Users users;
     String usercode;
     private TitlePopup titlePopup;
-
+    //用于判断是否为创建者
+    Users userIsFounder;
+    private String orgCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,13 +85,14 @@ public class FriendDetailActivity extends JwActivity {
         setContentView(R.layout.activity_friend_detail);
         ButterKnife.bind(this);
         setTitle("用户信息");
+        userIsFounder = JwAppAplication.getUsers();
         getData();
         Intent intent = getIntent();
         boolean flag = intent.getBooleanExtra("flag", false);
         if (flag == true) {
             initView();
         }
-        String friend_code = intent.getStringExtra("friend_code");
+        friend_code = intent.getStringExtra("friend_code");
         if (StrUtils.IsNotEmpty(friend_code)) {
             new GetUserPicture(getMy(), iv, friend_code).execute();
         }
@@ -104,7 +111,7 @@ public class FriendDetailActivity extends JwActivity {
 //        addMenuView(menuTextView);
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
-        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "解散");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "移除");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
@@ -113,7 +120,7 @@ public class FriendDetailActivity extends JwActivity {
                 if (position == 0) {
                     showAlertDialog();
                 } else {
-                    finish();
+                    showAlertDelMemDialog();
                 }
             }
         });
@@ -139,6 +146,31 @@ public class FriendDetailActivity extends JwActivity {
                 //设置你的操作事项
                 String friendPhone = tvPhone.getText().toString();
                 save(friendPhone);
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
+
+    }
+
+    public void showAlertDelMemDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("您确定要移除该成员？");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                showLoading();
+                new deleteMember(getMy()).execute();
+                finish();
             }
         });
 
@@ -314,6 +346,7 @@ public class FriendDetailActivity extends JwActivity {
     private void getData() {
         showLoading();
         phone = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        orgCode = getIntent().getStringExtra("org_code");
         new FinishRefresh(getMy()).execute();
     }
 
@@ -392,6 +425,64 @@ public class FriendDetailActivity extends JwActivity {
         }
 
     }
+
+    /**
+     * 删除组织成员
+     */
+    private class deleteMember extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public deleteMember(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "0";
+            boolean flagUserOrg = false;
+            boolean flagUserDept = false;
+            List<Orgunit> listIsFounder;
+            try {
+
+                listIsFounder = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and founder_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()));
+                if (ListUtils.IsNotNull(listIsFounder)) {
+                    flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
+                    flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code));
+
+                    if (flagUserOrg && flagUserDept) {
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
+                } else {
+                    result = "2";
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if ("1".equals(result)) {
+                ToastShow("删除成功");
+                OttUtils.push("deptUsers_refresh", "");
+            } else if ("0".equals(result)) {
+                ToastShow("删除失败");
+            } else if ("2".equals(result)) {
+                ToastShow("您没有权限踢人");
+            }
+            hideLoading();
+        }
+    }
+
 
     @Override
     public void onResume() {
