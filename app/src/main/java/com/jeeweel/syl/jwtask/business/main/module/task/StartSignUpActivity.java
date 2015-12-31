@@ -17,6 +17,7 @@ import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
@@ -134,7 +135,7 @@ public class StartSignUpActivity extends JwActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
                 if (postion == friendList.size() - 1) {
-                    JwStartActivity(DeptSelectFriendListActivity.class, Contants.sign);
+                    JwStartActivity(PublicyContactHomeActivity.class, Contants.fzr);
                 }
             }
         });
@@ -144,23 +145,24 @@ public class StartSignUpActivity extends JwActivity {
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
-        if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.sign)) {
-            String json = activityMsgEvent.getParam();
+        if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
+            String json = activityMsgEvent.getParam1();
             if (StrUtils.IsNotEmpty(json)) {
-                friends = JwJSONUtils.getParseArray(json, Friend.class);
-
-//                if (friendList.size() == 1) {
-//                    friendList.remove(0);
-//                } else {
-//                    friendList.remove(friendList.size() - 1);
-//
-//                }
+                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                List<Friend> friends = new ArrayList<Friend>();
+                for (Userdept userdept : userdepts) {
+                    Friend friend = new Friend();
+                    friend.setUser_code(userdept.getUser_code());
+                    friend.setFriend_nickname(userdept.getNickname());
+                    friend.setPhoto_code(userdept.getPhoto_code());
+                    friends.add(friend);
+                }
                 friendList.clear();
                 friendList.addAll(friends);
-                Friend friend = new Friend();
-                friend.setContent("1");
-                friend.setFriend_nickname("123");
-                friendList.add(friend);
+                Friend newfriend = new Friend();
+                newfriend.setContent("1");
+                newfriend.setFriend_nickname("123");
+                friendList.add(newfriend);
                 signAdapter.notifyDataSetChanged();
             }
         }

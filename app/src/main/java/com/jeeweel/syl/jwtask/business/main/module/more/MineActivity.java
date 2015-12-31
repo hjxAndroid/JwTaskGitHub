@@ -97,8 +97,6 @@ public class MineActivity extends JwActivity {
     }
 
 
-
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -143,8 +141,8 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(birthday)) {
             tv_birthday.setText(birthday);
         }
-        if(StrUtils.IsNotEmpty(users.getPic_road())){
-            JwImageLoader.displayImage(users.getPic_all_road(),iv_user_head2);
+        if (StrUtils.IsNotEmpty(users.getPic_road())) {
+            JwImageLoader.displayImage(users.getPic_all_road(), iv_user_head2);
         }
     }
 
@@ -251,13 +249,18 @@ public class MineActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(birthday)) {
             String[] data = birthday.split("-");
             int year = Integer.parseInt(data[0]);
-            int mouth = Integer.parseInt(data[1])-1;
+            int mouth = Integer.parseInt(data[1]) - 1;
             int day = Integer.parseInt(data[2]);
+//            int hours = Integer.parseInt(data[3];
+//            int mintues = Integer.parseInt(data[4]);
+//            int seconds = Integer.parseInt(data[5]);
             dialog = new DatePickerDialog(
                     this,
                     new DatePickerDialog.OnDateSetListener() {
+                        //, int dayOfMonth,int hours,int mintues,int seconds
+                        // +"-"+hours+"-"+mintues+"-"+seconds
                         public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
-                            tv_birthday.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                            tv_birthday.setText("" + year + "-" + (month + 1) + "-");
                             birthday = tv_birthday.getText().toString();
                             new saveBirthday(getMy()).execute();
                         }
@@ -315,11 +318,12 @@ public class MineActivity extends JwActivity {
     public void changePhoto(ActivityMsgEvent activityMsgEvent) {
         if (activityMsgEvent.getMsg().equals("photo_refresh")) {
             users = JwAppAplication.getInstance().users;
-            if(StrUtils.IsNotEmpty(users.getPic_road())){
-                JwImageLoader.displayImage(users.getPic_all_road(),iv_user_head2);
+            if (StrUtils.IsNotEmpty(users.getPic_road())) {
+                JwImageLoader.displayImage(users.getPic_all_road(), iv_user_head2);
             }
         }
     }
+
     @Override
     public void onPause() {
         super.onPause();

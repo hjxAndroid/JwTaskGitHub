@@ -15,6 +15,8 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 
+import org.w3c.dom.Text;
+
 import api.util.Utils;
 
 
@@ -61,6 +63,7 @@ public class SignAdapter extends BaseAdapter {
             holder.iv_add = (ImageView) convertView.findViewById(R.id.iv_add);
             holder.tv_pic_friend_name = (TextView) convertView.findViewById(R.id.tv_pic_friend_name);
             holder.iv_head_pic = (ImageView) convertView.findViewById(R.id.iv_head_pic);
+            holder.tv_pic_friendname = (TextView) convertView.findViewById(R.id.tv_pic_friendname);
             // 为view设置标签
             convertView.setTag(holder);
         } else {
@@ -73,31 +76,48 @@ public class SignAdapter extends BaseAdapter {
             holder.tv_cir.setVisibility(View.GONE);
             holder.tv_pic_friend_name.setVisibility(View.GONE);
             holder.iv_head_pic.setVisibility(View.GONE);
+            holder.tv_pic_friendname.setVisibility(View.GONE);
         } else {
             String friendNickName = list.get(position).getFriend_nickname();
-            holder.tv_pic_friend_name.setVisibility(View.VISIBLE);
-            holder.iv_add.setVisibility(View.GONE);
-
+            String friendPic = "";
+            if (StrUtils.IsNotEmpty(friendNickName)) {
+                if (friendNickName.length() > 2) {
+                    friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
+                } else {
+                    friendPic = friendNickName;
+                }
+            } else {
+                friendPic = "姓名";
+            }
             if (StrUtils.IsNotEmpty(list.get(position).getPhoto_code())) {
                 JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPhoto_code(), holder.iv_head_pic);
-                holder.iv_head_pic.setVisibility(View.VISIBLE);
+
+                holder.tv_pic_friendname.setVisibility(View.GONE);
+
+                holder.iv_add.setVisibility(View.GONE);
+
                 holder.tv_cir.setVisibility(View.GONE);
+
+                holder.tv_pic_friend_name.setVisibility(View.VISIBLE);
+
+                holder.iv_head_pic.setVisibility(View.VISIBLE);
+
+                holder.tv_pic_friend_name.setText(friendNickName);
             } else {
+                holder.tv_pic_friendname.setVisibility(View.VISIBLE);
+
+                holder.tv_cir.setVisibility(View.VISIBLE);
+
                 holder.iv_head_pic.setVisibility(View.GONE);
-                    String friendPic = "";
-                    if (StrUtils.IsNotEmpty(friendNickName)) {
-                        if (friendNickName.length() > 2) {
-                            friendPic = friendNickName.substring(friendNickName.length() - 2, friendNickName.length());
-                        } else {
-                            friendPic = friendNickName;
-                        }
-                } else {
-                    friendPic = "姓名";
-                }
+
+                holder.iv_add.setVisibility(View.GONE);
+
+                holder.tv_pic_friend_name.setVisibility(View.GONE);
 
                 holder.tv_cir.setText(friendPic);
-                holder.tv_pic_friend_name.setText(friendPic);
-                holder.tv_cir.setVisibility(View.VISIBLE);
+
+                holder.tv_pic_friendname.setText(friendPic);
+
             }
         }
 
@@ -110,5 +130,6 @@ public class SignAdapter extends BaseAdapter {
         public ImageView iv_add;
         public TextView tv_pic_friend_name;
         public ImageView iv_head_pic;
+        public TextView tv_pic_friendname;
     }
 }

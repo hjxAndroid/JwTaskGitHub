@@ -30,6 +30,7 @@
                 android:gravity="center"
                 android:textColor="@color/white" />
 
+
             <TextView
                 android:id="@+id/tv_username"
                 style="@style/text_nomor_style"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/tv_cir"
@@ -13,7 +13,7 @@
         android:background="@drawable/tvcircle"
         android:gravity="center"
         android:textColor="@color/white"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_head_pic"
@@ -21,10 +21,10 @@
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/time_space"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <TextView
-        android:id="@+id/tv_pic_friend_name"
+        android:id="@+id/tv_pic_friendname"
         style="@style/text_nomor_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,13 +32,24 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:textColor="@color/black"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_pic_friend_name"
+        style="@style/text_nomor_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv_head_pic"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:visibility="gone" />
+
 
     <ImageView
         android:id="@+id/iv_add"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_margin="@dimen/time_space"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 </RelativeLayout>

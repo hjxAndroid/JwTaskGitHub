@@ -280,7 +280,7 @@ public class JobAddActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(timeData)) {
             String[] data = timeData.split("-");
             int year = Integer.parseInt(data[0]);
-            int mouth = Integer.parseInt(data[1])-1;
+            int mouth = Integer.parseInt(data[1]) - 1;
             int day = Integer.parseInt(data[2]);
             dialog = new android.app.DatePickerDialog(
                     this,

@@ -128,7 +128,7 @@ public class FriendAddListActivity extends JwListActivity {
         if (StrUtils.IsNotEmpty(phone) && StrUtils.IsNotEmpty(friendphone)) {
             new changeTask(getMy()).execute(phone, friendphone);
         } else {
-            ToastShow("好有信息不完全");
+            ToastShow("好友信息不完全");
         }
 
     }
@@ -317,7 +317,7 @@ public class FriendAddListActivity extends JwListActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-               OttUtils.push("news_refresh","");
+                OttUtils.push("news_refresh", "");
             } else {
                 //没有加载到数据
             }
