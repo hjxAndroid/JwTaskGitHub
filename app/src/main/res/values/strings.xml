@@ -98,4 +98,5 @@
     <string name="title_activity_solve_give_up">SolveGiveUpActivity</string>
     <string name="title_activity_my_job_detail">MyJobDetailActivity</string>
     <string name="title_activity_solve_give_up_detail">SolveGiveUpDetail</string>
+    <string name="title_activity_orag_detail">OragDetailActivity</string>
 </resources>

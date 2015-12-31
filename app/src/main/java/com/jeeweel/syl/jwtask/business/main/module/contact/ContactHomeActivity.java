@@ -158,10 +158,7 @@ public class ContactHomeActivity extends JwActivity {
                         public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
                             Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
 
-                            Intent intent = new Intent(getMy(), AddDeptActivity.class);
-                            intent.putExtra(StaticStrUtils.baseItem, orgunit.getOrg_name());
-                            intent.putExtra("org_code", orgunit.getOrg_code());
-                            startActivity(intent);
+                            JwStartActivity(OragDetailActivity.class,orgunit);
 
                             return true;
                         }

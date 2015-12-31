@@ -96,45 +96,49 @@ public class DeptUsersListActivity extends JwListActivity {
     }
 
     private void initView() {
-//        MenuTextView menuTextView = new MenuTextView(getMy());
-//        menuTextView.setText("添加");
-//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-//        menuTextView.setOnClickListener(new View.OnClickListener() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("添加");
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
+                intent.putExtra("userdept", userdept);
+                intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
+                startActivity(intent);
+                finish();
+            }
+        });
+        addMenuView(menuTextView);
+//        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
+//        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "解散");
+//        titlePopup.addAction(action);
+//        titlePopup.addAction(action1);
+//        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
 //            @Override
-//            public void onClick(View arg0) {
-//
+//            public void onItemClick(ActionItem item, int position) {
+//                if (position == 0) {
+//                    Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
+//                    intent.putExtra("userdept", userdept);
+//                    intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
+//                    startActivity(intent);
+//                    finish();
+//                } else {
+//                    new FinishRefreshDismiss(getMy()).execute();
+//                    finish();
+//                }
 //            }
 //        });
-//        addMenuView(menuTextView);
-        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
-        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "解散");
-        titlePopup.addAction(action);
-        titlePopup.addAction(action1);
-        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
-            @Override
-            public void onItemClick(ActionItem item, int position) {
-                if (position == 0) {
-                    Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
-                    intent.putExtra("userdept", userdept);
-                    intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    new FinishRefreshDismiss(getMy()).execute();
-                    finish();
-                }
-            }
-        });
-        MenuImageView menuImageView = new MenuImageView(getMy());
-        menuImageView.setBackgroundResource(R.drawable.more);
-        menuImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                titlePopup.show(v);
-            }
-        });
-        addMenuView(menuImageView);
+//        MenuImageView menuImageView = new MenuImageView(getMy());
+//        menuImageView.setBackgroundResource(R.drawable.more);
+//        menuImageView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                titlePopup.show(v);
+//            }
+//        });
+//        addMenuView(menuImageView);
 
     }
 

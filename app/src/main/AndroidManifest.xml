@@ -486,6 +486,10 @@
             android:name=".business.main.module.task.ChangePublicyActivity"
             android:label="@string/title_activity_change_publicity" >
         </activity>
+        <activity
+            android:name=".business.main.module.contact.OragDetailActivity"
+            android:label="@string/title_activity_orag_detail" >
+        </activity>
     </application>
 
 </manifest>
