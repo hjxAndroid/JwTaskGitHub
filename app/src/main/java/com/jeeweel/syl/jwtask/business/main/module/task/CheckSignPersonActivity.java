@@ -112,6 +112,7 @@ public class CheckSignPersonActivity extends JwListActivity {
         super.initListViewController();
     }
 
+    //已签
     @OnClick(R.id.already_signed_change_counts)
     void wzxClick() {
         resetAll();
@@ -122,6 +123,7 @@ public class CheckSignPersonActivity extends JwListActivity {
         onListViewHeadRefresh();
     }
 
+    //未签
     @OnClick(R.id.unsign_change_counts)
     void yzxClick() {
         resetAll();
@@ -243,7 +245,8 @@ public class CheckSignPersonActivity extends JwListActivity {
             sqlInfo1.setSql("SELECT " +
                     " nickname, " +
                     " create_time, " +
-                    " location " +
+                    " location," +
+                    " sign_user_code" +
                     " FROM " +
                     " signed " +
                     " where sign_code= ? " +
@@ -264,7 +267,8 @@ public class CheckSignPersonActivity extends JwListActivity {
             SqlInfo sqlInfo2 = new SqlInfo();
             sqlInfo2.setSql("SELECT " +
                     " nickname, " +
-                    " create_time " +
+                    " create_time," +
+                    " user_code " +
                     " FROM " +
                     " v_sign_users " +
                     " where sign_code= ? ");
@@ -280,6 +284,7 @@ public class CheckSignPersonActivity extends JwListActivity {
                     signed.setNickname(v_sign_nickname.getNickname());
                     signed.setCreate_time("");
                     signed.setLocation("");
+                    signed.setSign_user_code(v_sign_nickname.getUser_code());
                     handadd.add(signed);
                     signedList.add(signed);
 
@@ -408,7 +413,7 @@ public class CheckSignPersonActivity extends JwListActivity {
         Signed signed;
         for (int i = 0; i < list3.size(); i++) {
             for (int j = 0; j < list2.size(); j++) {
-                if (list3.get(i).getNickname().equals(list2.get(j).getNickname())) {
+                if (list3.get(i).getSign_user_code().equals(list2.get(j).getSign_user_code())) {
                     list1.remove(list3.get(i));
 //                    list1.remove(i);
 //                    signed = new Signed();
@@ -424,9 +429,9 @@ public class CheckSignPersonActivity extends JwListActivity {
         Signed signed;
         Iterator<Signed> listIterator = list.iterator();
         if (listIterator.hasNext()) {
-            signed=listIterator.next();
-            if(OUtils.IsNull(signed))
-            list.remove(signed);
+            signed = listIterator.next();
+            if (OUtils.IsNull(signed))
+                list.remove(signed);
         }
         return list;
     }

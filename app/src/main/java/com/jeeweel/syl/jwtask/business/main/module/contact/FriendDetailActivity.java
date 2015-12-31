@@ -7,9 +7,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
+
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -30,6 +32,7 @@ import com.umeng.analytics.MobclickAgent;
 import java.net.URLEncoder;
 import java.util.List;
 
+import api.util.Contants;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.ListNoScrollView;
@@ -61,13 +64,15 @@ public class FriendDetailActivity extends JwActivity {
     private List<Users> usersList;
 
     private List<Userorg> userorgs;
+
     private String phone;
 
     String friendCode = "";
     Users users;
     String usercode;
+    private TitlePopup titlePopup;
 
-    TitlePopup titlePopup;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,18 +86,37 @@ public class FriendDetailActivity extends JwActivity {
             initView();
         }
         String friend_code = intent.getStringExtra("friend_code");
-        if(StrUtils.IsNotEmpty(friend_code)){
+        if (StrUtils.IsNotEmpty(friend_code)) {
             new GetUserPicture(getMy(), iv, friend_code).execute();
         }
     }
 
     private void initView() {
-        titlePopup = new TitlePopup(this, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0),"添加");
-        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0),"解散");
+//        MenuTextView menuTextView = new MenuTextView(getMy());
+//        menuTextView.setText("加为好友");
+//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+//        menuTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                showAlertDialog();
+//            }
+//        });
+//        addMenuView(menuTextView);
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "解散");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
-
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
+            @Override
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    showAlertDialog();
+                } else {
+                    finish();
+                }
+            }
+        });
         MenuImageView menuImageView = new MenuImageView(getMy());
         menuImageView.setBackgroundResource(R.drawable.more);
         menuImageView.setOnClickListener(new View.OnClickListener() {
@@ -102,18 +126,6 @@ public class FriendDetailActivity extends JwActivity {
             }
         });
         addMenuView(menuImageView);
-
-//        MenuTextView menuTextView = new MenuTextView(getMy());
-//        menuTextView.setText("加为好友");
-//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-//        menuTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View arg0) {
-//                titlePopup.show(v);
-//                //showAlertDialog();
-//            }
-//        });
-//        addMenuView(menuTextView);
     }
 
     public void showAlertDialog() {
@@ -369,7 +381,6 @@ public class FriendDetailActivity extends JwActivity {
             hideLoading();
         }
     }
-
 
     @OnClick(R.id.li_phone)
     void callClick() {

@@ -5,16 +5,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
@@ -38,7 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.Utils;
+import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -54,8 +62,13 @@ public class DeptUsersListActivity extends JwListActivity {
     private int pageStart = 0; //截取的开始
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
+    private TitlePopup titlePopup;
+    private List<Userorg> userorgsList;
+
 
     List<Userdept> list;
+    List<Orgunit> orgunits;
+    Orgunit orgunit;
 
     /**
      * 用于判断是从哪请求过来的
@@ -64,14 +77,18 @@ public class DeptUsersListActivity extends JwListActivity {
 
 
     private Userdept userdept;
+    private String orgCode;
+    private Users users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
         userdept = (Userdept) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        users = JwAppAplication.getUsers();
         if (null != userdept) {
             setTitle(userdept.getDept_name());
+            orgCode = userdept.getOrg_code();
         }
         ButterKnife.bind(this);
         initListViewController();
@@ -79,20 +96,46 @@ public class DeptUsersListActivity extends JwListActivity {
     }
 
     private void initView() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("添加");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+//        MenuTextView menuTextView = new MenuTextView(getMy());
+//        menuTextView.setText("添加");
+//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+//        menuTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//
+//            }
+//        });
+//        addMenuView(menuTextView);
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "解散");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
-                intent.putExtra("userdept", userdept);
-                intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
-                startActivity(intent);
-                finish();
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
+                    intent.putExtra("userdept", userdept);
+                    intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    new FinishRefreshDismiss(getMy()).execute();
+                    finish();
+                }
             }
         });
-        addMenuView(menuTextView);
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
+
     }
 
     @Override
@@ -117,7 +160,7 @@ public class DeptUsersListActivity extends JwListActivity {
                     }
                 }
 
-                if(item.getAdmin_state()==1){
+                if (item.getAdmin_state() == 1) {
                     ImageView tv_name = helper.getImageView(R.id.iv_admin);
                     tv_name.setVisibility(View.VISIBLE);
                 }
@@ -229,6 +272,67 @@ public class DeptUsersListActivity extends JwListActivity {
             hideLoading();
         }
     }
+
+
+    private class FinishRefreshDismiss extends AsyncTask<String, Void, String> {
+        private Context context;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshDismiss(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = "1";
+
+
+            boolean flagUserDept = false;
+            boolean flagUserOrg = false;
+            boolean flagDept = false;
+            boolean flagOrgUnit = false;
+            JCloudDB jCloudDB = new JCloudDB();
+            try {
+                orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + "\'" + orgCode + "\'");
+                if (ListUtils.IsNotNull(orgunits)) {
+                    orgunit = orgunits.get(0);
+
+                    flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + "\'" + orgCode + "\'");
+                    flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + "\'" + orgCode + "\'");
+                    flagDept = jCloudDB.deleteByWhere(Dept.class, " org_code = " + "\'" + orgCode + "\'");
+                    flagOrgUnit = jCloudDB.deleteByWhere(Orgunit.class, " org_code = " + "\'" + orgCode + "\'");
+                    if (flagUserDept && flagUserOrg && flagDept && flagOrgUnit) {
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
+                }else{
+                    result = "2";
+                }
+
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                ToastShow("解散成功");
+                OttUtils.push("deptAdd_refresh", "");
+            } else if(result.equals("2")){
+                ToastShow("您没有权限解散组织");
+            }else{
+                ToastShow("解散失败");
+            }
+        }
+    }
+
 
     /**
      * 分页增数
