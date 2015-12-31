@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
@@ -88,11 +89,27 @@ public class JobFzListActivity extends JwListActivity {
                     if(priority.equals("急")){
                         tv_yxj.setTextColor(getResources().getColor(R.color.red));
                     }else if(priority.equals("优先")){
-                        tv_yxj.setTextColor(getResources().getColor(R.color.yellow));
+                        tv_yxj.setTextColor(getResources().getColor(R.color.blue));
                     }else{
                         tv_yxj.setTextColor(getResources().getColor(R.color.green));
                     }
                 }
+
+                int state = item.getNow_state();
+                ImageView imageView = helper.getView(R.id.iv_xz);
+                //已确认
+                if(state ==1){
+                    imageView.setBackgroundResource(R.drawable.circle_red);
+                    //未审核
+                }else if(state ==2){
+                    imageView.setBackgroundResource(R.drawable.circular_blue);
+                    //已审核
+                }else if(state ==3){
+                    imageView.setBackgroundResource(R.drawable.circular_portrait);
+                }else{
+                    imageView.setBackgroundResource(R.drawable.dialog_share_link_default_icon);
+                }
+
 
             }
         };

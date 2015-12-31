@@ -14,7 +14,6 @@
         android:layout_width="@dimen/doctor_width_height"
         android:layout_height="@dimen/doctor_width_height"
         android:layout_marginRight="10.0dip"
-        android:src="@drawable/dialog_share_link_default_icon"
         app:border_color="@color/white"
         app:border_width="1.0dip"
         />

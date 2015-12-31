@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
@@ -75,10 +76,12 @@ public class JobListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<Task>(getMy(), mListItems, R.layout.item_job_list) {
             @Override
             public void convert(ViewHolder helper, Task item) {
+
                 helper.setText(R.id.tv_task_name, item.getTask_name());
                 helper.setText(R.id.tv_state, item.getNow_state_name());
                 helper.setText(R.id.tv_time, item.getCreate_time());
                 helper.setText(R.id.tv_yxj, item.getPriority());
+
                 String priority = item.getPriority();
                 TextView tv_yxj = helper.getView(R.id.tv_yxj);
                 tv_yxj.setText(priority);
@@ -86,10 +89,30 @@ public class JobListActivity extends JwListActivity {
                     if(priority.equals("急")){
                         tv_yxj.setTextColor(getResources().getColor(R.color.red));
                     }else if(priority.equals("优先")){
-                        tv_yxj.setTextColor(getResources().getColor(R.color.yellow));
+                        tv_yxj.setTextColor(getResources().getColor(R.color.blue));
                     }else{
                         tv_yxj.setTextColor(getResources().getColor(R.color.green));
                     }
+                }
+
+//                //未确认
+//                if(state ==0){
+//                    imageView.setBackgroundResource(R.drawable.circle_red);
+//
+//                }else
+                int state = item.getNow_state();
+                ImageView imageView = helper.getView(R.id.iv_xz);
+                //已确认
+                if(state ==1){
+                    imageView.setBackgroundResource(R.drawable.circle_red);
+                    //未审核
+                }else if(state ==2){
+                    imageView.setBackgroundResource(R.drawable.circular_blue);
+                    //已审核
+                }else if(state ==3){
+                    imageView.setBackgroundResource(R.drawable.circular_portrait);
+                }else{
+                    imageView.setBackgroundResource(R.drawable.dialog_share_link_default_icon);
                 }
 
             }

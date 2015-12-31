@@ -64,9 +64,8 @@ public class OragDetailActivity extends JwActivity {
         orgunit = (Orgunit)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         if(null!=orgunit){
             orgCode = orgunit.getOrg_code();
-            tvZzm.setText(StrUtils.IsNull(orgunit.getOrg_name()));
-            tvCjr.setText(StrUtils.IsNull(orgunit.getNickname()));
-            tvCjsj.setText(StrUtils.IsNull(orgunit.getFounder_time()));
+            showLoading();
+            new GetData(getMy()).execute();
         }
     }
 
@@ -178,4 +177,43 @@ public class OragDetailActivity extends JwActivity {
         }
     }
 
+
+    private class GetData extends AsyncTask<String, Void, String> {
+        private Context context;
+        List<Orgunit> orgunits;
+        JCloudDB jCloudDB;
+        /**
+         * @param context 上下文
+         */
+        public GetData(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = "1";
+            try {
+                orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode));
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                    if(ListUtils.IsNotNull(orgunits)){
+                          orgunit = orgunits.get(0);
+                          tvZzm.setText(StrUtils.IsNull(orgunit.getOrg_name()));
+                          tvCjr.setText(StrUtils.IsNull(orgunit.getNickname()));
+                          tvCjsj.setText(StrUtils.IsNull(orgunit.getCreate_time()));
+                    }
+            }
+            hideLoading();
+        }
+    }
 }
