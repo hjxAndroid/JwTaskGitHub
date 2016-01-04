@@ -378,6 +378,7 @@ public class FriendDetailActivity extends JwActivity {
                     userorgs = jCloudDB.findAllByWhere(Userorg.class,
                             "user_name=" + StrUtils.QuotedStr(phone));
 
+                    removeDuplicate(userorgs);
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -494,5 +495,20 @@ public class FriendDetailActivity extends JwActivity {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<Userorg> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getOrg_code().equals(list.get(i).getOrg_code())) {
+                    list.remove(j);
+                }
+            }
+        }
     }
 }

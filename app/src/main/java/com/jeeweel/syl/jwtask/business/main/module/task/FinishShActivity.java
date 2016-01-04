@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Submit;
@@ -46,6 +48,7 @@ import api.util.OttUtils;
 import api.util.Utils;
 import api.view.GridNoScrollView;
 import api.view.ListNoScrollView;
+import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -89,6 +92,7 @@ public class FinishShActivity extends JwActivity {
     int score;
     String orgCode;
 
+    TitlePopup titlePopup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,7 +107,7 @@ public class FinishShActivity extends JwActivity {
     }
 
     private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
+      /*  MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("完成");
         menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
@@ -131,7 +135,53 @@ public class FinishShActivity extends JwActivity {
                 }
             }
         });
-        addMenuView(menuTextView);
+        addMenuView(menuTextView);*/
+
+
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "同意");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "驳回");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
+            @Override
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    wcqk = liWcqk.getText().toString();
+                    shpj = etShpj.getText().toString();
+
+                    if (StrUtils.IsNotEmpty(wcqk) && StrUtils.IsNotEmpty(shpj)) {
+                        showLoading();
+                        double sco = 0.01;
+                        if (shpj.equals("优秀")) {
+                            sco = task.getDegree_score() * 1;
+                        } else if (shpj.equals("良好")) {
+                            sco = task.getDegree_score() * (0.5);
+                        } else if (shpj.equals("未完成")) {
+                            sco = task.getDegree_score() * (-0.5);
+                        }
+                        score = (int) sco;
+
+                        new saveRefresh(getMy()).execute();
+                    } else {
+                        ToastShow("请完成审核内容");
+                    }
+                } else {
+                   //拒绝
+                    showLoading();
+                    new RefuseRefresh(getMy()).execute();
+                }
+            }
+        });
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
     }
 
     private void getData() {
@@ -179,7 +229,7 @@ public class FinishShActivity extends JwActivity {
                             "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
-                            "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
+                            "pic_code=" + StrUtils.QuotedStr(task.getTask_code()+"1"));
 
                     String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
                     //查找数据
@@ -384,6 +434,69 @@ public class FinishShActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 ToastShow("审核成功");
+                OttUtils.push("sh_refresh", "");
+                finish();
+            } else {
+                ToastShow("保存失败");
+            }
+            hideLoading();
+        }
+    }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class RefuseRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public RefuseRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+            if (null != submit) {
+                try {
+
+                    String sqlsubmit = "update submit set audit_content = '" + wcqk + "' , audit_evaluate = '" + shpj + "',score = " + score + " where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                    CloudDB.execSQL(sqlsubmit);
+
+                    if (null != users) {
+                        String sql = "update task set now_state = 10 , now_state_name = '审核驳回' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code());
+                        CloudDB.execSQL(sql);
+                    }
+
+                    //保存到流程表里
+                    Taskflow taskflow = new Taskflow();
+                    taskflow.setUser_code(users.getUser_code());
+                    taskflow.setNickname(users.getNickname());
+                    taskflow.setTask_code(task.getTask_code());
+                    taskflow.setNow_state(10);
+                    taskflow.setNow_state_name(Contants.action_shbh);
+                    taskflow.setUser_action(Contants.action_shbh);
+                    jCloudDB.save(taskflow);
+
+                } catch (CloudServiceException e) {
+                    result = "0";
+                    e.printStackTrace();
+                }
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                ToastShow("任务已驳回");
                 OttUtils.push("sh_refresh", "");
                 finish();
             } else {

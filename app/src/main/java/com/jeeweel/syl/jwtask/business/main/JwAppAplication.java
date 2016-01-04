@@ -2,8 +2,10 @@ package com.jeeweel.syl.jwtask.business.main;
 
 import android.app.Notification;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -216,6 +218,7 @@ public class JwAppAplication extends JeeweelApplication {
                                 .setTicker(msg.ticker)
                                 .setAutoCancel(true);
                         Notification mNotification = builder.build();
+                        mNotification.sound = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.umeng_push_notification_default_sound);
                         //由于Android v4包的bug，在2.3及以下系统，Builder创建出来的Notification，并没有设置RemoteView，故需要添加此代码
                         mNotification.contentView = myNotificationView;
                         return mNotification;

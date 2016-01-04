@@ -205,6 +205,14 @@ public class JobDetailActivity extends JwActivity {
                     btDjsh.setClickable(true);
                     btSqyq.setClickable(true);
                     break;
+                //审核驳回
+                case 10:
+                    btQrjs.setText("已确认");
+                    btQrjs.setClickable(false);
+                    btDjsh.setText("审核驳回");
+                    btDjsh.setClickable(true);
+                    btSqyq.setClickable(true);
+                    break;
                 default:
                     break;
             }
@@ -379,7 +387,7 @@ public class JobDetailActivity extends JwActivity {
                                 break;
                             case 3:
                                 //已审核，查看审核情况
-                                JwStartActivity(YshActivity.class, taskflow.getTask_code());
+                                JwStartActivity(YshActivity.class, task);
                                 break;
                             case 4:
                                 //延期申请中，查看自己的延期信息
@@ -393,10 +401,16 @@ public class JobDetailActivity extends JwActivity {
                                 startActivity(intent);
                                 break;
                             case 8:
+                                //已放弃
                                 JwStartActivity(SolveGiveUpDetail.class, task);
                                 break;
                             case 9:
+                                //放弃驳回
                                 JwStartActivity(SolveGiveUpDetail.class, task);
+                                break;
+                            case 10:
+                                //审核驳回
+                                JwStartActivity(YshActivity.class, task);
                                 break;
                             default:
                                 break;

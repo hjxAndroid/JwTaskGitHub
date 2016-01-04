@@ -98,4 +98,6 @@ public class Contants {
     public static String action_tyfq = "同意放弃";
     //发布
     public static String action_fqbh = "放弃驳回";
+    //审核驳回
+    public static String action_shbh = "审核驳回";
 }

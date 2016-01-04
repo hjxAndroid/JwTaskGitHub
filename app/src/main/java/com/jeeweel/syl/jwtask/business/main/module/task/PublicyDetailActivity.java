@@ -36,6 +36,7 @@ import api.viewpage.ConvenientBanner;
 import api.viewpage.NetworkImageHolderView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PublicyDetailActivity extends JwActivity {
 
@@ -73,6 +74,12 @@ public class PublicyDetailActivity extends JwActivity {
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         setData();
         new FinishRefreshIfIsFounder(getMy()).execute();
+    }
+
+
+    @OnClick(R.id.rl_ydwd)
+    void loginClick() {
+         JwStartActivity(PublicReadOpotionActivity.class,publicity);
     }
 
     private void initRight() {
