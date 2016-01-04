@@ -295,7 +295,7 @@ public class JobDetailActivity extends JwActivity {
                     }
 
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
-                            "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
+                            "pic_code=" + StrUtils.QuotedStr(task.getTask_code()+"1"));
                 }
 
                 String newSql = "select * from  v_taskflow where task_code= " + StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
@@ -316,7 +316,7 @@ public class JobDetailActivity extends JwActivity {
                 OttUtils.push("news_refresh", "");
 
                 //展现图片
-                if (ListUtils.IsNotNull(pictureList)) {
+                 if (ListUtils.IsNotNull(pictureList)) {
                     final String imgs[] = new String[pictureList.size()];
                     for(int i = 0; i<pictureList.size();i++){
                         imgs[i] = Utils.getPicUrl() + pictureList.get(i).getPic_road();
@@ -375,7 +375,7 @@ public class JobDetailActivity extends JwActivity {
                         switch (state) {
                             case 2:
                                 //已递交，未审核，查看自己提交的完成情况信息
-                                JwStartActivity(MyJobDetailActivity.class, taskflow.getTask_code());
+                                JwStartActivity(MyJobDetailActivity.class,task);
                                 break;
                             case 3:
                                 //已审核，查看审核情况

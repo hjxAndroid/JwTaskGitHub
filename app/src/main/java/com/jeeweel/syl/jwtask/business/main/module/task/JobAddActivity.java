@@ -608,12 +608,6 @@ public class JobAddActivity extends JwActivity {
                     jCloudDB.save(task);
 
 
-                    //保存图片表
-                    for (String sFile : Bimp.drr) {
-                        // File file = new File(sFile);
-                        CloudFile.upload(sFile, unid);
-                    }
-
                     //保存到流程表里
                     Taskflow taskflow = new Taskflow();
                     taskflow.setUser_code(users.getUser_code());
@@ -624,6 +618,11 @@ public class JobAddActivity extends JwActivity {
                     taskflow.setUser_action(Contants.action_fb);
                     jCloudDB.save(taskflow);
 
+                    //保存图片表
+                    for (String sFile : Bimp.drr) {
+                        // File file = new File(sFile);
+                        CloudFile.upload(sFile, unid+"1");
+                    }
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -636,12 +635,14 @@ public class JobAddActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.equals("1")) {
-                pushData();
-                ToastShow("任务发布成功");
-            } else {
-                ToastShow("保存失败");
-            }
+//            if (result.equals("1")) {
+//                pushData();
+//                ToastShow("任务发布成功");
+//            } else {
+//                ToastShow("保存失败");
+//            }
+            pushData();
+            ToastShow("任务发布成功");
             hideLoading();
 
         }
