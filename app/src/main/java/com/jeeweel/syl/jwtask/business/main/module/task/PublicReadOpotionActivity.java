@@ -36,32 +36,34 @@ public class PublicReadOpotionActivity extends JwActivity {
     List<Userorg> orgunits;
     List<Alreadyread> alreadyreads;
     List<Userorg> unReads = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_read_opotion);
         ButterKnife.bind(this);
         setTitle("已读未读情况");
-        publicity = (V_publicityunread)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        publicity = (V_publicityunread) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         showLoading();
         new OrgPerson(getMy()).execute();
     }
 
     @OnClick(R.id.bt_yd)
     void ydClick() {
-        if(ListUtils.IsNotNull(orgunits)){
+        if (ListUtils.IsNotNull(orgunits)) {
             String json = new Gson().toJson(alreadyreads);
-            JwStartActivity(PublicReadOpotionActivity.class,json);
+            JwStartActivity(PublicReadOpotionActivity.class, json);
         }
     }
 
     @OnClick(R.id.bt_wd)
     void wdClick() {
-        if(ListUtils.IsNotNull(unReads)){
+        if (ListUtils.IsNotNull(unReads)) {
             String json = new Gson().toJson(unReads);
-            JwStartActivity(PublicReadOpotionActivity.class,json);
+            JwStartActivity(PublicReadOpotionActivity.class, json);
         }
     }
+
     /**
      * 查看总人数
      */
@@ -89,11 +91,11 @@ public class PublicReadOpotionActivity extends JwActivity {
                             "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()));
                     //已读人数
                     alreadyreads = jCloudDB.findAllByWhere(Alreadyread.class,
-                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) +"and task_code=" +StrUtils.QuotedStr(publicity.getPublicity_code()));
+                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) + "and task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()));
 
                     //未读人数
                     for (int i = 0; i < orgunits.size(); i++) {
-                        for (int j = 0 ; j< alreadyreads.size();j++) {
+                        for (int j = 0; j < alreadyreads.size(); j++) {
                             if (orgunits.get(i).getUser_code().equals(alreadyreads.get(i).getOperator_code())) {
                                 unReads.add(orgunits.get(i));
                             }

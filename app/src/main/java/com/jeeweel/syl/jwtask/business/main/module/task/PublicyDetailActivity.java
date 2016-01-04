@@ -77,10 +77,10 @@ public class PublicyDetailActivity extends JwActivity {
     }
 
 
-    @OnClick(R.id.rl_ydwd)
-    void loginClick() {
-         JwStartActivity(PublicReadOpotionActivity.class,publicity);
-    }
+//    @OnClick(R.id.rl_ydwd)
+//    void loginClick() {
+//         JwStartActivity(PublicReadOpotionActivity.class,publicity);
+//    }
 
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());

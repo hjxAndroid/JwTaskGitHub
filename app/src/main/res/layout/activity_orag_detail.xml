@@ -12,58 +12,59 @@
 
 
 
-            <LinearLayout
+        <LinearLayout
+            android:id="@+id/ll_oragname"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:clickable="true"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="组织名"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:textSize="@dimen/test_size" />
+
+
+            <TextView
+                android:id="@+id/tv_zzm"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_Height"
-                android:background="@drawable/shape_li"
-                android:clickable="true"
-                android:gravity="center">
+                android:layout_height="wrap_content"
+                android:text="泉州市捷微信息科技"
+                android:gravity="right"
+                android:paddingRight="10dp"
+                android:textColor="@color/list_text_color"
+                android:textSize="@dimen/test_size" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="组织名"
-                    android:layout_marginLeft="@dimen/margin_Size"
-                    android:textSize="@dimen/test_size" />
+        </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/ll_email"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:clickable="true"
+            android:gravity="center">
 
-                    <TextView
-                        android:id="@+id/tv_zzm"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="泉州市捷微信息科技"
-                        android:gravity="right"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/list_text_color"
-                        android:textSize="@dimen/test_size" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="创建人"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:textSize="@dimen/test_size" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_email"
+            <TextView android:gravity="right"
+                android:id="@+id/tv_cjr"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/item_Height"
-                android:background="@drawable/shape_li"
-                android:clickable="true"
-                android:gravity="center">
+                android:layout_height="wrap_content"
+                android:text="黄吉祥"
+                android:paddingRight="10dp"
+                android:textColor="@color/list_text_color"
+                android:textSize="@dimen/test_size" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="创建人"
-                    android:layout_marginLeft="@dimen/margin_Size"
-                    android:textSize="@dimen/test_size" />
-
-                    <TextView android:gravity="right"
-                        android:id="@+id/tv_cjr"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="黄吉祥"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/list_text_color"
-                        android:textSize="@dimen/test_size" />
-
-            </LinearLayout>
+        </LinearLayout>
 
 
 

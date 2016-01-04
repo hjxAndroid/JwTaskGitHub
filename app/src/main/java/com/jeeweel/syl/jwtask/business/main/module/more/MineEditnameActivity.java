@@ -20,6 +20,7 @@ import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.umeng.analytics.MobclickAgent;
 
+import api.util.OttUtils;
 import api.view.CustomDialog;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -31,6 +32,7 @@ public class MineEditnameActivity extends JwActivity {
     Users users;
     String strtitle;
     boolean register;
+    String code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,8 @@ public class MineEditnameActivity extends JwActivity {
         } else if (strtitle.equals("设置邮箱")) {
             et.setText(users.getEmail());
             et.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+        } else if (strtitle.equals("修改部门名") || strtitle.equals("修改组织名")) {
+            code = intent.getStringExtra("code");
         }
     }
 
@@ -123,15 +127,48 @@ public class MineEditnameActivity extends JwActivity {
             if (strtitle.equals("设置昵称")) {
                 users.setNickname(str1);
                 sql = "UPDATE users SET nickname='" + str1 + "'WHERE username ='" + phone + "'";
+                try {
+                    CloudDB.execSQL(sql);
+                } catch (CloudServiceException e) {
+                    result = "0";
+                }
             } else if (strtitle.equals("设置邮箱")) {
                 users.setEmail(str1);
                 sql = "UPDATE users SET email='" + str1 + "'WHERE username ='" + phone + "'";
+                try {
+                    CloudDB.execSQL(sql);
+                } catch (CloudServiceException e) {
+                    result = "0";
+                }
+            } else if (strtitle.equals("修改部门名")) {
+                String sqlDept = "UPDATE dept SET depart_name='" + str1 + "'WHERE depart_code ='" + code + "'";
+                String sqlUserdept = "UPDATE userdept SET dept_name='" + str1 + "'WHERE dept_code ='" + code + "'";
+
+                try {
+                    CloudDB.execSQL(sqlDept);
+                    CloudDB.execSQL(sqlUserdept);
+                } catch (CloudServiceException e) {
+                    result = "0";
+                }
+            } else if (strtitle.equals("修改组织名")) {
+                String sqlOrgunit = "UPDATE orgunit SET org_name='" + str1 + "'WHERE org_code ='" + code + "'";
+                String sqlUserDept = "UPDATE userdept SET org_name='" + str1 + "'WHERE org_code ='" + code + "'";
+                String sqlUserorg = "UPDATE userorg SET org_name='" + str1 + "'WHERE org_code ='" + code + "'";
+                String sqlDept = "UPDATE dept SET org_name='" + str1 + "'WHERE org_code ='" + code + "'";
+                try {
+                    CloudDB.execSQL(sqlOrgunit);
+                    CloudDB.execSQL(sqlUserDept);
+                    CloudDB.execSQL(sqlUserorg);
+                    CloudDB.execSQL(sqlDept);
+                } catch (CloudServiceException e) {
+                    result = "0";
+                }
             }
-            try {
-                CloudDB.execSQL(sql);
-            } catch (CloudServiceException e) {
-                result = "0";
-            }
+//            try {
+//                CloudDB.execSQL(sql);
+//            } catch (CloudServiceException e) {
+//                result = "0";
+//            }
             return result;
         }
 
@@ -146,6 +183,15 @@ public class MineEditnameActivity extends JwActivity {
                 } else {
                     MineEditnameActivity.this.finish();
                 }
+                if (strtitle.equals("修改部门名")) {
+                    OttUtils.push("depart_name_refresh", str1);
+                    OttUtils.push("deptAdd_refresh", "");
+
+                } else if (strtitle.equals("修改组织名")) {
+                    OttUtils.push("org_name_refresh", str1);
+                    OttUtils.push("deptAdd_refresh", "");
+                }
+                ToastShow("修改成功");
             } else {
                 ToastShow("数据保存失败");
                 MineEditnameActivity.this.finish();

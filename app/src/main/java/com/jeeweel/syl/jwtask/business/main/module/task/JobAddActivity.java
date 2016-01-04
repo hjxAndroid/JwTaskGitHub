@@ -148,12 +148,12 @@ public class JobAddActivity extends JwActivity {
     int hours;
     int minutes;
     private String dateAndTime;
-//    MyDate myDate = new MyDate(this);
 
 
     private ScrollView li_fb;
     GridView noScrollgridview;
     GridAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -165,10 +165,11 @@ public class JobAddActivity extends JwActivity {
         orgcode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         orgname = (String) SharedPreferencesUtils.get(getMy(), Contants.org_name, "");
         initRight();
+        initView();
     }
 
 
-    private void initView(){
+    private void initView() {
         li_fb = (ScrollView) findViewById(R.id.li_fb);
 
         noScrollgridview = (GridView) findViewById(R.id.noScrollgridview);
@@ -357,6 +358,7 @@ public class JobAddActivity extends JwActivity {
                     str = new StringBuilder("");
                     str.append(year + "-" + (month + 1) + "-"
                             + day + " ");
+                    //android4.1/4.2/4.4版本会将onDateSet()方法回掉两次，所以重新继承DatePickerDiolog重写onStop方法，同理TimePickerDiolog
                     timeDialog = new MyTimePickerDialog(JobAddActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
