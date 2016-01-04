@@ -91,7 +91,6 @@ public class SignListActivity extends JwListActivity {
                         helper.setText(R.id.tv_sign_title, item.getSign_title());
                         helper.setText(R.id.tv_name, item.getProuser_name());
                         helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
-                /*new FinishRefreshChangeState(getMy()).execute();*/
                     }
                 }
             }

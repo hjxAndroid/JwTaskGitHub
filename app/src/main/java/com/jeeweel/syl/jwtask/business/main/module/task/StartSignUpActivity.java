@@ -72,8 +72,6 @@ public class StartSignUpActivity extends JwActivity {
     String sign_code;
     String userNick;
     String buddyCode;
-    String receiveName;
-    List<Friend> friends;
     List<Friend> friendList = new ArrayList<Friend>();
     // private CommonAdapter commonAdapter;
     int dayOfWeek;
@@ -85,7 +83,6 @@ public class StartSignUpActivity extends JwActivity {
     String fName;
     @Bind(R.id.iv_user_pic)
     ImageView ivUserPic;
-    private String isUserCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +150,7 @@ public class StartSignUpActivity extends JwActivity {
                 for (Userdept userdept : userdepts) {
                     Friend friend = new Friend();
                     friend.setUser_code(userdept.getUser_code());
+                    friend.setFriend_code(userdept.getUser_code());
                     friend.setFriend_nickname(userdept.getNickname());
                     friend.setPhoto_code(userdept.getPhoto_code());
                     friends.add(friend);
@@ -203,6 +201,9 @@ public class StartSignUpActivity extends JwActivity {
         tvStartDate = DateHelper.getCurrentDate();
         tvStartTime = tvStartTime.substring(0, 5);
         switch (dayOfWeek) {
+            case 0:
+                tvStartWeek = "星期日";
+                break;
             case 1:
                 tvStartWeek = "星期一";
                 break;
@@ -220,9 +221,6 @@ public class StartSignUpActivity extends JwActivity {
                 break;
             case 6:
                 tvStartWeek = "星期六";
-                break;
-            case 7:
-                tvStartWeek = "星期日";
                 break;
             default:
                 break;

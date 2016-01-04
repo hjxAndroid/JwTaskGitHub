@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
@@ -33,7 +35,6 @@ import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
@@ -106,6 +107,20 @@ public class JobAddActivity extends JwActivity {
     DegreeItem item;
 
     String timeData = "";
+
+    String dateStr;
+    String[] data;
+    String[] dateTime;
+    Dialog timeDialog = null;
+    StringBuilder str;
+    int year;
+    int month;
+    int day;
+    int hours;
+    int minutes;
+    private String dateAndTime;
+//    MyDate myDate = new MyDate(this);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -217,53 +232,133 @@ public class JobAddActivity extends JwActivity {
     }
 
 
+//    /**
+//     * 创建日期及时间选择对话框
+//     */
+//    @Override
+//    protected Dialog onCreateDialog(int id) {
+//        Dialog dialog = null;
+//
+//        if (StrUtils.IsNotEmpty(timeData)) {
+//            String[] data = timeData.split("-");
+//            int year = Integer.parseInt(data[0]);
+//            int mouth = Integer.parseInt(data[1]) - 1;
+//            int day = Integer.parseInt(data[2]);
+//            dialog = new android.app.DatePickerDialog(
+//                    this,
+//                    new android.app.DatePickerDialog.OnDateSetListener() {
+//                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+//                            if (timeFlag == 0) {
+//                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+//                            } else {
+//                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+//                            }
+//                        }
+//                    },
+//                    year, // 传入年份
+//                    mouth, // 传入月份
+//                    day // 传入天数
+//            );
+//        } else {
+//            Calendar c = Calendar.getInstance();
+//            dialog = new android.app.DatePickerDialog(
+//                    this,
+//                    new android.app.DatePickerDialog.OnDateSetListener() {
+//                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+//                            if (timeFlag == 0) {
+//                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+//                            } else {
+//                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+//                            }
+//                        }
+//                    },
+//                    c.get(Calendar.YEAR), // 传入年份
+//                    c.get(Calendar.MONTH), // 传入月份
+//                    c.get(Calendar.DAY_OF_MONTH) // 传入天数
+//            );
+//        }
+//        return dialog;
+//    }
+
     /**
      * 创建日期及时间选择对话框
      */
     @Override
     protected Dialog onCreateDialog(int id) {
-        Dialog dialog = null;
-
+//    private void clickChangeDateTime() {
+        Dialog dateDialog = null;
         if (StrUtils.IsNotEmpty(timeData)) {
-            String[] data = timeData.split("-");
-            int year = Integer.parseInt(data[0]);
-            int mouth = Integer.parseInt(data[1]) - 1;
-            int day = Integer.parseInt(data[2]);
-            dialog = new android.app.DatePickerDialog(
-                    this,
-                    new android.app.DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+            data = timeData.split("-");
+            year = Integer.parseInt(data[0]);
+            month = Integer.parseInt(data[1]) - 1;
+            day = Integer.parseInt(data[2]);
+            dateAndTime = data[3];
+            dateTime = dateAndTime.split(":");
+            hours = Integer.parseInt(dateTime[0]);
+            minutes = Integer.parseInt(data[1]);
+            dateDialog = new MyDatePickDialog(JobAddActivity.this, new android.app.DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                    str = new StringBuilder("");
+                    str.append(year + "-" + (month + 1) + "-"
+                            + day + " ");
+                    timeDialog = new MyTimePickerDialog(JobAddActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
+                            str.append(hours + ":"
+                                    + minutes);
+                            dateStr = str.toString();
                             if (timeFlag == 0) {
-                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                                etStartTime.setText(dateStr);
                             } else {
-                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                                etEndTime.setText(dateStr);
                             }
                         }
-                    },
-                    year, // 传入年份
-                    mouth, // 传入月份
-                    day // 传入天数
-            );
+                    }, hours, minutes
+// true表示采用24小时制
+                            , true);
+                    timeDialog.setTitle("请选择时间");
+                    timeDialog.show();
+                }
+            }, year, month, day);
+            dateDialog.setTitle("请选择日期");
+            dateDialog.show();
         } else {
             Calendar c = Calendar.getInstance();
-            dialog = new android.app.DatePickerDialog(
-                    this,
-                    new android.app.DatePickerDialog.OnDateSetListener() {
-                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+            dateDialog = new MyDatePickDialog(JobAddActivity.this, new android.app.DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+                    str = new StringBuilder("");
+                    str.append(year + "-" + (month + 1) + "-"
+                            + dayOfMonth + " ");
+                    Calendar time = Calendar.getInstance();
+                    timeDialog = new MyTimePickerDialog(JobAddActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                        @Override
+                        public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+                            str.append(hourOfDay + ":"
+                                    + minute);
+                            dateStr = str.toString();
                             if (timeFlag == 0) {
-                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                                etStartTime.setText(dateStr);
                             } else {
-                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
+                                etEndTime.setText(dateStr);
                             }
                         }
-                    },
-                    c.get(Calendar.YEAR), // 传入年份
-                    c.get(Calendar.MONTH), // 传入月份
-                    c.get(Calendar.DAY_OF_MONTH) // 传入天数
-            );
+                    }, time.get(Calendar.HOUR_OF_DAY), time
+                            .get(Calendar.MINUTE)
+// true表示采用24小时制
+                            , true);
+                    timeDialog.setTitle("请选择时间");
+                    timeDialog.show();
+                }
+            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c
+                    .get(Calendar.DAY_OF_MONTH));
+            dateDialog.setTitle("请选择日期");
+            dateDialog.show();
         }
-        return dialog;
+        return dateDialog;
     }
+
 
     //开始时间
     @OnClick(R.id.li_start_time)
@@ -271,6 +366,9 @@ public class JobAddActivity extends JwActivity {
         timeFlag = 0;
         timeData = etStartTime.getText().toString();
         showDialog(0);
+//        dateStr = myDate.dateSelect(timeData);
+//        etStartTime.setText(dateStr);
+
     }
 
 
@@ -279,6 +377,8 @@ public class JobAddActivity extends JwActivity {
     void endtimeClick() {
         timeFlag = 1;
         timeData = etEndTime.getText().toString();
+//        dateStr = myDate.dateSelect(timeData);
+//        etEndTime.setText(timeData);
         showDialog(0);
     }
 
@@ -586,6 +686,7 @@ public class JobAddActivity extends JwActivity {
             hideLoading();
 
         }
+
     }
 
     @Subscribe

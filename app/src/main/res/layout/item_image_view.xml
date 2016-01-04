@@ -17,8 +17,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_head_pic"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_centerHorizontal="true"
         android:layout_margin="@dimen/time_space"
         android:visibility="gone" />
@@ -46,10 +46,12 @@
         android:visibility="gone" />
 
 
-    <ImageView
-        android:id="@+id/iv_add"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_margin="@dimen/time_space"
-        android:visibility="visible" />
+    <!--<ImageView-->
+    <!--android:id="@+id/iv_add"-->
+    <!--android:layout_width="40dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_margin="@dimen/time_space"-->
+    <!--android:visibility="visible" />-->
+
+
 </RelativeLayout>
