@@ -222,13 +222,6 @@ public class SendShActivity extends JwActivity {
                 try {
                     jCloudDB.save(submit);
 
-                    //保存图片表
-                    for (String sFile : Bimp.drr) {
-                        // File file = new File(sFile);
-                        CloudFile.upload(sFile, task.getTask_code());
-                    }
-
-
                     if (null != users) {
                         String sql = "update task set now_state = 2 , now_state_name = '未审核' where task_code = " + StrUtils.QuotedStr(task.getTask_code()) + "and principal_code like " + StrUtils.QuotedStrLike(users.getUser_code());
                         CloudDB.execSQL(sql);
@@ -245,6 +238,13 @@ public class SendShActivity extends JwActivity {
                     taskflow.setUser_action(Contants.action_dj);
                     jCloudDB.save(taskflow);
 
+
+                    //保存图片表
+                    for (String sFile : Bimp.drr) {
+                        // File file = new File(sFile);
+                        CloudFile.upload(sFile, task.getTask_code());
+                    }
+
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -255,14 +255,10 @@ public class SendShActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.equals("1")) {
-                ToastShow("发布成功");
+                ToastShow("审核成功");
                 OttUtils.push("job_refresh", "");
                 finish();
-            } else {
-                ToastShow("保存失败");
-            }
-            hideLoading();
+                hideLoading();
         }
     }
 

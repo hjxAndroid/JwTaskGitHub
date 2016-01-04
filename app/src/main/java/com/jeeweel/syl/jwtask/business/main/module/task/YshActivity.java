@@ -211,7 +211,7 @@ public class YshActivity extends JwActivity {
                             switch (state) {
                                 case 2:
                                     //已递交，未审核，查看自己提交的完成情况信息
-                                    JwStartActivity(MyJobDetailActivity.class, taskflow.getTask_code());
+                                    JwStartActivity(MyJobDetailActivity.class, task);
                                     break;
                                 case 3:
                                     //已审核，查看审核情况

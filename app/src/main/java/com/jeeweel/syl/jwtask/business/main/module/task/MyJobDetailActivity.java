@@ -88,11 +88,7 @@ public class MyJobDetailActivity extends JwActivity {
 
     private void getData() {
         showLoading();
-        String task_code = getIntent().getStringExtra(StaticStrUtils.baseItem);
-        if (StrUtils.IsNotEmpty(task_code)) {
-            task = new Task();
-            task.setTask_code(task_code);
-        }
+        task = (Task)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         showLoading();
         new FinishRefresh(getMy()).execute();
     }

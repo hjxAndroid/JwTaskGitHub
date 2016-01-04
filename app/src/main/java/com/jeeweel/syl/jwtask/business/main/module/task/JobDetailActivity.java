@@ -17,13 +17,13 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
-import com.jeeweel.syl.jwtask.business.main.module.service.Helper;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -43,6 +43,7 @@ import api.util.Contants;
 import api.util.OttUtils;
 import api.util.Utils;
 import api.view.CustomDialog;
+import api.view.GridNoScrollView;
 import api.view.ListNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -92,6 +93,8 @@ public class JobDetailActivity extends JwActivity {
     Button btFqrw;
     @Bind(R.id.li_bt)
     LinearLayout liBt;
+    @Bind(R.id.noScrollgridview)
+    GridNoScrollView noScrollgridview;
 
     private Users users;
 
@@ -250,7 +253,7 @@ public class JobDetailActivity extends JwActivity {
         private Context context;
         private JCloudDB jCloudDB;
         List<Task> tasks;
-
+        List<Picture> pictureList;
         /**
          * @param context 上下文
          */
@@ -290,9 +293,12 @@ public class JobDetailActivity extends JwActivity {
                         alreadyread.setOperate_type("2");
                         jCloudDB.save(alreadyread);
                     }
+
+                    pictureList = jCloudDB.findAllByWhere(Picture.class,
+                            "pic_code=" + StrUtils.QuotedStr(task.getTask_code()+"1"));
                 }
 
-                String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
+                String newSql = "select * from  v_taskflow where task_code= " + StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
                 //查找数据
                 taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
             } catch (CloudServiceException e) {
@@ -308,6 +314,36 @@ public class JobDetailActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 OttUtils.push("news_refresh", "");
+
+                //展现图片
+                 if (ListUtils.IsNotNull(pictureList)) {
+                    final String imgs[] = new String[pictureList.size()];
+                    for(int i = 0; i<pictureList.size();i++){
+                        imgs[i] = Utils.getPicUrl() + pictureList.get(i).getPic_road();
+                    }
+
+                    CommonAdapter commonAdapter1 = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
+                        @Override
+                        public void convert(ViewHolder helper, Picture item) {
+                            ImageView imageView = helper.getImageView(R.id.img);
+                            JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
+                        }
+                    };
+                    noScrollgridview.setAdapter(commonAdapter1);
+                    noScrollgridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if(imgs.length!=0){
+                                Intent intent = new Intent(getMy(),ImagePagerActivity.class);
+                                // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
+                                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imgs);
+                                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+                                getMy().startActivity(intent);
+                            }
+                        }
+                    });
+                }
+
 
                 if (ListUtils.IsNotNull(tasks)) {
                     Task task = tasks.get(0);
@@ -327,7 +363,7 @@ public class JobDetailActivity extends JwActivity {
                         helper.setText(R.id.tv_time, item.getCreate_time());
 
                         ImageView imageView = helper.getImageView(R.id.iv_xz);
-                        JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
+                        JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
                     }
                 };
                 listview.setAdapter(commonAdapter);
@@ -339,7 +375,7 @@ public class JobDetailActivity extends JwActivity {
                         switch (state) {
                             case 2:
                                 //已递交，未审核，查看自己提交的完成情况信息
-                                JwStartActivity(MyJobDetailActivity.class, taskflow.getTask_code());
+                                JwStartActivity(MyJobDetailActivity.class,task);
                                 break;
                             case 3:
                                 //已审核，查看审核情况
@@ -472,7 +508,7 @@ public class JobDetailActivity extends JwActivity {
         });
 
         builder.setNegativeButton("取消",
-                new android.content.DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -563,7 +599,7 @@ public class JobDetailActivity extends JwActivity {
 
 
             try {
-                String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code());
+                String newSql = "select * from  v_taskflow where task_code= " + StrUtils.QuotedStr(task.getTask_code());
                 //查找数据
                 taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
             } catch (CloudServiceException e) {
