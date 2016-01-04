@@ -3,6 +3,7 @@ package api.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +61,7 @@ public class SignAdapter extends BaseAdapter {
             // 导入布局并赋值给convertview
             convertView = inflater.inflate(R.layout.item_image_view, null);
             holder.tv_cir = (TextView) convertView.findViewById(R.id.tv_cir);
-            holder.iv_add = (ImageView) convertView.findViewById(R.id.iv_add);
+//            holder.iv_add = (ImageView) convertView.findViewById(R.id.iv_add);
             holder.tv_pic_friend_name = (TextView) convertView.findViewById(R.id.tv_pic_friend_name);
             holder.iv_head_pic = (ImageView) convertView.findViewById(R.id.iv_head_pic);
             holder.tv_pic_friendname = (TextView) convertView.findViewById(R.id.tv_pic_friendname);
@@ -71,9 +72,13 @@ public class SignAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
         if (position == list.size() - 1) {
-            holder.iv_add.setImageDrawable((context.getResources().getDrawable(R.drawable.icon_org_add)));
-            holder.iv_add.setVisibility(View.VISIBLE);
-            holder.tv_cir.setVisibility(View.GONE);
+//            holder.iv_add.setImageDrawable((context.getResources().getDrawable(R.drawable.icon_org_add)));
+//            holder.iv_add.setVisibility(View.VISIBLE);
+//            Drawable iconAdd = context.getResources().getDrawable(R.drawable.icon_org_add);
+//            iconAdd.setBounds(20, 20, 20, 20);
+//            holder.tv_cir.setCompoundDrawables(null, iconAdd, null, null);
+            holder.tv_cir.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.icon_org_add));
+            holder.tv_cir.setVisibility(View.VISIBLE);
             holder.tv_pic_friend_name.setVisibility(View.GONE);
             holder.iv_head_pic.setVisibility(View.GONE);
             holder.tv_pic_friendname.setVisibility(View.GONE);
@@ -94,7 +99,7 @@ public class SignAdapter extends BaseAdapter {
 
                 holder.tv_pic_friendname.setVisibility(View.GONE);
 
-                holder.iv_add.setVisibility(View.GONE);
+//                holder.iv_add.setVisibility(View.GONE);
 
                 holder.tv_cir.setVisibility(View.GONE);
 
@@ -104,13 +109,15 @@ public class SignAdapter extends BaseAdapter {
 
                 holder.tv_pic_friend_name.setText(friendNickName);
             } else {
+                holder.tv_cir.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.tvcircle));
+
                 holder.tv_pic_friendname.setVisibility(View.VISIBLE);
 
                 holder.tv_cir.setVisibility(View.VISIBLE);
 
                 holder.iv_head_pic.setVisibility(View.GONE);
 
-                holder.iv_add.setVisibility(View.GONE);
+//                holder.iv_add.setVisibility(View.GONE);
 
                 holder.tv_pic_friend_name.setVisibility(View.GONE);
 
@@ -127,9 +134,9 @@ public class SignAdapter extends BaseAdapter {
 
     public static class ViewHolder {
         public TextView tv_cir;
-        public ImageView iv_add;
         public TextView tv_pic_friend_name;
         public ImageView iv_head_pic;
         public TextView tv_pic_friendname;
+
     }
 }

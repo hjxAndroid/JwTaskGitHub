@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.main.module.more;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
@@ -245,15 +247,12 @@ public class MineActivity extends JwActivity {
     @Override
     protected Dialog onCreateDialog(int id) {
         Dialog dialog = null;
-
         if (StrUtils.IsNotEmpty(birthday)) {
             String[] data = birthday.split("-");
             int year = Integer.parseInt(data[0]);
             int mouth = Integer.parseInt(data[1]) - 1;
             int day = Integer.parseInt(data[2]);
-//            int hours = Integer.parseInt(data[3];
-//            int mintues = Integer.parseInt(data[4]);
-//            int seconds = Integer.parseInt(data[5]);
+
             dialog = new DatePickerDialog(
                     this,
                     new DatePickerDialog.OnDateSetListener() {
@@ -269,6 +268,7 @@ public class MineActivity extends JwActivity {
                     mouth, // 传入月份
                     day // 传入天数
             );
+
         } else {
             Calendar c = Calendar.getInstance();
             dialog = new DatePickerDialog(
