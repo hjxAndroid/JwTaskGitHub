@@ -146,7 +146,6 @@ public class PublicyContactHomeActivity extends JwActivity {
                         public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
                             Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
                             JwStartActivity(OragDetailActivity.class, orgunit);
-
                             return true;
                         }
                     });

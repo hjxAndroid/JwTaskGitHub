@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
@@ -91,9 +92,9 @@ public class CheckAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 boolean check = holders.cb.isChecked();
-                if(check){
+                if (check) {
                     getIsSelected().put(position, check);
-                }else{
+                } else {
                     getIsSelected().put(position, check);
                 }
             }

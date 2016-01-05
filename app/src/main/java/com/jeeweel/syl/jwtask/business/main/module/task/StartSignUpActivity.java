@@ -92,8 +92,6 @@ public class StartSignUpActivity extends JwActivity {
         setTitle("发起签到");
         initDate();
         initView();
-
-
     }
 
     @Override
