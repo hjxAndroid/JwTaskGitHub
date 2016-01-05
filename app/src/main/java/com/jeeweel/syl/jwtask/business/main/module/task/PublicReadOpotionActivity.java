@@ -10,8 +10,6 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -34,7 +32,7 @@ public class PublicReadOpotionActivity extends JwActivity {
     Button btWd;
     V_publicityunread publicity;
     List<Userorg> orgunits;
-    List<Alreadyread> alreadyreads;
+    List<Userorg> alreadyreads;
     List<Userorg> unReads = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +47,9 @@ public class PublicReadOpotionActivity extends JwActivity {
 
     @OnClick(R.id.bt_yd)
     void ydClick() {
-        if(ListUtils.IsNotNull(orgunits)){
+        if(ListUtils.IsNotNull(alreadyreads)){
             String json = new Gson().toJson(alreadyreads);
-            JwStartActivity(PublicReadOpotionActivity.class,json);
+            JwStartActivity(PublicyReadListActivity.class,json);
         }
     }
 
@@ -59,7 +57,7 @@ public class PublicReadOpotionActivity extends JwActivity {
     void wdClick() {
         if(ListUtils.IsNotNull(unReads)){
             String json = new Gson().toJson(unReads);
-            JwStartActivity(PublicReadOpotionActivity.class,json);
+            JwStartActivity(PublicyUnReadListActivity.class,json);
         }
     }
     /**
@@ -84,22 +82,33 @@ public class PublicReadOpotionActivity extends JwActivity {
 
             if (null != publicity) {
                 try {
-                    //总人数
-                    orgunits = jCloudDB.findAllByWhere(Userorg.class,
-                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()));
+//                    //总人数
+//                    orgunits = jCloudDB.findAllByWhere(Userorg.class,
+//                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()));
                     //已读人数
-                    alreadyreads = jCloudDB.findAllByWhere(Alreadyread.class,
-                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) +"and task_code=" +StrUtils.QuotedStr(publicity.getPublicity_code()));
+//                    alreadyreads = jCloudDB.findAllByWhere(Alreadyread.class,
+//                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) +"and task_code=" +StrUtils.QuotedStr(publicity.getPublicity_code()));
+
+
+                    //已读人数
+                    String readSql  = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
+                    //查找数据
+                    alreadyreads = jCloudDB.findAllBySql(Userorg.class, readSql);
+                    removeDuplicate(alreadyreads);
 
                     //未读人数
-                    for (int i = 0; i < orgunits.size(); i++) {
-                        for (int j = 0 ; j< alreadyreads.size();j++) {
-                            if (orgunits.get(i).getUser_code().equals(alreadyreads.get(i).getOperator_code())) {
-                                unReads.add(orgunits.get(i));
-                            }
-                        }
-                    }
-
+//                    for (int i = 0; i < orgunits.size(); i++) {
+//                        for (int j = 0 ; j< alreadyreads.size();j++) {
+//                            if (orgunits.get(i).getUser_code().equals(alreadyreads.get(i).getOperator_code())) {
+//                                unReads.add(orgunits.get(i));
+//                            }
+//                        }
+//                    }
+                    //未读人数
+                    String sql  = "SELECT t.* from userorg t where t.user_code not in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
+                    //查找数据
+                    unReads = jCloudDB.findAllBySql(Userorg.class, sql);
+                    removeDuplicate(unReads);
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -114,5 +123,20 @@ public class PublicReadOpotionActivity extends JwActivity {
             hideLoading();
         }
 
+    }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<Userorg> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {
+                    list.remove(j);
+                }
+            }
+        }
     }
 }
