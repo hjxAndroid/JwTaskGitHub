@@ -19,11 +19,14 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.more.MineActivity;
+import com.jeeweel.syl.jwtask.business.main.module.more.MineEditnameActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -45,24 +48,26 @@ public class OragDetailActivity extends JwActivity {
     @Bind(R.id.bt_add)
     Button btAdd;
 
+
     Orgunit orgunit;
 
     String orgCode;
     Users users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orag_detail);
         ButterKnife.bind(this);
         setTitle("组织详情");
+        users = JwAppAplication.getInstance().getUsers();
+        orgunit = (Orgunit) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         getData();
         initRight();
     }
 
-    private void getData(){
-        users = JwAppAplication.getInstance().getUsers();
-        orgunit = (Orgunit)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
-        if(null!=orgunit){
+    private void getData() {
+        if (null != orgunit) {
             orgCode = orgunit.getOrg_code();
             showLoading();
             new GetData(getMy()).execute();
@@ -77,7 +82,7 @@ public class OragDetailActivity extends JwActivity {
         startActivity(intent);
     }
 
-    private void initRight(){
+    private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
         menuTextView.setText("解散");
         menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
@@ -118,6 +123,7 @@ public class OragDetailActivity extends JwActivity {
     private class FinishRefreshDismiss extends AsyncTask<String, Void, String> {
         private Context context;
         List<Orgunit> orgunits;
+
         /**
          * @param context 上下文
          */
@@ -136,8 +142,8 @@ public class OragDetailActivity extends JwActivity {
             boolean flagOrgUnit = false;
             JCloudDB jCloudDB = new JCloudDB();
             try {
-                if(null!=users){
-                    orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode)  +
+                if (null != users) {
+                    orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) +
                             "and founder_code =" + StrUtils.QuotedStr(users.getUser_code()));
                     if (ListUtils.IsNotNull(orgunits)) {
 
@@ -150,7 +156,7 @@ public class OragDetailActivity extends JwActivity {
                         } else {
                             result = "0";
                         }
-                    }else{
+                    } else {
                         result = "2";
                     }
 
@@ -168,20 +174,20 @@ public class OragDetailActivity extends JwActivity {
             if (result.equals("1")) {
                 ToastShow("解散成功");
                 OttUtils.push("deptAdd_refresh", "");
-            } else if(result.equals("2")){
+            } else if (result.equals("2")) {
                 ToastShow("您没有权限解散组织");
-            }else{
+            } else {
                 ToastShow("解散失败");
             }
             hideLoading();
         }
     }
 
-
     private class GetData extends AsyncTask<String, Void, String> {
         private Context context;
         List<Orgunit> orgunits;
         JCloudDB jCloudDB;
+
         /**
          * @param context 上下文
          */
@@ -206,14 +212,83 @@ public class OragDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                    if(ListUtils.IsNotNull(orgunits)){
-                          orgunit = orgunits.get(0);
-                          tvZzm.setText(StrUtils.IsNull(orgunit.getOrg_name()));
-                          tvCjr.setText(StrUtils.IsNull(orgunit.getNickname()));
-                          tvCjsj.setText(StrUtils.IsNull(orgunit.getCreate_time()));
-                    }
+                if (ListUtils.IsNotNull(orgunits)) {
+                    orgunit = orgunits.get(0);
+                    tvZzm.setText(StrUtils.IsNull(orgunit.getOrg_name()));
+                    tvCjr.setText(StrUtils.IsNull(orgunit.getNickname()));
+                    tvCjsj.setText(StrUtils.IsNull(orgunit.getCreate_time()));
+                }
             }
             hideLoading();
+        }
+    }
+
+
+    private class FinishRefresIsFounder extends AsyncTask<String, Void, String> {
+        private Context context;
+        List<Orgunit> orgunits;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresIsFounder(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = "1";
+
+
+            JCloudDB jCloudDB = new JCloudDB();
+            try {
+                if (null != users) {
+                    orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) +
+                            "and founder_code =" + StrUtils.QuotedStr(users.getUser_code()));
+                    if (ListUtils.IsNotNull(orgunits)) {
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                Intent intent = new Intent();
+                intent.putExtra("title", "修改组织名");
+                intent.putExtra("code", orgunit.getOrg_code());
+                intent.setClass(OragDetailActivity.this, MineEditnameActivity.class);
+                JwStartActivity(intent);
+            } else {
+                ToastShow("您没有权限修改");
+            }
+            hideLoading();
+        }
+    }
+
+    @OnClick(R.id.ll_oragname)
+    void ll_oragnameClick() {
+        new FinishRefresIsFounder(getMy()).execute();
+    }
+
+    @OnClick(R.id.rea_members)
+    void rea_membersClick() {
+        JwStartActivity(OrgMembersActivity.class, orgCode);
+    }
+
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (StrUtils.IsNotEmpty(msg) && msg.equals("org_name_refresh")) {
+            getData();
         }
     }
 }

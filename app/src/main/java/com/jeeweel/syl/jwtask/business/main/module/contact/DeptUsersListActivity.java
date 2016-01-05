@@ -23,6 +23,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.more.MineEditnameActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -79,6 +80,8 @@ public class DeptUsersListActivity extends JwListActivity {
     private Userdept userdept;
     private String orgCode;
     private Users users;
+    private List<Userdept> listUserDept;
+    private String dept_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +92,7 @@ public class DeptUsersListActivity extends JwListActivity {
         if (null != userdept) {
             setTitle(userdept.getDept_name());
             orgCode = userdept.getOrg_code();
+            dept_code = userdept.getDept_code();
         }
         ButterKnife.bind(this);
         initListViewController();
@@ -96,20 +100,57 @@ public class DeptUsersListActivity extends JwListActivity {
     }
 
     private void initView() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("添加");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "修改部门名");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
-                intent.putExtra("userdept", userdept);
-                intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
-                startActivity(intent);
-                finish();
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
+                    intent.putExtra("userdept", userdept);
+                    intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
+                    startActivity(intent);
+                    //     finish();
+                } else {
+
+                    new FinishRefresIsFounder(getMy()).execute();
+
+//                    Intent intent = new Intent();
+//                    intent.putExtra("title", "修改部门名");
+//                    intent.putExtra("code", userdept.getDept_code());
+//                    intent.setClass(DeptUsersListActivity.this, MineEditnameActivity.class);
+//                    JwStartActivity(intent);
+                }
             }
         });
-        addMenuView(menuTextView);
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
+    }
+//    private void initView() {
+//        MenuTextView menuTextView = new MenuTextView(getMy());
+//        menuTextView.setText("添加");
+//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+//        menuTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                Intent intent = new Intent(getMy(), DeptSelectFriendListActivity.class);
+//                intent.putExtra("userdept", userdept);
+//                intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
+//                startActivity(intent);
+//                finish();
+//            }
+//        });
+//        addMenuView(menuTextView);
 //        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 //        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
 //        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "解散");
@@ -139,8 +180,8 @@ public class DeptUsersListActivity extends JwListActivity {
 //            }
 //        });
 //        addMenuView(menuImageView);
-
-    }
+//
+//    }
 
     @Override
     public void initListViewController() {
@@ -177,12 +218,15 @@ public class DeptUsersListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
+        String flag = "DeptUsers";
         Userdept userdept = (Userdept) commonAdapter.getItem(position);
         Intent intent = new Intent();
         intent.putExtra("flag", true);
+        intent.putExtra("mark", flag);
         intent.putExtra(StaticStrUtils.baseItem, userdept.getUsername());
         intent.putExtra("friend_code", userdept.getUser_code());
         intent.putExtra("org_code", userdept.getOrg_code());
+        intent.putExtra("dept_code", dept_code);
         intent.setClass(DeptUsersListActivity.this, FriendDetailActivity.class);
         JwStartActivity(intent);
         //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
@@ -359,6 +403,62 @@ public class DeptUsersListActivity extends JwListActivity {
         if (StrUtils.IsNotEmpty(msg) && msg.equals("deptUsers_refresh")) {
             list.clear();
             onListViewHeadRefresh();
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals("depart_name_refresh")) {
+            setTitle(activityMsgEvent.getParam());
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals("deptAdd_refresh")) {
+            list.clear();
+            onListViewHeadRefresh();
+        }
+    }
+
+    private class FinishRefresIsFounder extends AsyncTask<String, Void, String> {
+        private Context context;
+        List<Orgunit> orgunits;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresIsFounder(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            String result = "1";
+
+
+            JCloudDB jCloudDB = new JCloudDB();
+            try {
+                if (null != users) {
+                    listUserDept = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and admin_state = 1 ");
+                    orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) +
+                            "and founder_code =" + StrUtils.QuotedStr(users.getUser_code()));
+
+                    if (ListUtils.IsNotNull(orgunits) || ListUtils.IsNotNull(listUserDept)) {
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                Intent intent = new Intent();
+                intent.putExtra("title", "修改部门名");
+                intent.putExtra("code", userdept.getDept_code());
+                intent.setClass(DeptUsersListActivity.this, MineEditnameActivity.class);
+                JwStartActivity(intent);
+            } else {
+                ToastShow("您没有权限修改");
+            }
+            hideLoading();
         }
     }
 }

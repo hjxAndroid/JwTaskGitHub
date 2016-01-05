@@ -286,7 +286,7 @@ public class DeptSelectFriendListActivity extends JwListActivity {
                     for (Friend friend : friends) {
 
                         List<Userdept> list = jCloudDB.findAllByWhere(Userdept.class,
-                                "user_code=" + StrUtils.QuotedStr(friend.getFriend_code()));
+                                "user_code=" + StrUtils.QuotedStr(friend.getFriend_code()) + "and dept_code = " + com.jeeweel.syl.jcloudlib.db.utils.StrUtils.QuotedStr(udept.getDept_code()));
                         if (ListUtils.IsNull(list)) {
 
                             Userdept userdept = new Userdept();
