@@ -229,7 +229,7 @@ public class FinishShActivity extends JwActivity {
                             "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
-                            "pic_code=" + StrUtils.QuotedStr(task.getTask_code()+"1"));
+                            "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
                     String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
                     //查找数据

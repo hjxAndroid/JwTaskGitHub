@@ -148,12 +148,14 @@ public class JobAddActivity extends JwActivity {
     int hours;
     int minutes;
     private String dateAndTime;
+//    MyDate myDate = new MyDate(this);
 
 
     private ScrollView li_fb;
     GridView noScrollgridview;
     GridAdapter adapter;
 
+    String fzr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -169,7 +171,7 @@ public class JobAddActivity extends JwActivity {
     }
 
 
-    private void initView() {
+    private void initView(){
         li_fb = (ScrollView) findViewById(R.id.li_fb);
 
         noScrollgridview = (GridView) findViewById(R.id.noScrollgridview);
@@ -234,9 +236,7 @@ public class JobAddActivity extends JwActivity {
         }
 
 
-        String fzr = etFzr.getText().toString();
         if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
-            task.setPrincipal_code(fzrCode);
         } else {
             return null;
         }
@@ -358,7 +358,6 @@ public class JobAddActivity extends JwActivity {
                     str = new StringBuilder("");
                     str.append(year + "-" + (month + 1) + "-"
                             + day + " ");
-                    //android4.1/4.2/4.4版本会将onDateSet()方法回掉两次，所以重新继承DatePickerDiolog重写onStop方法，同理TimePickerDiolog
                     timeDialog = new MyTimePickerDialog(JobAddActivity.this, new TimePickerDialog.OnTimeSetListener() {
                         @Override
                         public void onTimeSet(TimePicker timePicker, int hours, int minutes) {
@@ -598,7 +597,7 @@ public class JobAddActivity extends JwActivity {
             if (StrUtils.IsNotEmpty(json)) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     fzrCode = "";
-                    String fzr = "";
+                    fzr = "";
                     for (Userdept userdept : userdepts) {
                         fzr += userdept.getNickname() + ",";
                         fzrCode += userdept.getUser_code() + ",";
@@ -690,48 +689,61 @@ public class JobAddActivity extends JwActivity {
         protected String doInBackground(String... params) {
 
             String result = "1";
+            try {
+               if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
+                   String[] fzrNames = fzr.split(",");
+                   String[] fzrs = fzrCode.split(",");
+                   String task_name = task.getTask_name();
+                   //批量发布任务
+                   for(int i = 0; i<fzrs.length; i++){
+                       task.setPrincipal_code(fzrs[i]);
+                       if (null != task) {
 
-            if (null != task) {
-                try {
-                    String unid = Utils.getUUid();
-                    if (null != users) {
-                        task.setTask_code(unid);
-                        task.setPromulgator_code(users.getUser_code());
-                        task.setPromulgator_name(users.getUsername());
-                        task.setNickname(users.getNickname());
-                        //设置当前状态(已发布未确认)
-                        task.setNow_state(0);
-                        task.setNow_state_name(Contants.wqr);
-                    }
+                               String unid = Utils.getUUid();
+                               if (null != users) {
+                                   //设置任务名为任务名-负责人-发布时间
+                                   String taskName = task_name+"_"+fzrNames[i]+"_"+task.getOver_time();
+                                   task.setTask_name(taskName);
+                                   task.setTask_code(unid);
+                                   task.setPromulgator_code(users.getUser_code());
+                                   task.setPromulgator_name(users.getUsername());
+                                   task.setNickname(users.getNickname());
+                                   //设置当前状态(已发布未确认)
+                                   task.setNow_state(0);
+                                   task.setNow_state_name(Contants.wqr);
+                               }
 
-                    if (StrUtils.IsNotEmpty(orgcode)) {
-                        task.setOrg_code(orgcode);
-                        task.setOrg_name(orgname);
-                    }
+                               if (StrUtils.IsNotEmpty(orgcode)) {
+                                   task.setOrg_code(orgcode);
+                                   task.setOrg_name(orgname);
+                               }
 
-                    jCloudDB.save(task);
+                               jCloudDB.save(task);
 
 
-                    //保存到流程表里
-                    Taskflow taskflow = new Taskflow();
-                    taskflow.setUser_code(users.getUser_code());
-                    taskflow.setNickname(users.getNickname());
-                    taskflow.setTask_code(unid);
-                    taskflow.setNow_state(0);
-                    taskflow.setNow_state_name(Contants.wqr);
-                    taskflow.setUser_action(Contants.action_fb);
-                    jCloudDB.save(taskflow);
+                               //保存到流程表里
+                               Taskflow taskflow = new Taskflow();
+                               taskflow.setUser_code(users.getUser_code());
+                               taskflow.setNickname(users.getNickname());
+                               taskflow.setTask_code(unid);
+                               taskflow.setNow_state(0);
+                               taskflow.setNow_state_name(Contants.wqr);
+                               taskflow.setUser_action(Contants.action_fb);
+                               jCloudDB.save(taskflow);
 
-                    //保存图片表
-                    for (String sFile : Bimp.drr) {
-                        // File file = new File(sFile);
-                        CloudFile.upload(sFile, unid + "1");
-                    }
-                } catch (CloudServiceException e) {
-                    result = "0";
-                    e.printStackTrace();
-                }
+                               //保存图片表
+                               for (String sFile : Bimp.drr) {
+                                   // File file = new File(sFile);
+                                   CloudFile.upload(sFile, unid + "1");
+                               }
 
+
+                       }
+                   }
+               }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
             }
 
             return result;

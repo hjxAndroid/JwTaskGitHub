@@ -123,8 +123,8 @@ public class FriendAddListActivity extends JwListActivity {
     }
 
     public void changeState(Friend item) {
-        String phone = item.getUser_name();
-        String friendphone = item.getFriend_name();
+        String phone = item.getUser_code();
+        String friendphone = item.getFriend_code();
         if (StrUtils.IsNotEmpty(phone) && StrUtils.IsNotEmpty(friendphone)) {
             new changeTask(getMy()).execute(phone, friendphone);
         } else {
@@ -253,11 +253,11 @@ public class FriendAddListActivity extends JwListActivity {
 
 
                     //改变自己为主体的好友表状态
-                    String sql = "update friend set state = 2 where user_name =" + myphone;
+                    String sql = "update friend set state = 2 where user_code =" + StrUtils.QuotedStr(myphone) + "and friend_code =" + StrUtils.QuotedStr(friendphone);
                     CloudDB.execSQL(sql);
 
                     //改变好友为主体的好友表状态
-                    String sql1 = "update friend set state = 2 where user_name =" + friendphone;
+                    String sql1 = "update friend set state = 2 where user_code =" + StrUtils.QuotedStr(friendphone) + "and friend_code =" + StrUtils.QuotedStr(myphone);
                     CloudDB.execSQL(sql1);
                 }
             } catch (CloudServiceException e) {

@@ -100,4 +100,5 @@
     <string name="title_activity_solve_give_up_detail">SolveGiveUpDetail</string>
     <string name="title_activity_orag_detail">OragDetailActivity</string>
     <string name="title_activity_public_read_opotion">PublicReadOpotionActivity</string>
+    <string name="title_activity_publicy_read_list">PublicyReadListActivity</string>
 </resources>
