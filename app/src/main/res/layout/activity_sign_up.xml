@@ -178,7 +178,7 @@
                 android:layout_margin="@dimen/margin_Size"
                 android:text="签到地址:"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/margin_Large_Top_Size" />
+                android:textSize="@dimen/text_Size" />
 
             <TextView
                 android:id="@+id/tv_sign_addr"
@@ -187,7 +187,33 @@
                 android:layout_margin="@dimen/margin_Size"
                 android:text="@string/detail_localtion"
                 android:textColor="@color/gray"
-                android:textSize="@dimen/margin_Large_Top_Size" />
+                android:textSize="@dimen/text_Size" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
+            android:background="@drawable/settings_mid_select"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_Size"
+                android:text="备注:"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/text_Size" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:background="@null"
+                android:hint="" />
+
         </LinearLayout>
 
         <LinearLayout

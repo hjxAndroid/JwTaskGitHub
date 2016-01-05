@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.internal.view.menu.ExpandedMenuView;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
@@ -19,6 +20,7 @@ import com.jeeweel.syl.jwtask.business.main.module.contact.AddHomeActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptUsersListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.contact.OragDetailActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -138,6 +140,16 @@ public class PublicyContactHomeActivity extends JwActivity {
                     for (int i = 0; i < expandableAdapter.getGroupCount(); i++) {
                         elContact.expandGroup(i);
                     }
+
+                    elContact.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+                        @Override
+                        public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
+                            Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
+                            JwStartActivity(OragDetailActivity.class, orgunit);
+
+                            return true;
+                        }
+                    });
 
                     elContact.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
                         @Override

@@ -80,6 +80,8 @@ public class DeptUsersListActivity extends JwListActivity {
     private Userdept userdept;
     private String orgCode;
     private Users users;
+    private List<Userdept> listUserDept;
+    private String dept_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +92,7 @@ public class DeptUsersListActivity extends JwListActivity {
         if (null != userdept) {
             setTitle(userdept.getDept_name());
             orgCode = userdept.getOrg_code();
+            dept_code = userdept.getDept_code();
         }
         ButterKnife.bind(this);
         initListViewController();
@@ -114,7 +117,7 @@ public class DeptUsersListActivity extends JwListActivity {
                 } else {
 
                     new FinishRefresIsFounder(getMy()).execute();
-//
+
 //                    Intent intent = new Intent();
 //                    intent.putExtra("title", "修改部门名");
 //                    intent.putExtra("code", userdept.getDept_code());
@@ -215,12 +218,15 @@ public class DeptUsersListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
+        String flag = "DeptUsers";
         Userdept userdept = (Userdept) commonAdapter.getItem(position);
         Intent intent = new Intent();
         intent.putExtra("flag", true);
+        intent.putExtra("mark", flag);
         intent.putExtra(StaticStrUtils.baseItem, userdept.getUsername());
         intent.putExtra("friend_code", userdept.getUser_code());
         intent.putExtra("org_code", userdept.getOrg_code());
+        intent.putExtra("dept_code", dept_code);
         intent.setClass(DeptUsersListActivity.this, FriendDetailActivity.class);
         JwStartActivity(intent);
         //     JwStartActivity(FriendDetailActivity.class, userdept.getUsername());
@@ -399,6 +405,9 @@ public class DeptUsersListActivity extends JwListActivity {
             onListViewHeadRefresh();
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals("depart_name_refresh")) {
             setTitle(activityMsgEvent.getParam());
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals("deptAdd_refresh")) {
+            list.clear();
+            onListViewHeadRefresh();
         }
     }
 
@@ -421,9 +430,11 @@ public class DeptUsersListActivity extends JwListActivity {
             JCloudDB jCloudDB = new JCloudDB();
             try {
                 if (null != users) {
+                    listUserDept = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and admin_state = 1 ");
                     orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) +
                             "and founder_code =" + StrUtils.QuotedStr(users.getUser_code()));
-                    if (ListUtils.IsNotNull(orgunits)) {
+
+                    if (ListUtils.IsNotNull(orgunits) || ListUtils.IsNotNull(listUserDept)) {
                         result = "1";
                     } else {
                         result = "0";

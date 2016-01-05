@@ -78,6 +78,9 @@ public class FriendDetailActivity extends JwActivity {
     //用于判断是否为创建者
     Users userIsFounder;
     private String orgCode;
+    private String flag = "0";
+    private String dept_code;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +173,6 @@ public class FriendDetailActivity extends JwActivity {
                 dialog.dismiss();
                 showLoading();
                 new deleteMember(getMy()).execute();
-                finish();
             }
         });
 
@@ -347,6 +349,8 @@ public class FriendDetailActivity extends JwActivity {
         showLoading();
         phone = getIntent().getStringExtra(StaticStrUtils.baseItem);
         orgCode = getIntent().getStringExtra("org_code");
+        flag = getIntent().getStringExtra("mark");
+        dept_code = getIntent().getStringExtra("dept_code");
         new FinishRefresh(getMy()).execute();
     }
 
@@ -448,17 +452,27 @@ public class FriendDetailActivity extends JwActivity {
             boolean flagUserOrg = false;
             boolean flagUserDept = false;
             List<Orgunit> listIsFounder;
+            List<Userdept> listDeptFounder;
             try {
-
+                listDeptFounder = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()) + " and admin_state = 1 ");
                 listIsFounder = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and founder_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()));
-                if (ListUtils.IsNotNull(listIsFounder)) {
-                    flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
-                    flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code));
-
-                    if (flagUserOrg && flagUserDept) {
-                        result = "1";
-                    } else {
-                        result = "0";
+                if (ListUtils.IsNotNull(listIsFounder) || ListUtils.IsNotNull(listDeptFounder)) {
+                    if ("DeptUsers".equals(flag)) {
+                        //flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
+                        flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code) + " and dept_code = " + StrUtils.QuotedStr(dept_code));
+                        if (flagUserDept) {
+                            result = "1";
+                        } else {
+                            result = "0";
+                        }
+                    } else if ("OrgMembers".equals(flag)) {
+                        flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
+                        flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code));
+                        if (flagUserDept || flagUserOrg) {
+                            result = "1";
+                        } else {
+                            result = "0";
+                        }
                     }
                 } else {
                     result = "2";
@@ -481,6 +495,8 @@ public class FriendDetailActivity extends JwActivity {
                 ToastShow("您没有权限踢人");
             }
             hideLoading();
+            finish();
+            OttUtils.push("OrgMembersRefreash", "");
         }
     }
 

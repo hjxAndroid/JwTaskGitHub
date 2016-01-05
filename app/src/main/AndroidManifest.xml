@@ -282,7 +282,8 @@
         </activity>
         <activity
             android:name=".business.main.module.task.SignUpActivity"
-            android:label="@string/title_activity_sign_up" >
+            android:label="@string/title_activity_sign_up"
+            android:windowSoftInputMode="stateHidden|adjustResize" >>
         </activity>
         <activity
             android:name=".business.main.module.task.SignListActivity"
@@ -493,6 +494,10 @@
         <activity
             android:name=".business.main.module.task.PublicReadOpotionActivity"
             android:label="@string/title_activity_public_read_opotion" >
+        </activity>
+        <activity
+            android:name=".business.main.module.contact.OrgMembersActivity"
+            android:label="@string/title_activity_org_members" >
         </activity>
     </application>
 

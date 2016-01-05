@@ -48,6 +48,9 @@ public class Userorg {
     private String update_time;
 
 
+    private String photo_code;
+
+
     public int getMid() {
         return mid;
     }
@@ -126,6 +129,14 @@ public class Userorg {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getPhoto_code() {
+        return photo_code;
+    }
+
+    public void setPhoto_code(String photo_code) {
+        this.photo_code = photo_code;
     }
 }
 

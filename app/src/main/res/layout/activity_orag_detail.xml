@@ -11,7 +11,6 @@
         android:orientation="vertical">
 
 
-
         <LinearLayout
             android:id="@+id/ll_oragname"
             android:layout_width="match_parent"
@@ -23,8 +22,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="组织名"
                 android:layout_marginLeft="@dimen/margin_Size"
+                android:text="组织名"
                 android:textSize="@dimen/test_size" />
 
 
@@ -32,9 +31,10 @@
                 android:id="@+id/tv_zzm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="泉州市捷微信息科技"
-                android:gravity="right"
+                android:drawableRight="@drawable/arrow_right"
+                android:gravity="center|right"
                 android:paddingRight="10dp"
+                android:text="泉州市捷微信息科技"
                 android:textColor="@color/list_text_color"
                 android:textSize="@dimen/test_size" />
 
@@ -51,21 +51,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="创建人"
                 android:layout_marginLeft="@dimen/margin_Size"
+                android:text="创建人"
                 android:textSize="@dimen/test_size" />
 
-            <TextView android:gravity="right"
+            <TextView
                 android:id="@+id/tv_cjr"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="黄吉祥"
+                android:gravity="right"
                 android:paddingRight="10dp"
+                android:text="黄吉祥"
                 android:textColor="@color/list_text_color"
                 android:textSize="@dimen/test_size" />
 
         </LinearLayout>
-
 
 
         <LinearLayout
@@ -78,31 +78,58 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="创建时间"
                 android:layout_marginLeft="@dimen/margin_Size"
+                android:text="创建时间"
                 android:textSize="@dimen/test_size" />
 
-            <TextView android:gravity="right"
+            <TextView
                 android:id="@+id/tv_cjsj"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="黄吉祥"
+                android:gravity="right"
                 android:paddingRight="10dp"
+                android:text="黄吉祥"
                 android:textColor="@color/list_text_color"
                 android:textSize="@dimen/test_size" />
 
         </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rea_members"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/item_Height"
+            android:background="@drawable/shape_li"
+            android:clickable="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="组织成员"
+                android:textSize="@dimen/test_size" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/time_space"
+                android:src="@drawable/arrow_right" />
+        </RelativeLayout>
     </LinearLayout>
 
 
-    <Button android:id="@+id/bt_add"
+    <Button
+        android:id="@+id/bt_add"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_margin="10dp"
         android:layout_alignParentBottom="true"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textSize_large"
+        android:layout_margin="10dp"
         android:background="@drawable/bg_button"
-        android:text="添加部门"/>
+        android:text="添加部门"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSize_large" />
 </RelativeLayout>
 

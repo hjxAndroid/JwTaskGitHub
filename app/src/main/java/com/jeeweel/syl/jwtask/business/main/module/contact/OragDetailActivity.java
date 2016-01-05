@@ -48,6 +48,7 @@ public class OragDetailActivity extends JwActivity {
     @Bind(R.id.bt_add)
     Button btAdd;
 
+
     Orgunit orgunit;
 
     String orgCode;
@@ -275,6 +276,11 @@ public class OragDetailActivity extends JwActivity {
     @OnClick(R.id.ll_oragname)
     void ll_oragnameClick() {
         new FinishRefresIsFounder(getMy()).execute();
+    }
+
+    @OnClick(R.id.rea_members)
+    void rea_membersClick() {
+        JwStartActivity(OrgMembersActivity.class, orgCode);
     }
 
 
