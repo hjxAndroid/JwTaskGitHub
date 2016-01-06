@@ -66,7 +66,7 @@ public class FriendDetailActivity extends JwActivity {
 
     private List<Users> usersList;
 
-    private List<Userorg> userorgs;
+    private List<Userdept> userdepts;
 
     private String phone;
 
@@ -379,10 +379,8 @@ public class FriendDetailActivity extends JwActivity {
                     usersList = jCloudDB.findAllByWhere(Users.class,
                             "username=" + StrUtils.QuotedStr(phone));
 
-                    userorgs = jCloudDB.findAllByWhere(Userorg.class,
-                            "user_name=" + StrUtils.QuotedStr(phone));
-
-                    removeDuplicate(userorgs);
+                    userdepts = jCloudDB.findAllByWhere(Userdept.class,
+                            "username=" + StrUtils.QuotedStr(phone));
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -403,11 +401,12 @@ public class FriendDetailActivity extends JwActivity {
                     tvArea.setText(users.getArea());
                 }
 
-                if (ListUtils.IsNotNull(userorgs)) {
-                    CommonAdapter commonAdapter = new CommonAdapter<Userorg>(getMy(), userorgs, R.layout.item_friend_detail) {
+                if (ListUtils.IsNotNull(userdepts)) {
+                    CommonAdapter commonAdapter = new CommonAdapter<Userdept>(getMy(), userdepts, R.layout.item_friend_detail) {
                         @Override
-                        public void convert(ViewHolder helper, Userorg item) {
+                        public void convert(ViewHolder helper, Userdept item) {
                             helper.setText(R.id.tv_org_name, item.getOrg_name());
+                            helper.setText(R.id.tv_dept_name, item.getDept_name());
                         }
                     };
                     listview.setAdapter(commonAdapter);

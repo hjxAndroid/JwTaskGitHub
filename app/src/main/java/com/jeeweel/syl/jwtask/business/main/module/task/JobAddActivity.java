@@ -64,6 +64,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 
+import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
@@ -134,7 +135,7 @@ public class JobAddActivity extends JwActivity {
     int timeFlag = 0;
 
     DegreeItem item;
-
+    String kssj = "";
     String timeData = "";
 
     String dateStr;
@@ -364,11 +365,19 @@ public class JobAddActivity extends JwActivity {
                             str.append(hours + ":"
                                     + minutes);
                             dateStr = str.toString();
-                            if (timeFlag == 0) {
-                                etStartTime.setText(dateStr);
-                            } else {
-                                etEndTime.setText(dateStr);
-                            }
+
+                                    if (timeFlag == 0) {
+                                        etStartTime.setText(dateStr);
+                                    } else {
+                                        //后面时间比较大
+                                        if(Utils.compare_date(dateStr,kssj)){
+                                            etEndTime.setText(dateStr);
+                                        }else {
+                                            ToastShow("结束时间不能比开始时间早，请您重新选择时间");
+                                        }
+                                    }
+
+
                         }
                     }, hours, minutes
 // true表示采用24小时制
@@ -394,11 +403,19 @@ public class JobAddActivity extends JwActivity {
                             str.append(hourOfDay + ":"
                                     + minute);
                             dateStr = str.toString();
+
                             if (timeFlag == 0) {
                                 etStartTime.setText(dateStr);
                             } else {
-                                etEndTime.setText(dateStr);
+                                //后面时间比较大
+                                if(Utils.compare_date(dateStr,kssj)){
+                                    etEndTime.setText(dateStr);
+                                }else {
+                                    ToastShow("结束时间不能比开始时间早，请您重新选择时间");
+                                }
                             }
+
+
                         }
                     }, time.get(Calendar.HOUR_OF_DAY), time
                             .get(Calendar.MINUTE)
@@ -432,10 +449,13 @@ public class JobAddActivity extends JwActivity {
     @OnClick(R.id.li_end_time)
     void endtimeClick() {
         timeFlag = 1;
-        timeData = etEndTime.getText().toString();
-//        dateStr = myDate.dateSelect(timeData);
-//        etEndTime.setText(timeData);
-        showDialog(0);
+        kssj = etStartTime.getText().toString();
+        if(StrUtils.IsNotEmpty(kssj)){
+            timeData = etEndTime.getText().toString();
+            showDialog(0);
+        }else{
+            ToastShow("请先选择开始时间");
+        }
     }
 
 
@@ -701,9 +721,9 @@ public class JobAddActivity extends JwActivity {
 
                                String unid = Utils.getUUid();
                                if (null != users) {
-                                   //设置任务名为任务名-负责人-发布时间
+                                 /*  //设置任务名为任务名-负责人-发布时间
                                    String taskName = task_name+"_"+fzrNames[i]+"_"+task.getOver_time();
-                                   task.setTask_name(taskName);
+                                   task.setTask_name(taskName);*/
                                    task.setTask_code(unid);
                                    task.setPromulgator_code(users.getUser_code());
                                    task.setPromulgator_name(users.getUsername());

@@ -4,7 +4,10 @@ import android.content.Context;
 
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,6 +72,26 @@ public class Utils {
     public static String getOrgUrl() {
         String url = Contants.All_URL+"/servlet/OrgServlet";
         return url;
+    }
+
+    //比较两个时间大小
+    public static boolean compare_date(String DATE1, String DATE2) {
+        boolean result = false;
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        try {
+            Date dt1 = df.parse(DATE1);
+            Date dt2 = df.parse(DATE2);
+            if (dt1.getTime() > dt2.getTime()) {
+                result = true;
+            } else if (dt1.getTime() < dt2.getTime()) {
+                result = false;
+            } else {
+                result = false;
+            }
+        } catch (Exception exception) {
+            exception.printStackTrace();
+        }
+        return result;
     }
 
 }

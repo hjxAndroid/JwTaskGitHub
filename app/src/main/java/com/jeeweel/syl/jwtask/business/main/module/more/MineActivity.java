@@ -2,7 +2,6 @@ package com.jeeweel.syl.jwtask.business.main.module.more;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -13,24 +12,33 @@ import android.view.View;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TimePicker;
 
+import com.google.gson.JsonElement;
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
+import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
+import com.jeeweel.syl.jcloudlib.db.jsonclass.ResMsgItem;
+import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
-import com.jeeweel.syl.jcloudlib.db.utils.Utils;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.LSignedCountItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.TaskScoresItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
+import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
+import net.tsz.afinal.FinalDb;
+
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,7 +70,9 @@ public class MineActivity extends JwActivity {
     String str;
     String user_code;
     boolean register;
-
+    @Bind(R.id.tv_jxfz)
+    TextView tvJxfz;
+    TaskScoresItem taskScoresItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +92,12 @@ public class MineActivity extends JwActivity {
         users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
         user_code = users.getUser_code();
+        getData();
+    }
+
+    private void getData(){
+        showLoading();
+        new FinishRefresh(getMy()).execute();
     }
 
     private void initRight() {
@@ -329,4 +345,66 @@ public class MineActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresh(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+            String sSql = "";
+            JCloudDB jCloudDB = new JCloudDB();
+            try {
+                if(StrUtils.IsNotEmpty(user_code)){
+                    sSql = "SELECT SUM(t.score) as score from submit t where t.task_code in (SELECT b.task_code from task b where b.principal_code = ? and b.now_state = '3')";
+                    SqlInfo sqlInfo = new SqlInfo();
+                    sqlInfo.setSql(sSql);
+                    sqlInfo.addValue(user_code);
+                    sSql = sqlInfo.getBuildSql();
+
+                    ResMsgItem res = CloudDB.queryRes(sSql);
+                    JsonElement element = res.getData();
+                    String eleStr = element.toString();
+                    List<TaskScoresItem> items =
+                            JwJSONUtils.getParseArray(eleStr,
+                                    TaskScoresItem.class);
+
+                    taskScoresItem = items.get(0);
+                }
+
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+
+                if(null!=taskScoresItem){
+                    tvJxfz.setText(taskScoresItem.getScore());
+                }
+
+            } else {
+                ToastShow("数据获取出错");
+            }
+            hideLoading();
+        }
+    }
+
 }

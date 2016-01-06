@@ -1,13 +1,60 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity">
+
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/li_search"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_below="@+id/li_img"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/shape_edit_circle"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingRight="5dp">
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:background="@null"
+            android:hint="搜索标题,负责人"
+            android:paddingLeft="13dp"
+            android:paddingRight="6dp" />
+
+    </LinearLayout>
+        <ImageView
+            android:id="@+id/iv_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="3dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/search" />
+</LinearLayout>
 
     <com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView
         android:id="@id/listview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="5dp"
         android:cacheColorHint="@color/transparent"
         android:divider="@color/divider_color"
         android:dividerHeight="1.0px"
@@ -15,4 +62,4 @@
         android:listSelector="@color/transparent"
         android:scrollbars="none" />
 
-</RelativeLayout>
+</LinearLayout>

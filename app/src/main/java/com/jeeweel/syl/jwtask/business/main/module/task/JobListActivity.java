@@ -18,6 +18,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.basic.RegisterActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddActivity;
 import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
@@ -70,6 +71,13 @@ public class JobListActivity extends JwListActivity {
         ButterKnife.bind(this);
         initListViewController();
     }
+
+
+    @OnClick(R.id.iv_search)
+    void searchClick() {
+        ToastShow("11");
+    }
+
 
     @Override
     public void initListViewController() {

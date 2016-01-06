@@ -11,10 +11,21 @@
 
     <TextView
         android:id="@+id/tv_org_name"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5.0dip"
-        android:layout_weight="1.0"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textColor="@color/ios7blue"
+        android:textSize="@dimen/textSize_normal" />
+
+    <TextView
+        android:id="@+id/tv_dept_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5.0dip"
         android:maxLength="20"
         android:maxLines="1"
         android:scrollHorizontally="true"

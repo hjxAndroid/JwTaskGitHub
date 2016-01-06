@@ -61,12 +61,22 @@
 
         <TextView
             android:id="@+id/tv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="陈晓阳"
             android:textColor="@color/gray"
             android:textSize="@dimen/textSize_normal" />
 
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:text="2015-12-10"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/textSize_normal" />
     </LinearLayout>
 
     <View android:layout_width="match_parent"
@@ -110,7 +120,29 @@
         android:orientation="horizontal"
         android:layout_marginTop="3dp"
         android:clickable="true"
-        android:id="@+id/rl_ydwd">
+        android:id="@+id/rl_yd">
+
+        <TextView android:id="@+id/tv_yd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="8人已读"
+            android:textColor="@color/gray"
+            android:textSize="@dimen/textSize_normal" />
+
+    </RelativeLayout>
+
+    <View android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gray_fgx"
+        android:layout_marginTop="3dp"/>
+
+    <RelativeLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="3dp"
+        android:clickable="true"
+        android:id="@+id/rl_wd">
 
         <TextView android:id="@+id/tv_wd"
             android:layout_width="wrap_content"
@@ -120,25 +152,8 @@
             android:textColor="@color/gray"
             android:textSize="@dimen/textSize_normal" />
 
-        <TextView android:id="@+id/tv_yd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@+id/tv_wd"
-            android:text="8人已读"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/textSize_normal" />
-
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true"
-            android:text="2015-12-10"
-            android:textColor="@color/gray"
-            android:textSize="@dimen/textSize_normal" />
      </RelativeLayout>
+
 
     <View android:layout_width="match_parent"
         android:layout_height="0.5dp"

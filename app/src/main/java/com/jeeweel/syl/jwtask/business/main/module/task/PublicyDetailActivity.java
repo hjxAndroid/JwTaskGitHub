@@ -7,12 +7,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -64,6 +66,9 @@ public class PublicyDetailActivity extends JwActivity {
     Users users;
     String orgCode;
 
+    List<Userorg> alreadyreads;
+    List<Userorg> unReads;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,10 +82,21 @@ public class PublicyDetailActivity extends JwActivity {
     }
 
 
-//    @OnClick(R.id.rl_ydwd)
-//    void loginClick() {
-//         JwStartActivity(PublicReadOpotionActivity.class,publicity);
-//    }
+    @OnClick(R.id.rl_yd)
+    void ydClick() {
+        if(ListUtils.IsNotNull(alreadyreads)){
+            String json = new Gson().toJson(alreadyreads);
+            JwStartActivity(PublicyReadListActivity.class,json);
+        }
+    }
+
+    @OnClick(R.id.rl_wd)
+    void wdClick() {
+        if(ListUtils.IsNotNull(unReads)){
+            String json = new Gson().toJson(unReads);
+            JwStartActivity(PublicyUnReadListActivity.class,json);
+        }
+    }
 
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
@@ -112,7 +128,7 @@ public class PublicyDetailActivity extends JwActivity {
             networkImages = new ArrayList<String>();
             String path = publicity.getPictureListSting();
 
-            String wd = publicity.getUnread();
+           /* String wd = publicity.getUnread();
             if (StrUtils.IsNotEmpty(wd)) {
                 int intWd = Integer.parseInt(wd);
                 if (intWd < 0) {
@@ -123,7 +139,7 @@ public class PublicyDetailActivity extends JwActivity {
             String yd = publicity.getAlread();
             if (StrUtils.IsNotEmpty(yd)) {
                 tvYd.setText(yd + "人已读");
-            }
+            }*/
 
             if (path != null) {
                 String[] st = path.split(",");
@@ -181,6 +197,20 @@ public class PublicyDetailActivity extends JwActivity {
             try {
 
                 if (null != users && null != publicity) {
+
+                    //已读人数
+                    String readSql  = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
+                    //查找数据
+                    alreadyreads = jCloudDB.findAllBySql(Userorg.class, readSql);
+                    removeDuplicate(alreadyreads);
+
+                    //未读人数
+                    String sql  = "SELECT t.* from userorg t where t.user_code not in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
+                    //查找数据
+                    unReads = jCloudDB.findAllBySql(Userorg.class, sql);
+                    removeDuplicate(unReads);
+
+
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
                             "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
                     if (ListUtils.IsNull(alreadyreadList)) {
@@ -207,6 +237,17 @@ public class PublicyDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+
+                if(ListUtils.IsNotNull(alreadyreads)){
+                    tvYd.setText(alreadyreads.size() + "人未读");
+                }
+
+                if(ListUtils.IsNotNull(unReads)){
+                    tvWd.setText(unReads.size() + "人未读");
+                }
+
+
+
                 OttUtils.push("news_refresh", "");
                 OttUtils.push("publicy_refresh", "");
             }
@@ -268,4 +309,18 @@ public class PublicyDetailActivity extends JwActivity {
         MobclickAgent.onPause(this);
     }
 
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<Userorg> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {
+                    list.remove(j);
+                }
+            }
+        }
+    }
 }
