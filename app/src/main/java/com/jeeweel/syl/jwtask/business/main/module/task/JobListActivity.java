@@ -4,43 +4,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.basic.RegisterActivity;
-import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddActivity;
-import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
-import com.jeeweel.syl.lib.api.core.jwpublic.integer.IntUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
-import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
-import com.jeeweel.syl.lib.api.core.toast.JwToast;
-import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import api.util.Contants;
-import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,6 +39,8 @@ public class JobListActivity extends JwListActivity {
 
     @Bind(R.id.listview)
     PullToRefreshListView listview;
+    @Bind(R.id.et_search)
+    EditText etSearch;
     private CommonAdapter commonAdapter;
 
     private int pageStart = 0; //截取的开始
@@ -60,6 +50,7 @@ public class JobListActivity extends JwListActivity {
     List<Task> list;
 
     private Users users;
+    private String tv_search;
 
 
     @Override
@@ -70,12 +61,38 @@ public class JobListActivity extends JwListActivity {
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
         initListViewController();
+        initView();
     }
 
+    private void initView(){
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(StrUtils.IsNotEmpty(etSearch.getText().toString())){
+                    new FinishRefreshSearch(getMy()).execute();
+                }else{
+                    new FinishRefresh(getMy(),0).execute();
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+    }
 
     @OnClick(R.id.iv_search)
     void searchClick() {
-        ToastShow("11");
+        tv_search = etSearch.getText().toString();
+        if (StrUtils.IsNotEmpty(tv_search)) {
+            new FinishRefreshSearch(getMy()).execute();
+        }
     }
 
 
@@ -93,12 +110,12 @@ public class JobListActivity extends JwListActivity {
                 String priority = item.getPriority();
                 TextView tv_yxj = helper.getView(R.id.tv_yxj);
                 tv_yxj.setText(priority);
-                if(StrUtils.IsNotEmpty(priority)){
-                    if(priority.equals("急")){
+                if (StrUtils.IsNotEmpty(priority)) {
+                    if (priority.equals("急")) {
                         tv_yxj.setTextColor(getResources().getColor(R.color.red));
-                    }else if(priority.equals("优先")){
+                    } else if (priority.equals("优先")) {
                         tv_yxj.setTextColor(getResources().getColor(R.color.blue));
-                    }else{
+                    } else {
                         tv_yxj.setTextColor(getResources().getColor(R.color.green));
                     }
                 }
@@ -111,15 +128,15 @@ public class JobListActivity extends JwListActivity {
                 int state = item.getNow_state();
                 ImageView imageView = helper.getView(R.id.iv_xz);
                 //已确认
-                if(state ==1){
+                if (state == 1) {
                     imageView.setBackgroundResource(R.drawable.circle_red);
                     //未审核
-                }else if(state ==2){
+                } else if (state == 2) {
                     imageView.setBackgroundResource(R.drawable.circular_blue);
                     //已审核
-                }else if(state ==3){
+                } else if (state == 3) {
                     imageView.setBackgroundResource(R.drawable.circular_portrait);
-                }else{
+                } else {
                     imageView.setBackgroundResource(R.drawable.dialog_share_link_default_icon);
                 }
 
@@ -219,6 +236,66 @@ public class JobListActivity extends JwListActivity {
             if (result.equals("1")) {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
+            } else {
+                //没有加载到数据
+            }
+            listview.onRefreshComplete();
+            hideLoading();
+        }
+    }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefreshSearch extends AsyncTask<String, Void, String> {
+        private Context context;
+        private int mode = 0;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshSearch(Context context) {
+            this.context = context;
+            this.mode = mode;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "0";
+
+            if (null != users) {
+                try {
+                    setPage(true);
+                    //已读人数4
+                    String sql = "SELECT * from task t where t.principal_code = (SELECT user_code from users where nickname like" + StrUtils.QuotedStrLike(tv_search) + ") or t.task_name LIKE " + StrUtils.QuotedStrLike(tv_search) + " and t.promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()) + " ORDER BY now_state ASC limit " + pageStart + ", " + pageEnd;
+                    //查找数据
+                    list = jCloudDB.findAllBySql(Task.class, sql);
+
+                    mListItems.clear();
+                } catch (CloudServiceException e) {
+                    e.printStackTrace();
+                }
+
+                if (ListUtils.IsNotNull(list)) {
+                    result = "1";
+                } else {
+                    result = "0";
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                mListItems.addAll(list);
+                commonAdapter.notifyDataSetChanged();
+                etSearch.setText("");
             } else {
                 //没有加载到数据
             }
