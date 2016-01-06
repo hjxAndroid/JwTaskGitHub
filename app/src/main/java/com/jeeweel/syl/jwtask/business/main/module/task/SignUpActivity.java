@@ -313,12 +313,12 @@ public class SignUpActivity extends JwActivity {
                     list = jCloudDB.findAllByWhere(Sign.class,
                             "sign_code=" + StrUtils.QuotedStr(signedCode));
                 }
-
-                //保存图片表
-                for (String sFile : Bimp.drr) {
-                    // File file = new File(sFile);
-                    CloudFile.upload(sFile, unid);
-                }
+//
+//                //保存图片表
+//                for (String sFile : Bimp.drr) {
+//                    // File file = new File(sFile);
+//                    CloudFile.upload(sFile, unid);
+//                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();

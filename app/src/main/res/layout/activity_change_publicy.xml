@@ -1,7 +1,7 @@
 <LinearLayout
-    android:id="@+id/li_fb"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/li_fb"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_bg_color"
@@ -11,7 +11,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/gray_fgx"/>
+        android:background="@color/gray_fgx" />
 
     <LinearLayout
         android:id="@+id/li"
@@ -36,14 +36,14 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/gray"
-            android:textSize="@dimen/textSize_large"/>
+            android:textSize="@dimen/textSize_large" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/gray_fgx"/>
+        android:background="@color/gray_fgx" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -68,14 +68,14 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:textColorHint="@color/gray"
-            android:textSize="@dimen/textSize_large"/>
+            android:textSize="@dimen/textSize_large" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="@color/gray_fgx"/>
+        android:background="@color/gray_fgx" />
 
     <api.view.GridNoScrollView
         android:id="@+id/noScrollgridview"
@@ -86,6 +86,5 @@
         android:horizontalSpacing="1dp"
         android:numColumns="4"
         android:scrollbars="none"
-        android:verticalSpacing="5dp">
-    </api.view.GridNoScrollView>
+        android:verticalSpacing="5dp"/>
 </LinearLayout>

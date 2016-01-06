@@ -61,6 +61,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 
@@ -148,6 +149,8 @@ public class JobAddActivity extends JwActivity {
     int hours;
     int minutes;
     private String dateAndTime;
+    private String dateStart;
+    private String dateEnd;
 //    MyDate myDate = new MyDate(this);
 
 
@@ -156,6 +159,7 @@ public class JobAddActivity extends JwActivity {
     GridAdapter adapter;
 
     String fzr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,7 +175,7 @@ public class JobAddActivity extends JwActivity {
     }
 
 
-    private void initView(){
+    private void initView() {
         li_fb = (ScrollView) findViewById(R.id.li_fb);
 
         noScrollgridview = (GridView) findViewById(R.id.noScrollgridview);
@@ -690,57 +694,57 @@ public class JobAddActivity extends JwActivity {
 
             String result = "1";
             try {
-               if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
-                   String[] fzrNames = fzr.split(",");
-                   String[] fzrs = fzrCode.split(",");
-                   String task_name = task.getTask_name();
-                   //批量发布任务
-                   for(int i = 0; i<fzrs.length; i++){
-                       task.setPrincipal_code(fzrs[i]);
-                       if (null != task) {
+                if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
+                    String[] fzrNames = fzr.split(",");
+                    String[] fzrs = fzrCode.split(",");
+                    String task_name = task.getTask_name();
+                    //批量发布任务
+                    for (int i = 0; i < fzrs.length; i++) {
+                        task.setPrincipal_code(fzrs[i]);
+                        if (null != task) {
 
-                               String unid = Utils.getUUid();
-                               if (null != users) {
-                                   //设置任务名为任务名-负责人-发布时间
-                                   String taskName = task_name+"_"+fzrNames[i]+"_"+task.getOver_time();
-                                   task.setTask_name(taskName);
-                                   task.setTask_code(unid);
-                                   task.setPromulgator_code(users.getUser_code());
-                                   task.setPromulgator_name(users.getUsername());
-                                   task.setNickname(users.getNickname());
-                                   //设置当前状态(已发布未确认)
-                                   task.setNow_state(0);
-                                   task.setNow_state_name(Contants.wqr);
-                               }
+                            String unid = Utils.getUUid();
+                            if (null != users) {
+                                //设置任务名为任务名-负责人-发布时间
+                                String taskName = task_name + "_" + fzrNames[i] + "_" + task.getOver_time();
+                                task.setTask_name(taskName);
+                                task.setTask_code(unid);
+                                task.setPromulgator_code(users.getUser_code());
+                                task.setPromulgator_name(users.getUsername());
+                                task.setNickname(users.getNickname());
+                                //设置当前状态(已发布未确认)
+                                task.setNow_state(0);
+                                task.setNow_state_name(Contants.wqr);
+                            }
 
-                               if (StrUtils.IsNotEmpty(orgcode)) {
-                                   task.setOrg_code(orgcode);
-                                   task.setOrg_name(orgname);
-                               }
+                            if (StrUtils.IsNotEmpty(orgcode)) {
+                                task.setOrg_code(orgcode);
+                                task.setOrg_name(orgname);
+                            }
 
-                               jCloudDB.save(task);
-
-
-                               //保存到流程表里
-                               Taskflow taskflow = new Taskflow();
-                               taskflow.setUser_code(users.getUser_code());
-                               taskflow.setNickname(users.getNickname());
-                               taskflow.setTask_code(unid);
-                               taskflow.setNow_state(0);
-                               taskflow.setNow_state_name(Contants.wqr);
-                               taskflow.setUser_action(Contants.action_fb);
-                               jCloudDB.save(taskflow);
-
-                               //保存图片表
-                               for (String sFile : Bimp.drr) {
-                                   // File file = new File(sFile);
-                                   CloudFile.upload(sFile, unid + "1");
-                               }
+                            jCloudDB.save(task);
 
 
-                       }
-                   }
-               }
+                            //保存到流程表里
+                            Taskflow taskflow = new Taskflow();
+                            taskflow.setUser_code(users.getUser_code());
+                            taskflow.setNickname(users.getNickname());
+                            taskflow.setTask_code(unid);
+                            taskflow.setNow_state(0);
+                            taskflow.setNow_state_name(Contants.wqr);
+                            taskflow.setUser_action(Contants.action_fb);
+                            jCloudDB.save(taskflow);
+
+                            //保存图片表
+                            for (String sFile : Bimp.drr) {
+                                // File file = new File(sFile);
+                                CloudFile.upload(sFile, unid + "1");
+                            }
+
+
+                        }
+                    }
+                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();

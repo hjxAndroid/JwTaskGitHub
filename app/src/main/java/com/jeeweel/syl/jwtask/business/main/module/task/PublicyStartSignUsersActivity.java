@@ -31,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import api.adapter.CheckAdapter;
+import api.adapter.StrartSignAdapter;
+import api.util.Contants;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -39,20 +41,21 @@ import butterknife.ButterKnife;
  */
 public class PublicyStartSignUsersActivity extends JwActivity {
 
-    List<Userdept> mListItems = new ArrayList<Userdept>();
+    List<Userorg> mListItems = new ArrayList<Userorg>();
     @Bind(R.id.listview)
     ListView listview;
     @Bind(R.id.cb_all)
     CheckBox cbAll;
 
-    private CheckAdapter checkAdapter;
+    private StrartSignAdapter strartSignAdapter;
 
     private int pageStart = 0; //截取的开始
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
 
-    List<Userdept> list;
+    List<Userorg> list;
     private Orgunit orgunit;
+    private Userorg userorg;
 
     /**
      * 用于判断是从哪请求过来的
@@ -69,14 +72,14 @@ public class PublicyStartSignUsersActivity extends JwActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publicy_users_list);
-        if (null != userdept) {
-            setTitle(userdept.getDept_name());
+        orgunit = (Orgunit) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        if (null != orgunit) {
+            setTitle(orgunit.getOrg_name());
         }
         tag = getIntent().getStringExtra("tag");
         ButterKnife.bind(this);
         initRight();
         initListView();
-        getData();
         cbAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton arg0, boolean arg1) {
@@ -84,33 +87,29 @@ public class PublicyStartSignUsersActivity extends JwActivity {
                 if (cbAll.isChecked()) {
                     // 遍历list的长度，将MyAdapter中的map值全部设为true
                     for (int i = 0; i < list.size(); i++) {
-                        checkAdapter.getIsSelected().put(i, true);
+                        strartSignAdapter.getIsSelected().put(i, true);
                     }
                     // 数量设为list的长度
                     checkNum = list.size();
                     // 刷新listview和TextView的显示
-                    checkAdapter.notifyDataSetChanged();
+                    strartSignAdapter.notifyDataSetChanged();
 
                 } else {
                     // 遍历list的长度，将已选的按钮设为未选
                     for (int i = 0; i < list.size(); i++) {
-                        if (checkAdapter.getIsSelected().get(i)) {
-                            checkAdapter.getIsSelected().put(i, false);
+                        if (strartSignAdapter.getIsSelected().get(i)) {
+                            strartSignAdapter.getIsSelected().put(i, false);
                             checkNum--;// 数量减1
                         }
                     }
                     // 刷新listview和TextView的显示
-                    checkAdapter.notifyDataSetChanged();
+                    strartSignAdapter.notifyDataSetChanged();
 
                 }
             }
         });
     }
 
-
-    private void getData() {
-        orgunit = (Orgunit) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
-    }
 
     private void initRight() {
         MenuTextView menuTextView = new MenuTextView(getMy());
@@ -119,15 +118,15 @@ public class PublicyStartSignUsersActivity extends JwActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                List<Userdept> userdepts = new ArrayList<Userdept>();
-                HashMap<Integer, Boolean> isSelected = checkAdapter.getIsSelected();
+                List<Userorg> userorgs = new ArrayList<Userorg>();
+                HashMap<Integer, Boolean> isSelected = strartSignAdapter.getIsSelected();
                 for (int i = 0; i < isSelected.size(); i++) {
                     if (isSelected.get(i)) {
-                        userdepts.add(mListItems.get(i));
+                        userorgs.add(mListItems.get(i));
                     }
                 }
                 Gson gson = new Gson();
-                String json = gson.toJson(userdepts);
+                String json = gson.toJson(userorgs);
 
                 ActivityMsgEvent activityMsgEvent = new ActivityMsgEvent();
                 activityMsgEvent.setMsg(tag);
@@ -168,9 +167,9 @@ public class PublicyStartSignUsersActivity extends JwActivity {
 
             String result = "0";
 
-            if (null != userdept) {
+            if (null != orgunit) {
                 try {
-                    list = jCloudDB.findAllByWhere(Userdept.class,
+                    list = jCloudDB.findAllByWhere(Userorg.class,
                             " org_code = " + StrUtils.QuotedStr(orgunit.getOrg_code()));
                     mListItems.clear();
                     removeDuplicate(list);
@@ -179,9 +178,10 @@ public class PublicyStartSignUsersActivity extends JwActivity {
                 }
 
                 if (ListUtils.IsNotNull(list)) {
-                    for (Userdept userdept : list) {
+                    for (Userorg userorgs : list) {
                         //取头像
-                        String user_code = userdept.getUser_code();
+                        userorg = userorgs;
+                        String user_code = userorg.getUser_code();
 
                         String sSql = "pic_code=?";
                         SqlInfo sqlInfo = new SqlInfo();
@@ -199,7 +199,7 @@ public class PublicyStartSignUsersActivity extends JwActivity {
                             String path = picture.getPic_road();
                             if (StrUtils.IsNotEmpty(path)) {
                                 //存头像
-                                userdept.setPhoto_code(path);
+                                userorg.setPhoto_code(path);
                             }
                         }
                     }
@@ -217,8 +217,8 @@ public class PublicyStartSignUsersActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 mListItems.addAll(list);
-                checkAdapter = new CheckAdapter(mListItems, getMy());
-                listview.setAdapter(checkAdapter);
+                strartSignAdapter = new StrartSignAdapter(mListItems, getMy());
+                listview.setAdapter(strartSignAdapter);
             } else {
                 //没有加载到数据
             }
@@ -258,7 +258,7 @@ public class PublicyStartSignUsersActivity extends JwActivity {
      *
      * @param list
      */
-    public void removeDuplicate(List<Userdept> list) {
+    public void removeDuplicate(List<Userorg> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = list.size() - 1; j > i; j--) {
                 if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {

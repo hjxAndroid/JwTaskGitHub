@@ -267,5 +267,4 @@ public class PublicyDetailActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-
 }
