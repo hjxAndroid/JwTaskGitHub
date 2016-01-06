@@ -3,6 +3,9 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +48,8 @@ public class JobShListActivity extends JwListActivity {
     TextView tvYqsq;
     @Bind(R.id.tv_fqrw)
     TextView tvFqrw;
+    @Bind(R.id.et_search)
+    EditText etSearch;
 
     private CommonAdapter commonAdapter;
 
@@ -55,6 +60,7 @@ public class JobShListActivity extends JwListActivity {
     List<Task> list;
 
     private Users users;
+    private String tv_search;
 
     int flag = 2;
 
@@ -69,6 +75,35 @@ public class JobShListActivity extends JwListActivity {
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         ButterKnife.bind(this);
         initListViewController();
+        initView();
+    }
+
+    private void initView(){
+        etSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(StrUtils.isEmpty(etSearch.getText().toString())) {
+                    new FinishRefresh(getMy(),0).execute();
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                                          int after) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+
+    }
+    @OnClick(R.id.iv_search)
+    void searchClick() {
+        tv_search = etSearch.getText().toString();
+        if (StrUtils.IsNotEmpty(tv_search)) {
+            new FinishRefreshSearch(getMy()).execute();
+        }
     }
 
 
@@ -253,6 +288,64 @@ public class JobShListActivity extends JwListActivity {
                 commonAdapter.notifyDataSetChanged();
             } else {
                 commonAdapter.notifyDataSetChanged();
+                //没有加载到数据
+            }
+            listview.onRefreshComplete();
+            hideLoading();
+        }
+    }
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefreshSearch extends AsyncTask<String, Void, String> {
+        private Context context;
+        private int mode = 0;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshSearch(Context context) {
+            this.context = context;
+            this.mode = mode;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "0";
+
+            if (null != users) {
+                try {
+                    setPage(true);
+                    //已读人数4
+                    String sql = "SELECT * from task t where t.principal_code = (SELECT user_code from users where nickname like" + StrUtils.QuotedStrLike(tv_search) + ") or t.task_name LIKE " + StrUtils.QuotedStrLike(tv_search) + " and t.auditor_code = " + StrUtils.QuotedStr(users.getUser_code()) + " ORDER BY now_state ASC limit " + pageStart + ", " + pageEnd;
+                    //查找数据
+                    list = jCloudDB.findAllBySql(Task.class, sql);
+
+                    mListItems.clear();
+                } catch (CloudServiceException e) {
+                    e.printStackTrace();
+                }
+
+                if (ListUtils.IsNotNull(list)) {
+                    result = "1";
+                } else {
+                    result = "0";
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                mListItems.addAll(list);
+                commonAdapter.notifyDataSetChanged();
+            } else {
                 //没有加载到数据
             }
             listview.onRefreshComplete();

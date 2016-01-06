@@ -68,9 +68,7 @@ public class JobListActivity extends JwListActivity {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(StrUtils.IsNotEmpty(etSearch.getText().toString())){
-                    new FinishRefreshSearch(getMy()).execute();
-                }else{
+                if(StrUtils.isEmpty(etSearch.getText().toString())) {
                     new FinishRefresh(getMy(),0).execute();
                 }
             }
@@ -295,7 +293,6 @@ public class JobListActivity extends JwListActivity {
             if (result.equals("1")) {
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
-                etSearch.setText("");
             } else {
                 //没有加载到数据
             }
