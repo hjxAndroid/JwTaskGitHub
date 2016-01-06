@@ -130,7 +130,7 @@ public class StartSignUpActivity extends JwActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
                 if (postion == friendList.size() - 1) {
-                    JwStartActivity(PublicyContactHomeActivity.class, Contants.start_sign);
+                    JwStartActivity(PublicyContactHomeActivity.class, Contants.fzr);
                 }
             }
         });
@@ -160,20 +160,19 @@ public class StartSignUpActivity extends JwActivity {
                 newfriend.setFriend_nickname("123");
                 friendList.add(newfriend);
                 signAdapter.notifyDataSetChanged();
+            }else{
+                json = activityMsgEvent.getParam();
+                if (StrUtils.IsNotEmpty(json)) {
+                    List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
+                    friendList.clear();
+                    friendList.addAll(friends);
+                    Friend newfriend = new Friend();
+                    newfriend.setContent("1");
+                    newfriend.setFriend_nickname("123");
+                    friendList.add(newfriend);
+                    signAdapter.notifyDataSetChanged();
+                }
             }
-        } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.start_sign)) {
-            String json = activityMsgEvent.getParam();
-            if (StrUtils.IsNotEmpty(json)) {
-                List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
-                friendList.clear();
-                friendList.addAll(friends);
-                Friend newfriend = new Friend();
-                newfriend.setContent("1");
-                newfriend.setFriend_nickname("123");
-                friendList.add(newfriend);
-                signAdapter.notifyDataSetChanged();
-            }
-
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.start_sign_org)) {
             String json = activityMsgEvent.getParam1();
             if (StrUtils.IsNotEmpty(json)) {

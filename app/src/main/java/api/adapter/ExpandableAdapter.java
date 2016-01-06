@@ -22,6 +22,8 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
     Context context;
 
     private List<Orgunit> groupArray;
+
+    int size = 0;
     /**
      * 获取布局对象
      */
@@ -29,6 +31,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
     public ExpandableAdapter(Context context, List<Orgunit> groupArray) {
         this.context = context;
         this.groupArray = groupArray;
+        size = groupArray.size();
         mInflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }

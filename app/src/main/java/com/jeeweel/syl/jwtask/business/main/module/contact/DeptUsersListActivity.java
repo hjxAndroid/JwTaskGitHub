@@ -20,6 +20,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -54,7 +55,7 @@ import butterknife.OnClick;
 
 
 public class DeptUsersListActivity extends JwListActivity {
-    List<Userdept> mListItems = new ArrayList<Userdept>();
+    List<UserdeptItem> mListItems = new ArrayList<UserdeptItem>();
 
     @Bind(R.id.listview)
     PullToRefreshListView listview;
@@ -67,7 +68,7 @@ public class DeptUsersListActivity extends JwListActivity {
     private List<Userorg> userorgsList;
 
 
-    List<Userdept> list;
+    List<UserdeptItem> list;
     List<Orgunit> orgunits;
     Orgunit orgunit;
 
@@ -185,17 +186,17 @@ public class DeptUsersListActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Userdept>(getMy(), mListItems, R.layout.item_friend) {
+        commonAdapter = new CommonAdapter<UserdeptItem>(getMy(), mListItems, R.layout.item_friend) {
             @Override
-            public void convert(ViewHolder helper, Userdept item) {
+            public void convert(ViewHolder helper, UserdeptItem item) {
                 String nickname = item.getNickname();
                 helper.setText(R.id.tv_name, item.getUsername());
                 helper.setText(R.id.tv_nick_name, nickname);
 
-                if (item.getPhoto_code() != null) {
+                if (item.getPic_road() != null) {
                     ImageView iv_photo = helper.getImageView(R.id.iv_xz);
                     //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
-                    JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
+                    JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), iv_photo);
                 } else {
                     if (nickname.length() > 2) {
                         nickname = nickname.substring(nickname.length() - 2, nickname.length());
@@ -219,7 +220,7 @@ public class DeptUsersListActivity extends JwListActivity {
     @Override
     public void onListItemClick(int position) {
         String flag = "DeptUsers";
-        Userdept userdept = (Userdept) commonAdapter.getItem(position);
+        UserdeptItem userdept = (UserdeptItem) commonAdapter.getItem(position);
         Intent intent = new Intent();
         intent.putExtra("flag", true);
         intent.putExtra("mark", flag);
@@ -264,45 +265,52 @@ public class DeptUsersListActivity extends JwListActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             if (null != userdept) {
                 try {
                     if (mode == 0) {
                         setPage(true);
-                        list = jCloudDB.findAllByWhere(Userdept.class,
-                                "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd);
+
+                        String readSql  = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = "+ StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd;
+                        //查找数据
+                        list = jCloudDB.findAllBySql(UserdeptItem.class, readSql);
+
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        list = jCloudDB.findAllByWhere(Userdept.class,
-                                "user_name = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd);
+                        String readSql  = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = "+ StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd;
+                        //查找数据
+                        list = jCloudDB.findAllBySql(UserdeptItem.class, readSql);
                     }
 
-                    if (ListUtils.IsNotNull(list)) {
-                        result = "1";
-                        for (Userdept userdept : list) {
-                            //取头像
-                            String user_code = userdept.getUser_code();
-                            String sSql = "pic_code=?";
-                            SqlInfo sqlInfo = new SqlInfo();
-                            sqlInfo.setSql(sSql);
-                            sqlInfo.addValue(user_code);
-                            sSql = sqlInfo.getBuildSql();
-                            List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
-                            if (ListUtils.IsNotNull(pictureList)) {
-                                Picture picture = pictureList.get(0);
-                                String path = picture.getPic_road();
-                                if (StrUtils.IsNotEmpty(path)) {
-                                    //存头像
-                                    userdept.setPhoto_code(path);
-                                }
-                            }
-                        }
-                    } else {
-                        result = "0";
-                    }
+
+
+//                    if (ListUtils.IsNotNull(list)) {
+//                        result = "1";
+//                        for (Userdept userdept : list) {
+//                            //取头像
+//                            String user_code = userdept.getUser_code();
+//                            String sSql = "pic_code=?";
+//                            SqlInfo sqlInfo = new SqlInfo();
+//                            sqlInfo.setSql(sSql);
+//                            sqlInfo.addValue(user_code);
+//                            sSql = sqlInfo.getBuildSql();
+//                            List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+//                            if (ListUtils.IsNotNull(pictureList)) {
+//                                Picture picture = pictureList.get(0);
+//                                String path = picture.getPic_road();
+//                                if (StrUtils.IsNotEmpty(path)) {
+//                                    //存头像
+//                                    userdept.setPhoto_code(path);
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        result = "0";
+//                    }
                 } catch (CloudServiceException e) {
+                    result = "0";
                     e.printStackTrace();
                 }
             }

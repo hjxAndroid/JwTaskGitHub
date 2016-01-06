@@ -12,7 +12,7 @@ import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
  */
 
 @Table(name = "userdept")
-public class Userdept extends BaseItem{
+public class UserdeptItem extends BaseItem{
     /**
      * mid
      */
@@ -38,8 +38,10 @@ public class Userdept extends BaseItem{
     private String create_time;
     private String update_time;
     private String photo_code;
-    private int admin_state;
     private String pic_road;
+
+
+    private int admin_state;
 
     public int getMid() {
         return mid;
