@@ -1,9 +1,5 @@
 package api.adapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,16 +10,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
+
+import java.util.HashMap;
+import java.util.List;
 
 import api.util.Utils;
 
-
-public class CheckAdapter extends BaseAdapter {
+/**
+ * Created by Ragn on 2016/1/6.
+ */
+public class StrartSignAdapter extends BaseAdapter {
     // 填充数据的list
-    private List<Userdept> list;
+    private List<Userorg> list;
     // 用来控制CheckBox的选中状况
     private static HashMap<Integer, Boolean> isSelected;
     // 上下文
@@ -32,7 +33,7 @@ public class CheckAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
 
     // 构造器
-    public CheckAdapter(List<Userdept> list, Context context) {
+    public StrartSignAdapter(List<Userorg> list, Context context) {
         this.context = context;
         this.list = list;
         inflater = LayoutInflater.from(context);
@@ -83,7 +84,7 @@ public class CheckAdapter extends BaseAdapter {
         }
         final ViewHolder holders = holder;
         // 设置list中TextView的显示
-        holder.tv.setText(list.get(position).getUsername());
+        holder.tv.setText(list.get(position).getUser_name());
         holder.nick.setText(list.get(position).getNickname());
         JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPhoto_code(), holder.iv_head_pic);
         // 根据isSelected来设置checkbox的选中状况
@@ -107,7 +108,7 @@ public class CheckAdapter extends BaseAdapter {
     }
 
     public static void setIsSelected(HashMap<Integer, Boolean> isSelected) {
-        CheckAdapter.isSelected = isSelected;
+        StrartSignAdapter.isSelected = isSelected;
     }
 
     public static class ViewHolder {

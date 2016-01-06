@@ -150,6 +150,9 @@ public class DeptSelectFriendListActivity extends JwListActivity {
                 } else if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.sign)) {
                     OttUtils.push(Contants.sign, json);
                     finish();
+                } else if (StrUtils.IsNotEmpty(tag) && tag.equals(Contants.start_sign)) {
+                    OttUtils.push(Contants.start_sign, json);
+                    finish();
                 } else {
                     //发布任务请求
                     OttUtils.push(tag, json);

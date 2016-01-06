@@ -58,6 +58,7 @@ public class PublicyListActivity extends JwListActivity {
 
     private String orgcode;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -299,8 +300,8 @@ public class PublicyListActivity extends JwListActivity {
 
             if (null != users) {
                 try {
-                    orgunits = jCloudDB.findAllByWhere(Orgunit.class,
-                            "founder_code = " + StrUtils.QuotedStr(users.getUser_code()));
+                    orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + "\'" + orgcode + "\'" + " and founder_code = " + "\'" + users.getUser_code() + "\'");
+
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();

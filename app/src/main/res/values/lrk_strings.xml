@@ -33,5 +33,6 @@
     <string name="title_activity_check_sign_person">CheckSignPersonActivity</string>
     <string name="title_activity_change_publicity">ChangePublicyActivity</string>
     <string name="title_activity_org_members">OrgMembersActivity</string>
+    <string name="title_activity_publicy_start_sign_users">PublicyStartSignUsersActivity</string>
     <string name="receive_name">接收者</string>
 </resources>

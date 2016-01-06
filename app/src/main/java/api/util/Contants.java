@@ -17,7 +17,7 @@ public class Contants {
     public static String WEB_NAME = "JCloud";
 
     //后台数据库
-    public static String WEB_DB="jwtask";
+    public static String WEB_DB = "jwtask";
 
     //组织添加好友
     public static String dept_add_friend = "dept_add_friend";
@@ -100,4 +100,7 @@ public class Contants {
     public static String action_fqbh = "放弃驳回";
     //审核驳回
     public static String action_shbh = "审核驳回";
+
+    public static String start_sign = "发起签到好友选择";
+    public static String start_sign_org = "发起签到组织成员选择";
 }

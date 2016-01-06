@@ -92,8 +92,6 @@ public class StartSignUpActivity extends JwActivity {
         setTitle("发起签到");
         initDate();
         initView();
-
-
     }
 
     @Override
@@ -132,7 +130,7 @@ public class StartSignUpActivity extends JwActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
                 if (postion == friendList.size() - 1) {
-                    JwStartActivity(PublicyContactHomeActivity.class, Contants.fzr);
+                    JwStartActivity(PublicyContactHomeActivity.class, Contants.start_sign);
                 }
             }
         });
@@ -163,7 +161,42 @@ public class StartSignUpActivity extends JwActivity {
                 friendList.add(newfriend);
                 signAdapter.notifyDataSetChanged();
             }
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.start_sign)) {
+            String json = activityMsgEvent.getParam();
+            if (StrUtils.IsNotEmpty(json)) {
+                List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
+                friendList.clear();
+                friendList.addAll(friends);
+                Friend newfriend = new Friend();
+                newfriend.setContent("1");
+                newfriend.setFriend_nickname("123");
+                friendList.add(newfriend);
+                signAdapter.notifyDataSetChanged();
+            }
+
+        } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.start_sign_org)) {
+            String json = activityMsgEvent.getParam1();
+            if (StrUtils.IsNotEmpty(json)) {
+                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                List<Friend> friends = new ArrayList<Friend>();
+                for (Userdept userdept : userdepts) {
+                    Friend friend = new Friend();
+                    friend.setUser_code(userdept.getUser_code());
+                    friend.setFriend_code(userdept.getUser_code());
+                    friend.setFriend_nickname(userdept.getNickname());
+                    friend.setPhoto_code(userdept.getPhoto_code());
+                    friends.add(friend);
+                }
+                friendList.clear();
+                friendList.addAll(friends);
+                Friend newfriend = new Friend();
+                newfriend.setContent("1");
+                newfriend.setFriend_nickname("123");
+                friendList.add(newfriend);
+                signAdapter.notifyDataSetChanged();
+            }
         }
+
     }
 
     //日期初始化

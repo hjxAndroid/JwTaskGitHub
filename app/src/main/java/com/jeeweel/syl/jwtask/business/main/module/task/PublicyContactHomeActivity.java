@@ -38,6 +38,7 @@ import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.bmob.push.config.Constant;
 
 public class PublicyContactHomeActivity extends JwActivity {
 
@@ -145,8 +146,12 @@ public class PublicyContactHomeActivity extends JwActivity {
                         @Override
                         public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
                             Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
-                            JwStartActivity(OragDetailActivity.class, orgunit);
-
+//                            JwStartActivity(PublicyStartSignUsersActivity.class, orgunit);
+                            Intent intent = new Intent(getMy(), PublicyStartSignUsersActivity.class);
+                            intent.putExtra(StaticStrUtils.baseItem, orgunit);
+                            intent.putExtra("tag", Contants.start_sign_org);
+                            startActivity(intent);
+                            finish();
                             return true;
                         }
                     });
