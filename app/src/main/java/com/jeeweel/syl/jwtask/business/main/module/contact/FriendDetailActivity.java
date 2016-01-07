@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.view.ViewGroup.LayoutParams;
 
+import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -23,6 +24,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
+import com.jeeweel.syl.jwtask.business.main.module.task.WebActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -32,6 +34,7 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 
 import api.util.Contants;
@@ -94,6 +97,8 @@ public class FriendDetailActivity extends JwActivity {
         boolean flag = intent.getBooleanExtra("flag", false);
         if (flag == true) {
             initView();
+        }else{
+            initRight();
         }
         friend_code = intent.getStringExtra("friend_code");
         if (StrUtils.IsNotEmpty(friend_code)) {
@@ -113,16 +118,22 @@ public class FriendDetailActivity extends JwActivity {
 //        });
 //        addMenuView(menuTextView);
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
-        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "移除");
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a5), "绩效");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
+        ActionItem action2=new ActionItem(getResources().getDrawable(R.drawable.a6),"移除");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
+        titlePopup.addAction(action2);
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
                 if (position == 0) {
+                    if(StrUtils.IsNotEmpty(friend_code))
+                        JwStartActivity(WebActivity.class,friend_code);
+                }
+                else if(position==1){
                     showAlertDialog();
-                } else {
+                }else if(position==2){
                     showAlertDelMemDialog();
                 }
             }
@@ -136,6 +147,21 @@ public class FriendDetailActivity extends JwActivity {
             }
         });
         addMenuView(menuImageView);
+    }
+
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("績效查看");
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                if(StrUtils.IsNotEmpty(friend_code))
+                    JwStartActivity(WebActivity.class,friend_code);
+            }
+        });
+        addMenuView(menuTextView);
     }
 
     public void showAlertDialog() {
