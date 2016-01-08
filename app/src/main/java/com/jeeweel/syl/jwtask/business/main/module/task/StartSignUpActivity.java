@@ -150,6 +150,7 @@ public class StartSignUpActivity extends JwActivity {
                     friend.setUser_code(userdept.getUser_code());
                     friend.setFriend_code(userdept.getUser_code());
                     friend.setFriend_nickname(userdept.getNickname());
+                    friend.setFriend_name(userdept.getUsername());
                     friend.setPhoto_code(userdept.getPhoto_code());
                     friends.add(friend);
                 }

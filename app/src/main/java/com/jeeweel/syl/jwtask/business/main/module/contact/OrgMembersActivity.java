@@ -56,7 +56,7 @@ public class OrgMembersActivity extends JwActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend_list);
+        setContentView(R.layout.activity_org_members);
         users = JwAppAplication.getUsers();
         setTitle("组织成员");
         ButterKnife.bind(this);

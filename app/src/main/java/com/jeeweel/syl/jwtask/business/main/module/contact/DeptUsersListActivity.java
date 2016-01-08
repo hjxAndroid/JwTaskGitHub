@@ -91,7 +91,7 @@ public class DeptUsersListActivity extends JwListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
         userdept = (Userdept) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
-        users = JwAppAplication.getUsers();
+        users = JwAppAplication.getInstance().getUsers();
         if (null != userdept) {
             setTitle(userdept.getDept_name());
             orgCode = userdept.getOrg_code();
