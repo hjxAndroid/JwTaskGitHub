@@ -50,8 +50,8 @@ public class PublicyReadListActivity extends JwActivity {
 
         if (StrUtils.IsNotEmpty(json)) {
             unReads = JwJSONUtils.getParseArray(json, Userorg.class);
-           // setTitle("已读"+unReads.size()+"人");
-             setTitle("已读人数");
+            setTitle("已读"+unReads.size()+"人");
+         //    setTitle("已读人数");
             showLoading();
             new FinishRefresh(getMy()).execute();
         }

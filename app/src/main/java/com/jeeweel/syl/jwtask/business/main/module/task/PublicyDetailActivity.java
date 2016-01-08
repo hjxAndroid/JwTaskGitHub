@@ -199,13 +199,14 @@ public class PublicyDetailActivity extends JwActivity {
                 if (null != users && null != publicity) {
 
                     //已读人数
-                    String readSql  = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
+                   // String readSql  = "SELECT c.operator_code,c.nickname,c.create_time from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+ StrUtils.QuotedStr(publicity.getPublicity_code());
+                    String readSql  = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")  and t.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code());
                     //查找数据
                     alreadyreads = jCloudDB.findAllBySql(Userorg.class, readSql);
                     removeDuplicate(alreadyreads);
 
                     //未读人数
-                    String sql  = "SELECT t.* from userorg t where t.user_code not in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
+                    String sql  = "SELECT t.* from userorg t where t.user_code not in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+") and t.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code());
                     //查找数据
                     unReads = jCloudDB.findAllBySql(Userorg.class, sql);
                     removeDuplicate(unReads);
@@ -218,6 +219,7 @@ public class PublicyDetailActivity extends JwActivity {
                         Alreadyread alreadyread = new Alreadyread();
                         alreadyread.setTask_code(publicity.getPublicity_code());
                         alreadyread.setOperator_code(users.getUser_code());
+                        alreadyread.setNickname(users.getNickname());
                         alreadyread.setOrg_code(orgCode);
                         alreadyread.setOperate_type("0");
                         jCloudDB.save(alreadyread);
@@ -239,7 +241,7 @@ public class PublicyDetailActivity extends JwActivity {
             if (result.equals("1")) {
 
                 if(ListUtils.IsNotNull(alreadyreads)){
-                    tvYd.setText(alreadyreads.size() + "人未读");
+                    tvYd.setText(alreadyreads.size() + "人已读");
                 }
 
                 if(ListUtils.IsNotNull(unReads)){

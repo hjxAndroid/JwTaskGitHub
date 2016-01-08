@@ -84,6 +84,10 @@ public class Alreadyread {
      * 更新时间
      */
     private String update_time;
+    /**
+     * 更新时间
+     */
+    private String nickname;
 
 
     public int getMid() {
@@ -220,6 +224,14 @@ public class Alreadyread {
 
     public void setUpdate_time(String update_time) {
         this.update_time = update_time;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
 

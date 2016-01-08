@@ -91,7 +91,7 @@ public class FriendDetailActivity extends JwActivity {
         setContentView(R.layout.activity_friend_detail);
         ButterKnife.bind(this);
         setTitle("用户信息");
-        userIsFounder = JwAppAplication.getUsers();
+        userIsFounder = JwAppAplication.getInstance().getUsers();
         getData();
         Intent intent = getIntent();
         boolean flag = intent.getBooleanExtra("flag", false);
@@ -118,9 +118,9 @@ public class FriendDetailActivity extends JwActivity {
 //        });
 //        addMenuView(menuTextView);
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a5), "绩效");
-        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
-        ActionItem action2=new ActionItem(getResources().getDrawable(R.drawable.a6),"移除");
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a5), "绩效查看");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加好友");
+        ActionItem action2=new ActionItem(getResources().getDrawable(R.drawable.a6),"移除该部");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
         titlePopup.addAction(action2);
@@ -479,29 +479,36 @@ public class FriendDetailActivity extends JwActivity {
             List<Orgunit> listIsFounder;
             List<Userdept> listDeptFounder;
             try {
-                listDeptFounder = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()) + " and admin_state = 1 ");
-                listIsFounder = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and founder_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()));
-                if (ListUtils.IsNotNull(listIsFounder) || ListUtils.IsNotNull(listDeptFounder)) {
-                    if ("DeptUsers".equals(flag)) {
-                        //flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
-                        flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code) + " and dept_code = " + StrUtils.QuotedStr(dept_code));
-                        if (flagUserDept) {
-                            result = "1";
-                        } else {
-                            result = "0";
+
+                if(friend_code.equals(userIsFounder.getUser_code())){
+                    result =  "3";
+                }else{
+                    listDeptFounder = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()) + " and admin_state = 1 ");
+                    listIsFounder = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and founder_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()));
+
+                    if (ListUtils.IsNotNull(listIsFounder) || ListUtils.IsNotNull(listDeptFounder)) {
+                        if ("DeptUsers".equals(flag)) {
+                            //flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
+                            flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code) + " and dept_code = " + StrUtils.QuotedStr(dept_code));
+                            if (flagUserDept) {
+                                result = "1";
+                            } else {
+                                result = "0";
+                            }
+                        } else if ("OrgMembers".equals(flag)) {
+                            flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
+                            flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code));
+                            if (flagUserDept || flagUserOrg) {
+                                result = "1";
+                            } else {
+                                result = "0";
+                            }
                         }
-                    } else if ("OrgMembers".equals(flag)) {
-                        flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(friend_code));
-                        flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + "and user_code = " + StrUtils.QuotedStr(friend_code));
-                        if (flagUserDept || flagUserOrg) {
-                            result = "1";
-                        } else {
-                            result = "0";
-                        }
+                    } else {
+                        result = "2";
                     }
-                } else {
-                    result = "2";
                 }
+
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -518,6 +525,8 @@ public class FriendDetailActivity extends JwActivity {
                 ToastShow("删除失败");
             } else if ("2".equals(result)) {
                 ToastShow("您没有权限踢人");
+            }else if("3".equals(result)){
+                ToastShow("您不能移除自己");
             }
             hideLoading();
             finish();

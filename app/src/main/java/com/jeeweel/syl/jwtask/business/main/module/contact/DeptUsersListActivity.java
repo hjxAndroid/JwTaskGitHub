@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.contact;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -48,6 +49,7 @@ import java.util.List;
 import api.util.Contants;
 import api.util.OttUtils;
 import api.util.Utils;
+import api.view.CustomDialog;
 import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -102,10 +104,12 @@ public class DeptUsersListActivity extends JwListActivity {
 
     private void initView() {
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加");
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加成员");
         ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "修改部门名");
+        ActionItem action2 = new ActionItem(getResources().getDrawable(R.drawable.a5), "解散部门");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
+        titlePopup.addAction(action2);
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
@@ -115,7 +119,7 @@ public class DeptUsersListActivity extends JwListActivity {
                     intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
                     startActivity(intent);
                     //     finish();
-                } else {
+                } else if(position == 1){
 
                     new FinishRefresIsFounder(getMy()).execute();
 
@@ -124,6 +128,8 @@ public class DeptUsersListActivity extends JwListActivity {
 //                    intent.putExtra("code", userdept.getDept_code());
 //                    intent.setClass(DeptUsersListActivity.this, MineEditnameActivity.class);
 //                    JwStartActivity(intent);
+                }else{
+                    showAlertDialog();
                 }
             }
         });
@@ -183,6 +189,31 @@ public class DeptUsersListActivity extends JwListActivity {
 //        addMenuView(menuImageView);
 //
 //    }
+
+
+    public void showAlertDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("您确定要解散该组织");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                showLoading();
+                new FinishRefreshDismiss(getMy()).execute();
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
+
+    }
 
     @Override
     public void initListViewController() {
@@ -331,44 +362,48 @@ public class DeptUsersListActivity extends JwListActivity {
     }
 
 
-    private class FinishRefreshDismiss extends AsyncTask<String, Void, String> {
-        private Context context;
 
+    private class FinishRefreshDismiss extends AsyncTask<String, Void, String> {
+        JCloudDB jCloudDB;
+        List<Orgunit> listIsFounder;
+        List<Userdept> listDeptFounder;
         /**
          * @param context 上下文
          */
         public FinishRefreshDismiss(Context context) {
-            this.context = context;
+            jCloudDB = new JCloudDB();
         }
 
         @Override
         protected String doInBackground(String... strings) {
             String result = "1";
 
-
             boolean flagUserDept = false;
             boolean flagUserOrg = false;
             boolean flagDept = false;
-            boolean flagOrgUnit = false;
-            JCloudDB jCloudDB = new JCloudDB();
+
             try {
-                orgunits = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + "\'" + orgCode + "\'");
-                if (ListUtils.IsNotNull(orgunits)) {
-                    orgunit = orgunits.get(0);
+                if (null != users) {
 
-                    flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + "\'" + orgCode + "\'");
-                    flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + "\'" + orgCode + "\'");
-                    flagDept = jCloudDB.deleteByWhere(Dept.class, " org_code = " + "\'" + orgCode + "\'");
-                    flagOrgUnit = jCloudDB.deleteByWhere(Orgunit.class, " org_code = " + "\'" + orgCode + "\'");
-                    if (flagUserDept && flagUserOrg && flagDept && flagOrgUnit) {
-                        result = "1";
+                    listDeptFounder = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and admin_state = 1 ");
+                    listIsFounder = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and founder_code = " + StrUtils.QuotedStr(users.getUser_code()));
+
+                    if (ListUtils.IsNotNull(listDeptFounder)||ListUtils.IsNotNull(listIsFounder)) {
+
+                        flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + "\'" + orgCode + "\'");
+                        flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + "\'" + orgCode + "\'");
+                        flagDept = jCloudDB.deleteByWhere(Dept.class, " org_code = " + "\'" + orgCode + "\'");
+
+                        if (flagUserDept && flagUserOrg && flagDept) {
+                            result = "1";
+                        } else {
+                            result = "0";
+                        }
                     } else {
-                        result = "0";
+                        result = "2";
                     }
-                } else {
-                    result = "2";
-                }
 
+                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -382,10 +417,14 @@ public class DeptUsersListActivity extends JwListActivity {
             if (result.equals("1")) {
                 ToastShow("解散成功");
                 OttUtils.push("deptAdd_refresh", "");
+                hideLoading();
+                finish();
             } else if (result.equals("2")) {
-                ToastShow("您没有权限解散组织");
+                ToastShow("您没有权限解散部门");
+                hideLoading();
             } else {
                 ToastShow("解散失败");
+                hideLoading();
             }
         }
     }

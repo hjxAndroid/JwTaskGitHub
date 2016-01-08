@@ -149,7 +149,7 @@ public class PublicyContactHomeActivity extends JwActivity {
 //                            JwStartActivity(PublicyStartSignUsersActivity.class, orgunit);
                             Intent intent = new Intent(getMy(), PublicyStartSignUsersActivity.class);
                             intent.putExtra(StaticStrUtils.baseItem, orgunit);
-                            intent.putExtra("tag", Contants.start_sign_org);
+                            intent.putExtra("tag", tag);
                             startActivity(intent);
                             finish();
                             return true;

@@ -173,7 +173,9 @@ public class StartSignUpActivity extends JwActivity {
                     signAdapter.notifyDataSetChanged();
                 }
             }
-        } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.start_sign_org)) {
+        }
+
+/*        else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.start_sign_org)) {
             String json = activityMsgEvent.getParam1();
             if (StrUtils.IsNotEmpty(json)) {
                 List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
@@ -194,7 +196,7 @@ public class StartSignUpActivity extends JwActivity {
                 friendList.add(newfriend);
                 signAdapter.notifyDataSetChanged();
             }
-        }
+        }*/
 
     }
 
