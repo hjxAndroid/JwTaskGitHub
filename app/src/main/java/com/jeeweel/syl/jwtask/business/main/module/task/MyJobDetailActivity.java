@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -24,6 +25,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Submit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
+import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -148,6 +150,12 @@ public class MyJobDetailActivity extends JwActivity {
                 }
 
                 if (ListUtils.IsNotNull(pictureList)) {
+
+                    final String imgs[] = new String[pictureList.size()];
+                    for(int i = 0; i<pictureList.size();i++){
+                        imgs[i] = Utils.getPicUrl() + pictureList.get(i).getPic_road();
+                    }
+
                     CommonAdapter commonAdapter = new CommonAdapter<Picture>(getMy(), pictureList, R.layout.item_img) {
                         @Override
                         public void convert(ViewHolder helper, Picture item) {
@@ -156,18 +164,30 @@ public class MyJobDetailActivity extends JwActivity {
                         }
                     };
                     noScrollgridview.setAdapter(commonAdapter);
+                    noScrollgridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            if(imgs.length!=0){
+                                Intent intent = new Intent(getMy(),ImagePagerActivity.class);
+                                // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
+                                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imgs);
+                                intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
+                                getMy().startActivity(intent);
+                            }
+                        }
+                    });
                 }
 
                 if (ListUtils.IsNotNull(taskflows)) {
                     CommonAdapter commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
                         @Override
                         public void convert(ViewHolder helper, Taskflow item) {
-                            helper.setText(R.id.tv_nick_name, item.getNickname());
+                            helper.setText(R.id.tv_nickname, item.getNickname());
                             helper.setText(R.id.tv_action, item.getUser_action());
                             helper.setText(R.id.tv_time, item.getCreate_time());
 
                             ImageView imageView = helper.getImageView(R.id.iv_xz);
-                            JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
+                            JwImageLoader.displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
                         }
                     };
                     listview.setAdapter(commonAdapter);

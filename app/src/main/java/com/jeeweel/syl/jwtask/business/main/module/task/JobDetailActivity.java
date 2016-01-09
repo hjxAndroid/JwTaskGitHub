@@ -37,6 +37,7 @@ import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
@@ -104,7 +105,7 @@ public class JobDetailActivity extends JwActivity {
     private Task task;
     String flag;
     CommonAdapter commonAdapter;
-    List<Taskflow> taskflows;
+    List<Taskflow> taskflows = new ArrayList<>();
     String orgCode;
 
     @Override
@@ -217,6 +218,20 @@ public class JobDetailActivity extends JwActivity {
                     break;
             }
 
+            commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
+                @Override
+                public void convert(ViewHolder helper, Taskflow item) {
+                    helper.setText(R.id.tv_nickname, item.getNickname());
+                    helper.setText(R.id.tv_action, item.getUser_action());
+                    helper.setText(R.id.tv_time, item.getCreate_time());
+                    ImageView imageView = helper.getImageView(R.id.iv_xz);
+
+                    JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
+
+                }
+            };
+            listview.setAdapter(commonAdapter);
+
             showLoading();
             new FinishRefresh(getMy()).execute();
         }
@@ -262,6 +277,7 @@ public class JobDetailActivity extends JwActivity {
         private JCloudDB jCloudDB;
         List<Task> tasks;
         List<Picture> pictureList;
+        List<Taskflow> taskflowNews;
         /**
          * @param context 上下文
          */
@@ -308,7 +324,7 @@ public class JobDetailActivity extends JwActivity {
 
                 String newSql = "select * from  v_taskflow where task_code= " + StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
                 //查找数据
-                taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
+                taskflowNews = jCloudDB.findAllBySql(Taskflow.class, newSql);
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -352,6 +368,8 @@ public class JobDetailActivity extends JwActivity {
                     });
                 }
 
+                taskflows.addAll(taskflowNews);
+                commonAdapter.notifyDataSetChanged();
 
                 if (ListUtils.IsNotNull(tasks)) {
                     Task task = tasks.get(0);
@@ -363,18 +381,6 @@ public class JobDetailActivity extends JwActivity {
                 }
 
 
-                commonAdapter = new CommonAdapter<Taskflow>(getMy(), taskflows, R.layout.item_task_detail) {
-                    @Override
-                    public void convert(ViewHolder helper, Taskflow item) {
-                        helper.setText(R.id.tv_nickname, item.getNickname());
-                        helper.setText(R.id.tv_action, item.getUser_action());
-                        helper.setText(R.id.tv_time, item.getCreate_time());
-
-                        ImageView imageView = helper.getImageView(R.id.iv_xz);
-                        JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
-                    }
-                };
-                listview.setAdapter(commonAdapter);
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {

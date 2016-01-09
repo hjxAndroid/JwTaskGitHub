@@ -193,7 +193,7 @@ public class YshActivity extends JwActivity {
                             helper.setText(R.id.tv_time, item.getCreate_time());
 
                             ImageView imageView = helper.getImageView(R.id.iv_xz);
-                            JwImageLoader.getImageLoader().displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
+                            JwImageLoader.displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
                         }
                     };
                     listview.setAdapter(commonAdapter);
