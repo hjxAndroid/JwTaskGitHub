@@ -18,8 +18,10 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
@@ -64,6 +66,10 @@ public class PublicyUsersListActivity extends JwActivity {
     private int checkNum; // 记录选中的条目数量
     private TextView tv_show;// 用于显示选中的条目数量
 
+    private String data = "";
+
+    List<Userdept> userdepts = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +79,10 @@ public class PublicyUsersListActivity extends JwActivity {
             setTitle(userdept.getDept_name());
         }
         tag = getIntent().getStringExtra("tag");
+        data = getIntent().getStringExtra("data");
+        if(StrUtils.IsNotEmpty(data)){
+            userdepts = JwJSONUtils.getParseArray(data, Userdept.class);
+        }
         ButterKnife.bind(this);
         initRight();
         initListView();
@@ -114,15 +124,22 @@ public class PublicyUsersListActivity extends JwActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                List<Userdept> userdepts = new ArrayList<Userdept>();
+                List<Userdept> userdeptnews = new ArrayList<Userdept>();
                 HashMap<Integer, Boolean> isSelected = checkAdapter.getIsSelected();
                 for (int i = 0; i < isSelected.size(); i++) {
                     if (isSelected.get(i)) {
-                        userdepts.add(mListItems.get(i));
+                        userdeptnews.add(mListItems.get(i));
                     }
                 }
+
+                if(ListUtils.IsNotNull(userdepts)){
+                    userdeptnews.addAll(userdepts);
+                }
+                removeDuplicate(userdeptnews);
+
+
                 Gson gson = new Gson();
-                String json = gson.toJson(userdepts);
+                String json = gson.toJson(userdeptnews);
 
                 ActivityMsgEvent activityMsgEvent = new ActivityMsgEvent();
                 activityMsgEvent.setMsg(tag);
@@ -210,7 +227,7 @@ public class PublicyUsersListActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 mListItems.addAll(list);
-                checkAdapter = new CheckAdapter(mListItems, getMy());
+                checkAdapter = new CheckAdapter(mListItems,userdepts,getMy());
                 listview.setAdapter(checkAdapter);
             } else {
                 //没有加载到数据
@@ -243,5 +260,20 @@ public class PublicyUsersListActivity extends JwActivity {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<Userdept> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {
+                    list.remove(j);
+                }
+            }
+        }
     }
 }

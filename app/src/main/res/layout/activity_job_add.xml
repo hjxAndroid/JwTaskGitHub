@@ -151,7 +151,6 @@
             android:layout_marginLeft="10.0dip"
             android:layout_weight="1.0"
             android:hint="请选择"
-            android:maxLength="20"
             android:maxLines="1"
             android:scrollHorizontally="true"
             android:singleLine="true"

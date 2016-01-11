@@ -55,6 +55,7 @@ public class PublicyContactHomeActivity extends JwActivity {
 
     String tag = "";
 
+    String data = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +64,7 @@ public class PublicyContactHomeActivity extends JwActivity {
         setTitle(getString(R.string.contact));
         users = JwAppAplication.getInstance().getUsers();
         tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        data = getIntent().getStringExtra("data");
         getDate();
     }
 
@@ -150,6 +152,7 @@ public class PublicyContactHomeActivity extends JwActivity {
                             Intent intent = new Intent(getMy(), PublicyStartSignUsersActivity.class);
                             intent.putExtra(StaticStrUtils.baseItem, orgunit);
                             intent.putExtra("tag", tag);
+                            intent.putExtra("data", data);
                             startActivity(intent);
                             finish();
                             return true;
@@ -163,6 +166,7 @@ public class PublicyContactHomeActivity extends JwActivity {
                             Intent intent = new Intent(getMy(), PublicyUsersListActivity.class);
                             intent.putExtra(StaticStrUtils.baseItem, userdept);
                             intent.putExtra("tag", tag);
+                            intent.putExtra("data", data);
                             startActivity(intent);
                             finish();
                             return true;

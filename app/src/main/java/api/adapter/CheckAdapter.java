@@ -30,11 +30,12 @@ public class CheckAdapter extends BaseAdapter {
     private Context context;
     // 用来导入布局
     private LayoutInflater inflater = null;
-
+    List<Userdept> userdepts;
     // 构造器
-    public CheckAdapter(List<Userdept> list, Context context) {
+    public CheckAdapter(List<Userdept> list,List<Userdept> userdepts, Context context) {
         this.context = context;
         this.list = list;
+        this.userdepts = userdepts;
         inflater = LayoutInflater.from(context);
         isSelected = new HashMap<Integer, Boolean>();
         // 初始化数据
@@ -45,6 +46,14 @@ public class CheckAdapter extends BaseAdapter {
     private void initDate() {
         for (int i = 0; i < list.size(); i++) {
             getIsSelected().put(i, false);
+        }
+
+        for(int i = 0 ;i<list.size();i++){
+            for(int j=0;j<userdepts.size();j++){
+                if(list.get(i).getUser_code().equals(userdepts.get(j).getUser_code())){
+                    getIsSelected().put(i, true);
+                }
+            }
         }
     }
 
