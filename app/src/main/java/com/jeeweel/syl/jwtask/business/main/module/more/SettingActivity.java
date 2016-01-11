@@ -10,6 +10,7 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.update.UmengUpdateAgent;
+import com.umeng.update.UpdateConfig;
 
 import net.tsz.afinal.FinalDb;
 
@@ -31,7 +32,11 @@ public class SettingActivity extends JwActivity {
 
     @OnClick(R.id.ll_update)
     void updateClick() {
-        UmengUpdateAgent.forceUpdate(this);
+        if(UpdateConfig.isUpdateCheck()){
+            ToastShow("已是最新版本");
+        }else{
+            UmengUpdateAgent.forceUpdate(this);
+        }
     }
 
     @OnClick(R.id.ll_about)

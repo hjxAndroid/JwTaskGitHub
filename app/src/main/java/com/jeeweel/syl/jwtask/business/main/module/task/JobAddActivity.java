@@ -40,6 +40,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
@@ -55,6 +56,7 @@ import com.jeeweel.syl.jwtask.business.main.module.photo.GetPicActivity;
 import com.jeeweel.syl.jwtask.business.main.module.photo.PhotoActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
+import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
@@ -157,6 +159,10 @@ public class JobAddActivity extends JwActivity {
     GridAdapter adapter;
 
     String fzr;
+
+    String chooseFlag = "";
+
+    List<Userdept> userdepts = new ArrayList<>();;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -462,27 +468,67 @@ public class JobAddActivity extends JwActivity {
     //选择负责人
     @OnClick(R.id.li_fzr)
     void fzrClick() {
-        JwStartActivity(PublicyContactHomeActivity.class, Contants.fzr);
+        if(ListUtils.IsNotNull(userdepts)){
+            String json = new Gson().toJson(userdepts);
+            Intent intent = new Intent(getMy(),SelectedActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.fzr);
+            intent.putExtra("data",json);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(getMy(),PublicyContactHomeActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.fzr);
+            startActivity(intent);
+        }
     }
 
     //选择审核人
     @OnClick(R.id.li_shr)
     void shrClick() {
-        JwStartActivity(PublicyContactHomeActivity.class, Contants.shr);
+        if(ListUtils.IsNotNull(userdepts)){
+            String json = new Gson().toJson(userdepts);
+            Intent intent = new Intent(getMy(),SelectedActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.shr);
+            intent.putExtra("data",json);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(getMy(),PublicyContactHomeActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.shr);
+            startActivity(intent);
+        }
     }
 
 
     //选择观察者
     @OnClick(R.id.li_gcz)
     void gczClick() {
-        JwStartActivity(PublicyContactHomeActivity.class, Contants.gcz);
+        if(ListUtils.IsNotNull(userdepts)){
+            String json = new Gson().toJson(userdepts);
+            Intent intent = new Intent(getMy(),SelectedActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.gcz);
+            intent.putExtra("data",json);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(getMy(),PublicyContactHomeActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.gcz);
+            startActivity(intent);
+        }
     }
 
 
     //选择参与者
     @OnClick(R.id.li_cyz)
     void cyzClick() {
-        JwStartActivity(PublicyContactHomeActivity.class, Contants.cyz);
+        if(ListUtils.IsNotNull(userdepts)){
+            String json = new Gson().toJson(userdepts);
+            Intent intent = new Intent(getMy(),SelectedActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.cyz);
+            intent.putExtra("data",json);
+            startActivity(intent);
+        }else{
+            Intent intent = new Intent(getMy(),PublicyContactHomeActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,Contants.cyz);
+            startActivity(intent);
+        }
     }
 
 
@@ -595,7 +641,6 @@ public class JobAddActivity extends JwActivity {
 
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
-        List<Userdept> userdepts;
         String msg = activityMsgEvent.getMsg();
         String json = activityMsgEvent.getParam1();
         if (StrUtils.IsNotEmpty(json)) {
@@ -603,7 +648,6 @@ public class JobAddActivity extends JwActivity {
         } else {
             json = activityMsgEvent.getParam();
             List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
-            userdepts = new ArrayList<>();
             for (Friend friend : friends) {
                 Userdept userdept = new Userdept();
                 userdept.setUser_code(friend.getFriend_code());
@@ -614,7 +658,7 @@ public class JobAddActivity extends JwActivity {
 
 
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
-            if (StrUtils.IsNotEmpty(json)) {
+            if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     fzrCode = "";
                     fzr = "";
@@ -630,10 +674,15 @@ public class JobAddActivity extends JwActivity {
                     }
                     etFzr.setText(fzr);
                 }
+            }else{
+                etFzr.setText("");
+                fzrCode = "";
+                fzr = "";
+                userdepts.clear();
             }
 
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.shr)) {
-            if (StrUtils.IsNotEmpty(json)) {
+            if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
                     shrCode = "";
@@ -649,9 +698,13 @@ public class JobAddActivity extends JwActivity {
                     }
                     etShr.setText(fzr);
                 }
+            }else{
+                etShr.setText("");
+                shrCode = "";
+                userdepts.clear();
             }
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.gcz)) {
-            if (StrUtils.IsNotEmpty(json)) {
+            if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
                     gczCode = "";
@@ -667,9 +720,13 @@ public class JobAddActivity extends JwActivity {
                     }
                     etGcz.setText(fzr);
                 }
+            }else{
+                etGcz.setText("");
+                gczCode = "";
+                userdepts.clear();
             }
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.cyz)) {
-            if (StrUtils.IsNotEmpty(json)) {
+            if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     String fzr = "";
                     cyzCode = "";
@@ -685,6 +742,10 @@ public class JobAddActivity extends JwActivity {
                     }
                     tvCyz.setText(fzr);
                 }
+            }else{
+                tvCyz.setText("");
+                cyzCode = "";
+                userdepts.clear();
             }
         }
     }

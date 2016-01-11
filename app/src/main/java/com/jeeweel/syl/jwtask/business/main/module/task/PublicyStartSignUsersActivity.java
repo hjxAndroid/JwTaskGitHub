@@ -20,6 +20,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
@@ -68,6 +69,9 @@ public class PublicyStartSignUsersActivity extends JwActivity {
     private int checkNum; // 记录选中的条目数量
     private TextView tv_show;// 用于显示选中的条目数量
 
+    private String data = "";
+
+    List<Userdept> userdepts = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +81,10 @@ public class PublicyStartSignUsersActivity extends JwActivity {
             setTitle(orgunit.getOrg_name());
         }
         tag = getIntent().getStringExtra("tag");
+        data = getIntent().getStringExtra("data");
+        if(StrUtils.IsNotEmpty(data)){
+            userdepts = JwJSONUtils.getParseArray(data, Userdept.class);
+        }
         ButterKnife.bind(this);
         initRight();
         initListView();
@@ -125,6 +133,12 @@ public class PublicyStartSignUsersActivity extends JwActivity {
                         userorgs.add(mListItems.get(i));
                     }
                 }
+
+//                if(ListUtils.IsNotNull(userdepts)){
+//                    userdeptnews.addAll(userdepts);
+//                }
+//                removeDuplicate(userdeptnews);
+
                 Gson gson = new Gson();
                 String json = gson.toJson(userorgs);
 
@@ -217,7 +231,7 @@ public class PublicyStartSignUsersActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 mListItems.addAll(list);
-                strartSignAdapter = new StrartSignAdapter(mListItems, getMy());
+                strartSignAdapter = new StrartSignAdapter(mListItems,userdepts,getMy());
                 listview.setAdapter(strartSignAdapter);
             } else {
                 //没有加载到数据
