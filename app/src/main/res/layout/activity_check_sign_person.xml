@@ -1,35 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/main_bg_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_bg_color"
+    android:orientation="vertical">
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="45dp"
-                  android:layout_margin="20dp"
-                  android:orientation="horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="20dp"
+        android:orientation="horizontal">
 
-        <TextView android:id="@+id/already_signed_change_counts"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_height="match_parent"
-                  android:gravity="center"
-                  android:text="已经签到0人"
-                  android:textSize="@dimen/textSize_normal"
-                  android:textColor="@color/white"
-                  android:background="@drawable/shape_blue"/>
+        <TextView
+            android:id="@+id/already_signed_change_counts"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_blue"
+            android:gravity="center"
+            android:text="已经签到0人"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_normal" />
 
-        <TextView android:id="@+id/unsign_change_counts"
-                  android:layout_width="0dp"
-                  android:layout_weight="1"
-                  android:layout_height="match_parent"
-                  android:gravity="center"
-                  android:background="@drawable/shape_white"
-                  android:textColor="@color/list_text_color"
-                  android:textSize="@dimen/textSize_normal"
-                  android:text="未签到0人"/>
+        <TextView
+            android:id="@+id/unsign_change_counts"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_white"
+            android:gravity="center"
+            android:text="未签到0人"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_normal" />
 
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_signed_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_li"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_large_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:text="签到标题：" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/text_large_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_signed_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_li"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/text_large_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:text="签到内容：" />
+
+        <TextView
+            android:id="@+id/tv_signed_content"
+            style="@style/text_large_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView
@@ -41,6 +88,6 @@
         android:dividerHeight="1.0px"
         android:fadingEdge="none"
         android:listSelector="@color/transparent"
-        android:scrollbars="none"/>
+        android:scrollbars="none" />
 
 </LinearLayout>

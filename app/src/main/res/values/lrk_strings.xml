@@ -10,7 +10,7 @@
     <string name="weeks">星期四</string>
     <string name="current_time">当前时间</string>
     <string name="system_time">16:33</string>
-    <string name="item_sign_title">主题 :</string>
+    <string name="item_sign_title">主题：</string>
     <string name="start_sign_up_button">发起签到</string>
     <string name="home">是否到家请签到</string>
     <string name="localtion">地址地址地址</string>
@@ -34,5 +34,8 @@
     <string name="title_activity_change_publicity">ChangePublicyActivity</string>
     <string name="title_activity_org_members">OrgMembersActivity</string>
     <string name="title_activity_publicy_start_sign_users">PublicyStartSignUsersActivity</string>
+    <string name="title_activity_signed_detail">SignedDetailActivity</string>
+    <string name="title_activity_already_signed">AlreadySignedActivity</string>
+    <string name="title_activity_unsign">UnSignActivity</string>
     <string name="receive_name">接收者</string>
 </resources>

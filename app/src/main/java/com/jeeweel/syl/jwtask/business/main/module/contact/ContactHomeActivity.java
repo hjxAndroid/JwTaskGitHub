@@ -13,6 +13,8 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -42,11 +44,14 @@ public class ContactHomeActivity extends JwActivity {
     Users users;
 
     List<Orgunit> groups = new ArrayList<Orgunit>();
-    List<List<Userdept>> childs = new ArrayList<List<Userdept>>();
+        List<List<Userdept>> childs = new ArrayList<List<Userdept>>();
+//    List<List<UserdeptItem>> childs = new ArrayList<List<UserdeptItem>>();
 
-    List<Userdept> list = null;
+        List<Userdept> list = null;
+//    List<UserdeptItem> list = null;
 
     ExpandableAdapter expandableAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,9 +98,7 @@ public class ContactHomeActivity extends JwActivity {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
                 Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
-
                 JwStartActivity(OragDetailActivity.class, orgunit);
-
                 return true;
             }
         });
@@ -128,6 +131,10 @@ public class ContactHomeActivity extends JwActivity {
             try {
                 list = jCloudDB.findAllByWhere(Userdept.class,
                         "username=" + StrUtils.QuotedStr(users.getUsername()));
+                //未读人数
+                String sql = "SELECT * FROM v_deptusers WHERE user_code =" + StrUtils.QuotedStr(users.getUser_code());
+                //查找数据
+//                list = jCloudDB.findAllBySql(UserdeptItem.class, sql);
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();

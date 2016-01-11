@@ -12,7 +12,7 @@ import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
  */
 
 @Table(name = "userdept")
-public class UserdeptItem extends BaseItem{
+public class UserdeptItem extends BaseItem {
     /**
      * mid
      */
@@ -42,6 +42,16 @@ public class UserdeptItem extends BaseItem{
 
 
     private int admin_state;
+
+    private String count;
+
+    public String getCount() {
+        return count;
+    }
+
+    public void setCount(String count) {
+        this.count = count;
+    }
 
     public int getMid() {
         return mid;

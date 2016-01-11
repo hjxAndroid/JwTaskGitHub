@@ -106,15 +106,19 @@ public class StartSignUpActivity extends JwActivity {
         fName = saveFname();
         etStartTitle = etTitle.getText().toString();
         etStartContext = etContext.getText().toString();
-        if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
-            sign.setSign_title(etStartTitle);
-            sign.setSend_context(etStartContext);
-            sign.setRead_state("0");
-            sign.setReceive_name(fName);
-            sign.setReceive_code(buddyCode);
-            new saveSignInformaiton(getMy()).execute();
+        if (friendList.size() > 11) {
+            ToastShow("选择人数多于10人");
         } else {
-            ToastShow("内容或标题不能为空");
+            if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
+                sign.setSign_title(etStartTitle);
+                sign.setSend_context(etStartContext);
+                sign.setRead_state("0");
+                sign.setReceive_name(fName);
+                sign.setReceive_code(buddyCode);
+                new saveSignInformaiton(getMy()).execute();
+            } else {
+                ToastShow("内容或标题不能为空");
+            }
         }
     }
 
@@ -161,7 +165,7 @@ public class StartSignUpActivity extends JwActivity {
                 newfriend.setFriend_nickname("123");
                 friendList.add(newfriend);
                 signAdapter.notifyDataSetChanged();
-            }else{
+            } else {
                 json = activityMsgEvent.getParam();
                 if (StrUtils.IsNotEmpty(json)) {
                     List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);

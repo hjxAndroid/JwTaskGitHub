@@ -10,8 +10,12 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
+import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
@@ -30,47 +34,46 @@ public class PublicReadOpotionActivity extends JwActivity {
     Button btYd;
     @Bind(R.id.bt_wd)
     Button btWd;
-    V_publicityunread publicity;
-    List<Userorg> orgunits;
-    List<Userorg> alreadyreads;
-    List<Userorg> unReads = new ArrayList<>();
+    List<Signed> alreadySigned;
+    List<Sign> usSign;
+    private Users users;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_public_read_opotion);
         ButterKnife.bind(this);
-        setTitle("已读未读情况");
-        publicity = (V_publicityunread)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
-        showLoading();
-        new OrgPerson(getMy()).execute();
+        setTitle("签到列表");
+//        users = JwAppAplication.getInstance().getUsers();
+//        if (users != null) {
+//            showLoading();
+//            new SignPerson(getMy()).execute();
+//        }
     }
 
     @OnClick(R.id.bt_yd)
     void ydClick() {
-        if(ListUtils.IsNotNull(alreadyreads)){
-            String json = new Gson().toJson(alreadyreads);
-            JwStartActivity(PublicyReadListActivity.class,json);
-        }
+        JwStartActivity(AlreadySignedActivity.class);
+
     }
 
     @OnClick(R.id.bt_wd)
     void wdClick() {
-        if(ListUtils.IsNotNull(unReads)){
-            String json = new Gson().toJson(unReads);
-            JwStartActivity(PublicyUnReadListActivity.class,json);
-        }
+        JwStartActivity(UnSignActivity.class);
+
     }
+
     /**
      * 查看总人数
      */
-    private class OrgPerson extends AsyncTask<String, Void, String> {
+    private class SignPerson extends AsyncTask<String, Void, String> {
         private Context context;
         private JCloudDB jCloudDB;
 
         /**
          * @param context 上下文
          */
-        public OrgPerson(Context context) {
+        public SignPerson(Context context) {
             this.context = context;
             jCloudDB = new JCloudDB();
         }
@@ -80,40 +83,25 @@ public class PublicReadOpotionActivity extends JwActivity {
 
             String result = "1";
 
-            if (null != publicity) {
-                try {
-//                    //总人数
-//                    orgunits = jCloudDB.findAllByWhere(Userorg.class,
-//                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()));
-                    //已读人数
-//                    alreadyreads = jCloudDB.findAllByWhere(Alreadyread.class,
-//                            "org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) +"and task_code=" +StrUtils.QuotedStr(publicity.getPublicity_code()));
-
-
-                    //已读人数
-                    String readSql  = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
-                    //查找数据
-                    alreadyreads = jCloudDB.findAllBySql(Userorg.class, readSql);
-                    removeDuplicate(alreadyreads);
-
-                    //未读人数
-//                    for (int i = 0; i < orgunits.size(); i++) {
-//                        for (int j = 0 ; j< alreadyreads.size();j++) {
-//                            if (orgunits.get(i).getUser_code().equals(alreadyreads.get(i).getOperator_code())) {
-//                                unReads.add(orgunits.get(i));
-//                            }
-//                        }
-//                    }
-                    //未读人数
-                    String sql  = "SELECT t.* from userorg t where t.user_code not in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")";
-                    //查找数据
-                    unReads = jCloudDB.findAllBySql(Userorg.class, sql);
-                    removeDuplicate(unReads);
-                } catch (CloudServiceException e) {
+            try {
+                alreadySigned = jCloudDB.findAllBySql(Signed.class, "SELECT b.* from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE '%cead7d048cea4ba2b6766bc7b17df8d2%') and b.sign_user_code = " +
+                        StrUtils.QuotedStr(users.getUser_code()));
+                removeDuplicateSigned(alreadySigned);
+                usSign = jCloudDB.findAllBySql(Sign.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE '%cead7d048cea4ba2b6766bc7b17df8d2%') and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")");
+                removeDuplicateSign(usSign);
+                if (ListUtils.IsNotNull(alreadySigned)) {
+                    result = "1";
+                } else {
                     result = "0";
-                    e.printStackTrace();
                 }
-
+                if (ListUtils.IsNotNull(usSign)) {
+                    result = "1";
+                } else {
+                    result = "0";
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
             }
             return result;
         }
@@ -130,10 +118,25 @@ public class PublicReadOpotionActivity extends JwActivity {
      *
      * @param list
      */
-    public void removeDuplicate(List<Userorg> list) {
+    public void removeDuplicateSigned(List<Signed> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = list.size() - 1; j > i; j--) {
-                if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {
+                if (list.get(j).getSign_code().equals(list.get(i).getSign_code())) {
+                    list.remove(j);
+                }
+            }
+        }
+    }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicateSign(List<Sign> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getSign_code().equals(list.get(i).getSign_code())) {
                     list.remove(j);
                 }
             }

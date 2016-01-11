@@ -1,18 +1,11 @@
 package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
-import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
-import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
 /**
- * @author 苏逸龙 317616660@qq.com
- * @ClassName: Alreadyread
- * @Description: TODO(签到明细表)
- * @date 2011-11-26 下午7:26:08
+ * Created by Ragn on 2016/1/11.
  */
-
-@Table(name = "signed")
-public class Signed extends BaseItem {
+public class SignedPictures {
     /**
      * mid
      */
@@ -74,6 +67,16 @@ public class Signed extends BaseItem {
     private String pictureListSting;
     private String photo_code;
     private String uuid;
+
+    private String pic_road;
+
+    public String getPic_road() {
+        return pic_road;
+    }
+
+    public void setPic_road(String pic_road) {
+        this.pic_road = pic_road;
+    }
 
     public String getProuser_name() {
         return prouser_name;
@@ -229,4 +232,3 @@ public class Signed extends BaseItem {
         this.pictureListSting = pictureListSting;
     }
 }
-

@@ -93,12 +93,12 @@ public class JobCyListActivity extends JwListActivity {
                 String priority = item.getPriority();
                 TextView tv_yxj = helper.getView(R.id.tv_yxj);
                 tv_yxj.setText(priority);
-                if(StrUtils.IsNotEmpty(priority)){
-                    if(priority.equals("急")){
+                if (StrUtils.IsNotEmpty(priority)) {
+                    if (priority.equals("急")) {
                         tv_yxj.setTextColor(getResources().getColor(R.color.red));
-                    }else if(priority.equals("优先")){
+                    } else if (priority.equals("优先")) {
                         tv_yxj.setTextColor(getResources().getColor(R.color.blue));
-                    }else{
+                    } else {
                         tv_yxj.setTextColor(getResources().getColor(R.color.green));
                     }
                 }
@@ -106,15 +106,15 @@ public class JobCyListActivity extends JwListActivity {
                 int state = item.getNow_state();
                 ImageView imageView = helper.getView(R.id.iv_xz);
                 //已确认
-                if(state ==1){
+                if (state == 1) {
                     imageView.setBackgroundResource(R.drawable.circle_red);
                     //未审核
-                }else if(state ==2){
+                } else if (state == 2) {
                     imageView.setBackgroundResource(R.drawable.circular_blue);
                     //已审核
-                }else if(state ==3){
+                } else if (state == 3) {
                     imageView.setBackgroundResource(R.drawable.circular_portrait);
-                }else{
+                } else {
                     imageView.setBackgroundResource(R.drawable.dialog_share_link_default_icon);
                 }
 
@@ -125,12 +125,12 @@ public class JobCyListActivity extends JwListActivity {
         super.initListViewController();
     }
 
-    private void initView(){
+    private void initView() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(StrUtils.isEmpty(etSearch.getText().toString())) {
-                    new FinishRefresh(getMy(),0).execute();
+                if (StrUtils.isEmpty(etSearch.getText().toString())) {
+                    new FinishRefresh(getMy(), 0).execute();
                 }
             }
 
@@ -145,6 +145,7 @@ public class JobCyListActivity extends JwListActivity {
         });
 
     }
+
     @OnClick(R.id.iv_search)
     void searchClick() {
         tv_search = etSearch.getText().toString();

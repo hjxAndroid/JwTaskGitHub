@@ -55,7 +55,7 @@ public class Orgunit extends BaseItem {
      */
     private ArrayList<Userdept> childs = new ArrayList<Userdept>();
 
-
+//    private ArrayList<UserdeptItem> childs = new ArrayList<UserdeptItem>();
     public int getMid() {
         return mid;
     }

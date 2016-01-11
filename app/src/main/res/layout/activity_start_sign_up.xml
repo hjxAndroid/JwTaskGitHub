@@ -177,22 +177,17 @@
         </LinearLayout>
 
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/gray_f2f2f2"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/start_sign_button"
-                style="@style/text_nomor_style"
-                android:layout_width="@dimen/sign_button"
-                android:layout_height="@dimen/sign_button"
-                android:layout_margin="@dimen/margin_Large_Top_Size"
-                android:background="@drawable/circular_blue"
-                android:gravity="center"
-                android:text="@string/start_sign_up_button"
-                android:textColor="@color/white" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/start_sign_button"
+            style="@style/text_nomor_style"
+            android:layout_width="@dimen/sign_button"
+            android:layout_height="@dimen/sign_button"
+            android:layout_margin="@dimen/margin_Large_Top_Size"
+            android:background="@drawable/circular_blue"
+            android:gravity="center"
+            android:text="@string/start_sign_up_button"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
+
 </ScrollView>

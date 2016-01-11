@@ -3,13 +3,15 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
-import com.jeeweel.syl.jcloudlib.db.callback.FindAllListener;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_sign_users;
@@ -41,9 +43,18 @@ public class CheckSignPersonActivity extends JwListActivity {
     TextView unsignCounts;
     @Bind(R.id.listview)
     PullToRefreshListView listview;
+    @Bind(R.id.tv_title)
+    TextView tvTitle;
+    @Bind(R.id.tv_signed_content)
+    TextView tvSignedContent;
 
 
     List<Signed> mListItems = new ArrayList<Signed>();
+    @Bind(R.id.ll_signed_title)
+    LinearLayout llSignedTitle;
+    @Bind(R.id.ll_signed_content)
+    LinearLayout llSignedContent;
+
     private CommonAdapter commonAdapter;
     private String signedCode;
     private List<Signed> listSigned;
@@ -76,7 +87,7 @@ public class CheckSignPersonActivity extends JwListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_sign_person);
         ButterKnife.bind(this);
-        setTitle("签到人数");
+        setTitle("签到详情");
         getData();
         initListViewController();
     }
@@ -110,6 +121,14 @@ public class CheckSignPersonActivity extends JwListActivity {
         };
         setCommonAdapter(commonAdapter);
         super.initListViewController();
+    }
+
+    @Override
+    public void onListItemClick(int position) {
+        if ("0".equals(flag)) {
+            Signed signed = (Signed) commonAdapter.getItem(position);
+            JwStartActivity(SignedDetailActivity.class, signed);
+        }
     }
 
     //已签
@@ -242,21 +261,23 @@ public class CheckSignPersonActivity extends JwListActivity {
 
             String result = "1";
             SqlInfo sqlInfo1 = new SqlInfo();
-            sqlInfo1.setSql("SELECT " +
-                    " nickname, " +
-                    " create_time, " +
-                    " location," +
-                    " sign_user_code" +
-                    " FROM " +
-                    " signed " +
-                    " where sign_code= ? " +
-                    " GROUP BY " +
-                    " sign_code, " +
-                    " sign_user_code ");
+//            sqlInfo1.setSql("SELECT * " +
+////                    " nickname, " +
+////                    " create_time, " +
+////                    " location," +
+////                    " sign_user_code" +
+//                    " FROM " +
+//                    " signed " +
+//                    " where sign_code= ? " +
+//                    " GROUP BY " +
+//                    " sign_code, " +
+//                    " sign_user_code ");
+//            SELECT * from signed where create_time in (select max(create_time) from signed WHERE sign_code = '8b9c09c619674b798a7bcc75390e28cd' group by sign_user_code)
+            sqlInfo1.setSql("SELECT * FROM signed where create_time in (select max(create_time) from signed WHERE sign_code =?" +
+                    "group by sign_user_code)");
             sqlInfo1.addValue(signedCode);
             String sql1 = sqlInfo1.getBuildSql();
             try {
-
                 list = jCloudDB.findAllBySql(Signed.class, sql1);
                 mListItems.clear();
             } catch (CloudServiceException e) {
@@ -265,10 +286,10 @@ public class CheckSignPersonActivity extends JwListActivity {
 
 
             SqlInfo sqlInfo2 = new SqlInfo();
-            sqlInfo2.setSql("SELECT " +
-                    " nickname, " +
-                    " create_time," +
-                    " user_code " +
+            sqlInfo2.setSql("SELECT * " +
+//                    " nickname, " +
+//                    " create_time," +
+//                    " user_code " +
                     " FROM " +
                     " v_sign_users " +
                     " where sign_code= ? ");
@@ -282,7 +303,7 @@ public class CheckSignPersonActivity extends JwListActivity {
                     v_sign_nickname = listSum.get(i);
                     signed = new Signed();
                     signed.setNickname(v_sign_nickname.getNickname());
-                    signed.setCreate_time("");
+                    signed.setCreate_time(v_sign_nickname.getCreate_time());
                     signed.setLocation("");
                     signed.setSign_user_code(v_sign_nickname.getUser_code());
                     handadd.add(signed);
@@ -291,6 +312,34 @@ public class CheckSignPersonActivity extends JwListActivity {
                 }
                 listRemain = removeList(handadd, list, signedList);
                 mListItems.clear();
+
+
+                for (Signed signed : list) {
+                    //取头像
+                    String signedCode = signed.getSign_code();
+                    String uuid = signed.getUuid();
+                    if (StrUtils.IsNotEmpty(uuid)) {
+                        String sSql = "pic_code=?";
+                        SqlInfo sqlInfo = new SqlInfo();
+                        sqlInfo.setSql(sSql);
+                        sqlInfo.addValue(uuid);
+                        sSql = sqlInfo.getBuildSql();
+                        List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+                        if (ListUtils.IsNotNull(pictureList)) {
+                            StringBuffer stringBuffer = new StringBuffer();
+                            for (int i = 0; i < pictureList.size(); i++) {
+                                stringBuffer.append(pictureList.get(i).getPic_road() + ",");
+                            }
+                            signed.setPictureListSting(stringBuffer.toString());
+                            Picture picture = pictureList.get(0);
+                            String path = picture.getPic_road();
+                            if (StrUtils.IsNotEmpty(path)) {
+                                //存头像
+                                signed.setPhoto_code(path);
+                            }
+                        }
+                    }
+                }
             } catch (CloudServiceException e) {
                 e.printStackTrace();
             }
@@ -312,7 +361,23 @@ public class CheckSignPersonActivity extends JwListActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            if (ListUtils.IsNotNull(list)) {
+                tvTitle.setText(list.get(0).getSign_title());
+                tvSignedContent.setText(list.get(0).getSign_msg());
+            } else {
+                llSignedTitle.setVisibility(View.GONE);
+                llSignedContent.setVisibility(View.GONE);
+            }
             if (result.equals("1")) {
+//                if (ListUtils.IsNotNull(list)) {
+//                    tvTitle.setText(list.get(0).getSign_title());
+//                    tvSignedContent.setText(list.get(0).getSign_msg());
+//                } else {
+//                    llSignedTitle.setVisibility(View.GONE);
+//                    llSignedContent.setVisibility(View.GONE);
+//                }
+//                tvTitle.setText(list.get(0).getSign_title());
+//                tvSignedContent.setText(list.get(0).getSign_msg());
                 if ("0".equals(flag)) {
                     mListItems.addAll(list);
                     commonAdapter.notifyDataSetChanged();
@@ -321,6 +386,8 @@ public class CheckSignPersonActivity extends JwListActivity {
                     commonAdapter.notifyDataSetChanged();
                 }
             } else {
+//                llSignedTitle.setVisibility(View.GONE);
+//                llSignedContent.setVisibility(View.GONE);
                 commonAdapter.notifyDataSetChanged();
                 //没有加载到数据
             }

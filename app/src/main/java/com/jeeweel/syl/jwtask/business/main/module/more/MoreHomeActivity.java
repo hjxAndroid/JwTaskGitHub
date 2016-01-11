@@ -60,8 +60,8 @@ public class MoreHomeActivity extends JwActivity {
                 }
             }
         }
-        if(StrUtils.IsNotEmpty(users.getPic_road())){
-            JwImageLoader.displayImage(users.getPic_all_road(),iv_user_head2);
+        if (StrUtils.IsNotEmpty(users.getPic_road())) {
+            JwImageLoader.displayImage(users.getPic_all_road(), iv_user_head2);
         }
         MobclickAgent.onResume(this);
     }
@@ -108,13 +108,23 @@ public class MoreHomeActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
     @Subscribe
     public void changePhoto(ActivityMsgEvent activityMsgEvent) {
         if (activityMsgEvent.getMsg().equals("photo_refresh")) {
             users = JwAppAplication.getInstance().users;
-            if(StrUtils.IsNotEmpty(users.getPic_road())){
-                JwImageLoader.displayImage(users.getPic_all_road(),iv_user_head2);
+            if (StrUtils.IsNotEmpty(users.getPic_road())) {
+                JwImageLoader.displayImage(users.getPic_all_road(), iv_user_head2);
             }
         }
     }
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (msg.equals("Log_out")) {
+            this.finish();
+        }
+    }
+
 }

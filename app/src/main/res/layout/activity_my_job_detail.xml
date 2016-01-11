@@ -170,17 +170,17 @@
 
 
         <api.view.GridNoScrollView
-            android:id="@+id/noScrollgridview"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center"
-            android:horizontalSpacing="3dp"
-            android:numColumns="5"
-            android:scrollbars="none"
-            android:verticalSpacing="5dp" >
-        </api.view.GridNoScrollView>
+        android:id="@+id/noScrollgridview"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:horizontalSpacing="3dp"
+        android:numColumns="5"
+        android:scrollbars="none"
+        android:verticalSpacing="5dp" >
+    </api.view.GridNoScrollView>
 
 
         <api.view.ListNoScrollView

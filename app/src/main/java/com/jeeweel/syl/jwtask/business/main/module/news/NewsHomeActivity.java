@@ -21,6 +21,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.JwCaptureActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.task.PublicReadOpotionActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.PublicyListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.SignListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.TaskJobHomeActivity;
@@ -153,7 +154,7 @@ public class NewsHomeActivity extends JwActivity {
                         JwStartActivity(PublicyListActivity.class);
                         break;
                     case 1:
-                        JwStartActivity(SignListActivity.class);
+                        JwStartActivity(PublicReadOpotionActivity.class);
                         break;
                     case 2:
                         News news = (News) commonAdapter.getItem(position);

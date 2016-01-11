@@ -13,6 +13,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
@@ -45,6 +46,7 @@ public class SignListActivity extends JwListActivity {
     private String isUserCode;
     String[] sCodes;
     String buddyCode;
+    List<Signed> listSigned;
     private int pageStart = 0; //截取的开始
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
@@ -70,7 +72,7 @@ public class SignListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<Sign>(getMy(), mListItems, R.layout.item_sign_information) {
             @Override
             public void convert(ViewHolder helper, Sign item) {
-
+                String sign_code = item.getSign_code();
                 ImageView imageView = helper.getImageView(R.id.iv_xz);
                 JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), imageView);
 
@@ -160,31 +162,38 @@ public class SignListActivity extends JwListActivity {
                                         "," +
                                         pageEnd);
                     }
-                if (ListUtils.IsNotNull(list)) {
-                    result = "1";
-                    for (Sign sign : list) {
-                        //取头像
-                        String prouser_code = sign.getProuser_code();
+                    if (ListUtils.IsNotNull(list)) {
+                        result = "1";
+                        for (Sign sign : list) {
+                            //取头像
+                            String prouser_code = sign.getProuser_code();
 
-                        String sSql = "pic_code=?";
-                        SqlInfo sqlInfo = new SqlInfo();
-                        sqlInfo.setSql(sSql);
-                        sqlInfo.addValue(prouser_code);
-                        sSql = sqlInfo.getBuildSql();
-                        List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
-                        if (ListUtils.IsNotNull(pictureList)) {
-                            Picture picture = pictureList.get(0);
-                            String path = picture.getPic_road();
-                            if (StrUtils.IsNotEmpty(path)) {
-                                //存头像
-                                sign.setPhoto_code(path);
+                            String sSql = "pic_code=?";
+                            SqlInfo sqlInfo = new SqlInfo();
+                            sqlInfo.setSql(sSql);
+                            sqlInfo.addValue(prouser_code);
+                            sSql = sqlInfo.getBuildSql();
+                            List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
+                            if (ListUtils.IsNotNull(pictureList)) {
+                                Picture picture = pictureList.get(0);
+                                String path = picture.getPic_road();
+                                if (StrUtils.IsNotEmpty(path)) {
+                                    //存头像
+                                    sign.setPhoto_code(path);
+                                }
                             }
                         }
-                    }
+//                        for (int i = 0; i < list.size(); i++) {
+//                            Sign sign = list.get(i);
+//                            List<Signed> listSigned = jCloudDB.findAllBySql(Signed.class, " sign_code = " +
+//                                    StrUtils.QuotedStr(sign.getSign_code()) +
+//                                    " and sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()));
+//                        }
 
-                } else {
-                    result = "0";
-                }
+
+                    } else {
+                        result = "0";
+                    }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();
                 }
@@ -214,6 +223,38 @@ public class SignListActivity extends JwListActivity {
         }
     }
 
+
+    private class FinishRefreshIsSigned extends AsyncTask<String, Void, String> {
+        private Context context;
+        private String sign_code;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshIsSigned(Context context, String sign_code) {
+            this.context = context;
+            this.sign_code = sign_code;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "0";
+            try {
+                listSigned = jCloudDB.findAllBySql(Signed.class, " sign_code = " +
+                        StrUtils.QuotedStr(sign_code) +
+                        " and sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()));
+            } catch (CloudServiceException e) {
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+        }
+    }
 
     private class FinishRefreshChangeState extends AsyncTask<String, Void, String> {
         private Context context;
@@ -255,6 +296,6 @@ public class SignListActivity extends JwListActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
-    
+
 }
 

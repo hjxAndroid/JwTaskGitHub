@@ -50,20 +50,22 @@
                         android:layout_height="wrap_content"
                         android:text="@string/tv_userName" />
 
-                    <TextView
-                        style="@style/text_nomor_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:text="@string/item_sign_title" />
+                    <!--<TextView-->
+                    <!--style="@style/text_nomor_style"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginLeft="20dp"-->
+                    <!--android:text="@string/item_sign_title"-->
+                    <!--android:visibility="gone" />-->
 
-                    <TextView
-                        android:id="@+id/tv_sign_title_det"
-                        style="@style/text_nomor_style"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:singleLine="false"
-                        android:text="@string/home" />
+                    <!--<TextView-->
+                    <!--android:id="@+id/tv_sign_title_det"-->
+                    <!--style="@style/text_nomor_style"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:singleLine="false"-->
+                    <!--android:text="@string/home"-->
+                    <!--android:visibility="gone" />-->
                 </LinearLayout>
 
                 <LinearLayout
@@ -158,6 +160,7 @@
 
         </RelativeLayout>
 
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -171,7 +174,8 @@
             android:layout_marginRight="@dimen/margin_Size"
             android:layout_marginTop="@dimen/margin_Size"
             android:background="@drawable/settings_mid_select"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -190,6 +194,57 @@
                 android:textColor="@color/gray"
                 android:textSize="@dimen/text_Size" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
+            android:background="@drawable/settings_mid_select"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="@string/item_sign_title" />
+
+            <TextView
+                android:id="@+id/tv_sign_title_det"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:text="@string/home" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_Size"
+            android:layout_marginRight="@dimen/margin_Size"
+            android:layout_marginTop="@dimen/margin_Size"
+            android:background="@drawable/settings_mid_select"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_Size"
+                android:text="签到内容：" />
+
+            <TextView
+                android:id="@+id/tv_signed_content"
+                style="@style/text_nomor_style"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="false"
+                android:text="@string/home" />
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -223,26 +278,18 @@
             android:horizontalSpacing="1dp"
             android:numColumns="4"
             android:scrollbars="none"
-            android:verticalSpacing="5dp"
-            android:visibility="gone"/>
+            android:verticalSpacing="5dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/gray_f2f2f2"
-            android:gravity="center">
-
-            <TextView
-                android:id="@+id/tv_sign_button"
-                android:layout_width="@dimen/sign_button"
-                android:layout_height="@dimen/sign_button"
-                android:layout_gravity="center"
-                android:layout_margin="@dimen/margin_Large_Top_Size"
-                android:background="@drawable/circular_blue"
-                android:gravity="center"
-                android:text="@string/sign_up_button"
-                android:textColor="@color/white"
-                android:textSize="@dimen/sign_size" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tv_sign_button"
+            android:layout_width="@dimen/sign_button"
+            android:layout_height="@dimen/sign_button"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/margin_Large_Top_Size"
+            android:background="@drawable/circular_blue"
+            android:gravity="center"
+            android:text="@string/sign_up_button"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sign_size" />
     </LinearLayout>
 </ScrollView>

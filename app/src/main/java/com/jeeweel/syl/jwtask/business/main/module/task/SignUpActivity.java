@@ -47,6 +47,7 @@ import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.LSignedCountItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -115,6 +116,8 @@ public class SignUpActivity extends JwActivity {
     String signedContext;
     String signUserCode;
     String signedRemark;
+    String uuid;
+    String prouserName;
 
     //地理位置相关字段
     String address;
@@ -130,14 +133,18 @@ public class SignUpActivity extends JwActivity {
     Signed signed = new Signed();
     ResMsgItem res;
     List<Sign> list;
+    List<Signed> listSigned;
     LSignedCountItem lSignedCounts;
     LocationClient mLocationClient;
     MyLocationListener mMyLocationListener;
     GridView noScrollgridview;
+    @Bind(R.id.tv_signed_content)
+    TextView tvSignedContent;
     private ScrollView li_fb;
     private Activity context;
     GridAdapter adapter;
     String orgCode = "";
+    private Users users;
 
 
     @Override
@@ -154,6 +161,7 @@ public class SignUpActivity extends JwActivity {
         mMyLocationListener = new MyLocationListener();
         mLocationClient.registerLocationListener(mMyLocationListener);
         mLocationClient.start();
+        users = JwAppAplication.getInstance().getUsers();
         initLocation();
         initRight();
         initView();
@@ -286,8 +294,8 @@ public class SignUpActivity extends JwActivity {
         signed.setLongtude(longitude);
         signed.setLocation(address);
         signed.setNickname(userNick);
+        signed.setProuser_name(prouserName);
         signed.setRemark(etRemark.getText().toString());
-
         new FinishRefreshSigned(getMy()).execute();
         ToastShow("签到成功");
     }
@@ -306,19 +314,12 @@ public class SignUpActivity extends JwActivity {
         protected String doInBackground(String... params) {
 
             String result = "1";
-            String unid = Utils.getUUid();
             JCloudDB jCloudDB = new JCloudDB();
             try {
                 if (StrUtils.IsNotEmpty(signedCode)) {
                     list = jCloudDB.findAllByWhere(Sign.class,
                             "sign_code=" + StrUtils.QuotedStr(signedCode));
                 }
-//
-//                //保存图片表
-//                for (String sFile : Bimp.drr) {
-//                    // File file = new File(sFile);
-//                    CloudFile.upload(sFile, unid);
-//                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -335,6 +336,8 @@ public class SignUpActivity extends JwActivity {
                     signTitleDet = sign.getSign_title();
                     tvSignTitleDet.setText(signTitleDet);
                     signedContext = sign.getSend_context();
+                    prouserName = sign.getProuser_name();
+                    tvSignedContent.setText(signedContext);
                 }
             } else {
                 ToastShow("用户名或密码出错");
@@ -360,9 +363,25 @@ public class SignUpActivity extends JwActivity {
 
             JCloudDB jCloudDB = new JCloudDB();
             try {
+                listSigned = jCloudDB.findAllByWhere(Signed.class,
+                        " sign_code = " + StrUtils.QuotedStr(signedCode) + " and sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()));
+                if (ListUtils.IsNotNull(listSigned)) {
+                    uuid = listSigned.get(0).getUuid();
+                    //删除原来的图片
+                    jCloudDB.deleteByWhere(Picture.class, " pic_code = " + StrUtils.QuotedStr(uuid));
+                } else {
+                    uuid = Utils.getUUid();
+                }
+
+                signed.setUuid(uuid);
                 jCloudDB.save(signed);
                 counts = Integer.parseInt(signCounts) + 1;
                 signCounts = "" + counts;
+                //保存图片表
+                for (String sFile : Bimp.drr) {
+                    // File file = new File(sFile);
+                    CloudFile.upload(sFile, uuid);
+                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -509,6 +528,39 @@ public class SignUpActivity extends JwActivity {
         }
     }
 
+    private static final int TAKE_PICTURE = 0x000000;
+    private String path = "";
+
+    public void photo() {
+        String status = Environment.getExternalStorageState();
+        if (status.equals(Environment.MEDIA_MOUNTED)) {
+            File dir = new File(Environment.getExternalStorageDirectory() + "/myimage/");
+            if (!dir.exists()) dir.mkdirs();
+
+            Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File file = new File(dir, String.valueOf(System.currentTimeMillis())
+                    + ".jpg");
+            path = file.getPath();
+            Uri imageUri = Uri.fromFile(file);
+            openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            openCameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+            startActivityForResult(openCameraIntent, TAKE_PICTURE);
+        } else {
+            Toast.makeText(context, "没有储存卡", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case TAKE_PICTURE:
+                if (Bimp.drr.size() < 9 && resultCode == -1) {
+                    Bimp.drr.add(path);
+                }
+                break;
+        }
+    }
+
     @SuppressLint("HandlerLeak")
     public class GridAdapter extends BaseAdapter {
         private LayoutInflater inflater; // 视图容器
@@ -638,27 +690,14 @@ public class SignUpActivity extends JwActivity {
         }
     }
 
-
-    private static final int TAKE_PICTURE = 0x000000;
-    private String path = "";
-
-    public void photo() {
-        String status = Environment.getExternalStorageState();
-        if (status.equals(Environment.MEDIA_MOUNTED)) {
-            File dir = new File(Environment.getExternalStorageDirectory() + "/myimage/");
-            if (!dir.exists()) dir.mkdirs();
-
-            Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            File file = new File(dir, String.valueOf(System.currentTimeMillis())
-                    + ".jpg");
-            path = file.getPath();
-            Uri imageUri = Uri.fromFile(file);
-            openCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-            openCameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
-            startActivityForResult(openCameraIntent, TAKE_PICTURE);
-        } else {
-            Toast.makeText(context, "没有储存卡", Toast.LENGTH_LONG).show();
+    public String getString(String s) {
+        String path = null;
+        if (s == null)
+            return "";
+        for (int i = s.length() - 1; i > 0; i++) {
+            s.charAt(i);
         }
+        return path;
     }
 
 

@@ -12,6 +12,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 
@@ -28,6 +29,7 @@ public class ExpandableAdapter extends BaseExpandableListAdapter {
      * 获取布局对象
      */
     private LayoutInflater mInflater;
+
     public ExpandableAdapter(Context context, List<Orgunit> groupArray) {
         this.context = context;
         this.groupArray = groupArray;
