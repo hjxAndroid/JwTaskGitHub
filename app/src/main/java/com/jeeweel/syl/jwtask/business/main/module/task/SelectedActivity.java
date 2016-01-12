@@ -87,7 +87,7 @@ public class SelectedActivity extends JwActivity {
     @OnClick(R.id.li_add)
     void AddClick() {
         Intent intent = new Intent(getMy(),PublicyContactHomeActivity.class);
-        intent.putExtra(StaticStrUtils.baseItem,Contants.fzr);
+        intent.putExtra(StaticStrUtils.baseItem,tag);
         intent.putExtra("data",json);
         startActivity(intent);
         finish();

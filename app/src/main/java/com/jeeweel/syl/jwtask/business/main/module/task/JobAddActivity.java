@@ -162,7 +162,14 @@ public class JobAddActivity extends JwActivity {
 
     String chooseFlag = "";
 
-    List<Userdept> userdepts = new ArrayList<>();;
+    //负责人
+    List<Userdept> userdepts = new ArrayList<>();
+    //审核人
+    List<Userdept> shrdepts = new ArrayList<>();
+    //参与者
+    List<Userdept> cyzdepts = new ArrayList<>();
+    //观察者
+    List<Userdept> gczdepts = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -484,8 +491,8 @@ public class JobAddActivity extends JwActivity {
     //选择审核人
     @OnClick(R.id.li_shr)
     void shrClick() {
-        if(ListUtils.IsNotNull(userdepts)){
-            String json = new Gson().toJson(userdepts);
+        if(ListUtils.IsNotNull(shrdepts)){
+            String json = new Gson().toJson(shrdepts);
             Intent intent = new Intent(getMy(),SelectedActivity.class);
             intent.putExtra(StaticStrUtils.baseItem,Contants.shr);
             intent.putExtra("data",json);
@@ -501,8 +508,8 @@ public class JobAddActivity extends JwActivity {
     //选择观察者
     @OnClick(R.id.li_gcz)
     void gczClick() {
-        if(ListUtils.IsNotNull(userdepts)){
-            String json = new Gson().toJson(userdepts);
+        if(ListUtils.IsNotNull(gczdepts)){
+            String json = new Gson().toJson(gczdepts);
             Intent intent = new Intent(getMy(),SelectedActivity.class);
             intent.putExtra(StaticStrUtils.baseItem,Contants.gcz);
             intent.putExtra("data",json);
@@ -518,8 +525,8 @@ public class JobAddActivity extends JwActivity {
     //选择参与者
     @OnClick(R.id.li_cyz)
     void cyzClick() {
-        if(ListUtils.IsNotNull(userdepts)){
-            String json = new Gson().toJson(userdepts);
+        if(ListUtils.IsNotNull(cyzdepts)){
+            String json = new Gson().toJson(cyzdepts);
             Intent intent = new Intent(getMy(),SelectedActivity.class);
             intent.putExtra(StaticStrUtils.baseItem,Contants.cyz);
             intent.putExtra("data",json);
@@ -643,21 +650,23 @@ public class JobAddActivity extends JwActivity {
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
         String json = activityMsgEvent.getParam1();
-        if (StrUtils.IsNotEmpty(json)) {
-            userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
-        } else {
-            json = activityMsgEvent.getParam();
-            List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
-            for (Friend friend : friends) {
-                Userdept userdept = new Userdept();
-                userdept.setUser_code(friend.getFriend_code());
-                userdept.setNickname(friend.getFriend_nickname());
-                userdepts.add(userdept);
-            }
-        }
-
 
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
+
+            if (StrUtils.IsNotEmpty(json)) {
+                userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+            } else {
+                json = activityMsgEvent.getParam();
+                List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
+                for (Friend friend : friends) {
+                    Userdept userdept = new Userdept();
+                    userdept.setUser_code(friend.getFriend_code());
+                    userdept.setNickname(friend.getFriend_nickname());
+                    userdepts.add(userdept);
+                }
+            }
+
+
             if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
                 if (ListUtils.IsNotNull(userdepts)) {
                     fzrCode = "";
@@ -682,11 +691,26 @@ public class JobAddActivity extends JwActivity {
             }
 
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.shr)) {
+
+            if (StrUtils.IsNotEmpty(json)) {
+                shrdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+            } else {
+                json = activityMsgEvent.getParam();
+                List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
+                for (Friend friend : friends) {
+                    Userdept userdept = new Userdept();
+                    userdept.setUser_code(friend.getFriend_code());
+                    userdept.setNickname(friend.getFriend_nickname());
+                    shrdepts.add(userdept);
+                }
+            }
+
+
             if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
-                if (ListUtils.IsNotNull(userdepts)) {
+                if (ListUtils.IsNotNull(shrdepts)) {
                     String fzr = "";
                     shrCode = "";
-                    for (Userdept userdept : userdepts) {
+                    for (Userdept userdept : shrdepts) {
                         fzr += userdept.getNickname() + ",";
                         shrCode += userdept.getUser_code() + ",";
                     }
@@ -701,14 +725,29 @@ public class JobAddActivity extends JwActivity {
             }else{
                 etShr.setText("");
                 shrCode = "";
-                userdepts.clear();
+                shrdepts.clear();
             }
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.gcz)) {
+
+            if (StrUtils.IsNotEmpty(json)) {
+                gczdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+            } else {
+                json = activityMsgEvent.getParam();
+                List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
+                for (Friend friend : friends) {
+                    Userdept userdept = new Userdept();
+                    userdept.setUser_code(friend.getFriend_code());
+                    userdept.setNickname(friend.getFriend_nickname());
+                    gczdepts.add(userdept);
+                }
+            }
+
+
             if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
-                if (ListUtils.IsNotNull(userdepts)) {
+                if (ListUtils.IsNotNull(gczdepts)) {
                     String fzr = "";
                     gczCode = "";
-                    for (Userdept userdept : userdepts) {
+                    for (Userdept userdept : gczdepts) {
                         fzr += userdept.getNickname() + ",";
                         gczCode += userdept.getUser_code() + ",";
                     }
@@ -723,14 +762,29 @@ public class JobAddActivity extends JwActivity {
             }else{
                 etGcz.setText("");
                 gczCode = "";
-                userdepts.clear();
+                gczdepts.clear();
             }
         } else if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.cyz)) {
+
+            if (StrUtils.IsNotEmpty(json)) {
+                cyzdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+            } else {
+                json = activityMsgEvent.getParam();
+                List<Friend> friends = JwJSONUtils.getParseArray(json, Friend.class);
+                for (Friend friend : friends) {
+                    Userdept userdept = new Userdept();
+                    userdept.setUser_code(friend.getFriend_code());
+                    userdept.setNickname(friend.getFriend_nickname());
+                    cyzdepts.add(userdept);
+                }
+            }
+
+
             if (StrUtils.IsNotEmpty(json)&&!json.equals("[]")) {
-                if (ListUtils.IsNotNull(userdepts)) {
+                if (ListUtils.IsNotNull(cyzdepts)) {
                     String fzr = "";
                     cyzCode = "";
-                    for (Userdept userdept : userdepts) {
+                    for (Userdept userdept : cyzdepts) {
                         fzr += userdept.getNickname() + ",";
                         cyzCode += userdept.getUser_code() + ",";
                     }
@@ -745,7 +799,7 @@ public class JobAddActivity extends JwActivity {
             }else{
                 tvCyz.setText("");
                 cyzCode = "";
-                userdepts.clear();
+                cyzdepts.clear();
             }
         }
     }
