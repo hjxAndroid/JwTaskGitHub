@@ -297,7 +297,6 @@ public class SignUpActivity extends JwActivity {
         signed.setProuser_name(prouserName);
         signed.setRemark(etRemark.getText().toString());
         new FinishRefreshSigned(getMy()).execute();
-        ToastShow("签到成功");
     }
 
     private class FinishRefresh extends AsyncTask<String, Void, String> {
@@ -392,6 +391,9 @@ public class SignUpActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            if ("1".equals(result)) {
+                ToastShow("签到成功");
+            }
             tvSignCounts.setText(signCounts);
         }
     }
