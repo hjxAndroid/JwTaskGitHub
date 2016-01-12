@@ -111,19 +111,15 @@ public class StartSignUpActivity extends JwActivity {
         fName = saveFname();
         etStartTitle = etTitle.getText().toString();
         etStartContext = etContext.getText().toString();
-        if (friendList.size() > 11) {
-            ToastShow("选择人数多于10人");
+        if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
+            sign.setSign_title(etStartTitle);
+            sign.setSend_context(etStartContext);
+            sign.setRead_state("0");
+            sign.setReceive_name(fName);
+            sign.setReceive_code(buddyCode);
+            new saveSignInformaiton(getMy()).execute();
         } else {
-            if (StrUtils.IsNotEmpty(etStartTitle) && StrUtils.IsNotEmpty(etStartContext)) {
-                sign.setSign_title(etStartTitle);
-                sign.setSend_context(etStartContext);
-                sign.setRead_state("0");
-                sign.setReceive_name(fName);
-                sign.setReceive_code(buddyCode);
-                new saveSignInformaiton(getMy()).execute();
-            } else {
-                ToastShow("内容或标题不能为空");
-            }
+            ToastShow("内容或标题不能为空");
         }
     }
 

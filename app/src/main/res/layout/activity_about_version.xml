@@ -58,5 +58,4 @@
         android:layout_margin="5dp"
         android:text="    签到模块：查看签到人列表，查看签到信息，提示使用者有新的签到信息并签到。"
         android:textSize="15dp" />
-
 </LinearLayout> 
