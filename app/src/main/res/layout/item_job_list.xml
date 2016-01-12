@@ -41,6 +41,17 @@
         android:layout_marginTop="4dp"
         />
 
+    <TextView android:id="@+id/tv_fbr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_small"
+        android:layout_toRightOf="@+id/tv_state"
+        android:layout_below="@+id/tv_task_name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="4dp"
+        />
+
     <TextView android:id="@+id/tv_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

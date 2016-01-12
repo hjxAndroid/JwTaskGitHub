@@ -126,7 +126,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="8人已读"
+            android:text="0人已读"
             android:textColor="@color/gray"
             android:textSize="@dimen/textSize_normal" />
 
@@ -148,7 +148,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="12人未读"
+            android:text="0人未读"
             android:textColor="@color/gray"
             android:textSize="@dimen/textSize_normal" />
 

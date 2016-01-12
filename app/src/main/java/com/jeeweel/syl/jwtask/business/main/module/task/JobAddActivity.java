@@ -839,6 +839,7 @@ public class JobAddActivity extends JwActivity {
                                  /*  //设置任务名为任务名-负责人-发布时间
                                    String taskName = task_name+"_"+fzrNames[i]+"_"+task.getOver_time();
                                    task.setTask_name(taskName);*/
+                                   task.setPrincipal_nickname(fzrNames[i]);
                                    task.setTask_code(unid);
                                    task.setPromulgator_code(users.getUser_code());
                                    task.setPromulgator_name(users.getUsername());
