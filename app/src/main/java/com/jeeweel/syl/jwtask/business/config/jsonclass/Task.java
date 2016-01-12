@@ -178,7 +178,6 @@ public class Task extends BaseItem{
     private int degree_score;
     private String reject_content;
 
-
     public String getPhoto_code() {
         return photo_code;
     }

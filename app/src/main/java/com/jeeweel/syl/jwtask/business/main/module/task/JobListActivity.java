@@ -104,7 +104,7 @@ public class JobListActivity extends JwListActivity {
                 helper.setText(R.id.tv_state, item.getNow_state_name());
                 helper.setText(R.id.tv_time, item.getCreate_time());
                 helper.setText(R.id.tv_yxj, item.getPriority());
-
+                helper.setText(R.id.tv_fbr,item.getPrincipal_nickname());
                 String priority = item.getPriority();
                 TextView tv_yxj = helper.getView(R.id.tv_yxj);
                 tv_yxj.setText(priority);
