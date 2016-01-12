@@ -57,6 +57,7 @@ public class AlreadySignedActivity extends JwListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_already_signed);
         ButterKnife.bind(this);
+        setTitle("已签到列表");
         users = JwAppAplication.getInstance().getUsers();
         initListViewController();
     }
@@ -196,12 +197,12 @@ public class AlreadySignedActivity extends JwListActivity {
                     result = "0";
                     e.printStackTrace();
                 }
-                String deletSql = "DROP View v_signed_pic";
-                try {
-                    CloudDB.execSQL(deletSql);
-                } catch (CloudServiceException e) {
-                    e.printStackTrace();
-                }
+//                String deletSql = "DROP View v_signed_pic";
+//                try {
+//                    CloudDB.execSQL(deletSql);
+//                } catch (CloudServiceException e) {
+//                    e.printStackTrace();
+//                }
 
             }
             return result;

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        android:background="@drawable/login_actionbar_icon"/>
+        android:background="@drawable/login_actionbar_icon" />
 
     <TextView
         android:id="@+id/tv_version_name"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="1.0"
-        android:textSize="@dimen/test_size"/>
+        android:textSize="@dimen/test_size" />
 
     <TextView
         style="@style/text_lrk_nomor_style"
@@ -25,34 +25,38 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="     功能介绍:app主要具备任务，公告，通讯录，签到四大模块。"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
+
     <TextView
         style="@style/text_lrk_nomor_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="     公告模块：组织的创建者可以发起公告，通知本组织的所有人员。"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
+
     <TextView
         style="@style/text_lrk_nomor_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="    任务模块：发起任务，设置任务的优先级，发起者可以查看任务的完成度。"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
+
     <TextView
         style="@style/text_lrk_nomor_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="    通讯录：添加好友，查看好友详情，创建组织、部门，添加部门成员。"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
+
     <TextView
         style="@style/text_lrk_nomor_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:text="    签到模块：查看签到人列表，查看签到信息，提示使用者有新的签到信息并签到。"
-        android:textSize="15dp"/>
+        android:textSize="15dp" />
 
 </LinearLayout> 

@@ -47,6 +47,7 @@ public class UnSignActivity extends JwListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unsign);
         ButterKnife.bind(this);
+        setTitle("未签到列表");
         users = JwAppAplication.getInstance().getUsers();
         initListViewController();
     }
@@ -127,6 +128,7 @@ public class UnSignActivity extends JwListActivity {
                         unSign = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" +
                                 " GROUP BY " +
                                 " sign_code " +
+                                " ORDER BY create_time DESC " +
                                 " LIMIT " + pageStart +
                                 "," +
                                 pageEnd);
@@ -136,6 +138,7 @@ public class UnSignActivity extends JwListActivity {
                         unSign = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" +
                                 " GROUP BY " +
                                 " sign_code " +
+                                " ORDER BY create_time DESC " +
                                 " LIMIT " + pageStart +
                                 "," +
                                 pageEnd);

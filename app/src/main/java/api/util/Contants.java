@@ -4,8 +4,17 @@ package api.util;
  * Created by asusa on 2015/11/18.
  */
 public class Contants {
-    //http://121.43.116.147:8080/jCloudDB
+    //http://121.43.116.147:80/jCloudDB
     //默认整个ip
+//    public static String All_URL = "http://121.199.8.223:8090/JCloud";
+//    //整个ip地址
+//    public static String DB_ID = "58975c511b1bcaddecc906a2c9337665";
+//
+//    //默认整个ip
+//    public static String URL = "121.199.8.223:8090";
+
+
+
     public static String All_URL = "http://121.43.116.147:80/JCloud";
     //整个ip地址
     public static String DB_ID = "58975c511b1bcaddecc906a2c9337665";

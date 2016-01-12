@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
@@ -22,9 +24,11 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
+import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
@@ -83,6 +87,7 @@ public class StartSignUpActivity extends JwActivity {
     String fName;
     @Bind(R.id.iv_user_pic)
     ImageView ivUserPic;
+    List<Userdept> userdepts = new ArrayList<Userdept>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +139,17 @@ public class StartSignUpActivity extends JwActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
                 if (postion == friendList.size() - 1) {
-                    JwStartActivity(PublicyContactHomeActivity.class, Contants.fzr);
+                    if (ListUtils.IsNotNull(userdepts)) {
+                        String json = new Gson().toJson(userdepts);
+                        Intent intent = new Intent(getMy(), SelectedActivity.class);
+                        intent.putExtra(StaticStrUtils.baseItem, Contants.fzr);
+                        intent.putExtra("data", json);
+                        startActivity(intent);
+                    } else {
+                        Intent intent = new Intent(getMy(), PublicyContactHomeActivity.class);
+                        intent.putExtra(StaticStrUtils.baseItem, Contants.fzr);
+                        startActivity(intent);
+                    }
                 }
             }
         });
@@ -147,7 +162,7 @@ public class StartSignUpActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
             String json = activityMsgEvent.getParam1();
             if (StrUtils.IsNotEmpty(json)) {
-                List<Userdept> userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
                 List<Friend> friends = new ArrayList<Friend>();
                 for (Userdept userdept : userdepts) {
                     Friend friend = new Friend();
