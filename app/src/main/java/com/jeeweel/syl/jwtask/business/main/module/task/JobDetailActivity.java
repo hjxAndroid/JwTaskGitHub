@@ -17,9 +17,12 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -118,9 +121,48 @@ public class JobDetailActivity extends JwActivity {
         setData();
     }
 
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("删除");
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                showAlertDeleatDialog();
+            }
+        });
+        addMenuView(menuTextView);
+    }
+
+    private void showAlertDeleatDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("删除该任务会导致其他任务接收人不能正常完成该任务，您确定删除该任务吗？");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //设置你的操作事项
+                showLoading();
+                new deleteMember(getMy()).execute();
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
+
+    }
+
     private void setData() {
         flag = getIntent().getStringExtra("flag");
         if (StrUtils.IsNotEmpty(flag)) {
+            initRight();
             liBt.setVisibility(View.GONE);
         }
 
@@ -183,7 +225,7 @@ public class JobDetailActivity extends JwActivity {
                     btQrjs.setText("已确认");
                     btQrjs.setClickable(false);
 
-                    btSqyq.setClickable(false);
+                    btSqyq.setClickable(true);
                     btSqyq.setText("延期驳回");
                     break;
                 case 7:
@@ -643,6 +685,44 @@ public class JobDetailActivity extends JwActivity {
                 ToastShow("数据获取失败");
             }
             hideLoading();
+        }
+    }
+
+    /**
+     * 删除组织成员
+     */
+    private class deleteMember extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public deleteMember(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "1";
+            try {
+                jCloudDB.deleteByWhere(Task.class, " task_code = " + StrUtils.QuotedStr(task.getTask_code()) + " and promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()));
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if ("1".equals(result)) {
+                ToastShow("删除成功");
+                hideLoading();
+                finish();
+                OttUtils.push("delet_refresh", "");
+            }
         }
     }
 

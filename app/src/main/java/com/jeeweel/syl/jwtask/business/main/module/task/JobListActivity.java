@@ -24,6 +24,8 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -313,4 +315,11 @@ public class JobListActivity extends JwListActivity {
         MobclickAgent.onPause(this);
     }
 
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (msg.equals("delet_refresh")) {
+            new FinishRefresh(getMy(), 0).execute();
+        }
+    }
 }
