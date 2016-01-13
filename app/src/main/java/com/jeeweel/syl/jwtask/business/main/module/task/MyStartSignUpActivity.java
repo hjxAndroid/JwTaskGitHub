@@ -1,7 +1,6 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -14,11 +13,11 @@ import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
-import com.jeeweel.syl.lib.api.config.StaticStrUtils;
-import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -160,6 +159,14 @@ public class MyStartSignUpActivity extends JwListActivity {
             }
             listview.onRefreshComplete();
             hideLoading();
+        }
+    }
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (StrUtils.IsNotEmpty(msg) && msg.equals("mysign_refresh")) {
+            new FinishRefresh(getMy(), 0).execute();
         }
     }
 

@@ -328,7 +328,7 @@ public class PublicyListActivity extends JwListActivity {
     @Subscribe
     public void resultInfo(ActivityMsgEvent activityMsgEvent) {
         String msg = activityMsgEvent.getMsg();
-        if (StrUtils.IsNotEmpty(msg) && msg.equals("publicy_refresh")) {
+        if ((StrUtils.IsNotEmpty(msg) && msg.equals("publicy_refresh")) || (StrUtils.IsNotEmpty(msg) && msg.equals("publicy_detail"))) {
             new FinishRefresh(getMy(), 0).execute();
         }
     }
