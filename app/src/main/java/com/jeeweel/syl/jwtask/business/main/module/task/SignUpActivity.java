@@ -381,6 +381,20 @@ public class SignUpActivity extends JwActivity {
                     // File file = new File(sFile);
                     CloudFile.upload(sFile, uuid);
                 }
+
+                if (null != user) {
+                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                            "task_code=" + StrUtils.QuotedStr(signedCode) + "and operator_code=" + StrUtils.QuotedStr(user.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                    if (ListUtils.IsNull(alreadyreadList)) {
+                        //已读表未插入，插入到已读表
+                        Alreadyread alreadyread = new Alreadyread();
+                        alreadyread.setTask_code(signedCode);
+                        alreadyread.setOperator_code(user.getUser_code());
+                        alreadyread.setOrg_code(orgCode);
+                        alreadyread.setOperate_type("1");
+                        jCloudDB.save(alreadyread);
+                    }
+                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -432,19 +446,6 @@ public class SignUpActivity extends JwActivity {
                 lSignedCounts = items.get(0);
                 signCounts = lSignedCounts.getMycount();
 
-                if (null != user) {
-                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
-                            "task_code=" + StrUtils.QuotedStr(signedCode) + "and operator_code=" + StrUtils.QuotedStr(user.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
-                    if (ListUtils.IsNull(alreadyreadList)) {
-                        //已读表未插入，插入到已读表
-                        Alreadyread alreadyread = new Alreadyread();
-                        alreadyread.setTask_code(signedCode);
-                        alreadyread.setOperator_code(user.getUser_code());
-                        alreadyread.setOrg_code(orgCode);
-                        alreadyread.setOperate_type("1");
-                        jCloudDB.save(alreadyread);
-                    }
-                }
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();

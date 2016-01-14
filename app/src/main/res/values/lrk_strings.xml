@@ -3,7 +3,7 @@
     <string name="tv_user_head">榕凯</string>
     <string name="tv_userName">李榕凯</string>
     <string name="sign_up_information">发起签到</string>
-    <string name="sign_msg">今日完成签到</string>
+    <string name="sign_msg">完成签到</string>
     <string name="counts_value">0</string>
     <string name="counts">次</string>
     <string name="date">2015.11.26</string>
