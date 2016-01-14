@@ -12,10 +12,11 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.FriendItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -48,7 +49,7 @@ import butterknife.OnClick;
 
 
 public class FriendListActivity extends JwListActivity {
-    List<Friend> mListItems = new ArrayList<Friend>();
+    List<FriendItem> mListItems = new ArrayList<FriendItem>();
 
     @Bind(R.id.listview)
     PullToRefreshListView listview;
@@ -58,7 +59,7 @@ public class FriendListActivity extends JwListActivity {
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
 
-    List<Friend> list;
+    List<FriendItem> list;
 
     private Users users;
 
@@ -93,25 +94,16 @@ public class FriendListActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Friend>(getMy(), mListItems, R.layout.item_friend) {
+        commonAdapter = new CommonAdapter<FriendItem>(getMy(), mListItems, R.layout.item_friend) {
             @Override
-            public void convert(ViewHolder helper, Friend item) {
+            public void convert(ViewHolder helper, FriendItem item) {
                 String friend_nickname = item.getFriend_nickname();
                 helper.setText(R.id.tv_nick_name, item.getFriend_name());
                 helper.setText(R.id.tv_name, friend_nickname);
 
-                if (StrUtils.IsNotEmpty(item.getPhoto_code())) {
-                    ImageView iv_photo = helper.getImageView(R.id.iv_xz);
-                    //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
-                    JwImageLoader.displayImage(Utils.getPicUrl() + item.getPhoto_code(), iv_photo);
-                } else {
-                    if (friend_nickname.length() > 2) {
-                        friend_nickname = friend_nickname.substring(friend_nickname.length() - 2, friend_nickname.length());
-                        helper.setText(R.id.tv_user_head1, friend_nickname);
-                    } else {
-                        helper.setText(R.id.tv_user_head1, friend_nickname);
-                    }
-                }
+                ImageView iv_photo = helper.getImageView(R.id.iv_xz);
+                //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
+                JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), iv_photo);
             }
         };
         setCommonAdapter(commonAdapter);
@@ -121,15 +113,15 @@ public class FriendListActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
-        Friend friend = (Friend) commonAdapter.getItem(position);
+        FriendItem FriendItem = (FriendItem) commonAdapter.getItem(position);
         Intent intent = new Intent();
-        if (null != friend) {
-            intent.putExtra("friend_code", friend.getFriend_code());
-            intent.putExtra(StaticStrUtils.baseItem, friend.getFriend_name());
+        if (null != FriendItem) {
+            intent.putExtra("friend_code", FriendItem.getFriend_code());
+            intent.putExtra(StaticStrUtils.baseItem, FriendItem.getFriend_name());
             intent.setClass(FriendListActivity.this, FriendDetailActivity.class);
             JwStartActivity(intent);
         }
-        //     JwStartActivity(FriendDetailActivity.class, friend.getFriend_name());
+        //     JwStartActivity(FriendDetailActivity.class, FriendItem.getFriend_name());
     }
 
     @Override
@@ -164,48 +156,23 @@ public class FriendListActivity extends JwListActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             if (null != users) {
                 try {
                     if (mode == 0) {
                         setPage(true);
-                        list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" + " limit " + pageStart + "," + pageEnd);
-                        removeDuplicate(list);
+                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code())  +" and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
+                        list = jCloudDB.findAllBySql(FriendItem.class, sql);
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        list = jCloudDB.findAllByWhere(Friend.class,
-                                "user_name = " + StrUtils.QuotedStr(users.getUsername()) + "and state=2" + " limit " + pageStart + "," + pageEnd);
-                        removeDuplicate(list);
+                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code())  +" and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
+                        list = jCloudDB.findAllBySql(FriendItem.class, sql);
                     }
 
-                    if (ListUtils.IsNotNull(list)) {
-                        result = "1";
-                        for (Friend friend : list) {
-                            //取头像
-                            String friend_code = friend.getFriend_code();
-
-                            String sSql = "pic_code=?";
-                            SqlInfo sqlInfo = new SqlInfo();
-                            sqlInfo.setSql(sSql);
-                            sqlInfo.addValue(friend_code);
-                            sSql = sqlInfo.getBuildSql();
-                            List<Picture> pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
-                            if (ListUtils.IsNotNull(pictureList)) {
-                                Picture picture = pictureList.get(0);
-                                String path = picture.getPic_road();
-                                if (StrUtils.IsNotEmpty(path)) {
-                                    //存头像
-                                    friend.setPhoto_code(path);
-                                }
-                            }
-                        }
-                    } else {
-                        result = "0";
-                    }
                 } catch (CloudServiceException e) {
+                    result = "0";
                     e.printStackTrace();
                 }
             }
@@ -217,6 +184,7 @@ public class FriendListActivity extends JwListActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 mListItems.addAll(list);
+                removeDuplicate(mListItems);
                 commonAdapter.notifyDataSetChanged();
             } else {
                 //没有加载到数据
@@ -245,7 +213,7 @@ public class FriendListActivity extends JwListActivity {
      *
      * @param list
      */
-    public void removeDuplicate(List<Friend> list) {
+    public void removeDuplicate(List<FriendItem> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = list.size() - 1; j > i; j--) {
                 if (list.get(j).getFriend_code().equals(list.get(i).getFriend_code())) {
