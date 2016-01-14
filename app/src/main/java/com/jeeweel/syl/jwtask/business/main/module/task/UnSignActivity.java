@@ -125,7 +125,7 @@ public class UnSignActivity extends JwListActivity {
 //                                pageStart +
 //                                "," +
 //                                pageEnd);
-                        unSign = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" +
+                        unSign = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" + " and t.receive_code LIKE  " + StrUtils.QuotedStrLike(users.getUser_code()) +
                                 " GROUP BY " +
                                 " sign_code " +
                                 " ORDER BY create_time DESC " +
@@ -135,7 +135,7 @@ public class UnSignActivity extends JwListActivity {
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        unSign = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" +
+                        unSign = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" + " and t.receive_code LIKE  " + StrUtils.QuotedStr(users.getUser_code()) +
                                 " GROUP BY " +
                                 " sign_code " +
                                 " ORDER BY create_time DESC " +

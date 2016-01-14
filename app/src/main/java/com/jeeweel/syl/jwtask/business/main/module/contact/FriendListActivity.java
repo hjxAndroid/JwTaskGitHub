@@ -94,7 +94,7 @@ public class FriendListActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<FriendItem>(getMy(), mListItems, R.layout.item_friend) {
+        commonAdapter = new CommonAdapter<FriendItem>(getMy(), mListItems, R.layout.item_friend__no_textview) {
             @Override
             public void convert(ViewHolder helper, FriendItem item) {
                 String friend_nickname = item.getFriend_nickname();
@@ -162,12 +162,12 @@ public class FriendListActivity extends JwListActivity {
                 try {
                     if (mode == 0) {
                         setPage(true);
-                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code())  +" and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
+                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
                         list = jCloudDB.findAllBySql(FriendItem.class, sql);
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code())  +" and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
+                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
                         list = jCloudDB.findAllBySql(FriendItem.class, sql);
                     }
 

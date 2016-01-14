@@ -76,13 +76,13 @@ public class OrgMembersActivity extends JwActivity {
             @Override
             public void convert(ViewHolder helper, UserorgItem item) {
                 String nickname = item.getNickname();
-                helper.setText(R.id.tv_name, item.getNickname());
+                helper.setText(R.id.tv_name, item.getUser_name());
                 helper.setText(R.id.tv_nick_name, nickname);
 
-               // if (item.getPic_road() != null) {
-                    ImageView iv_photo = helper.getImageView(R.id.iv_xz);
-                    //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
-                    JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), iv_photo);
+                // if (item.getPic_road() != null) {
+                ImageView iv_photo = helper.getImageView(R.id.iv_xz);
+                //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
+                JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), iv_photo);
 //                } else {
 //                    if (nickname.length() > 2) {
 //                        nickname = nickname.substring(nickname.length() - 2, nickname.length());
@@ -138,7 +138,7 @@ public class OrgMembersActivity extends JwActivity {
 //                    list = jCloudDB.findAllByWhere(Userorg.class,
 //                            " org_code = " + StrUtils.QuotedStr(orgCode));
 
-                    String readSql  = "select * from userorg left join picture on userorg.user_code = picture.pic_code WHERE org_code = "+ StrUtils.QuotedStr(orgCode);
+                    String readSql = "select * from userorg left join picture on userorg.user_code = picture.pic_code WHERE org_code = " + StrUtils.QuotedStr(orgCode);
                     list = jCloudDB.findAllBySql(UserorgItem.class, readSql);
 
 

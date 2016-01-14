@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/doctor_memo"
+    style="@style/ListViewStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/linear_item_bg"
+    android:orientation="horizontal">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_xz"
+        android:layout_width="@dimen/doctor_width_height"
+        android:layout_height="@dimen/doctor_width_height"
+        android:layout_marginRight="10.0dip"
+        app:border_color="@color/white"
+        app:border_width="1.0dip" />
+
+    <ImageView
+        android:id="@+id/iv_admin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="@+id/iv_xz"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/iv_xz"
+        android:src="@drawable/admin"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/text_nomor_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="@+id/iv_xz"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/iv_admin"
+        android:text="任小云" />
+
+    <TextView
+        android:id="@+id/tv_nick_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_name"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@+id/iv_xz"
+        android:text="我是任小云"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_small" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/arrow_right" />
+</RelativeLayout>
