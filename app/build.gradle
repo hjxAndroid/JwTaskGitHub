@@ -8,8 +8,8 @@ android {
         applicationId "com.jeeweel.syl.jwtask"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 23
-        versionName "1.2.5"
+        versionCode 24
+        versionName "1.2.6"
     }
     buildTypes {
         release {

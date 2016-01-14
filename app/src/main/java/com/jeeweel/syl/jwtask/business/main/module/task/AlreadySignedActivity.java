@@ -41,10 +41,10 @@ import butterknife.ButterKnife;
  * Created by Ragn on 2016/1/11.
  */
 public class AlreadySignedActivity extends JwListActivity {
-    List<SignedPictures> alreadySigned;
+    List<Signed> alreadySigned;
     @Bind(R.id.listview)
     PullToRefreshListView listview;
-    List<SignedPictures> mListItems = new ArrayList<SignedPictures>();
+    List<Signed> mListItems = new ArrayList<Signed>();
     private int pageStart = 0; //截取的开始
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
@@ -59,16 +59,18 @@ public class AlreadySignedActivity extends JwListActivity {
         ButterKnife.bind(this);
         setTitle("已签到列表");
         users = JwAppAplication.getInstance().getUsers();
+//        showLoading();
+//        new CreateView(getMy()).execute();
         initListViewController();
     }
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<SignedPictures>(getMy(), mListItems, R.layout.item_sign_information) {
+        commonAdapter = new CommonAdapter<Signed>(getMy(), mListItems, R.layout.item_sign_information) {
             @Override
-            public void convert(ViewHolder helper, SignedPictures item) {
-                ImageView imageView = helper.getImageView(R.id.iv_xz);
-                JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
+            public void convert(ViewHolder helper, Signed item) {
+//                ImageView imageView = helper.getImageView(R.id.iv_xz);
+//                JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
                 helper.setText(R.id.tv_sign_title, item.getSign_title());
                 helper.setText(R.id.tv_name, item.getProuser_name());
                 helper.setText(R.id.tv_sign_time, item.getCreate_time().substring(0, 16));
@@ -80,8 +82,8 @@ public class AlreadySignedActivity extends JwListActivity {
 
     @Override
     public void onListItemClick(int position) {
-        SignedPictures signedPictures = (SignedPictures) commonAdapter.getItem(position);
-        JwStartActivity(SignUpActivity.class, signedPictures.getSign_code());
+        Signed signed = (Signed) commonAdapter.getItem(position);
+        JwStartActivity(SignUpActivity.class, signed.getSign_code());
     }
 
     @Override
@@ -123,6 +125,63 @@ public class AlreadySignedActivity extends JwListActivity {
             if (null != users) {
                 try {
 
+                    if (mode == 0) {
+                        setPage(true);
+                        alreadySigned = jCloudDB.findAllBySql(Signed.class, "SELECT b.* FROM signed b WHERE b.sign_code IN (SELECT t.sign_code FROM sign t WHERE t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ")AND b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " GROUP BY sign_code ORDER BY create_time DESC LIMIT " + pageStart + "," + pageEnd);
+                        mListItems.clear();
+                    } else {
+                        setPage(false);
+                        alreadySigned = jCloudDB.findAllBySql(Signed.class, "SELECT b.* FROM signed b WHERE b.sign_code IN (SELECT t.sign_code FROM sign t WHERE t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ")AND b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " GROUP BY sign_code ORDER BY create_time DESC LIMIT " + pageStart + "," + pageEnd);
+                    }
+                    if (ListUtils.IsNotNull(alreadySigned)) {
+                        result = "1";
+                    } else {
+                        result = "0";
+                    }
+                } catch (CloudServiceException e) {
+                    result = "0";
+                    e.printStackTrace();
+                }
+
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                mListItems.addAll(alreadySigned);
+                commonAdapter.notifyDataSetChanged();
+            }
+            listview.onRefreshComplete();
+            hideLoading();
+        }
+    }
+
+    /**
+     * 保存到数据库
+     */
+    private class CreateView extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+        private int mode = 0;
+
+
+        /**
+         * @param context 上下文
+         */
+        public CreateView(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+            if (null != users) {
+                try {
                     //创建视图
                     String sql = "create or replace view v_signed_pic " +
                             " as ( SELECT " +
@@ -148,61 +207,14 @@ public class AlreadySignedActivity extends JwListActivity {
                             " ) " +
                             " AND b.sign_user_code = " +
                             StrUtils.QuotedStr(users.getUser_code()) +
-                            " ) " + "and signed.sign_user_code = "+ StrUtils.QuotedStr(users.getUser_code()) +
+                            " ) " + "and signed.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) +
                             "ORDER BY " +
                             " create_time DESC) ";
                     CloudDB.execSQL(sql);
-
-                    if (mode == 0) {
-                        setPage(true);
-                        // String deletSql = "DROP TABLE tmp" + users.getUser_code();
-                        //cv CloudDB.execSQL(deletSql);
-
-//                        alreadySigned = jCloudDB.findAllBySql(SignedPictures.class, "SELECT signed.*,picture.pic_road from signed left join picture on signed.sign_user_code = picture.pic_code where signed.sign_code in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " +
-//                                StrUtils.QuotedStr(users.getUser_code()) +
-//                                ")" +
-//                                " ORDER BY create_time DESC " +
-//                                " limit " +
-//                                pageStart +
-//                                "," +
-//                                pageEnd);
-                        alreadySigned = jCloudDB.findAllBySql(SignedPictures.class, " SELECT " +
-                                " * " +
-                                " FROM " +
-                                " v_signed_pic " +
-                                " GROUP BY " +
-                                " sign_code " +
-                                " LIMIT " + pageStart +
-                                "," +
-                                pageEnd);
-                        mListItems.clear();
-                    } else {
-                        setPage(false);
-                        alreadySigned = jCloudDB.findAllBySql(SignedPictures.class, " SELECT " +
-                                " * " +
-                                " FROM " +
-                                " v_signed_pic " +
-                                " GROUP BY " +
-                                " sign_code " +
-                                " LIMIT " + pageStart +
-                                "," +
-                                pageEnd);
-                    }
-                    if (ListUtils.IsNotNull(alreadySigned)) {
-                        result = "1";
-                    } else {
-                        result = "0";
-                    }
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
                 }
-//                String deletSql = "DROP View v_signed_pic";
-//                try {
-//                    CloudDB.execSQL(deletSql);
-//                } catch (CloudServiceException e) {
-//                    e.printStackTrace();
-//                }
 
             }
             return result;
@@ -210,14 +222,11 @@ public class AlreadySignedActivity extends JwListActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.equals("1")) {
-                mListItems.addAll(alreadySigned);
-                commonAdapter.notifyDataSetChanged();
-            }
-            listview.onRefreshComplete();
             hideLoading();
+            initListViewController();
         }
     }
+
 
     private void setPage(boolean tag) {
         if (tag) {
@@ -243,4 +252,117 @@ public class AlreadySignedActivity extends JwListActivity {
             }
         }
     }
+
+
+    //备份
+//    /**
+//     * 保存到数据库
+//     */
+//    private class FinishRefresh extends AsyncTask<String, Void, String> {
+//        private Context context;
+//        private JCloudDB jCloudDB;
+//        private int mode = 0;
+//
+//
+//        /**
+//         * @param context 上下文
+//         */
+//        public FinishRefresh(Context context, int mode) {
+//            this.context = context;
+//            jCloudDB = new JCloudDB();
+//            this.mode = mode;
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//
+//            String result = "1";
+//
+//            if (null != users) {
+//                try {
+//                    //创建视图
+//                    String sql = "create or replace view v_signed_pic " +
+//                            " as ( SELECT " +
+//                            " signed. *, picture.pic_road " +
+//                            " FROM " +
+//                            " signed " +
+//                            " LEFT JOIN picture ON signed.uuid = picture.pic_code " +
+//                            " WHERE " +
+//                            " signed.sign_user_code IN ( " +
+//                            " SELECT " +
+//                            " b.sign_user_code " +
+//                            " FROM " +
+//                            " signed b " +
+//                            " WHERE " +
+//                            " b.sign_code IN ( " +
+//                            " SELECT " +
+//                            " t.sign_code " +
+//                            " FROM " +
+//                            " sign t " +
+//                            " WHERE " +
+//                            " t.receive_code LIKE " +
+//                            StrUtils.QuotedStrLike(users.getUser_code()) +
+//                            " ) " +
+//                            " AND b.sign_user_code = " +
+//                            StrUtils.QuotedStr(users.getUser_code()) +
+//                            " ) " + "and signed.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) +
+//                            "ORDER BY " +
+//                            " create_time DESC) ";
+//                    CloudDB.execSQL(sql);
+//
+//
+//                    if (mode == 0) {
+//                        setPage(true);
+//                        alreadySigned = jCloudDB.findAllBySql(SignedPictures.class, " SELECT " +
+//                                " * " +
+//                                " FROM " +
+//                                " v_signed_pic " +
+//                                " GROUP BY " +
+//                                " sign_code " +
+//                                " LIMIT " + pageStart +
+//                                "," +
+//                                pageEnd);
+//                        mListItems.clear();
+//                    } else {
+//                        setPage(false);
+//                        alreadySigned = jCloudDB.findAllBySql(SignedPictures.class, " SELECT " +
+//                                " * " +
+//                                " FROM " +
+//                                " v_signed_pic " +
+//                                " GROUP BY " +
+//                                " sign_code " +
+//                                " LIMIT " + pageStart +
+//                                "," +
+//                                pageEnd);
+//                    }
+//                    if (ListUtils.IsNotNull(alreadySigned)) {
+//                        result = "1";
+//                    } else {
+//                        result = "0";
+//                    }
+//                } catch (CloudServiceException e) {
+//                    result = "0";
+//                    e.printStackTrace();
+//                }
+////                String deletSql = "DROP View v_signed_pic";
+////                try {
+////                    CloudDB.execSQL(deletSql);
+////                } catch (CloudServiceException e) {
+////                    e.printStackTrace();
+////                }
+//
+//            }
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            if (result.equals("1")) {
+//                mListItems.addAll(alreadySigned);
+//                commonAdapter.notifyDataSetChanged();
+//            }
+//            listview.onRefreshComplete();
+//            hideLoading();
+//        }
+//    }
 }
