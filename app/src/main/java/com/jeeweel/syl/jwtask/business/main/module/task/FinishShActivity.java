@@ -168,8 +168,15 @@ public class FinishShActivity extends JwActivity {
                     }
                 } else {
                    //拒绝
-                    showLoading();
-                    new RefuseRefresh(getMy()).execute();
+                    wcqk = liWcqk.getText().toString();
+                    shpj = etShpj.getText().toString();
+
+                    if (StrUtils.IsNotEmpty(wcqk) && StrUtils.IsNotEmpty(shpj)) {
+                        showLoading();
+                        new RefuseRefresh(getMy()).execute();
+                    }else {
+                        ToastShow("请完成审核内容");
+                    }
                 }
             }
         });
