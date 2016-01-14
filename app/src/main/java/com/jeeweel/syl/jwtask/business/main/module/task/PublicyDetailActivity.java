@@ -1,9 +1,11 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -11,9 +13,10 @@ import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
@@ -23,8 +26,6 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
-import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
-import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
@@ -33,6 +34,8 @@ import java.util.List;
 import api.util.Contants;
 import api.util.OttUtils;
 import api.util.Utils;
+import api.view.CustomDialog;
+import api.view.TitlePopup;
 import api.viewpage.CBViewHolderCreator;
 import api.viewpage.ConvenientBanner;
 import api.viewpage.NetworkImageHolderView;
@@ -62,6 +65,7 @@ public class PublicyDetailActivity extends JwActivity {
     private List<String> networkImages;
     V_publicityunread publicity;
     private List<Orgunit> list;
+    private TitlePopup titlePopup;
 
     Users users;
     String orgCode;
@@ -84,31 +88,80 @@ public class PublicyDetailActivity extends JwActivity {
 
     @OnClick(R.id.rl_yd)
     void ydClick() {
-        if(ListUtils.IsNotNull(alreadyreads)){
+        if (ListUtils.IsNotNull(alreadyreads)) {
             String json = new Gson().toJson(alreadyreads);
-            JwStartActivity(PublicyReadListActivity.class,json);
+            JwStartActivity(PublicyReadListActivity.class, json);
         }
     }
 
     @OnClick(R.id.rl_wd)
     void wdClick() {
-        if(ListUtils.IsNotNull(unReads)){
+        if (ListUtils.IsNotNull(unReads)) {
             String json = new Gson().toJson(unReads);
-            JwStartActivity(PublicyUnReadListActivity.class,json);
+            JwStartActivity(PublicyUnReadListActivity.class, json);
         }
     }
 
-    private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("修改公告");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+    //    private void initRight() {
+//        MenuTextView menuTextView = new MenuTextView(getMy());
+//        menuTextView.setText("修改公告");
+//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+//        menuTextView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View arg0) {
+//                JwStartActivity(ChangePublicyActivity.class, publicity);
+//            }
+//        });
+//        addMenuView(menuTextView);
+//    }
+    private void initView() {
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "修改公告");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "删除公告");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                JwStartActivity(ChangePublicyActivity.class, publicity);
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    JwStartActivity(ChangePublicyActivity.class, publicity);
+                } else {
+                    showAlertDialog();
+                }
             }
         });
-        addMenuView(menuTextView);
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
+    }
+
+    public void showAlertDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("删除公告将会导致尚未看过的人员无法接收到此条公告");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                showLoading();
+                new FinishRefreshDeletePublicy(getMy()).execute();
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
     }
 
     private void setData() {
@@ -176,14 +229,14 @@ public class PublicyDetailActivity extends JwActivity {
     /**
      * 保存到数据库
      */
-    private class FinishRefresh extends AsyncTask<String, Void, String> {
+    private class FinishRefreshDeletePublicy extends AsyncTask<String, Void, String> {
         private Context context;
         private JCloudDB jCloudDB;
 
         /**
          * @param context 上下文
          */
-        public FinishRefresh(Context context) {
+        public FinishRefreshDeletePublicy(Context context) {
             this.context = context;
             jCloudDB = new JCloudDB();
         }
@@ -192,66 +245,29 @@ public class PublicyDetailActivity extends JwActivity {
         protected String doInBackground(String... params) {
 
             String result = "1";
-
-
+            boolean flag = false;
             try {
-
-                if (null != users && null != publicity) {
-
-                    //已读人数
-                   // String readSql  = "SELECT c.operator_code,c.nickname,c.create_time from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+ StrUtils.QuotedStr(publicity.getPublicity_code());
-                    String readSql  = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+")  and t.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code());
-                    //查找数据
-                    alreadyreads = jCloudDB.findAllBySql(Userorg.class, readSql);
-                    removeDuplicate(alreadyreads);
-
-                    //未读人数
-                    String sql  = "SELECT t.* from userorg t where t.user_code not in (SELECT c.operator_code from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+StrUtils.QuotedStr(publicity.getPublicity_code())+") and t.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code());
-                    //查找数据
-                    unReads = jCloudDB.findAllBySql(Userorg.class, sql);
-                    removeDuplicate(unReads);
-
-
-                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
-                            "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
-                    if (ListUtils.IsNull(alreadyreadList)) {
-                        //已读表未插入，插入到已读表
-                        Alreadyread alreadyread = new Alreadyread();
-                        alreadyread.setTask_code(publicity.getPublicity_code());
-                        alreadyread.setOperator_code(users.getUser_code());
-                        alreadyread.setNickname(users.getNickname());
-                        alreadyread.setOrg_code(orgCode);
-                        alreadyread.setOperate_type("0");
-                        jCloudDB.save(alreadyread);
-                    }
+                if (users != null && publicity != null) {
+                    flag = jCloudDB.deleteByWhere(Publicity.class,
+                            " publicity_code = " +
+                                    StrUtils.QuotedStr(publicity.getPublicity_code()));
                 }
-
-
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
             }
-
-
+            if (flag) {
+                result = "1";
+            }
             return result;
         }
 
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-
-                if(ListUtils.IsNotNull(alreadyreads)){
-                    tvYd.setText(alreadyreads.size() + "人已读");
-                }
-
-                if(ListUtils.IsNotNull(unReads)){
-                    tvWd.setText(unReads.size() + "人未读");
-                }
-
-
-
-                OttUtils.push("news_refresh", "");
-                OttUtils.push("publicy_refresh", "");
+                ToastShow("删除成功");
+                finish();
+                OttUtils.push("publicy_detail", "");
             }
             hideLoading();
         }
@@ -293,9 +309,89 @@ public class PublicyDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if ("1".equals(result)) {
-                initRight();
+                initView();
                 hideLoading();
             }
+        }
+    }
+
+    private class FinishRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+
+            try {
+
+                if (null != users && null != publicity) {
+
+                    //已读人数
+                    // String readSql  = "SELECT c.operator_code,c.nickname,c.create_time from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+ StrUtils.QuotedStr(publicity.getPublicity_code());
+                    String readSql = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) + " and c.task_code = " + StrUtils.QuotedStr(publicity.getPublicity_code()) + ")  and t.org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code());
+                    //查找数据
+                    alreadyreads = jCloudDB.findAllBySql(Userorg.class, readSql);
+                    removeDuplicate(alreadyreads);
+
+                    //未读人数
+                    String sql = "SELECT t.* from userorg t where t.user_code not in (SELECT c.operator_code from alreadyread c where c.org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) + " and c.task_code = " + StrUtils.QuotedStr(publicity.getPublicity_code()) + ") and t.org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code());
+                    //查找数据
+                    unReads = jCloudDB.findAllBySql(Userorg.class, sql);
+                    removeDuplicate(unReads);
+
+
+                    List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
+                            "task_code=" + StrUtils.QuotedStr(publicity.getPublicity_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
+                    if (ListUtils.IsNull(alreadyreadList)) {
+                        //已读表未插入，插入到已读表
+                        Alreadyread alreadyread = new Alreadyread();
+                        alreadyread.setTask_code(publicity.getPublicity_code());
+                        alreadyread.setOperator_code(users.getUser_code());
+                        alreadyread.setNickname(users.getNickname());
+                        alreadyread.setOrg_code(orgCode);
+                        alreadyread.setOperate_type("0");
+                        jCloudDB.save(alreadyread);
+                    }
+                }
+
+
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+
+                if (ListUtils.IsNotNull(alreadyreads)) {
+                    tvYd.setText(alreadyreads.size() + "人已读");
+                }
+
+                if (ListUtils.IsNotNull(unReads)) {
+                    tvWd.setText(unReads.size() + "人未读");
+                }
+
+
+                OttUtils.push("news_refresh", "");
+                OttUtils.push("publicy_refresh", "");
+            }
+            hideLoading();
         }
     }
 

@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import api.util.OttUtils;
+import api.view.CustomDialog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -90,6 +93,43 @@ public class CheckSignPersonActivity extends JwListActivity {
         setTitle("签到详情");
         getData();
         initListViewController();
+        initRight();
+    }
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("删除签到");
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                showAlertDialog();
+            }
+        });
+        addMenuView(menuTextView);
+    }
+
+    public void showAlertDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("删除签到将会导致尚未看过的人员无法接收到此条签到");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                showLoading();
+                new FinishRefreshDeleteSign(getMy()).execute();
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
     }
 
 
@@ -369,15 +409,6 @@ public class CheckSignPersonActivity extends JwListActivity {
                 llSignedContent.setVisibility(View.GONE);
             }
             if (result.equals("1")) {
-//                if (ListUtils.IsNotNull(list)) {
-//                    tvTitle.setText(list.get(0).getSign_title());
-//                    tvSignedContent.setText(list.get(0).getSign_msg());
-//                } else {
-//                    llSignedTitle.setVisibility(View.GONE);
-//                    llSignedContent.setVisibility(View.GONE);
-//                }
-//                tvTitle.setText(list.get(0).getSign_title());
-//                tvSignedContent.setText(list.get(0).getSign_msg());
                 if ("0".equals(flag)) {
                     mListItems.addAll(list);
                     commonAdapter.notifyDataSetChanged();
@@ -386,8 +417,6 @@ public class CheckSignPersonActivity extends JwListActivity {
                     commonAdapter.notifyDataSetChanged();
                 }
             } else {
-//                llSignedTitle.setVisibility(View.GONE);
-//                llSignedContent.setVisibility(View.GONE);
                 commonAdapter.notifyDataSetChanged();
                 //没有加载到数据
             }
@@ -464,6 +493,50 @@ public class CheckSignPersonActivity extends JwListActivity {
             alreadySignedCounts.setText("已签到" + tvAlreadySigned + "人");
             unsignCounts.setText("未签到" + tvUnsign + "人");
             hideLoading();
+        }
+    }
+
+    private class FinishRefreshDeleteSign extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshDeleteSign(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "0";
+            boolean flagSign = false;
+            boolean flagSigned = false;
+            try {
+                flagSign = jCloudDB.deleteByWhere(Sign.class, " sign_code = " + StrUtils.QuotedStr(signedCode));
+                flagSigned = jCloudDB.deleteByWhere(Signed.class, " sign_code = " + StrUtils.QuotedStr(signedCode));
+
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+            if (flagSign && flagSigned) {
+                result = "1";
+            } else {
+                result = "0";
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if ("1".equals(result)) {
+                ToastShow("删除成功");
+                finish();
+                OttUtils.push("mysign_refresh", "");
+            }
         }
     }
 
