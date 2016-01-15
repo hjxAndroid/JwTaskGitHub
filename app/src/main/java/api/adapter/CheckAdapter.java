@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 
 import api.util.Utils;
@@ -23,16 +24,16 @@ import api.util.Utils;
 
 public class CheckAdapter extends BaseAdapter {
     // 填充数据的list
-    private List<Userdept> list;
+    private List<UserdeptItem> list;
     // 用来控制CheckBox的选中状况
     private static HashMap<Integer, Boolean> isSelected;
     // 上下文
     private Context context;
     // 用来导入布局
     private LayoutInflater inflater = null;
-    List<Userdept> userdepts;
+    List<UserdeptItem> userdepts;
     // 构造器
-    public CheckAdapter(List<Userdept> list,List<Userdept> userdepts, Context context) {
+    public CheckAdapter(List<UserdeptItem> list,List<UserdeptItem> userdepts, Context context) {
         this.context = context;
         this.list = list;
         this.userdepts = userdepts;
@@ -94,7 +95,7 @@ public class CheckAdapter extends BaseAdapter {
         // 设置list中TextView的显示
         holder.tv.setText(list.get(position).getUsername());
         holder.nick.setText(list.get(position).getNickname());
-        JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPhoto_code(), holder.iv_head_pic);
+        JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPic_road(), holder.iv_head_pic);
         // 根据isSelected来设置checkbox的选中状况
         holder.cb.setChecked(getIsSelected().get(position));
         holder.cb.setOnClickListener(new View.OnClickListener() {

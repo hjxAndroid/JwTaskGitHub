@@ -217,6 +217,7 @@ public class SolveDelayActivity extends JwActivity {
             if (result.equals("1")) {
                 ToastShow("操作成功");
                 OttUtils.push("delay_refresh", "");
+                OttUtils.push("news_refresh", "");
                 finish();
             } else {
                 ToastShow("操作失败");

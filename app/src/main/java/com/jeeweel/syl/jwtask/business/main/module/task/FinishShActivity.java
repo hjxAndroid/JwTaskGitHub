@@ -442,6 +442,7 @@ public class FinishShActivity extends JwActivity {
             if (result.equals("1")) {
                 ToastShow("审核成功");
                 OttUtils.push("sh_refresh", "");
+                OttUtils.push("news_refresh", "");
                 finish();
             } else {
                 ToastShow("保存失败");

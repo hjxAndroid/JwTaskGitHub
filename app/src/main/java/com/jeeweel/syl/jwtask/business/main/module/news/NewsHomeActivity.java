@@ -16,6 +16,7 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -70,6 +71,8 @@ public class NewsHomeActivity extends JwActivity {
 
     CommonAdapter commonAdapter;
 
+    List<Task> wshlist;
+    List<Task> wqrlist;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -226,6 +229,14 @@ public class NewsHomeActivity extends JwActivity {
                 // String deletSql = "DROP TABLE tmp" + users.getUser_code();
                 //cv CloudDB.execSQL(deletSql);
 
+                //任务数量
+                //未审核数量
+                wshlist = jCloudDB.findAllByWhere(Task.class,
+                        "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = 2 or now_state = 4 or now_state = 7");
+                //负责未读数量
+                wqrlist = jCloudDB.findAllByWhere(Task.class,
+                        "principal_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + 0);
+
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
                         "user_name=" + StrUtils.QuotedStr(phone) + "and read_state=0 " + "ORDER BY create_time DESC");
@@ -245,6 +256,20 @@ public class NewsHomeActivity extends JwActivity {
                     newsList.get(0).setDraw_id(R.drawable.publicy);
                     newsList.get(1).setDraw_id(R.drawable.sign);
                     newsList.get(2).setDraw_id(R.drawable.task);
+
+                    int num = 0;
+                    if(ListUtils.IsNotNull(wshlist)){
+                        num = wshlist.size();
+                    }
+                    if(ListUtils.IsNotNull(wqrlist)){
+                        num += wqrlist.size();
+                    }
+                    if(num!=0){
+                        newsList.get(2).setReadstate("0");
+                        newsList.get(2).setReadsum(num + "");
+                        newsList.get(2).setAlread("0");
+                    }
+
                     allList.addAll(newsList);
                     commonAdapter.notifyDataSetChanged();
                 }
