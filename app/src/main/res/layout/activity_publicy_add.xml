@@ -62,7 +62,7 @@
             android:gravity="left"
             android:hint="公告内容"
             android:maxLength="20"
-            android:maxLines="1"
+            android:maxLines="15"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
             android:scrollHorizontally="true"
