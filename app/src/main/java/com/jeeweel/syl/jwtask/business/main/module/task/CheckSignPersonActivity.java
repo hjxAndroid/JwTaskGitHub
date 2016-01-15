@@ -314,7 +314,7 @@ public class CheckSignPersonActivity extends JwListActivity {
 //                    " sign_user_code ");
 //            SELECT * from signed where create_time in (select max(create_time) from signed WHERE sign_code = '8b9c09c619674b798a7bcc75390e28cd' group by sign_user_code)
             sqlInfo1.setSql("SELECT * FROM signed where create_time in (select max(create_time) from signed WHERE sign_code =?" +
-                    "group by sign_user_code)");
+                    " group by sign_user_code ) " + " group by sign_user_code ");
             sqlInfo1.addValue(signedCode);
             String sql1 = sqlInfo1.getBuildSql();
             try {
@@ -332,7 +332,8 @@ public class CheckSignPersonActivity extends JwListActivity {
 //                    " user_code " +
                     " FROM " +
                     " v_sign_users " +
-                    " where sign_code= ? ");
+                    " where sign_code= ? " +
+                    "GROUP BY user_code");
             sqlInfo2.addValue(signedCode);
             String sql2 = sqlInfo2.getBuildSql();
             try {
@@ -343,8 +344,9 @@ public class CheckSignPersonActivity extends JwListActivity {
                     v_sign_nickname = listSum.get(i);
                     signed = new Signed();
                     signed.setNickname(v_sign_nickname.getNickname());
-                    signed.setCreate_time(v_sign_nickname.getCreate_time());
+                    signed.setCreate_time("");
                     signed.setLocation("");
+                    signed.setSign_code(v_sign_nickname.getSign_code());
                     signed.setSign_user_code(v_sign_nickname.getUser_code());
                     handadd.add(signed);
                     signedList.add(signed);
@@ -555,6 +557,7 @@ public class CheckSignPersonActivity extends JwListActivity {
             for (int j = 0; j < list2.size(); j++) {
                 if (list3.get(i).getSign_user_code().equals(list2.get(j).getSign_user_code())) {
                     list1.remove(list3.get(i));
+                    break;
 //                    list1.remove(i);
 //                    signed = new Signed();
 //                    list1.add(i, signed);

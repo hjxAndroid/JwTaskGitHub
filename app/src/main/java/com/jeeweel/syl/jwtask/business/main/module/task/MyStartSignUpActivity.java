@@ -56,7 +56,7 @@ public class MyStartSignUpActivity extends JwListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_list_view);
         ButterKnife.bind(this);
-        setTitle("签到列表");
+        setTitle("发起签到列表");
         users = JwAppAplication.getInstance().users;
         initListViewController();
     }
