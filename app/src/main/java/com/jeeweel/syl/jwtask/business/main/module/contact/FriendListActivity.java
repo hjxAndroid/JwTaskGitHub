@@ -62,6 +62,7 @@ public class FriendListActivity extends JwListActivity {
     List<FriendItem> list;
 
     private Users users;
+    private String friendsCount;
 
     /**
      * 用于判断是从哪请求过来的
@@ -72,7 +73,6 @@ public class FriendListActivity extends JwListActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend_list);
-        setTitle("好友列表");
         users = JwAppAplication.getInstance().users;
         ButterKnife.bind(this);
         initView();
@@ -171,6 +171,7 @@ public class FriendListActivity extends JwListActivity {
                         list = jCloudDB.findAllBySql(FriendItem.class, sql);
                     }
 
+
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -185,6 +186,12 @@ public class FriendListActivity extends JwListActivity {
             if (result.equals("1")) {
                 mListItems.addAll(list);
                 removeDuplicate(mListItems);
+                friendsCount = Integer.toString(mListItems.size());
+                if (StrUtils.IsNotEmpty(friendsCount)) {
+                    setTitle("好友列表" + "(" + friendsCount + ")");
+                } else {
+                    setTitle("好友列表");
+                }
                 commonAdapter.notifyDataSetChanged();
             } else {
                 //没有加载到数据

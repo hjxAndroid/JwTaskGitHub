@@ -18,6 +18,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.FriendItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
@@ -71,6 +72,8 @@ public class DeptUsersListActivity extends JwListActivity {
 
 
     List<UserdeptItem> list;
+
+    List<UserdeptItem> listCounts;
     List<Orgunit> orgunits;
     Orgunit orgunit;
 
@@ -85,6 +88,7 @@ public class DeptUsersListActivity extends JwListActivity {
     private Users users;
     private List<Userdept> listUserDept;
     private String dept_code;
+    private String deptCounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +97,6 @@ public class DeptUsersListActivity extends JwListActivity {
         userdept = (Userdept) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         users = JwAppAplication.getInstance().getUsers();
         if (null != userdept) {
-            setTitle(userdept.getDept_name());
             orgCode = userdept.getOrg_code();
             dept_code = userdept.getDept_code();
         }
@@ -119,7 +122,7 @@ public class DeptUsersListActivity extends JwListActivity {
                     intent.putExtra(StaticStrUtils.baseItem, Contants.dept_add_friend);
                     startActivity(intent);
                     //     finish();
-                } else if(position == 1){
+                } else if (position == 1) {
 
                     new FinishRefresIsFounder(getMy()).execute();
 
@@ -128,7 +131,7 @@ public class DeptUsersListActivity extends JwListActivity {
 //                    intent.putExtra("code", userdept.getDept_code());
 //                    intent.setClass(DeptUsersListActivity.this, MineEditnameActivity.class);
 //                    JwStartActivity(intent);
-                }else{
+                } else {
                     showAlertDialog();
                 }
             }
@@ -303,18 +306,21 @@ public class DeptUsersListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
 
-                        String readSql  = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = "+ StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd;
+                        String readSql = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd;
                         //查找数据
                         list = jCloudDB.findAllBySql(UserdeptItem.class, readSql);
 
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        String readSql  = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = "+ StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd;
+                        String readSql = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " limit " + pageStart + "," + pageEnd;
                         //查找数据
                         list = jCloudDB.findAllBySql(UserdeptItem.class, readSql);
                     }
-
+                    String countsSql = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = " + StrUtils.QuotedStr(userdept.getDept_code());
+                    listCounts = jCloudDB.findAllBySql(UserdeptItem.class, countsSql);
+                    removeDuplicate(listCounts);
+                    deptCounts = Integer.toString(listCounts.size());
 
 
 //                    if (ListUtils.IsNotNull(list)) {
@@ -351,6 +357,14 @@ public class DeptUsersListActivity extends JwListActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                if (null != userdept) {
+                    if (StrUtils.IsNotEmpty(deptCounts)) {
+                        setTitle(userdept.getDept_name() + "(" + deptCounts + ")");
+                    } else {
+                        setTitle(userdept.getDept_name());
+                    }
+                }
+                removeDuplicate(mListItems);
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
             } else {
@@ -362,11 +376,11 @@ public class DeptUsersListActivity extends JwListActivity {
     }
 
 
-
     private class FinishRefreshDismiss extends AsyncTask<String, Void, String> {
         JCloudDB jCloudDB;
         List<Orgunit> listIsFounder;
         List<Userdept> listDeptFounder;
+
         /**
          * @param context 上下文
          */
@@ -388,7 +402,7 @@ public class DeptUsersListActivity extends JwListActivity {
                     listDeptFounder = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and admin_state = 1 ");
                     listIsFounder = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and founder_code = " + StrUtils.QuotedStr(users.getUser_code()));
 
-                    if (ListUtils.IsNotNull(listDeptFounder)||ListUtils.IsNotNull(listIsFounder)) {
+                    if (ListUtils.IsNotNull(listDeptFounder) || ListUtils.IsNotNull(listIsFounder)) {
 
                         flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + "\'" + orgCode + "\'");
                         flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + "\'" + orgCode + "\'");
@@ -506,6 +520,21 @@ public class DeptUsersListActivity extends JwListActivity {
                 ToastShow("您没有权限修改");
             }
             hideLoading();
+        }
+    }
+
+    /**
+     * 去除多余元素
+     *
+     * @param list
+     */
+    public void removeDuplicate(List<UserdeptItem> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {
+                    list.remove(j);
+                }
+            }
         }
     }
 }

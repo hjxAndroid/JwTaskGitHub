@@ -52,17 +52,18 @@ public class OrgMembersActivity extends JwActivity {
     private Users users;
     List<UserorgItem> list;
     private String orgCode;
+    private String orgMembersCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_org_members);
         users = JwAppAplication.getUsers();
-        setTitle("组织成员");
         ButterKnife.bind(this);
         getData();
         initListView();
         showLoading();
+
         new FinishRefresh(getMy()).execute();
     }
 
@@ -140,10 +141,9 @@ public class OrgMembersActivity extends JwActivity {
 
                     String readSql = "select * from userorg left join picture on userorg.user_code = picture.pic_code WHERE org_code = " + StrUtils.QuotedStr(orgCode);
                     list = jCloudDB.findAllBySql(UserorgItem.class, readSql);
-
-
                     mListItems.clear();
                     removeDuplicate(list);
+                    orgMembersCount = Integer.toString(list.size());
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -155,6 +155,11 @@ public class OrgMembersActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
+                if (StrUtils.IsNotEmpty(orgMembersCount)) {
+                    setTitle("组织成员" + "(" + orgMembersCount + ")");
+                } else {
+                    setTitle("组织成员");
+                }
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
             } else {
