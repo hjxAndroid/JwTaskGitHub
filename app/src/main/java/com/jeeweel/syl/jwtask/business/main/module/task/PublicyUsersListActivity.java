@@ -18,6 +18,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -41,7 +42,7 @@ import butterknife.OnClick;
 
 
 public class PublicyUsersListActivity extends JwActivity {
-    List<Userdept> mListItems = new ArrayList<Userdept>();
+    List<UserdeptItem> mListItems = new ArrayList<UserdeptItem>();
     @Bind(R.id.listview)
     ListView listview;
     @Bind(R.id.cb_all)
@@ -53,7 +54,7 @@ public class PublicyUsersListActivity extends JwActivity {
     private int pageEnd = 10; //截取的尾部
     private int addNum = 10;//下拉加载更多条数
 
-    List<Userdept> list;
+    List<UserdeptItem> list;
 
     /**
      * 用于判断是从哪请求过来的
@@ -68,7 +69,7 @@ public class PublicyUsersListActivity extends JwActivity {
 
     private String data = "";
 
-    List<Userdept> userdepts = new ArrayList<>();
+    List<UserdeptItem> userdepts = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +125,7 @@ public class PublicyUsersListActivity extends JwActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                List<Userdept> userdeptnews = new ArrayList<Userdept>();
+                List<UserdeptItem> userdeptnews = new ArrayList<UserdeptItem>();
                 HashMap<Integer, Boolean> isSelected = checkAdapter.getIsSelected();
                 for (int i = 0; i < isSelected.size(); i++) {
                     if (isSelected.get(i)) {
@@ -178,46 +179,20 @@ public class PublicyUsersListActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             if (null != userdept) {
                 try {
-                    list = jCloudDB.findAllByWhere(Userdept.class,
-                            "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()));
+//                    list = jCloudDB.findAllByWhere(Userdept.class,
+//                            "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()));
+                    String readSql  = "select * from userdept left join picture on userdept.user_code = picture.pic_code WHERE dept_code = "+ StrUtils.QuotedStr(userdept.getDept_code());
+                    //查找数据
+                    list = jCloudDB.findAllBySql(UserdeptItem.class, readSql);
                 } catch (CloudServiceException e) {
+                    result = "0";
                     e.printStackTrace();
                 }
 
-                if (ListUtils.IsNotNull(list)) {
-                    for (Userdept userdept : list) {
-                        //取头像
-                        String user_code = userdept.getUser_code();
-
-                        String sSql = "pic_code=?";
-                        SqlInfo sqlInfo = new SqlInfo();
-                        sqlInfo.setSql(sSql);
-                        sqlInfo.addValue(user_code);
-                        sSql = sqlInfo.getBuildSql();
-                        List<Picture> pictureList = null;
-                        try {
-                            pictureList = jCloudDB.findAllByWhere(Picture.class, sSql);
-                        } catch (CloudServiceException e) {
-                            e.printStackTrace();
-                        }
-                        if (ListUtils.IsNotNull(pictureList)) {
-                            Picture picture = pictureList.get(0);
-                            String path = picture.getPic_road();
-                            if (StrUtils.IsNotEmpty(path)) {
-                                //存头像
-                                userdept.setPhoto_code(path);
-                            }
-                        }
-                    }
-
-                    result = "1";
-                } else {
-                    result = "0";
-                }
             }
 
             return result;
@@ -267,7 +242,7 @@ public class PublicyUsersListActivity extends JwActivity {
      *
      * @param list
      */
-    public void removeDuplicate(List<Userdept> list) {
+    public void removeDuplicate(List<UserdeptItem> list) {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = list.size() - 1; j > i; j--) {
                 if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {

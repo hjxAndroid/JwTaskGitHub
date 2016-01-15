@@ -530,6 +530,7 @@ public class JobDetailActivity extends JwActivity {
 
                 //通知列表更新
                 OttUtils.push("fz_refresh", "");
+                OttUtils.push("news_refresh", "");
             } else {
                 ToastShow("操作失败");
             }

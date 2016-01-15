@@ -19,6 +19,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
@@ -41,7 +42,7 @@ import butterknife.OnClick;
 
 
 public class SelectedActivity extends JwActivity {
-    List<Userdept> mListItems = new ArrayList<Userdept>();
+    List<UserdeptItem> mListItems = new ArrayList<UserdeptItem>();
     @Bind(R.id.listview)
     ListView listview;
     @Bind(R.id.cb_all)
@@ -67,8 +68,8 @@ public class SelectedActivity extends JwActivity {
     private TextView tv_show;// 用于显示选中的条目数量
 
     String json = "";
-    List<Userdept> userdepts = new ArrayList<>();
-    List<Userdept> userdeptnews = new ArrayList<>();
+    List<UserdeptItem> userdepts = new ArrayList<>();
+    List<UserdeptItem> userdeptnews = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +102,7 @@ public class SelectedActivity extends JwActivity {
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                List<Userdept> userdepts = new ArrayList<Userdept>();
+                List<UserdeptItem> userdepts = new ArrayList<UserdeptItem>();
                 HashMap<Integer, Boolean> isSelected = checkAdapter.getIsSelected();
                 for (int i = 0; i < isSelected.size(); i++) {
                     if (isSelected.get(i)) {

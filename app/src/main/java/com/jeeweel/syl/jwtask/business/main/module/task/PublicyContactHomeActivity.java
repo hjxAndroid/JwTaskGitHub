@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.internal.view.menu.ExpandedMenuView;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
@@ -16,29 +15,20 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
-import com.jeeweel.syl.jwtask.business.main.module.contact.AddHomeActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
-import com.jeeweel.syl.jwtask.business.main.module.contact.DeptUsersListActivity;
-import com.jeeweel.syl.jwtask.business.main.module.contact.FriendListActivity;
-import com.jeeweel.syl.jwtask.business.main.module.contact.OragDetailActivity;
-import com.jeeweel.syl.jwtask.business.main.tab.TabHostActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
-import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import api.adapter.ExpandableAdapter;
-import api.util.Contants;
-import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.bmob.push.config.Constant;
 
 public class PublicyContactHomeActivity extends JwActivity {
 
@@ -148,8 +138,8 @@ public class PublicyContactHomeActivity extends JwActivity {
                         @Override
                         public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
                             Orgunit orgunit = expandableAdapter.getList().get(groupPosition);
-//                            JwStartActivity(PublicyStartSignUsersActivity.class, orgunit);
-                            Intent intent = new Intent(getMy(), PublicyStartSignUsersActivity.class);
+//                            JwStartActivity(PublicyOegUsersActivity.class, orgunit);
+                            Intent intent = new Intent(getMy(), PublicyOegUsersActivity.class);
                             intent.putExtra(StaticStrUtils.baseItem, orgunit);
                             intent.putExtra("tag", tag);
                             intent.putExtra("data", data);

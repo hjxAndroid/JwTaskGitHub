@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserorgItem;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 
 import java.util.HashMap;
@@ -24,7 +25,7 @@ import api.util.Utils;
  */
 public class StrartSignAdapter extends BaseAdapter {
     // 填充数据的list
-    private List<Userorg> list;
+    private List<UserorgItem> list;
     // 用来控制CheckBox的选中状况
     private static HashMap<Integer, Boolean> isSelected;
     // 上下文
@@ -33,7 +34,7 @@ public class StrartSignAdapter extends BaseAdapter {
     private LayoutInflater inflater = null;
     private List<Userdept> userdepts;
     // 构造器
-    public StrartSignAdapter(List<Userorg> list,List<Userdept> userdepts, Context context) {
+    public StrartSignAdapter(List<UserorgItem> list,List<Userdept> userdepts, Context context) {
         this.context = context;
         this.list = list;
         this.userdepts = userdepts;

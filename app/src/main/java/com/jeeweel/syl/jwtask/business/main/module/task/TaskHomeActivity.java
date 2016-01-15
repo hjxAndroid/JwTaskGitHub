@@ -70,7 +70,7 @@ public class TaskHomeActivity extends JwActivity {
     List<Userorg> mListItems;
 
     private Activity context;
-
+    MenuTextView menuTextView;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHideBack(true);
@@ -84,8 +84,13 @@ public class TaskHomeActivity extends JwActivity {
     }
 
     private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("切换");
+        menuTextView = new MenuTextView(getMy());
+        String org_name = (String)SharedPreferencesUtils.get(getMy(), Contants.org_name,"");
+        if(StrUtils.IsNotEmpty(org_name)){
+            menuTextView.setText(org_name);
+        }else{
+            menuTextView.setText("切换");
+        }
         menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
         menuTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +215,7 @@ public class TaskHomeActivity extends JwActivity {
                 SharedPreferencesUtils.save(getMy(), Contants.org_code, userorg.getOrg_code());
                 SharedPreferencesUtils.save(getMy(), Contants.org_name, userorg.getOrg_name());
                 dialog.cancel();
+                menuTextView.setText( userorg.getOrg_name());
             }
         });
     }
