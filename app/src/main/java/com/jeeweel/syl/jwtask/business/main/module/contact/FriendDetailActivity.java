@@ -97,7 +97,7 @@ public class FriendDetailActivity extends JwActivity {
         boolean flag = intent.getBooleanExtra("flag", false);
         if (flag == true) {
             initView();
-        }else{
+        } else {
             initRight();
         }
         friend_code = intent.getStringExtra("friend_code");
@@ -120,7 +120,7 @@ public class FriendDetailActivity extends JwActivity {
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a5), "绩效查看");
         ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加好友");
-        ActionItem action2=new ActionItem(getResources().getDrawable(R.drawable.a6),"移除该部");
+        ActionItem action2 = new ActionItem(getResources().getDrawable(R.drawable.a6), "移除该部");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
         titlePopup.addAction(action2);
@@ -128,12 +128,11 @@ public class FriendDetailActivity extends JwActivity {
             @Override
             public void onItemClick(ActionItem item, int position) {
                 if (position == 0) {
-                    if(StrUtils.IsNotEmpty(friend_code))
-                        JwStartActivity(WebActivity.class,friend_code);
-                }
-                else if(position==1){
+                    if (StrUtils.IsNotEmpty(friend_code))
+                        JwStartActivity(WebActivity.class, friend_code);
+                } else if (position == 1) {
                     showAlertDialog();
-                }else if(position==2){
+                } else if (position == 2) {
                     showAlertDelMemDialog();
                 }
             }
@@ -151,17 +150,31 @@ public class FriendDetailActivity extends JwActivity {
 
 
     private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("績效查看");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a5), "绩效查看");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a7), "删除好友");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                if(StrUtils.IsNotEmpty(friend_code))
-                    JwStartActivity(WebActivity.class,friend_code);
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    if (StrUtils.IsNotEmpty(friend_code))
+                        JwStartActivity(WebActivity.class, friend_code);
+                } else if (position == 1) {
+                    showAlertDialogDelFriends();
+                }
             }
         });
-        addMenuView(menuTextView);
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
     }
 
     public void showAlertDialog() {
@@ -199,6 +212,31 @@ public class FriendDetailActivity extends JwActivity {
                 dialog.dismiss();
                 showLoading();
                 new deleteMember(getMy()).execute();
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builder.create().show();
+
+    }
+
+    public void showAlertDialogDelFriends() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("是否删除该好友");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                //设置你的操作事项
+                showLoading();
+                new FinishRefreshDelFriends(getMy()).execute();
             }
         });
 
@@ -480,9 +518,9 @@ public class FriendDetailActivity extends JwActivity {
             List<Userdept> listDeptFounder;
             try {
 
-                if(friend_code.equals(userIsFounder.getUser_code())){
-                    result =  "3";
-                }else{
+                if (friend_code.equals(userIsFounder.getUser_code())) {
+                    result = "3";
+                } else {
                     listDeptFounder = jCloudDB.findAllByWhere(Userdept.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and user_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()) + " and admin_state = 1 ");
                     listIsFounder = jCloudDB.findAllByWhere(Orgunit.class, " org_code = " + StrUtils.QuotedStr(orgCode) + " and founder_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()));
 
@@ -525,12 +563,65 @@ public class FriendDetailActivity extends JwActivity {
                 ToastShow("删除失败");
             } else if ("2".equals(result)) {
                 ToastShow("您没有权限踢人");
-            }else if("3".equals(result)){
+            } else if ("3".equals(result)) {
                 ToastShow("您不能移除自己");
             }
             hideLoading();
             finish();
             OttUtils.push("OrgMembersRefreash", "");
+        }
+    }
+
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishRefreshDelFriends extends AsyncTask<String, Void, String> {
+        private Context context;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishRefreshDelFriends(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "0";
+            boolean flag1 = false;
+            boolean flag2 = false;
+            JCloudDB jCloudDB = new JCloudDB();
+            try {
+                if (userIsFounder != null) {
+
+                    flag1 = jCloudDB.deleteByWhere(Friend.class, " user_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()) + " and friend_code = " + StrUtils.QuotedStr(friend_code));
+                    flag2 = jCloudDB.deleteByWhere(Friend.class, " user_code = " + StrUtils.QuotedStr(friend_code) + " and friend_code = " + StrUtils.QuotedStr(userIsFounder.getUser_code()));
+
+                    if (flag1 && flag2) {
+                        result = "1";
+                    }
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+                ToastShow("删除好友成功");
+                finish();
+                OttUtils.push("friend_del_refresh", "");
+            } else {
+                ToastShow("删除好友失败");
+            }
+            hideLoading();
         }
     }
 

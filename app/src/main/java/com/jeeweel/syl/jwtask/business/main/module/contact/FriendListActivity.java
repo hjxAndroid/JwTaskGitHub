@@ -242,4 +242,14 @@ public class FriendListActivity extends JwListActivity {
         MobclickAgent.onPause(this);
     }
 
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (StrUtils.IsNotEmpty(msg) && msg.equals("friend_del_refresh")) {
+            list.clear();
+            showLoading();
+            onListViewHeadRefresh();
+        }
+    }
+
 }
