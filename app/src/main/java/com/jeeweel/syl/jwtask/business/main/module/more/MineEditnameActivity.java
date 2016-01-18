@@ -43,7 +43,7 @@ public class MineEditnameActivity extends JwActivity {
         strtitle = intent.getStringExtra("title");
         register = intent.getBooleanExtra("register", false);
         et = (EditText) findViewById(R.id.et_name);
-        users = JwAppAplication.getInstance().users;
+        users = JwAppAplication.getInstance().getUsers();
         phone = users.getUsername();
         setTitle(strtitle);
         if (strtitle.equals("设置昵称")) {
@@ -123,12 +123,41 @@ public class MineEditnameActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
             String result = "1";
-            String sql = "";
+            String sql,sql1,sql2,sql3,sql4,sql5,sql6,sql7,sql8,sql9,sql10,sql11 = "";
             if (strtitle.equals("设置昵称")) {
                 users.setNickname(str1);
-                sql = "UPDATE users SET nickname='" + str1 + "'WHERE username ='" + phone + "'";
+                sql = "UPDATE users set nickname = "+ StrUtils.QuotedStr(str1) +" where user_code = " + StrUtils.QuotedStr(users.getUser_code());
+                sql1 = "UPDATE alreadyread set nickname = "+ StrUtils.QuotedStr(str1) +" where  operator_code = " + StrUtils.QuotedStr(users.getUser_code());
+                sql2 = "UPDATE friend set user_nickname = "+ StrUtils.QuotedStr(str1) +" where user_code = " + StrUtils.QuotedStr(users.getUser_code());
+                sql3 = "UPDATE friend set friend_nickname = "+ StrUtils.QuotedStr(str1) +" where  friend_code = " + StrUtils.QuotedStr(users.getUser_code());
+
+                sql4 = "UPDATE publicity set nickname = "+ StrUtils.QuotedStr(str1) +" where prouser_code = " + StrUtils.QuotedStr(users.getUser_code());
+
+                sql5 = "UPDATE signed set nickname = "+ StrUtils.QuotedStr(str1) +" where sign_user_code = " + StrUtils.QuotedStr(users.getUser_code());
+
+                sql6 = "UPDATE task set principal_nickname = "+ StrUtils.QuotedStr(str1) +" where  principal_code = " + StrUtils.QuotedStr(users.getUser_code());
+                sql7 = "UPDATE task set nickname = "+ StrUtils.QuotedStr(str1) +" where  promulgator_code = " + StrUtils.QuotedStr(users.getUser_code());
+
+                sql8 = "UPDATE taskcommit set nickname = "+ StrUtils.QuotedStr(str1) +" where user_code = " + StrUtils.QuotedStr(users.getUser_code());
+                sql9 = "UPDATE taskflow set nickname = "+ StrUtils.QuotedStr(str1) +" where user_code = " + StrUtils.QuotedStr(users.getUser_code());
+
+
+                sql10 = "UPDATE userdept set nickname = "+ StrUtils.QuotedStr(str1) +" where  user_code = " + StrUtils.QuotedStr(users.getUser_code());
+                sql11 = "UPDATE userorg set nickname = "+ StrUtils.QuotedStr(str1) +" where  user_code = " + StrUtils.QuotedStr(users.getUser_code());
+
                 try {
                     CloudDB.execSQL(sql);
+                    CloudDB.execSQL(sql1);
+                    CloudDB.execSQL(sql2);
+                    CloudDB.execSQL(sql3);
+                    CloudDB.execSQL(sql4);
+                    CloudDB.execSQL(sql5);
+                    CloudDB.execSQL(sql6);
+                    CloudDB.execSQL(sql7);
+                    CloudDB.execSQL(sql8);
+                    CloudDB.execSQL(sql9);
+                    CloudDB.execSQL(sql10);
+                    CloudDB.execSQL(sql11);
                 } catch (CloudServiceException e) {
                     result = "0";
                 }

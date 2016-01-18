@@ -140,6 +140,8 @@ public class SignUpActivity extends JwActivity {
     GridView noScrollgridview;
     @Bind(R.id.tv_signed_content)
     TextView tvSignedContent;
+    @Bind(R.id.tv_sign_button)
+    TextView tvSignButton;
     private ScrollView li_fb;
     private Activity context;
     GridAdapter adapter;
@@ -407,6 +409,7 @@ public class SignUpActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if ("1".equals(result)) {
                 ToastShow("签到成功");
+                OttUtils.push("news_refresh","");
             }
             tvSignCounts.setText(signCounts);
         }

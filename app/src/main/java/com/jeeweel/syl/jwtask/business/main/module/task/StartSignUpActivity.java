@@ -23,7 +23,6 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
-import com.jeeweel.syl.jwtask.business.main.module.contact.DeptSelectFriendListActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
@@ -88,6 +87,8 @@ public class StartSignUpActivity extends JwActivity {
     @Bind(R.id.iv_user_pic)
     ImageView ivUserPic;
     List<Userdept> userdepts = new ArrayList<Userdept>();
+    @Bind(R.id.start_sign_button)
+    TextView startSignButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

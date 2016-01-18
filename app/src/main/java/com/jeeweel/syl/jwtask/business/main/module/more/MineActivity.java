@@ -275,7 +275,7 @@ public class MineActivity extends JwActivity {
                         //, int dayOfMonth,int hours,int mintues,int seconds
                         // +"-"+hours+"-"+mintues+"-"+seconds
                         public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
-                            tv_birthday.setText("" + year + "-" + (month + 1) + "-");
+                            tv_birthday.setText("" + year + "-" + (month + 1) + "-" +dayOfMonth);
                             birthday = tv_birthday.getText().toString();
                             new saveBirthday(getMy()).execute();
                         }

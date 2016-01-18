@@ -78,7 +78,7 @@ public class SelectedActivity extends JwActivity {
         tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
         json = getIntent().getStringExtra("data");
         if(StrUtils.IsNotEmpty(json)){
-            userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+            userdepts = JwJSONUtils.getParseArray(json, UserdeptItem.class);
         }
         ButterKnife.bind(this);
         initRight();

@@ -16,6 +16,7 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.SignedPictures;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -191,7 +192,7 @@ public class NewsHomeActivity extends JwActivity {
         private Context context;
         JCloudDB jCloudDB;
         List<News> newsList = new ArrayList<News>();
-
+        List<SignedPictures> unSignList;
         /**
          * @param context 上下文
          */
@@ -229,6 +230,11 @@ public class NewsHomeActivity extends JwActivity {
                 // String deletSql = "DROP TABLE tmp" + users.getUser_code();
                 //cv CloudDB.execSQL(deletSql);
 
+                //签到列表
+                unSignList = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" + " and t.receive_code LIKE  " + StrUtils.QuotedStrLike(users.getUser_code()) +
+                        " GROUP BY " +
+                        " sign_code ORDER BY create_time DESC ");
+
                 //任务数量
                 //未审核数量
                 wshlist = jCloudDB.findAllByWhere(Task.class,
@@ -257,16 +263,28 @@ public class NewsHomeActivity extends JwActivity {
                     newsList.get(1).setDraw_id(R.drawable.sign);
                     newsList.get(2).setDraw_id(R.drawable.task);
 
-                    int num = 0;
+                    int signnum = 0;
+                    if(ListUtils.IsNotNull(unSignList)){
+                        signnum = unSignList.size();
+                    }
+                    if(signnum!=0){
+                        newsList.get(1).setReadstate("0");
+                        newsList.get(1).setReadsum(signnum + "");
+                        newsList.get(1).setAlread("0");
+                        newsList.get(1).setMsg_title(unSignList.get(0).getSign_title());
+                    }
+
+
+                    int tasknnum = 0;
                     if(ListUtils.IsNotNull(wshlist)){
-                        num = wshlist.size();
+                        tasknnum = wshlist.size();
                     }
                     if(ListUtils.IsNotNull(wqrlist)){
-                        num += wqrlist.size();
+                        tasknnum += wqrlist.size();
                     }
-                    if(num!=0){
+                    if(tasknnum!=0){
                         newsList.get(2).setReadstate("0");
-                        newsList.get(2).setReadsum(num + "");
+                        newsList.get(2).setReadsum(tasknnum + "");
                         newsList.get(2).setAlread("0");
                     }
 
