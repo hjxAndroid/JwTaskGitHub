@@ -180,7 +180,7 @@ public class PublicyOegUsersActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             if (null != orgunit) {
                 try {
@@ -193,6 +193,7 @@ public class PublicyOegUsersActivity extends JwActivity {
                     mListItems.clear();
                     removeDuplicate(list);
                 } catch (CloudServiceException e) {
+                    result = "0";
                     e.printStackTrace();
                 }
 

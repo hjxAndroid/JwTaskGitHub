@@ -170,6 +170,9 @@ public class JobAddActivity extends JwActivity {
     List<Userdept> cyzdepts = new ArrayList<>();
     //观察者
     List<Userdept> gczdepts = new ArrayList<>();
+
+    //共用主键
+    String pic_unid = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,6 +183,7 @@ public class JobAddActivity extends JwActivity {
         users = JwAppAplication.getInstance().getUsers();
         orgcode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         orgname = (String) SharedPreferencesUtils.get(getMy(), Contants.org_name, "");
+        pic_unid = Utils.getUUid();
         initRight();
         initView();
     }
@@ -847,6 +851,7 @@ public class JobAddActivity extends JwActivity {
                                    //设置当前状态(已发布未确认)
                                    task.setNow_state(0);
                                    task.setNow_state_name(Contants.wqr);
+                                   task.setPic_code(pic_unid);
                                }
 
                                if (StrUtils.IsNotEmpty(orgcode)) {
@@ -867,15 +872,15 @@ public class JobAddActivity extends JwActivity {
                                taskflow.setUser_action(Contants.action_fb);
                                jCloudDB.save(taskflow);
 
-                               //保存图片表
-                               for (String sFile : Bimp.drr) {
-                                   // File file = new File(sFile);
-                                   CloudFile.upload(sFile, unid + "1");
-                               }
-
-
                        }
                    }
+
+
+                   //保存图片表
+                   for (String sFile : Bimp.drr) {
+                       CloudFile.upload(sFile,pic_unid);
+                   }
+
                }
             } catch (CloudServiceException e) {
                 result = "0";
