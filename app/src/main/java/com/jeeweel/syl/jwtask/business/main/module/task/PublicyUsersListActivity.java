@@ -82,7 +82,7 @@ public class PublicyUsersListActivity extends JwActivity {
         tag = getIntent().getStringExtra("tag");
         data = getIntent().getStringExtra("data");
         if(StrUtils.IsNotEmpty(data)){
-            userdepts = JwJSONUtils.getParseArray(data, Userdept.class);
+            userdepts = JwJSONUtils.getParseArray(data, UserdeptItem.class);
         }
         ButterKnife.bind(this);
         initRight();
