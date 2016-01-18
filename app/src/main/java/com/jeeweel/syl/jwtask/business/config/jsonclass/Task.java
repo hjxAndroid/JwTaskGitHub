@@ -177,6 +177,7 @@ public class Task extends BaseItem{
      */
     private int degree_score;
     private String reject_content;
+    private String pic_code;
 
     public String getPhoto_code() {
         return photo_code;
@@ -496,6 +497,14 @@ public class Task extends BaseItem{
 
     public void setReject_content(String reject_content) {
         this.reject_content = reject_content;
+    }
+
+    public String getPic_code() {
+        return pic_code;
+    }
+
+    public void setPic_code(String pic_code) {
+        this.pic_code = pic_code;
     }
 }
 
