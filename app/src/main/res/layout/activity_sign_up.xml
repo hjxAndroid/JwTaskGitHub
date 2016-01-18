@@ -286,7 +286,7 @@
             android:layout_height="@dimen/sign_button"
             android:layout_gravity="center"
             android:layout_margin="@dimen/margin_Large_Top_Size"
-            android:background="@drawable/circular_blue"
+            android:background="@drawable/circle_sign"
             android:gravity="center"
             android:text="@string/sign_up_button"
             android:textColor="@color/white"

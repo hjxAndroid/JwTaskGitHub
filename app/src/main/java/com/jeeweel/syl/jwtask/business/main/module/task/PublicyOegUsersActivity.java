@@ -17,6 +17,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.UserorgItem;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
@@ -72,7 +73,7 @@ public class PublicyOegUsersActivity extends JwActivity {
 
     private String data = "";
 
-    List<Userdept> userdepts = new ArrayList<>();
+    List<UserdeptItem> userdepts = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +85,7 @@ public class PublicyOegUsersActivity extends JwActivity {
         tag = getIntent().getStringExtra("tag");
         data = getIntent().getStringExtra("data");
         if(StrUtils.IsNotEmpty(data)){
-            userdepts = JwJSONUtils.getParseArray(data, Userdept.class);
+            userdepts = JwJSONUtils.getParseArray(data, UserdeptItem.class);
         }
         ButterKnife.bind(this);
         initRight();
@@ -180,7 +181,7 @@ public class PublicyOegUsersActivity extends JwActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             if (null != orgunit) {
                 try {
@@ -193,6 +194,7 @@ public class PublicyOegUsersActivity extends JwActivity {
                     mListItems.clear();
                     removeDuplicate(list);
                 } catch (CloudServiceException e) {
+                    result = "0";
                     e.printStackTrace();
                 }
 

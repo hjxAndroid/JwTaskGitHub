@@ -20,6 +20,7 @@ import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
@@ -86,7 +87,7 @@ public class StartSignUpActivity extends JwActivity {
     String fName;
     @Bind(R.id.iv_user_pic)
     ImageView ivUserPic;
-    List<Userdept> userdepts = new ArrayList<Userdept>();
+    List<UserdeptItem> userdepts = new ArrayList<UserdeptItem>();
     @Bind(R.id.start_sign_button)
     TextView startSignButton;
 
@@ -159,15 +160,15 @@ public class StartSignUpActivity extends JwActivity {
         if (StrUtils.IsNotEmpty(msg) && msg.equals(Contants.fzr)) {
             String json = activityMsgEvent.getParam1();
             if (StrUtils.IsNotEmpty(json)) {
-                userdepts = JwJSONUtils.getParseArray(json, Userdept.class);
+                userdepts = JwJSONUtils.getParseArray(json, UserdeptItem.class);
                 List<Friend> friends = new ArrayList<Friend>();
-                for (Userdept userdept : userdepts) {
+                for (UserdeptItem userdept : userdepts) {
                     Friend friend = new Friend();
                     friend.setUser_code(userdept.getUser_code());
                     friend.setFriend_code(userdept.getUser_code());
                     friend.setFriend_nickname(userdept.getNickname());
                     friend.setFriend_name(userdept.getUsername());
-                    friend.setPhoto_code(userdept.getPhoto_code());
+                    friend.setPhoto_code(userdept.getPic_road());
                     friends.add(friend);
                 }
                 friendList.clear();

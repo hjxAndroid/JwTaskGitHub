@@ -243,7 +243,7 @@ public class SignUpActivity extends JwActivity {
             case 6:
                 signWeek = "星期六";
                 break;
-            case 7:
+            case 0:
                 signWeek = "星期日";
                 break;
             default:
@@ -298,6 +298,8 @@ public class SignUpActivity extends JwActivity {
         signed.setNickname(userNick);
         signed.setProuser_name(prouserName);
         signed.setRemark(etRemark.getText().toString());
+        tvSignButton.setText("进行中");
+        showLoading();
         new FinishRefreshSigned(getMy()).execute();
     }
 
@@ -313,7 +315,7 @@ public class SignUpActivity extends JwActivity {
 
         @Override
         protected String doInBackground(String... params) {
-
+            showLoading();
             String result = "1";
             JCloudDB jCloudDB = new JCloudDB();
             try {
@@ -409,9 +411,12 @@ public class SignUpActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if ("1".equals(result)) {
                 ToastShow("签到成功");
-                OttUtils.push("news_refresh","");
+                hideLoading();
+                tvSignButton.setText("签到");
+                OttUtils.push("news_refresh", "");
             }
             tvSignCounts.setText(signCounts);
+
         }
     }
 

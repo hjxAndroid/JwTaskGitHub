@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.UserorgItem;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
@@ -32,9 +33,9 @@ public class StrartSignAdapter extends BaseAdapter {
     private Context context;
     // 用来导入布局
     private LayoutInflater inflater = null;
-    private List<Userdept> userdepts;
+    private List<UserdeptItem> userdepts;
     // 构造器
-    public StrartSignAdapter(List<UserorgItem> list,List<Userdept> userdepts, Context context) {
+    public StrartSignAdapter(List<UserorgItem> list,List<UserdeptItem> userdepts, Context context) {
         this.context = context;
         this.list = list;
         this.userdepts = userdepts;
@@ -97,7 +98,7 @@ public class StrartSignAdapter extends BaseAdapter {
         // 设置list中TextView的显示
         holder.tv.setText(list.get(position).getUser_name());
         holder.nick.setText(list.get(position).getNickname());
-        JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPhoto_code(), holder.iv_head_pic);
+        JwImageLoader.displayImage(Utils.getPicUrl() + list.get(position).getPic_road(), holder.iv_head_pic);
         // 根据isSelected来设置checkbox的选中状况
         holder.cb.setChecked(getIsSelected().get(position));
         holder.cb.setOnClickListener(new View.OnClickListener() {
