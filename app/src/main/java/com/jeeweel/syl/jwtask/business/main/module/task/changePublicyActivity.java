@@ -50,13 +50,17 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 
+import net.tsz.afinal.http.AjaxParams;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
 import api.photoview.Bimp;
 import api.photoview.FileUtils;
 import api.util.OttUtils;
+import api.util.Utils;
 import api.view.GridNoScrollView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -217,9 +221,9 @@ public class ChangePublicyActivity extends JwActivity {
                     //删除原有图片
                     jCloudDB.deleteByWhere(Picture.class, " pic_code = " + StrUtils.QuotedStr(vPublicityunrea.getPublicity_code()));
 //                    保存图片表
-                    for (String sFile : Bimp.drr) {
-                        CloudFile.upload(sFile, vPublicityunrea.getPublicity_code());
-                    }
+//                    for (String sFile : Bimp.drr) {
+//                        CloudFile.upload(sFile, vPublicityunrea.getPublicity_code());
+//                    }
                 }
             } catch (CloudServiceException e) {
                 e.printStackTrace();
@@ -229,10 +233,29 @@ public class ChangePublicyActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            uploadPic();
             ToastShow("修改成功");
             finish();
             hideLoading();
         }
+    }
+
+    void uploadPic() {
+        AjaxParams params = new AjaxParams();
+
+        int i = 0;
+        for (String sFile : Bimp.drr) {
+            File file = new File(sFile);
+            try {
+                params.put(vPublicityunrea.getPublicity_code(), file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
+            String apiStr = Utils.uploadPic();
+            JwHttpPost(apiStr, params);
+        }
+
     }
 
 

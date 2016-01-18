@@ -46,6 +46,8 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.umeng.analytics.MobclickAgent;
 
+import net.tsz.afinal.http.AjaxParams;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -72,6 +74,8 @@ public class PublicyAddActivity extends JwActivity {
     Context context;
     Publicity publicity = new Publicity();
     Users users;
+    String flag = "0";
+    String unid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -397,7 +401,7 @@ public class PublicyAddActivity extends JwActivity {
 
             if (null != publicity) {
                 try {
-                    String unid = Utils.getUUid();
+                    unid = Utils.getUUid();
                     //保存到主表
                     publicity.setPublicity_code(unid);
                     String orgcode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
@@ -411,11 +415,11 @@ public class PublicyAddActivity extends JwActivity {
                     }
                     jCloudDB.save(publicity);
 
-                    //保存图片表
-                    for (String sFile : Bimp.drr) {
-                        // File file = new File(sFile);
-                        CloudFile.upload(sFile, unid);
-                    }
+//                    //保存图片表
+//                    for (String sFile : Bimp.drr) {
+//                        // File file = new File(sFile);
+//                        CloudFile.upload(sFile, unid);
+//                    }
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -430,7 +434,8 @@ public class PublicyAddActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 OttUtils.push("publicy_refresh", "");
-                pushData();
+//                pushData();
+                uploadPic();
                 ToastShow("保存成功");
             } else {
                 ToastShow("保存失败");
@@ -439,8 +444,28 @@ public class PublicyAddActivity extends JwActivity {
         }
     }
 
+    void uploadPic() {
+        flag = "1";
+        AjaxParams params = new AjaxParams();
+
+        int i = 0;
+        for (String sFile : Bimp.drr) {
+            File file = new File(sFile);
+            try {
+                params.put(unid, file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
+            String apiStr = Utils.uploadPic();
+            JwHttpPost(apiStr, params);
+        }
+
+    }
+
 
     public void pushData() {
+        flag = "0";
         if (publicity != null) {
             String title = publicity.getPublicity_title();
             String content = publicity.getPublicity_content();
@@ -464,7 +489,11 @@ public class PublicyAddActivity extends JwActivity {
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-        finish();
+//        if ("0".equals(flag)) {
+            finish();
+//        } else if ("1".equals(flag)) {
+//            pushData();
+//        }
     }
 
     @Override

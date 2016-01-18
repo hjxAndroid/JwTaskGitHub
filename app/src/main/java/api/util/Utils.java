@@ -54,7 +54,7 @@ public class Utils {
      * 获取推送servlet
      */
     public static String getPushUrl() {
-        String url = Contants.All_URL+"/servlet/PushServlet";
+        String url = Contants.All_URL + "/servlet/PushServlet";
         return url;
     }
 
@@ -62,7 +62,7 @@ public class Utils {
      * 多个推送servlet
      */
     public static String getPublicUrl() {
-        String url = Contants.All_URL+"/servlet/PublicServlet";
+        String url = Contants.All_URL + "/servlet/PublicServlet";
         return url;
     }
 
@@ -70,7 +70,7 @@ public class Utils {
      * 全组推送servlet
      */
     public static String getOrgUrl() {
-        String url = Contants.All_URL+"/servlet/OrgServlet";
+        String url = Contants.All_URL + "/servlet/OrgServlet";
         return url;
     }
 
@@ -92,6 +92,14 @@ public class Utils {
             exception.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * 上传图片
+     */
+    public static String uploadPic() {
+        String url = Contants.All_URL + "/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665";
+        return url;
     }
 
 }

@@ -54,6 +54,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.photo.GetPicActivity;
 import com.jeeweel.syl.jwtask.business.main.module.photo.PhotoActivity;
+import com.jeeweel.syl.lib.api.component.dialog.SFProgrssDialog;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
@@ -62,7 +63,10 @@ import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.umeng.analytics.MobclickAgent;
 
+import net.tsz.afinal.http.AjaxParams;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -147,6 +151,7 @@ public class SignUpActivity extends JwActivity {
     GridAdapter adapter;
     String orgCode = "";
     private Users users;
+    private SFProgrssDialog m_customProgrssDialog;
 
 
     @Override
@@ -279,7 +284,7 @@ public class SignUpActivity extends JwActivity {
 
     //得到signedCode用于查找签到次数
     private void getData() {
-        showLoading();
+        showLoadingSign();
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         signedCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
         new FinishRefresh(getMy()).execute();
@@ -299,7 +304,7 @@ public class SignUpActivity extends JwActivity {
         signed.setProuser_name(prouserName);
         signed.setRemark(etRemark.getText().toString());
         tvSignButton.setText("进行中");
-        showLoading();
+        showLoadingSign();
         new FinishRefreshSigned(getMy()).execute();
     }
 
@@ -315,7 +320,7 @@ public class SignUpActivity extends JwActivity {
 
         @Override
         protected String doInBackground(String... params) {
-            showLoading();
+            showLoadingSign();
             String result = "1";
             JCloudDB jCloudDB = new JCloudDB();
             try {
@@ -345,7 +350,7 @@ public class SignUpActivity extends JwActivity {
             } else {
                 ToastShow("用户名或密码出错");
             }
-            hideLoading();
+            hideLoadingSign();
         }
     }
 
@@ -380,11 +385,11 @@ public class SignUpActivity extends JwActivity {
                 jCloudDB.save(signed);
                 counts = Integer.parseInt(signCounts) + 1;
                 signCounts = "" + counts;
-                //保存图片表
-                for (String sFile : Bimp.drr) {
-                    // File file = new File(sFile);
-                    CloudFile.upload(sFile, uuid);
-                }
+//                //保存图片表
+//                for (String sFile : Bimp.drr) {
+//                    // File file = new File(sFile);
+//                    CloudFile.upload(sFile, uuid);
+//                }
 
                 if (null != user) {
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
@@ -410,14 +415,36 @@ public class SignUpActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if ("1".equals(result)) {
+                uploadPic();
                 ToastShow("签到成功");
-                hideLoading();
+                hideLoadingSign();
+//                int signedCounts = Integer.parseInt(signCounts) + 1;
+//                String sSignedCounts = Integer.toString(signedCounts);
+//                tvSignCounts.setText(sSignedCounts);
                 tvSignButton.setText("签到");
                 OttUtils.push("news_refresh", "");
             }
             tvSignCounts.setText(signCounts);
 
         }
+    }
+
+    void uploadPic() {
+        AjaxParams params = new AjaxParams();
+
+        int i = 0;
+        for (String sFile : Bimp.drr) {
+            File file = new File(sFile);
+            try {
+                params.put(uuid, file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
+            String apiStr = Utils.uploadPic();
+            JwHttpPost(apiStr, params);
+        }
+
     }
 
     private class FinishRefreshSignedCounts extends AsyncTask<String, Void, String> {
@@ -735,5 +762,29 @@ public class SignUpActivity extends JwActivity {
         Bimp.drr.clear();
         Bimp.max = 0;
         super.onDestroy();
+    }
+
+    /**
+     * 显示动画
+     */
+    final public void showLoadingSign() {
+        if (null == m_customProgrssDialog)
+            m_customProgrssDialog = SFProgrssDialog
+                    .createProgrssDialog(this);
+        if (null != m_customProgrssDialog) {
+            m_customProgrssDialog.setMessage("请稍后");
+            m_customProgrssDialog.show();
+            m_customProgrssDialog.setCancelable(false);
+        }
+    }
+
+    /**
+     * 隐藏加载窗口
+     */
+    public void hideLoadingSign() {
+        if (null != m_customProgrssDialog) {
+            m_customProgrssDialog.dismiss();
+            m_customProgrssDialog = null;
+        }
     }
 }
