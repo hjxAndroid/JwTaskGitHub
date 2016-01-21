@@ -102,4 +102,6 @@
     <string name="title_activity_public_read_opotion">PublicReadOpotionActivity</string>
     <string name="title_activity_publicy_read_list">PublicyReadListActivity</string>
     <string name="title_activity_selected">SelectedActivity</string>
+    <string name="title_activity_dept_task">DeptTaskActivity</string>
+    <string name="title_activity_dept_task_detail">DeptTaskDetailActivity</string>
 </resources>

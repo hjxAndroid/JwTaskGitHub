@@ -46,6 +46,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.DegreeItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
@@ -79,7 +80,9 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import api.date.DatePickerDialog;
 import api.photoview.Bimp;
@@ -122,6 +125,12 @@ public class JobAddActivity extends JwActivity {
     private AlertDialog dialog;
 
     private Activity context;
+
+    //负责人所在部门code
+    String deptCode = "";
+
+    boolean deptflag = false;
+    Map<String,List<String>> deptCodeMap = new HashMap();
 
     String fzrCode = "";
 
@@ -682,9 +691,27 @@ public class JobAddActivity extends JwActivity {
                 if (ListUtils.IsNotNull(userdepts)) {
                     fzrCode = "";
                     fzr = "";
+                    deptCode = "";
                     for (Userdept userdept : userdepts) {
                         fzr += userdept.getNickname() + ",";
                         fzrCode += userdept.getUser_code() + ",";
+                        deptCode += userdept.getDept_code() + ",";
+                        if(deptflag){
+                            for(String key : deptCodeMap.keySet()) {
+                                if(key.equals(userdept.getUser_code())){
+                                    deptCodeMap.get(key).add(userdept.getDept_code());
+                                }else{
+                                    List<String> vals = new ArrayList();
+                                    vals.add(userdept.getDept_code());
+                                    deptCodeMap.put(userdept.getUser_code(), vals);
+                                }
+                            }
+                        }else{
+                            List<String> vals = new ArrayList();
+                            vals.add(userdept.getDept_code());
+                            deptCodeMap.put(userdept.getUser_code(),vals);
+                            deptflag = true;
+                        }
                     }
                     if (StrUtils.IsNotEmpty(fzr)) {
                         fzr = fzr.substring(0, fzr.length() - 1);
@@ -692,12 +719,16 @@ public class JobAddActivity extends JwActivity {
                     if (StrUtils.IsNotEmpty(fzrCode)) {
                         fzrCode = fzrCode.substring(0, fzrCode.length() - 1);
                     }
+                    if (StrUtils.IsNotEmpty(deptCode)) {
+                        deptCode = deptCode.substring(0, deptCode.length() - 1);
+                    }
                     etFzr.setText(fzr);
                 }
             } else {
                 etFzr.setText("");
                 fzrCode = "";
                 fzr = "";
+                deptCode = "";
                 userdepts.clear();
             }
 
@@ -878,6 +909,21 @@ public class JobAddActivity extends JwActivity {
                             taskflow.setNow_state_name(Contants.wqr);
                             taskflow.setUser_action(Contants.action_fb);
                             jCloudDB.save(taskflow);
+
+                            //保存到部门任务表里
+                            List<String> deptList = deptCodeMap.get(fzrs[i]);
+                            for(String deptCode : deptList){
+                                DeptTask deptTask = new DeptTask();
+                                deptTask.setTask_code(task.getTask_code());
+                                deptTask.setTask_name(task.getTask_name());
+                                //deptTask.setOrg_code();
+                                deptTask.setDept_code(deptCode);
+                                //负责人code
+                                deptTask.setUser_code(fzrs[i]);
+                                //负责人昵称
+                                deptTask.setNickname(fzrNames[i]);
+                                jCloudDB.save(deptTask);
+                            }
 
                         }
                     }

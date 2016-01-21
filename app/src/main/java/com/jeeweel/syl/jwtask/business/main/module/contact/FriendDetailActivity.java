@@ -8,11 +8,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.view.ViewGroup.LayoutParams;
 
-import com.google.gson.Gson;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -34,10 +33,8 @@ import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
 
-import api.util.Contants;
 import api.util.OttUtils;
 import api.util.Utils;
 import api.view.CustomDialog;
@@ -466,7 +463,7 @@ public class FriendDetailActivity extends JwActivity {
                 }
 
                 if (ListUtils.IsNotNull(userdepts)) {
-                    CommonAdapter commonAdapter = new CommonAdapter<Userdept>(getMy(), userdepts, R.layout.item_friend_detail) {
+                   final CommonAdapter commonAdapter = new CommonAdapter<Userdept>(getMy(), userdepts, R.layout.item_friend_detail) {
                         @Override
                         public void convert(ViewHolder helper, Userdept item) {
                             helper.setText(R.id.tv_org_name, item.getOrg_name());
@@ -474,6 +471,14 @@ public class FriendDetailActivity extends JwActivity {
                         }
                     };
                     listview.setAdapter(commonAdapter);
+                    listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Userdept userdept = (Userdept)commonAdapter.getItem(position);
+                            JwStartActivity(DeptTaskListActivity.class,userdept);
+                        }
+                    });
+
                 }
 
             } else {

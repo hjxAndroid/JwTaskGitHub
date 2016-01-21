@@ -13,14 +13,17 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.UserdeptItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.UserorgItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
+import com.jeeweel.syl.jwtask.business.main.module.task.JobDetailActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
@@ -43,21 +46,21 @@ import butterknife.ButterKnife;
 /**
  * Created by Ragn on 2016/1/5.
  */
-public class OrgMembersActivity extends JwActivity {
-    List<UserorgItem> mListItems = new ArrayList<UserorgItem>();
+public class DeptTaskListActivity extends JwActivity {
+    List<DeptTask> mListItems = new ArrayList<DeptTask>();
 
     @Bind(R.id.listview)
     ListView listview;
     private CommonAdapter commonAdapter;
     private Users users;
-    List<UserorgItem> list;
-    private String orgCode;
-    private String orgMembersCount;
-
+    List<DeptTask> list;
+    private Userdept userdept;
+    DeptTask deptTask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_org_members);
+        setContentView(R.layout.activity_dept_task);
+        setTitle("任务列表");
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
         getData();
@@ -69,46 +72,25 @@ public class OrgMembersActivity extends JwActivity {
 
 
     private void getData() {
-        orgCode = getIntent().getStringExtra(StaticStrUtils.baseItem);
+        userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
     }
 
     protected void initListView() {
-        commonAdapter = new CommonAdapter<UserorgItem>(getMy(), mListItems, R.layout.item_org_members) {
+        commonAdapter = new CommonAdapter<DeptTask>(getMy(), mListItems, R.layout.item_news) {
             @Override
-            public void convert(ViewHolder helper, UserorgItem item) {
-                String nickname = item.getNickname();
-                helper.setText(R.id.tv_name, item.getUser_name());
-                helper.setText(R.id.tv_nick_name, nickname);
-
-                // if (item.getPic_road() != null) {
-                ImageView iv_photo = helper.getImageView(R.id.iv_xz);
-                //     Logv("qwqwqw--"+Utils.getPicUrl()+"!!!"+item.getPhoto_code());
-                JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), iv_photo);
-//                } else {
-//                    if (nickname.length() > 2) {
-//                        nickname = nickname.substring(nickname.length() - 2, nickname.length());
-//                        helper.setText(R.id.tv_user_head1, nickname);
-//                    } else {
-//                        helper.setText(R.id.tv_user_head1, nickname);
-//                    }
-//                }
-
+            public void convert(ViewHolder helper, DeptTask item) {
+                helper.setText(R.id.task,item.getTask_name());
+                helper.setText(R.id.tv_task_news,item.getNickname());
+                helper.setText(R.id.tv_task_time,item.getCreate_time());
             }
         };
         listview.setAdapter(commonAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String flag = "OrgMembers";
-                UserorgItem userorg = (UserorgItem) commonAdapter.getItem(position);
-                Intent intent = new Intent();
-                intent.putExtra("flag", true);
-                intent.putExtra("mark", flag);
-                intent.putExtra(StaticStrUtils.baseItem, userorg.getUser_name());
-                intent.putExtra("friend_code", userorg.getUser_code());
-                intent.putExtra("org_code", userorg.getOrg_code());
-                intent.setClass(OrgMembersActivity.this, FriendDetailActivity.class);
-                JwStartActivity(intent);
+                deptTask = (DeptTask)commonAdapter.getItem(position);
+                showLoading();
+                new GetTaskRefresh(getMy()).execute();
             }
         });
     }
@@ -136,14 +118,9 @@ public class OrgMembersActivity extends JwActivity {
 
             if (null != users) {
                 try {
-//                    list = jCloudDB.findAllByWhere(Userorg.class,
-//                            " org_code = " + StrUtils.QuotedStr(orgCode));
+                    list = jCloudDB.findAllByWhere(DeptTask.class,
+                           "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " and user_code="+StrUtils.QuotedStr(userdept.getUser_code()));
 
-                    String readSql = "select * from userorg left join picture on userorg.user_code = picture.pic_code WHERE org_code = " + StrUtils.QuotedStr(orgCode);
-                    list = jCloudDB.findAllBySql(UserorgItem.class, readSql);
-                    mListItems.clear();
-                    removeDuplicate(list);
-                    orgMembersCount = Integer.toString(list.size());
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -155,11 +132,6 @@ public class OrgMembersActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                if (StrUtils.IsNotEmpty(orgMembersCount)) {
-                    setTitle("组织成员" + "(" + orgMembersCount + ")");
-                } else {
-                    setTitle("组织成员");
-                }
                 mListItems.addAll(list);
                 commonAdapter.notifyDataSetChanged();
             } else {
@@ -170,27 +142,48 @@ public class OrgMembersActivity extends JwActivity {
     }
 
     /**
-     * 去除多余元素
-     *
-     * @param list
+     * 保存到数据库
      */
-    public void removeDuplicate(List<UserorgItem> list) {
-        for (int i = 0; i < list.size() - 1; i++) {
-            for (int j = list.size() - 1; j > i; j--) {
-                if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {
-                    list.remove(j);
+    private class GetTaskRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+        List<Task> tasks;
+        /**
+         * @param context 上下文
+         */
+        public GetTaskRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+
+            if (null != deptTask) {
+                try {
+                    tasks = jCloudDB.findAllByWhere(Task.class,
+                            "task_code = " + StrUtils.QuotedStr(deptTask.getTask_code()));
+                } catch (CloudServiceException e) {
+                    result = "0";
+                    e.printStackTrace();
                 }
             }
+            return result;
         }
-    }
 
-    @Subscribe
-    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
-        String msg = activityMsgEvent.getMsg();
-        if (StrUtils.IsNotEmpty(msg) && msg.equals("OrgMembersRefreash")) {
-            list.clear();
-            showLoading();
-            new FinishRefresh(getMy()).execute();
+        @Override
+        protected void onPostExecute(String result) {
+            if (result.equals("1")) {
+               if(ListUtils.IsNotNull(tasks)){
+                   Task task = tasks.get(0);
+                   JwStartActivity(JobDetailActivity.class,task);
+               }
+            } else {
+                //没有加载到数据
+            }
+            hideLoading();
         }
     }
 }

@@ -530,6 +530,14 @@
             android:name=".business.main.module.task.UnSignActivity"
             android:label="@string/title_activity_unsign" >
         </activity>
+        <activity
+            android:name=".business.main.module.contact.DeptTaskListActivity"
+            android:label="@string/title_activity_dept_task" >
+        </activity>
+        <activity
+            android:name=".business.main.module.contact.DeptTaskDetailActivity"
+            android:label="@string/title_activity_dept_task_detail" >
+        </activity>
     </application>
 
 </manifest>

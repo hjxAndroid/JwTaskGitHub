@@ -55,7 +55,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="3dp"
         android:background="@drawable/circle_red"
-        android:visibility="visible"/>
+        android:visibility="gone"/>
 
     <ImageView android:id="@+id/iv_task_num"
         android:layout_width="wrap_content"
