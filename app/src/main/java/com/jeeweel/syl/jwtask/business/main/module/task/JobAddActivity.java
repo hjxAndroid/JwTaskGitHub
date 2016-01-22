@@ -1049,7 +1049,7 @@ public class JobAddActivity extends JwActivity {
             }
             //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
             String apiStr = Utils.uploadPic();
-            JwHttpPost(apiStr, params);
+            JwHttpPost(apiStr, params,true);
         }
 
     }
