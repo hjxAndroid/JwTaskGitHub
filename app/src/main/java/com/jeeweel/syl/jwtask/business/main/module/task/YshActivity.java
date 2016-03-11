@@ -77,6 +77,7 @@ public class YshActivity extends JwActivity {
     @Bind(R.id.tv_rwnd)
     TextView tvRwnd;
 
+    String flag = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +92,7 @@ public class YshActivity extends JwActivity {
 
     private void getData() {
         showLoading();
+        flag = getIntent().getStringExtra("flag");
         task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         showLoading();
         new FinishRefresh(getMy()).execute();
@@ -209,7 +211,10 @@ public class YshActivity extends JwActivity {
                                     break;
                                 case 3:
                                     //已审核，查看审核情况
-                                    JwStartActivity(YshActivity.class, taskflow.getTask_code());
+                                    if(flag==null){
+                                    }else{
+                                        JwStartActivity(YshActivity.class, taskflow.getTask_code());
+                                    }
                                     break;
                                 case 4:
                                     //延期申请中，查看自己的延期信息

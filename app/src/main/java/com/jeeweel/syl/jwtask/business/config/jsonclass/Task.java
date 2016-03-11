@@ -178,6 +178,16 @@ public class Task extends BaseItem{
     private int degree_score;
     private String reject_content;
     private String pic_code;
+    private String principal_dept_code;
+
+
+    public String getPrincipal_dept_code() {
+        return principal_dept_code;
+    }
+
+    public void setPrincipal_dept_code(String principal_dept_code) {
+        this.principal_dept_code = principal_dept_code;
+    }
 
     public String getPhoto_code() {
         return photo_code;

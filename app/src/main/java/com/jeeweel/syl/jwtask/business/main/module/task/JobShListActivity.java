@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,6 +20,7 @@ import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView;
+import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
@@ -160,6 +162,7 @@ public class JobShListActivity extends JwListActivity {
                 helper.setText(R.id.tv_state, item.getNow_state_name());
                 helper.setText(R.id.tv_time, item.getCreate_time());
                 helper.setText(R.id.tv_fbr,item.getPrincipal_nickname());
+                helper.setText(R.id.tv_end_time,item.getOver_time());
                 String priority = item.getPriority();
                 TextView tv_yxj = helper.getView(R.id.tv_yxj);
                 tv_yxj.setText(priority);
@@ -201,7 +204,10 @@ public class JobShListActivity extends JwListActivity {
         if (flag == 2) {
             JwStartActivity(FinishShActivity.class, task);
         } else if (flag == 3) {
-            JwStartActivity(YshActivity.class, task);
+            Intent intent = new Intent(getMy(),YshActivity.class);
+            intent.putExtra("flag",flag);
+            intent.putExtra(StaticStrUtils.baseItem,task);
+            startActivity(intent);
         } else if (flag == 4) {
             JwStartActivity(SolveDelayActivity.class, task);
         } else if (flag == 7) {

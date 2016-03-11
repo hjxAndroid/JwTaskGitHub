@@ -47,6 +47,17 @@ public class DeptTask {
 
     private String create_time;
 
+    private String end_time;
+
+
+    public String getEnd_time() {
+        return end_time;
+    }
+
+    public void setEnd_time(String end_time) {
+        this.end_time = end_time;
+    }
+
     public int getMid() {
         return mid;
     }

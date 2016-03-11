@@ -23,6 +23,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
+import com.jeeweel.syl.jwtask.business.main.module.task.JobDetailActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.WebActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -475,7 +476,10 @@ public class FriendDetailActivity extends JwActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Userdept userdept = (Userdept)commonAdapter.getItem(position);
-                            JwStartActivity(DeptTaskListActivity.class,userdept);
+                            Intent intent = new Intent(getMy(), DeptTaskListActivity.class);
+                            intent.putExtra(StaticStrUtils.baseItem, userdept);
+                            intent.putExtra("flag", "fb");
+                            startActivity(intent);
                         }
                     });
 

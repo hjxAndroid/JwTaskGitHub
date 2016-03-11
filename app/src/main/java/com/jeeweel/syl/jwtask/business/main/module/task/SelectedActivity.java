@@ -68,6 +68,7 @@ public class SelectedActivity extends JwActivity {
     private TextView tv_show;// 用于显示选中的条目数量
 
     String json = "";
+    String fzr = "";
     List<UserdeptItem> userdepts = new ArrayList<>();
     List<UserdeptItem> userdeptnews = new ArrayList<>();
     @Override
@@ -77,6 +78,7 @@ public class SelectedActivity extends JwActivity {
         setTitle("选择接收人");
         tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
         json = getIntent().getStringExtra("data");
+        fzr = getIntent().getStringExtra("fzr");
         if(StrUtils.IsNotEmpty(json)){
             userdepts = JwJSONUtils.getParseArray(json, UserdeptItem.class);
         }
@@ -89,6 +91,9 @@ public class SelectedActivity extends JwActivity {
     void AddClick() {
         Intent intent = new Intent(getMy(),PublicyContactHomeActivity.class);
         intent.putExtra(StaticStrUtils.baseItem,tag);
+        if(StrUtils.IsNotEmpty(fzr)){
+            intent.putExtra("fzr",fzr);
+        }
         intent.putExtra("data",json);
         startActivity(intent);
         finish();

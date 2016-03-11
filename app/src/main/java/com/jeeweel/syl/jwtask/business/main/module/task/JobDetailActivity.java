@@ -17,6 +17,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
@@ -318,6 +319,7 @@ public class JobDetailActivity extends JwActivity {
         private Context context;
         private JCloudDB jCloudDB;
         List<Task> tasks;
+        List<Dept> depts;
         List<Picture> pictureList;
         List<Taskflow> taskflowNews;
         /**
@@ -343,6 +345,9 @@ public class JobDetailActivity extends JwActivity {
                     String newSql = "select * from tmp" + unid;
                     //查找数据
                     tasks = jCloudDB.findAllBySql(Task.class, newSql);
+
+                    //查找部门
+                    depts = jCloudDB.findAllByWhere(Dept.class, "depart_code="+StrUtils.QuotedStr(task.getPrincipal_dept_code()));
 
                     String deletSql = "DROP TABLE tmp" + unid;
                     CloudDB.execSQL(deletSql);
@@ -421,7 +426,10 @@ public class JobDetailActivity extends JwActivity {
                     tvCyz.setText(task.getParticipant_nickname());
                     tvGcz.setText(task.getObserver_nickname());
                 }
-
+                if (ListUtils.IsNotNull(depts)) {
+                    String data = task.getPrincipal_nickname()+"   （发布部门："+depts.get(0).getDepart_name()+"）";
+                    tvFzr.setText(data);
+                }
 
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override

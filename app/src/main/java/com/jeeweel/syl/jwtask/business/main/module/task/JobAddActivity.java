@@ -130,7 +130,7 @@ public class JobAddActivity extends JwActivity {
     String deptCode = "";
 
     boolean deptflag = false;
-    Map<String,List<String>> deptCodeMap = new HashMap();
+    Map<String, List<String>> deptCodeMap = new HashMap();
 
     String fzrCode = "";
 
@@ -500,10 +500,12 @@ public class JobAddActivity extends JwActivity {
             Intent intent = new Intent(getMy(), SelectedActivity.class);
             intent.putExtra(StaticStrUtils.baseItem, Contants.fzr);
             intent.putExtra("data", json);
+            intent.putExtra("fzr", "fzr");
             startActivity(intent);
         } else {
             Intent intent = new Intent(getMy(), PublicyContactHomeActivity.class);
             intent.putExtra(StaticStrUtils.baseItem, Contants.fzr);
+            intent.putExtra("fzr", "fzr");
             startActivity(intent);
         }
     }
@@ -696,7 +698,7 @@ public class JobAddActivity extends JwActivity {
                         fzr += userdept.getNickname() + ",";
                         fzrCode += userdept.getUser_code() + ",";
                         deptCode += userdept.getDept_code() + ",";
-                        if(deptflag){
+                       /* if(deptflag){
                             for(String key : deptCodeMap.keySet()) {
                                 if(key.equals(userdept.getUser_code())){
                                     deptCodeMap.get(key).add(userdept.getDept_code());
@@ -711,7 +713,7 @@ public class JobAddActivity extends JwActivity {
                             vals.add(userdept.getDept_code());
                             deptCodeMap.put(userdept.getUser_code(),vals);
                             deptflag = true;
-                        }
+                        }*/
                     }
                     if (StrUtils.IsNotEmpty(fzr)) {
                         fzr = fzr.substring(0, fzr.length() - 1);
@@ -870,7 +872,7 @@ public class JobAddActivity extends JwActivity {
                 if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
                     String[] fzrNames = fzr.split(",");
                     String[] fzrs = fzrCode.split(",");
-                    String task_name = task.getTask_name();
+                    String[] deptCodes = deptCode.split(",");
                     //批量发布任务
                     for (int i = 0; i < fzrs.length; i++) {
                         task.setPrincipal_code(fzrs[i]);
@@ -890,6 +892,7 @@ public class JobAddActivity extends JwActivity {
                                 task.setNow_state(0);
                                 task.setNow_state_name(Contants.wqr);
                                 task.setPic_code(pic_unid);
+                                task.setPrincipal_dept_code(deptCodes[i]);
                             }
 
                             if (StrUtils.IsNotEmpty(orgcode)) {
@@ -911,19 +914,17 @@ public class JobAddActivity extends JwActivity {
                             jCloudDB.save(taskflow);
 
                             //保存到部门任务表里
-                            List<String> deptList = deptCodeMap.get(fzrs[i]);
-                            for(String deptCode : deptList){
-                                DeptTask deptTask = new DeptTask();
-                                deptTask.setTask_code(task.getTask_code());
-                                deptTask.setTask_name(task.getTask_name());
-                                //deptTask.setOrg_code();
-                                deptTask.setDept_code(deptCode);
-                                //负责人code
-                                deptTask.setUser_code(fzrs[i]);
-                                //负责人昵称
-                                deptTask.setNickname(fzrNames[i]);
-                                jCloudDB.save(deptTask);
-                            }
+                            DeptTask deptTask = new DeptTask();
+                            deptTask.setEnd_time(task.getOver_time());
+                            deptTask.setTask_code(task.getTask_code());
+                            deptTask.setTask_name(task.getTask_name());
+                            //deptTask.setOrg_code();
+                            deptTask.setDept_code(deptCodes[i]);
+                            //负责人code
+                            deptTask.setUser_code(fzrs[i]);
+                            //负责人昵称
+                            deptTask.setNickname(fzrNames[i]);
+                            jCloudDB.save(deptTask);
 
                         }
                     }
@@ -1014,9 +1015,9 @@ public class JobAddActivity extends JwActivity {
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-      //  if ("0".equals(flag)) {
-            finish();
-       // }
+        //  if ("0".equals(flag)) {
+        finish();
+        // }
 //        else if ("1".equals(flag)) {
 //            pushData();
 //        }
@@ -1040,18 +1041,22 @@ public class JobAddActivity extends JwActivity {
         AjaxParams params = new AjaxParams();
 
         int i = 0;
-        for (String sFile : Bimp.drr) {
-            File file = new File(sFile);
-            try {
-                params.put(pic_unid, file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+        int size = Bimp.drr.size();
+        if (size != 0) {
+            for (String sFile : Bimp.drr) {
+                File file = new File(sFile);
+                try {
+                    params.put(pic_unid, file);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
+                String apiStr = Utils.uploadPic();
+                JwHttpPost(apiStr, params, true);
             }
-            //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
-            String apiStr = Utils.uploadPic();
-            JwHttpPost(apiStr, params,true);
+        } else {
+            finish();
         }
-
     }
 
 //    @Override

@@ -72,6 +72,7 @@ public class PublicyOegUsersActivity extends JwActivity {
     private TextView tv_show;// 用于显示选中的条目数量
 
     private String data = "";
+    private String fzr = "";
 
     List<UserdeptItem> userdepts = new ArrayList<>();
     @Override
@@ -84,6 +85,7 @@ public class PublicyOegUsersActivity extends JwActivity {
         }
         tag = getIntent().getStringExtra("tag");
         data = getIntent().getStringExtra("data");
+        fzr= getIntent().getStringExtra("fzr");
         if(StrUtils.IsNotEmpty(data)){
             userdepts = JwJSONUtils.getParseArray(data, UserdeptItem.class);
         }

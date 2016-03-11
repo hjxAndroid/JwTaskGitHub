@@ -180,4 +180,6 @@ public class LoginActivity extends JwActivity {
         super.onPause();
         MobclickAgent.onPause(this);
     }
+
+
 }

@@ -8,12 +8,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
+import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
@@ -56,6 +59,7 @@ public class DeptTaskListActivity extends JwActivity {
     List<DeptTask> list;
     private Userdept userdept;
     DeptTask deptTask;
+    String flag = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,7 @@ public class DeptTaskListActivity extends JwActivity {
 
 
     private void getData() {
+        flag = getIntent().getStringExtra("flag");
         userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
     }
 
@@ -82,6 +87,9 @@ public class DeptTaskListActivity extends JwActivity {
                 helper.setText(R.id.task,item.getTask_name());
                 helper.setText(R.id.tv_task_news,item.getNickname());
                 helper.setText(R.id.tv_task_time,item.getCreate_time());
+                TextView textView = helper.getView(R.id.tv_end_time);
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(item.getEnd_time());
             }
         };
         listview.setAdapter(commonAdapter);
@@ -148,6 +156,7 @@ public class DeptTaskListActivity extends JwActivity {
         private Context context;
         private JCloudDB jCloudDB;
         List<Task> tasks;
+        List<Orgunit> orgunits;
         /**
          * @param context 上下文
          */
@@ -163,8 +172,20 @@ public class DeptTaskListActivity extends JwActivity {
 
             if (null != deptTask) {
                 try {
-                    tasks = jCloudDB.findAllByWhere(Task.class,
-                            "task_code = " + StrUtils.QuotedStr(deptTask.getTask_code()));
+                    orgunits = jCloudDB.findAllByWhere(Orgunit.class,
+                            "founder_code = " + StrUtils.QuotedStr(users.getUser_code()));
+
+                    if(ListUtils.IsNotNull(orgunits)){
+                        tasks = jCloudDB.findAllByWhere(Task.class,
+                                "task_code = " + StrUtils.QuotedStr(deptTask.getTask_code()));
+                    }else{
+                        result = "2";
+                        String sql = "SELECT * from task a where a.task_code  in (SELECT t.task_code from task t where  t.promulgator_code LIKE "+ StrUtils.QuotedStrLike(users.getUser_code()) +" or t.auditor_code LIKE "+ StrUtils.QuotedStrLike(users.getUser_code()) +" or t.observer_code like "+ StrUtils.QuotedStrLike(users.getUser_code()) +" or t.participant_code like "+ StrUtils.QuotedStrLike(users.getUser_code()) +" or t.principal_code like "+ StrUtils.QuotedStrLike(users.getUser_code()) +") and a.task_code = " + StrUtils.QuotedStr(deptTask.getTask_code());
+                        CloudDB.execSQL(sql);
+                        tasks = jCloudDB.findAllBySql(Task.class, sql);
+                    }
+
+
                 } catch (CloudServiceException e) {
                     result = "0";
                     e.printStackTrace();
@@ -178,10 +199,25 @@ public class DeptTaskListActivity extends JwActivity {
             if (result.equals("1")) {
                if(ListUtils.IsNotNull(tasks)){
                    Task task = tasks.get(0);
-                   JwStartActivity(JobDetailActivity.class,task);
+                   Intent intent = new Intent(getMy(),JobDetailActivity.class);
+                   intent.putExtra(StaticStrUtils.baseItem,task);
+                   if(StrUtils.IsNotEmpty(flag)){
+                       intent.putExtra("flag",flag);
+                   }
+                   startActivity(intent);
                }
-            } else {
-                //没有加载到数据
+            } else if(result.equals("2")){
+                if(ListUtils.IsNotNull(tasks)){
+                    Task task = tasks.get(0);
+                    Intent intent = new Intent(getMy(),JobDetailActivity.class);
+                    intent.putExtra(StaticStrUtils.baseItem,task);
+                    if(StrUtils.IsNotEmpty(flag)){
+                        intent.putExtra("flag",flag);
+                    }
+                    startActivity(intent);
+                }else{
+                    ToastShow("您未参与该任务，没有权限查看该任务");
+                }
             }
             hideLoading();
         }

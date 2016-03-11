@@ -46,6 +46,8 @@ public class PublicyContactHomeActivity extends JwActivity {
     String tag = "";
 
     String data = "";
+
+    String fzr = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +57,7 @@ public class PublicyContactHomeActivity extends JwActivity {
         users = JwAppAplication.getInstance().getUsers();
         tag = getIntent().getStringExtra(StaticStrUtils.baseItem);
         data = getIntent().getStringExtra("data");
+        fzr = getIntent().getStringExtra("fzr");
         getDate();
     }
 
@@ -143,6 +146,9 @@ public class PublicyContactHomeActivity extends JwActivity {
                             intent.putExtra(StaticStrUtils.baseItem, orgunit);
                             intent.putExtra("tag", tag);
                             intent.putExtra("data", data);
+                            if(StrUtils.IsNotEmpty(fzr)){
+                                intent.putExtra("fzr", fzr);
+                            }
                             startActivity(intent);
                             finish();
                             return true;
@@ -157,6 +163,9 @@ public class PublicyContactHomeActivity extends JwActivity {
                             intent.putExtra(StaticStrUtils.baseItem, userdept);
                             intent.putExtra("tag", tag);
                             intent.putExtra("data", data);
+                            if(StrUtils.IsNotEmpty(fzr)){
+                                intent.putExtra("fzr", fzr);
+                            }
                             startActivity(intent);
                             finish();
                             return true;

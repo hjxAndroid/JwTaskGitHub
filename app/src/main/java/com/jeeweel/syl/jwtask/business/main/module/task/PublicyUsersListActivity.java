@@ -68,6 +68,7 @@ public class PublicyUsersListActivity extends JwActivity {
     private TextView tv_show;// 用于显示选中的条目数量
 
     private String data = "";
+    private String fzr = "";
 
     List<UserdeptItem> userdepts = new ArrayList<>();
 
@@ -81,6 +82,7 @@ public class PublicyUsersListActivity extends JwActivity {
         }
         tag = getIntent().getStringExtra("tag");
         data = getIntent().getStringExtra("data");
+        fzr= getIntent().getStringExtra("fzr");
         if(StrUtils.IsNotEmpty(data)){
             userdepts = JwJSONUtils.getParseArray(data, UserdeptItem.class);
         }
@@ -136,8 +138,11 @@ public class PublicyUsersListActivity extends JwActivity {
                 if(ListUtils.IsNotNull(userdepts)){
                     userdeptnews.addAll(userdepts);
                 }
-                removeDuplicate(userdeptnews);
-
+                if(StrUtils.IsNotEmpty(fzr)){
+                    removeDuplicateDept(userdeptnews);
+                }else {
+                    removeDuplicate(userdeptnews);
+                }
 
                 Gson gson = new Gson();
                 String json = gson.toJson(userdeptnews);
@@ -246,6 +251,16 @@ public class PublicyUsersListActivity extends JwActivity {
         for (int i = 0; i < list.size() - 1; i++) {
             for (int j = list.size() - 1; j > i; j--) {
                 if (list.get(j).getUser_code().equals(list.get(i).getUser_code())) {
+                    list.remove(j);
+                }
+            }
+        }
+    }
+
+    public void removeDuplicateDept(List<UserdeptItem> list) {
+        for (int i = 0; i < list.size() - 1; i++) {
+            for (int j = list.size() - 1; j > i; j--) {
+                if (list.get(j).getDept_code().equals(list.get(i).getDept_code())) {
                     list.remove(j);
                 }
             }
