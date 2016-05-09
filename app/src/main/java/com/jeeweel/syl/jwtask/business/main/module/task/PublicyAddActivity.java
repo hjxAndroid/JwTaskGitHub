@@ -57,6 +57,7 @@ import api.photoview.Bimp;
 import api.photoview.FileUtils;
 import api.util.Contants;
 import api.util.OttUtils;
+import api.util.ReduceUtil;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -451,8 +452,16 @@ public class PublicyAddActivity extends JwActivity {
         int i = 0;
         for (String sFile : Bimp.drr) {
             File file = new File(sFile);
+
+            String fileName = sFile.substring(0,3);
             try {
-                params.put(unid, file);
+                sFile =  ReduceUtil.compressImage(sFile, fileName, 50);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                params.put(unid, new File(sFile));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }

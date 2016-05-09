@@ -20,7 +20,7 @@ public class Taskcommit {
     private int mid;
 
     private String task_code;
-
+    private String dept_code;
     private String content;
 
     private String user_code;
@@ -92,6 +92,14 @@ public class Taskcommit {
 
     public void setMid(int mid) {
         this.mid = mid;
+    }
+
+    public String getDept_code() {
+        return dept_code;
+    }
+
+    public void setDept_code(String dept_code) {
+        this.dept_code = dept_code;
     }
 }
 

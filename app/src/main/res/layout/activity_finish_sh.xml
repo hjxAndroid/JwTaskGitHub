@@ -200,6 +200,17 @@
         </LinearLayout>
 
 
+        <api.view.ListNoScrollView
+            android:id="@+id/lvfile"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:cacheColorHint="@color/transparent"
+            android:divider="@color/divider_color"
+            android:dividerHeight="1.0px"
+            android:fadingEdge="none"
+            android:listSelector="@color/transparent"
+            android:scrollbars="none" />
 
         <api.view.GridNoScrollView
             android:id="@+id/noScrollgridview"

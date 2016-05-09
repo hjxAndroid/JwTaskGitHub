@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/doctor_memo"
+    style="@style/ListViewStyle"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/linear_item_bg"
+    android:orientation="horizontal">
+
+
+<LinearLayout android:id="@+id/li"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_toLeftOf="@+id/bt_load"
+    android:layout_marginTop="5dp"
+    android:layout_marginLeft="10dp">
+
+    <TextView
+        android:id="@+id/tv_file"
+        style="@style/text_nomor_style"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="@+id/iv_xz"
+        android:text="文件名"
+        android:maxLines="2"
+        android:ellipsize="end"/>
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/text_nomor_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:text="凌月明"
+        android:layout_marginRight="10dp"/>
+</LinearLayout>
+    <TextView
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/li"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="10dp"
+        android:text="2015-10-10 30：203"
+        android:textColor="@color/TextColorGray"
+        android:textSize="@dimen/textSize_small" />
+
+    <Button android:id="@+id/bt_load"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/ios7blue"
+        android:textColor="@color/white"
+        android:text="下载"/>
+</RelativeLayout>

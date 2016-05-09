@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Sign;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Signed;
@@ -31,7 +33,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import api.util.OttUtils;
+import api.util.ShaerHelper;
 import api.view.CustomDialog;
+import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -84,7 +88,7 @@ public class CheckSignPersonActivity extends JwListActivity {
     V_sign_users v_sign_nickname;
     Signed signed;
     Sign sign;
-
+    TitlePopup titlePopup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +111,35 @@ public class CheckSignPersonActivity extends JwListActivity {
             }
         });
         addMenuView(menuTextView);
+    }
+
+    private void initView() {
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a1), "分享");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "删除公告");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
+            @Override
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    String tittle = list.get(0).getSign_title();
+                    String content = list.get(0).getSign_msg();
+                    new ShaerHelper(CheckSignPersonActivity.this, tittle, content);
+                } else{
+                    showAlertDialog();
+                }
+            }
+        });
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
     }
 
     public void showAlertDialog() {
@@ -406,6 +439,7 @@ public class CheckSignPersonActivity extends JwListActivity {
             if (ListUtils.IsNotNull(list)) {
                 tvTitle.setText(list.get(0).getSign_title());
                 tvSignedContent.setText(list.get(0).getSign_msg());
+                initView();
             } else {
                 llSignedTitle.setVisibility(View.GONE);
                 llSignedContent.setVisibility(View.GONE);

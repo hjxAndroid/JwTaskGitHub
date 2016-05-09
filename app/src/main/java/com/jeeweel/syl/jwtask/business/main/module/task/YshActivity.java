@@ -1,12 +1,14 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -28,11 +30,18 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.umeng.analytics.MobclickAgent;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+
+import java.io.File;
 import java.util.List;
 
+import api.util.FileUtils;
 import api.util.Utils;
 import api.view.GridNoScrollView;
 import api.view.ListNoScrollView;
@@ -78,6 +87,11 @@ public class YshActivity extends JwActivity {
     TextView tvRwnd;
 
     String flag = "";
+    @Bind(R.id.lvfile)
+    ListNoScrollView lvfile;
+    List<Picture> fjList;
+    ProgressDialog progress;
+    CommonAdapter fileAdapter = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +112,67 @@ public class YshActivity extends JwActivity {
         new FinishRefresh(getMy()).execute();
     }
 
+    /**
+     * 字节转换为kb
+     *
+     * @param bt
+     * @return kb大小
+     */
+    private int byteToKB(int bt) {
+        return Math.round(bt / 1024);
+    }
+    /**
+     * 下载文件
+     */
+    private void downloadApk(String sDownUrl, String filename) {
+        String sApkPath = StoreUtils.getSDPath() + filename;
+        FinalHttp jwHttp = new FinalHttp();
+        jwHttp.download(sDownUrl, sApkPath, new AjaxCallBack<File>() {
+
+            @Override
+            public int getRate() {
+                return super.getRate();
+            }
+
+            @Override
+            public AjaxCallBack<File> progress(boolean progress, int rate) {
+                return super.progress(progress, rate);
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                super.onLoading(count, current);
+                progress.setProgressNumberFormat("%1d k/%2d k");
+                progress.setMax(byteToKB((int) count));
+                progress.setProgress(byteToKB((int) current));
+            }
+
+            @Override
+            public void onSuccess(File f) {
+
+                progress.dismiss();
+                String path = f.getAbsolutePath();
+                fileAdapter.notifyDataSetChanged();
+                File file = new File(path);
+                FileUtils.openFile(file,YshActivity.this);
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                JwToast.ToastShow("文件下载异常");
+                progress.dismiss();
+            }
+        });
+
+
+    }
 
     /**
      * 保存到数据库
@@ -126,10 +201,14 @@ public class YshActivity extends JwActivity {
                     list = jCloudDB.findAllByWhere(Submit.class,
                             "task_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
+                    if (ListUtils.IsNotNull(list)) {
+                        fjList = jCloudDB.findAllByWhere(Picture.class, "pic_code=" + StrUtils.QuotedStr(list.get(0).getFile_code()));
+                    }
+
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
                             "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
-                    String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
+                    String newSql = "select * from  v_taskflow where task_code= " + StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
                     //查找数据
                     taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
                 }
@@ -155,6 +234,61 @@ public class YshActivity extends JwActivity {
                     etShjl.setText(StrUtils.IsNull(submit.getAudit_evaluate()));
                     tvShpj.setText(StrUtils.IsNull(submit.getAudit_content()));
                     tvScore.setText(StrUtils.IsNull(submit.getScore()));
+                }
+
+                if (ListUtils.IsNotNull(fjList)) {
+
+                    fileAdapter = new CommonAdapter<Picture>(getMy(), fjList, R.layout.item_file) {
+                        @Override
+                        public void convert(ViewHolder helper, final Picture item) {
+                            helper.setText(R.id.tv_name, "任务附件"+helper.getPosition()+":");
+                            String file = item.getPic_road();
+                            final String fileName = file.substring(file.lastIndexOf("_") + 1, file.length());
+                            helper.setText(R.id.tv_fj, fileName);
+                            final Button bt_load = helper.getView(R.id.bt_load);
+
+                            final String fliePath = StoreUtils.getSDPath()+ fileName;
+                            if(FileUtils.fileIsExists(fliePath)){
+                                //已下载，显示打开，按钮可点击 1
+                                bt_load.setText("打开");
+                                bt_load.setTag("1");
+                                bt_load.setClickable(true);
+                                bt_load.setBackgroundResource(R.drawable.bg_dk);
+                            }else{
+                                //还未下载，按钮显示下载,可点击
+                                bt_load.setTag("0");
+                                bt_load.setClickable(true);
+                                bt_load.setBackgroundResource(R.drawable.bg_xz);
+                            }
+
+                            bt_load.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(bt_load.getTag().equals("0")){
+                                        //显示下载中，不可点击
+                                        bt_load.setText("下载中");
+                                        bt_load.setBackgroundResource(R.drawable.bg_xzz);
+                                        bt_load.setClickable(false);
+                                        //显示加载进度条
+                                        progress = new ProgressDialog(YshActivity.this);
+                                        progress.setTitle("正在下载...");
+                                        progress.setCancelable(false);
+                                        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                        progress.setIndeterminate(false);
+                                        progress.setProgress(0);
+                                        progress.show();
+
+                                        String path = Utils.getPicUrl()+item.getPic_road();
+                                        downloadApk(path,fileName);
+                                    }else if(bt_load.getTag().equals("1")){
+                                        File file = new File(fliePath);
+                                        FileUtils.openFile(file,YshActivity.this);
+                                    }
+                                }
+                            });
+                        }
+                    };
+                    lvfile.setAdapter(fileAdapter);
                 }
 
                 if (ListUtils.IsNotNull(pictureList)) {
@@ -195,7 +329,7 @@ public class YshActivity extends JwActivity {
                             helper.setText(R.id.tv_time, item.getCreate_time());
 
                             ImageView imageView = helper.getImageView(R.id.iv_xz);
-                            JwImageLoader.displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
+                            JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
                         }
                     };
                     listview.setAdapter(commonAdapter);
@@ -211,8 +345,8 @@ public class YshActivity extends JwActivity {
                                     break;
                                 case 3:
                                     //已审核，查看审核情况
-                                    if(flag==null){
-                                    }else{
+                                    if (flag == null) {
+                                    } else {
                                         JwStartActivity(YshActivity.class, taskflow.getTask_code());
                                     }
                                     break;

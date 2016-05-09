@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.jeeweel.syl.jwtask.business.main.module.basic.RegisterActivity">
+
+
+    <EditText
+        android:id="@+id/et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="请输入手机号"
+        android:textColor="@color/list_text_color"
+        android:textSize="@dimen/textSize_title" />
+
+    <EditText
+        android:id="@+id/et_old_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="请输入旧密码"
+        android:textColor="@color/list_text_color"
+        android:textSize="@dimen/textSize_title" />
+
+    <EditText
+        android:id="@+id/et_new_pwd"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:hint="请输入新密码"
+        android:textColor="@color/list_text_color"
+        android:textSize="@dimen/textSize_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <EditText android:id="@+id/et_yzm"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_title"
+            android:hint="请输入您的验证码"/>
+
+        <Button android:id="@+id/bt_yzm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/bg_button"
+            android:text="发送验证码"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_title" />
+    </LinearLayout>
+
+
+
+    <Button android:id="@+id/bt_next"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="10dp"
+        android:textColor="@color/white"
+        android:textSize="17sp"
+        android:background="@drawable/bg_button"
+        android:text="修改"/>
+
+</LinearLayout>

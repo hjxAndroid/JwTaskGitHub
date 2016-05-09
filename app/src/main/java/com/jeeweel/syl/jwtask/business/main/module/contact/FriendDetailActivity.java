@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,8 +17,10 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -68,6 +71,7 @@ public class FriendDetailActivity extends JwActivity {
     private List<Users> usersList;
 
     private List<Userdept> userdepts;
+    private List<Task> deptTasks;
 
     private String phone;
 
@@ -90,7 +94,6 @@ public class FriendDetailActivity extends JwActivity {
         ButterKnife.bind(this);
         setTitle("用户信息");
         userIsFounder = JwAppAplication.getInstance().getUsers();
-        getData();
         Intent intent = getIntent();
         boolean flag = intent.getBooleanExtra("flag", false);
         if (flag == true) {
@@ -99,6 +102,7 @@ public class FriendDetailActivity extends JwActivity {
             initRight();
         }
         friend_code = intent.getStringExtra("friend_code");
+        getData();
         if (StrUtils.IsNotEmpty(friend_code)) {
             new GetUserPicture(getMy(), iv, friend_code).execute();
         }
@@ -443,6 +447,20 @@ public class FriendDetailActivity extends JwActivity {
 
                     userdepts = jCloudDB.findAllByWhere(Userdept.class,
                             "username=" + StrUtils.QuotedStr(phone));
+
+                    for(Userdept userdept : userdepts){
+
+
+                        deptTasks = jCloudDB.findAllByWhere(Task.class,
+                                "principal_code = "+StrUtils.QuotedStr(friend_code)+" and principal_dept_code ="+StrUtils.QuotedStr(userdept.getDept_code()));
+
+                        if(ListUtils.IsNotNull(deptTasks)){
+                            userdept.setAdmin_state(111111);
+                        }else{
+                            userdept.setAdmin_state(0);
+                        }
+                    }
+
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -467,6 +485,12 @@ public class FriendDetailActivity extends JwActivity {
                    final CommonAdapter commonAdapter = new CommonAdapter<Userdept>(getMy(), userdepts, R.layout.item_friend_detail) {
                         @Override
                         public void convert(ViewHolder helper, Userdept item) {
+                            ImageView iv_task_num = helper.getImageView(R.id.iv_task_num);
+                            if(item.getAdmin_state()==111111){
+                                iv_task_num.setVisibility(View.VISIBLE);
+                            }else{
+                                iv_task_num.setVisibility(View.GONE);
+                            }
                             helper.setText(R.id.tv_org_name, item.getOrg_name());
                             helper.setText(R.id.tv_dept_name, item.getDept_name());
                         }
@@ -492,13 +516,29 @@ public class FriendDetailActivity extends JwActivity {
         }
     }
 
-    @OnClick(R.id.li_phone)
+    @OnClick(R.id.iv_phone)
     void callClick() {
         String number = tvPhone.getText().toString();
         if (StrUtils.IsNotEmpty(number)) {
             //用intent启动拨打电话
             Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
             startActivity(intent);
+        }
+
+    }
+
+    @OnClick(R.id.iv_msg)
+    void msgClick() {
+        String number = tvPhone.getText().toString();
+        if (StrUtils.IsNotEmpty(number)) {
+            Uri smsToUri = Uri.parse("smsto:" + number);
+
+            Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+
+            intent.putExtra("sms_body", "天天：");
+
+            startActivity(intent);
+
         }
 
     }

@@ -162,12 +162,12 @@ public class FriendListActivity extends JwListActivity {
                 try {
                     if (mode == 0) {
                         setPage(true);
-                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
+                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and state = '2' GROUP BY picture.pic_roadGROUP BY picture.pic_road GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
                         list = jCloudDB.findAllBySql(FriendItem.class, sql);
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and state = '2' GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
+                        String sql = "select * from Friend left join picture on Friend.friend_code = picture.pic_code  where user_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and state = '2' GROUP BY picture.pic_road GROUP BY friend_code  limit " + pageStart + "," + pageEnd;
                         list = jCloudDB.findAllBySql(FriendItem.class, sql);
                     }
 

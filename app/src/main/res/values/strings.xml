@@ -1,5 +1,5 @@
 <resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
-    <string name="app_name">微微</string>
+    <string name="app_name">天天</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -104,4 +104,13 @@
     <string name="title_activity_selected">SelectedActivity</string>
     <string name="title_activity_dept_task">DeptTaskActivity</string>
     <string name="title_activity_dept_task_detail">DeptTaskDetailActivity</string>
+    <string name="title_activity_forget">ForgetActivity</string>
+    <string name="title_activity_job_edit">JobEditActivity</string>
+    <string name="title_activity_contant_commit">ContantCommitActivity</string>
+    <string name="title_activity_edit_pwd">EditPwdActivity</string>
+    <string name="title_activity_fz_sort">FzSortActivity</string>
+    <string name="title_activity_over_task_list">OverTaskListActivity</string>
+    <string name="title_activity_overed_task_list">OveredTaskListActivity</string>
+    <string name="title_activity_dept_file_list">DeptFileListActivity</string>
+    <string name="title_activity_fb_sort">FbSortActivity</string>
 </resources>

@@ -62,7 +62,7 @@
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="未审批"
+            android:text="未审核"
             android:textSize="@dimen/textSize_normal"
             android:textColor="@color/white"
             android:background="@drawable/shape_blue"/>
@@ -75,7 +75,7 @@
             android:background="@drawable/shape_white"
             android:textColor="@color/list_text_color"
             android:textSize="@dimen/textSize_normal"
-            android:text="已审批"/>
+            android:text="已审核"/>
 
         <TextView android:id="@+id/tv_yqsq"
             android:layout_width="0dp"

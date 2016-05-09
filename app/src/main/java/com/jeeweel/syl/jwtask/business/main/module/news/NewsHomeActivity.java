@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.news;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,8 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.JwCaptureActivity;
 import com.jeeweel.syl.jwtask.business.main.module.contact.FriendAddListActivity;
+import com.jeeweel.syl.jwtask.business.main.module.task.FzSortActivity;
+import com.jeeweel.syl.jwtask.business.main.module.task.OverTaskListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.PublicReadOpotionActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.PublicyListActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.SignListActivity;
@@ -42,6 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.view.CustomDialog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -62,6 +66,9 @@ public class NewsHomeActivity extends JwActivity {
 
     private List<Friend> friendList;
 
+    //即将超期任务
+    private List<Task> taskList;
+
     private String myphone;
 
     private String orgCode;
@@ -74,6 +81,8 @@ public class NewsHomeActivity extends JwActivity {
 
     List<Task> wshlist;
     List<Task> wqrlist;
+
+    boolean flag = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,13 +228,28 @@ public class NewsHomeActivity extends JwActivity {
                         SharedPreferencesUtils.save(getMy(), Contants.org_name, userorgs.get(0).getOrg_name());
                     }
                 }
-                //通过存储过程获取消息列表，用完删除
-                String sql = "call get_msg_list('" + users.getUser_code() + "','" + orgCode + "');";
-                CloudDB.execSQL(sql);
+                News news = new News();
+                News news1 = new News();
+                News news2 = new News();
+                news.setMsg_name("公告");
+                news1.setMsg_name("签到");
+                news2.setMsg_name("任务");
 
-                String newSql = "select * from  v_tmp" + users.getUser_code();
-                //查找数据
-                newsList = jCloudDB.findAllBySql(News.class, newSql);
+                news.setDraw_id(R.drawable.publicy);
+                news1.setDraw_id(R.drawable.sign);
+                news2.setDraw_id(R.drawable.task);
+
+                newsList.add(news);
+                newsList.add(news1);
+                newsList.add(news2);
+
+//                //通过存储过程获取消息列表，用完删除
+//                String sql = "call get_msg_list('" + users.getUser_code() + "','" + orgCode + "');";
+//                CloudDB.execSQL(sql);
+//
+//                String newSql = "select * from  v_tmp" + users.getUser_code();
+//                //查找数据
+//                newsList = jCloudDB.findAllBySql(News.class, newSql);
 
                 // String deletSql = "DROP TABLE tmp" + users.getUser_code();
                 //cv CloudDB.execSQL(deletSql);
@@ -246,6 +270,9 @@ public class NewsHomeActivity extends JwActivity {
                 //请求好友
                 friendList = jCloudDB.findAllByWhere(Friend.class,
                         "user_name=" + StrUtils.QuotedStr(phone) + "and read_state=0 " + "ORDER BY create_time DESC");
+
+                taskList = jCloudDB.findAllByWhere(Task.class,"principal_code = "+StrUtils.QuotedStr(users.getUser_code())+" AND now_state < 3 AND DATE_SUB(over_time, interval 4 day) < NOW() and over_time >= NOW()");
+
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();
@@ -259,9 +286,6 @@ public class NewsHomeActivity extends JwActivity {
             if (result.equals("1")) {
 
                 if (ListUtils.IsNotNull(newsList)) {
-                    newsList.get(0).setDraw_id(R.drawable.publicy);
-                    newsList.get(1).setDraw_id(R.drawable.sign);
-                    newsList.get(2).setDraw_id(R.drawable.task);
 
                     int signnum = 0;
                     if(ListUtils.IsNotNull(unSignList)){
@@ -278,14 +302,17 @@ public class NewsHomeActivity extends JwActivity {
                     int tasknnum = 0;
                     if(ListUtils.IsNotNull(wshlist)){
                         tasknnum = wshlist.size();
+                        newsList.get(2).setMsg_title(wshlist.get(0).getTask_name());
                     }
                     if(ListUtils.IsNotNull(wqrlist)){
                         tasknnum += wqrlist.size();
+                        newsList.get(2).setMsg_title(wqrlist.get(0).getTask_name());
                     }
                     if(tasknnum!=0){
                         newsList.get(2).setReadstate("0");
                         newsList.get(2).setReadsum(tasknnum + "");
                         newsList.get(2).setAlread("0");
+
                     }
 
                     allList.addAll(newsList);
@@ -332,6 +359,10 @@ public class NewsHomeActivity extends JwActivity {
 
                 }
 
+                if(ListUtils.IsNotNull(taskList)&&taskList.size()>0){
+                    showAlertDeleatDialog();
+                }
+
             } else {
                 ToastShow("请求出错");
             }
@@ -339,6 +370,37 @@ public class NewsHomeActivity extends JwActivity {
         }
     }
 
+
+    private void showAlertDeleatDialog() {
+        if(flag){
+            CustomDialog.Builder builder = new CustomDialog.Builder(this);
+            builder.setMessage("您有"+taskList.size()+"条任务即将到期");
+            builder.setTitle("提示");
+            builder.setPositiveButton("前往查看", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    flag = true;
+                    dialog.dismiss();
+                    //即将超期
+                    JwStartActivity(OverTaskListActivity.class);
+                }
+            });
+
+            builder.setNegativeButton("暂时没空",
+                    new android.content.DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            flag = true;
+                            dialog.dismiss();
+                        }
+                    });
+
+            builder.create().show();
+            flag = false;
+        }
+
+
+
+
+    }
 
     @OnClick(R.id.rl_friend)
     void friendClick() {

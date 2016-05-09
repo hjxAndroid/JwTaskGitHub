@@ -1,11 +1,13 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,14 +18,13 @@ import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Alreadyread;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -34,22 +35,31 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.DateHelper;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.FileUtils;
 import api.util.OttUtils;
+import api.util.ShaerHelper;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.GridNoScrollView;
 import api.view.ListNoScrollView;
+import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -100,17 +110,25 @@ public class JobDetailActivity extends JwActivity {
     LinearLayout liBt;
     @Bind(R.id.noScrollgridview)
     GridNoScrollView noScrollgridview;
+    @Bind(R.id.lvfile)
+    ListNoScrollView lvfile;
 
+    CommonAdapter fileAdapter = null;
     private Users users;
 
     /**
      * 任务主键
      */
     private Task task;
+
+    Task taskName;
     String flag;
     CommonAdapter commonAdapter;
     List<Taskflow> taskflows = new ArrayList<>();
     String orgCode;
+    TitlePopup titlePopup;
+    String draft;
+    ProgressDialog progress = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,16 +141,75 @@ public class JobDetailActivity extends JwActivity {
     }
 
     private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("删除");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a5), "修改");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a1), "分享");
+        ActionItem action2 = new ActionItem(getResources().getDrawable(R.drawable.a0), "删除");
+
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.addAction(action2);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                showAlertDeleatDialog();
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    int state = task.getNow_state();
+                    if (state == 0) {
+                        Intent intent = new Intent(JobDetailActivity.this, JobEditActivity.class);
+                        intent.putExtra("task", task);
+                        intent.putExtra("taskName", taskName);
+                        if (StrUtils.IsNotEmpty(draft)) {
+                            intent.putExtra("draft", draft);
+                        }
+                        startActivity(intent);
+                    } else {
+                        JwToast.ToastShow("该任务已确定无法修改");
+                    }
+                } else if (position == 1) {
+                    String tittle = task.getTask_name();
+                    String content = task.getTask_request();
+                    new ShaerHelper(JobDetailActivity.this, tittle, content);
+                } else if (position == 2) {
+                    showAlertDeleatDialog();
+                }
             }
         });
-        addMenuView(menuTextView);
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
+    }
+
+    private void initSingleRight() {
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a1), "分享");
+        titlePopup.addAction(action);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
+            @Override
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    String tittle = task.getTask_name();
+                    String content = task.getTask_request();
+                    new ShaerHelper(JobDetailActivity.this, tittle, content);
+                }
+
+            }
+        });
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
     }
 
     private void showAlertDeleatDialog() {
@@ -150,7 +227,7 @@ public class JobDetailActivity extends JwActivity {
         });
 
         builder.setNegativeButton("否",
-                new android.content.DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -160,11 +237,76 @@ public class JobDetailActivity extends JwActivity {
 
     }
 
+    /**
+     * 字节转换为kb
+     *
+     * @param bt
+     * @return kb大小
+     */
+    private int byteToKB(int bt) {
+        return Math.round(bt / 1024);
+    }
+    /**
+     * 下载文件
+     */
+    private void downloadApk(String sDownUrl, String filename) {
+        String sApkPath = StoreUtils.getSDPath() + filename;
+        FinalHttp jwHttp = new FinalHttp();
+        jwHttp.download(sDownUrl, sApkPath, new AjaxCallBack<File>() {
+
+            @Override
+            public int getRate() {
+                return super.getRate();
+            }
+
+            @Override
+            public AjaxCallBack<File> progress(boolean progress, int rate) {
+                return super.progress(progress, rate);
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                super.onLoading(count, current);
+                progress.setProgressNumberFormat("%1d k/%2d k");
+                progress.setMax(byteToKB((int) count));
+                progress.setProgress(byteToKB((int) current));
+            }
+
+            @Override
+            public void onSuccess(File f) {
+
+                progress.dismiss();
+                String path = f.getAbsolutePath();
+                fileAdapter.notifyDataSetChanged();
+                File file = new File(path);
+                FileUtils.openFile(file,JobDetailActivity.this);
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                JwToast.ToastShow("文件下载异常");
+                progress.dismiss();
+            }
+        });
+
+
+    }
+
     private void setData() {
         flag = getIntent().getStringExtra("flag");
+        draft = getIntent().getStringExtra("draft");
         if (StrUtils.IsNotEmpty(flag)) {
             initRight();
             liBt.setVisibility(View.GONE);
+        } else {
+            initSingleRight();
         }
 
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
@@ -176,7 +318,6 @@ public class JobDetailActivity extends JwActivity {
                 new GetUserPicture(getMy(), ivXz, users.getUser_code()).execute();
             }
 
-            tvNickname.setText(StrUtils.IsNull(task.getNickname()));
             tvNowState.setText(StrUtils.IsNull(task.getNow_state_name()));
             tvTaskName.setText(StrUtils.IsNull(task.getTask_name()));
             tvStartTime.setText(StrUtils.IsNull(task.getBegin_time()));
@@ -319,9 +460,22 @@ public class JobDetailActivity extends JwActivity {
         private Context context;
         private JCloudDB jCloudDB;
         List<Task> tasks;
+        List<Users> fers;
+        List<Users> shrs = new ArrayList<>();
+        //参与者
+        List<Users> cyzs = new ArrayList<>();
+        //观察者
+        List<Users> gczs = new ArrayList<>();
+
         List<Dept> depts;
+
+
         List<Picture> pictureList;
+
+        List<Picture> fjList;
+
         List<Taskflow> taskflowNews;
+
         /**
          * @param context 上下文
          */
@@ -339,18 +493,72 @@ public class JobDetailActivity extends JwActivity {
             try {
                 if (null != task) {
                     String unid = Utils.getUUid();
-                    String sql = "call get_task_detail('" + unid + "','" + task.getTask_code() + "');";
-                    CloudDB.execSQL(sql);
-
-                    String newSql = "select * from tmp" + unid;
+//                    String sql = "call get_task_detail('" + unid + "','" + task.getTask_code() + "');";
+//                    CloudDB.execSQL(sql);
+//
+//                    String newSql = "select * from tmp" + unid;
+                    String fzrSql = "select * from users where user_code = " + StrUtils.QuotedStr(task.getPrincipal_code());
                     //查找数据
-                    tasks = jCloudDB.findAllBySql(Task.class, newSql);
+                    fers = jCloudDB.findAllBySql(Users.class, fzrSql);
+                    String code = task.getAuditor_code();
+                    if (code.contains(",")) {
+                        String[] codes = code.split(",");
+                        for (int i = 0; i <= codes.length - 1; i++) {
+                            String shrSql = "select * from users where user_code = " + StrUtils.QuotedStr(codes[i]);
+                            List<Users> shritem = jCloudDB.findAllBySql(Users.class, shrSql);
+                            shrs.add(shritem.get(0));
+                        }
+                    } else {
+                        String shrSql = "select * from users where user_code = " + StrUtils.QuotedStr(code);
+
+                        shrs = jCloudDB.findAllBySql(Users.class, shrSql);
+                    }
+
+                    //参与者
+                    String codeCyz = task.getParticipant_code();
+
+                    if (StrUtils.IsNotEmpty(codeCyz)) {
+                        if (codeCyz.contains(",")) {
+                            String[] codes = codeCyz.split(",");
+                            for (int i = 0; i <= codes.length - 1; i++) {
+                                String shrSql = "select * from users where user_code = " + StrUtils.QuotedStr(codes[i]);
+                                List<Users> shritem = jCloudDB.findAllBySql(Users.class, shrSql);
+                                cyzs.add(shritem.get(0));
+                            }
+                        } else {
+                            String sql = "select * from users where user_code = " + StrUtils.QuotedStr(code);
+
+                            cyzs = jCloudDB.findAllBySql(Users.class, sql);
+                        }
+                    }
+
+
+                    //观察者
+                    String codeGcz = task.getObserver_code();
+                    if (StrUtils.IsNotEmpty(codeGcz)) {
+                        if (codeGcz.contains(",")) {
+                            String[] codes = codeGcz.split(",");
+                            for (int i = 0; i <= codes.length - 1; i++) {
+                                String shrSql = "select * from users where user_code = " + StrUtils.QuotedStr(codes[i]);
+                                List<Users> shritem = jCloudDB.findAllBySql(Users.class, shrSql);
+                                gczs.add(shritem.get(0));
+                            }
+                        } else {
+                            String sql = "select * from users where user_code = " + StrUtils.QuotedStr(code);
+
+                            gczs = jCloudDB.findAllBySql(Users.class, sql);
+                        }
+                    }
+
+
+                    //查找数据
+                    fers = jCloudDB.findAllBySql(Users.class, fzrSql);
 
                     //查找部门
-                    depts = jCloudDB.findAllByWhere(Dept.class, "depart_code="+StrUtils.QuotedStr(task.getPrincipal_dept_code()));
+                    depts = jCloudDB.findAllByWhere(Dept.class, "depart_code=" + StrUtils.QuotedStr(task.getPrincipal_dept_code()));
 
-                    String deletSql = "DROP TABLE tmp" + unid;
-                    CloudDB.execSQL(deletSql);
+
+                    fjList = jCloudDB.findAllByWhere(Picture.class, "pic_code=" + StrUtils.QuotedStr(task.getFile_code()));
 
 
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
@@ -387,9 +595,9 @@ public class JobDetailActivity extends JwActivity {
                 OttUtils.push("news_refresh", "");
 
                 //展现图片
-                 if (ListUtils.IsNotNull(pictureList)) {
+                if (ListUtils.IsNotNull(pictureList)) {
                     final String imgs[] = new String[pictureList.size()];
-                    for(int i = 0; i<pictureList.size();i++){
+                    for (int i = 0; i < pictureList.size(); i++) {
                         imgs[i] = Utils.getPicUrl() + pictureList.get(i).getPic_road();
                     }
 
@@ -404,8 +612,8 @@ public class JobDetailActivity extends JwActivity {
                     noScrollgridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            if(imgs.length!=0){
-                                Intent intent = new Intent(getMy(),ImagePagerActivity.class);
+                            if (imgs.length != 0) {
+                                Intent intent = new Intent(getMy(), ImagePagerActivity.class);
                                 // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
                                 intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imgs);
                                 intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
@@ -417,20 +625,112 @@ public class JobDetailActivity extends JwActivity {
 
                 taskflows.addAll(taskflowNews);
                 commonAdapter.notifyDataSetChanged();
-
-                if (ListUtils.IsNotNull(tasks)) {
-                    Task task = tasks.get(0);
-                    tvFbr.setText(task.getPromulgator_nickname());
-                    tvFzr.setText(task.getPrincipal_nickname());
-                    tvShr.setText(task.getAuditor_nickname());
-                    tvCyz.setText(task.getParticipant_nickname());
-                    tvGcz.setText(task.getObserver_nickname());
+                tvFbr.setText(task.getNickname());
+                if (ListUtils.IsNotNull(fers)) {
+                    tvFzr.setText(fers.get(0).getNickname());
+                    tvNickname.setText(fers.get(0).getNickname());
+                    task.setPrincipal_nickname(fers.get(0).getNickname());
                 }
+
+                if (ListUtils.IsNotNull(shrs)) {
+                    String name = "";
+                    for (Users users : shrs) {
+                        name += users.getNickname() + ",";
+                    }
+                    task.setAuditor_nickname(name.substring(0, name.length() - 1));
+                    tvShr.setText(name.substring(0, name.length() - 1));
+                }
+                //参与者
+                if (ListUtils.IsNotNull(cyzs)) {
+                    String name = "";
+                    for (Users users : cyzs) {
+                        name += users.getNickname() + ",";
+                    }
+                    task.setParticipant_nickname(name.substring(0, name.length() - 1));
+                    tvCyz.setText(name.substring(0, name.length() - 1));
+                }
+                //观察者
+                if (ListUtils.IsNotNull(gczs)) {
+                    String name = "";
+                    for (Users users : gczs) {
+                        name += users.getNickname() + ",";
+                    }
+                    task.setObserver_nickname(name.substring(0, name.length() - 1));
+                    tvGcz.setText(name.substring(0, name.length() - 1));
+                }
+
                 if (ListUtils.IsNotNull(depts)) {
-                    String data = task.getPrincipal_nickname()+"   （发布部门："+depts.get(0).getDepart_name()+"）";
+                    String data = task.getPrincipal_nickname() + "   （发布部门：" + depts.get(0).getDepart_name() + "）";
                     tvFzr.setText(data);
                 }
 
+                if (ListUtils.IsNotNull(fjList)) {
+
+                    fileAdapter = new CommonAdapter<Picture>(getMy(), fjList, R.layout.item_file) {
+                        @Override
+                        public void convert(ViewHolder helper, final Picture item) {
+                            helper.setText(R.id.tv_name, "任务附件"+helper.getPosition()+":");
+                            String file = item.getPic_road();
+                            final String fileName = file.substring(file.lastIndexOf("_") + 1, file.length());
+                            helper.setText(R.id.tv_fj, fileName);
+                            final Button bt_load = helper.getView(R.id.bt_load);
+
+                            final String fliePath = StoreUtils.getSDPath()+ fileName;
+                            if(FileUtils.fileIsExists(fliePath)){
+                                //已下载，显示打开，按钮可点击 1
+                                bt_load.setText("打开");
+                                bt_load.setTag("1");
+                                bt_load.setClickable(true);
+                                bt_load.setBackgroundResource(R.drawable.bg_dk);
+                            }else{
+                                //还未下载，按钮显示下载,可点击
+                                bt_load.setTag("0");
+                                bt_load.setClickable(true);
+                                bt_load.setBackgroundResource(R.drawable.bg_xz);
+                            }
+
+                            bt_load.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(bt_load.getTag().equals("0")){
+                                        //显示下载中，不可点击
+                                        bt_load.setText("下载中");
+                                        bt_load.setBackgroundResource(R.drawable.bg_xzz);
+                                        bt_load.setClickable(false);
+                                        //显示加载进度条
+                                        progress = new ProgressDialog(JobDetailActivity.this);
+                                        progress.setCancelable(false);
+                                        progress.setTitle("正在下载...");
+                                        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                        progress.setIndeterminate(false);
+                                        progress.setProgress(0);
+                                        progress.show();
+
+                                        String path = Utils.getPicUrl()+item.getPic_road();
+                                        downloadApk(path,fileName);
+                                    }else if(bt_load.getTag().equals("1")){
+                                        File file = new File(fliePath);
+                                        FileUtils.openFile(file,JobDetailActivity.this);
+                                    }
+                                }
+                            });
+                        }
+                    };
+                    lvfile.setAdapter(fileAdapter);
+                    lvfile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            Picture picture = (Picture) fileAdapter.getItem(position);
+                            String file = picture.getPic_road();
+
+                            if (StrUtils.IsNotEmpty(file)) {
+                                showLoading();
+                                String fileName = file.substring(file.lastIndexOf("_") + 1, file.length());
+                                downloadApk(Utils.getPicUrl() + file, fileName);
+                            }
+                        }
+                    });
+                }
                 listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -439,7 +739,7 @@ public class JobDetailActivity extends JwActivity {
                         switch (state) {
                             case 2:
                                 //已递交，未审核，查看自己提交的完成情况信息
-                                JwStartActivity(MyJobDetailActivity.class,task);
+                                JwStartActivity(MyJobDetailActivity.class, task);
                                 break;
                             case 3:
                                 //已审核，查看审核情况
@@ -717,6 +1017,8 @@ public class JobDetailActivity extends JwActivity {
             String result = "1";
             try {
                 jCloudDB.deleteByWhere(Task.class, " task_code = " + StrUtils.QuotedStr(task.getTask_code()) + " and promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()));
+                jCloudDB.deleteByWhere(DeptTask.class, " task_code = " + StrUtils.QuotedStr(task.getTask_code()));
+
             } catch (CloudServiceException e) {
                 result = "0";
                 e.printStackTrace();

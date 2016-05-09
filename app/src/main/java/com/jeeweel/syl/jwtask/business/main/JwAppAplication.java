@@ -33,7 +33,6 @@ import api.util.Contants;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobSMS;
-import cn.smssdk.SMSSDK;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 /**
@@ -72,8 +71,6 @@ public class JwAppAplication extends JeeweelApplication {
         );
         PublicColors.setNavicationBarColorRID(R.color.bottom_background);
         PublicColors.setTextColorRID(R.color.black);
-        //短信验证
-        SMSSDK.initSDK(this, APPKEY, APPSECRET);
         finalDb = FinalDb.create(this);
 
         //初始ImageLoader

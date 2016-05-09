@@ -75,7 +75,7 @@ public class Submit {
     private String remark;
     private String create_time;
     private String update_time;
-
+    private String file_code;
     /**
      * 审核评价
      */
@@ -89,6 +89,15 @@ public class Submit {
      * 审核总分
      */
     private String score;
+
+
+    public String getFile_code() {
+        return file_code;
+    }
+
+    public void setFile_code(String file_code) {
+        this.file_code = file_code;
+    }
 
     public int getMid() {
         return mid;

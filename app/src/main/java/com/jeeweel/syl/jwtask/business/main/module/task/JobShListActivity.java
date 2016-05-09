@@ -270,12 +270,12 @@ public class JobShListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + flag + " limit " + pageStart + "," + pageEnd);
+                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + flag + " ORDER BY create_time DESC limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + flag + " limit " + pageStart + "," + pageEnd);
+                                "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = " + flag + " ORDER BY create_time DESC limit " + pageStart + "," + pageEnd);
                     }
 
                 } catch (CloudServiceException e) {

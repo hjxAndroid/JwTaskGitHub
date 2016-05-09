@@ -69,13 +69,17 @@ public class JobFzListActivity extends JwListActivity {
     private String orgCode = "";
     private String tv_search;
 
+    private String state = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_list);
-        setTitle("我负责的");
+        String title = getIntent().getStringExtra("title");
+        setTitle(title);
         users = JwAppAplication.getInstance().getUsers();
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
+        state = getIntent().getStringExtra(StaticStrUtils.baseItem);
+
         ButterKnife.bind(this);
         initListViewController();
         initView();
@@ -215,12 +219,12 @@ public class JobFzListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "principal_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "ORDER BY now_state ASC limit " + pageStart + "," + pageEnd);
+                                "principal_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and  now_state = "+ StrUtils.QuotedStr(state) + " ORDER BY create_time DESC limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "principal_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "ORDER BY now_state ASC limit " + pageStart + "," + pageEnd);
+                                "principal_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and  now_state = "+ StrUtils.QuotedStr(state) + " ORDER BY create_time DESC limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     result = "0";

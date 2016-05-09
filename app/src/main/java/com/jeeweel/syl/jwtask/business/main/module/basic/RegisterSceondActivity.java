@@ -27,10 +27,8 @@ import cn.bmob.v3.BmobSMS;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.RequestSMSCodeListener;
 import cn.bmob.v3.listener.VerifySMSCodeListener;
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
 
-public class RegisterSceondActivity extends JwActivity implements Handler.Callback {
+public class RegisterSceondActivity extends JwActivity {
 
     @Bind(R.id.tv_phone)
     TextView tvPhone;
@@ -78,61 +76,10 @@ public class RegisterSceondActivity extends JwActivity implements Handler.Callba
 
     @OnClick(R.id.tv_rigster)
     void rigsterClick() {
-        SMSSDK.getVerificationCode("86", phone);
-    }
 
-    private void InitSMSSDK() {
-        final Handler handler = new Handler(this);
-        EventHandler eventHandler = new EventHandler() {
-            public void afterEvent(int event, int result, Object data) {
-                Message msg = new Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
-                handler.sendMessage(msg);
-            }
-        };
-        // 注册回调监听接口
-        SMSSDK.registerEventHandler(eventHandler);
-        SMSSDK.getSupportedCountries();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SMSSDK.unregisterAllEventHandler();
     }
 
 
-    public boolean handleMessage(Message msg) {
-
-        int event = msg.arg1;
-        int result = msg.arg2;
-        Object data = msg.obj;
-        if (result == SMSSDK.RESULT_COMPLETE) {
-            if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                Toast.makeText(mContext, "验证成功", Toast.LENGTH_SHORT).show();
-                //注册用户
-                JwStartActivity(RegisterLastActivity.class, phone);
-            } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(mContext, "验证码已发送，请耐心等待", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
-            }
-        } else {
-            ((Throwable) data).printStackTrace();
-            runOnUiThread(new Runnable() {
-                public void run() {
-                    Toast.makeText(mContext, "验证码已被使用", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-        return false;
-    }
 
     @Override
     public void onResume() {

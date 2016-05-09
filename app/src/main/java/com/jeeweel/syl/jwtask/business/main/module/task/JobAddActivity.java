@@ -3,9 +3,13 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +22,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,16 +44,16 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-
 import com.google.gson.Gson;
-import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.DegreeItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskdraft;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
@@ -57,18 +62,14 @@ import com.jeeweel.syl.jwtask.business.main.module.photo.GetPicActivity;
 import com.jeeweel.syl.jwtask.business.main.module.photo.PhotoActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
-import com.jeeweel.syl.lib.api.config.ApiUrlUtil;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
-import com.jeeweel.syl.lib.api.core.jwpublic.o.OUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
-
-import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
 
@@ -84,12 +85,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import api.date.DatePickerDialog;
 import api.photoview.Bimp;
 import api.photoview.FileUtils;
 import api.util.Contants;
-import api.util.OttUtils;
+import api.util.ReduceUtil;
 import api.util.Utils;
+import api.view.CustomDialog;
+import api.view.TitlePopup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -122,6 +124,8 @@ public class JobAddActivity extends JwActivity {
     TextView etYxj;
     @Bind(R.id.et_khbz)
     TextView etKhbz;
+    @Bind(R.id.et_file)
+    TextView etFile;
     private AlertDialog dialog;
 
     private Activity context;
@@ -141,7 +145,7 @@ public class JobAddActivity extends JwActivity {
     String cyzCode = "";
 
     Task task;
-
+    Taskdraft taskdraft;
     Users users;
 
     String orgcode;
@@ -188,7 +192,14 @@ public class JobAddActivity extends JwActivity {
 
     //共用主键
     String pic_unid = "";
+    TitlePopup titlePopup;
+    int mode = 0;
+    String fileNameFj = "";
+    String url = "";
+    String file_unid = "";
 
+    boolean saveFlag = false;
+    ProgressDialog progressDialog = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -200,6 +211,7 @@ public class JobAddActivity extends JwActivity {
         orgcode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         orgname = (String) SharedPreferencesUtils.get(getMy(), Contants.org_name, "");
         pic_unid = Utils.getUUid();
+        file_unid = Utils.getUUid();
         initRight();
         initView();
     }
@@ -229,22 +241,44 @@ public class JobAddActivity extends JwActivity {
     }
 
     private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
+
+        titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "完成");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a1), "暂存草稿");
+        titlePopup.addAction(action);
+        titlePopup.addAction(action1);
+        titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
-            public void onClick(View arg0) {
-                Task task = save();
-                if (null != task) {
-                    showLoading();
-                    new FinishRefresh(getMy()).execute();
-                } else {
-                    ToastShow("请完善必填信息");
+            public void onItemClick(ActionItem item, int position) {
+                if (position == 0) {
+                    Task task = save();
+                    if (null != task) {
+                        showLoading();
+                        new FinishRefresh(getMy()).execute();
+                    } else {
+                        ToastShow("请完善必填信息");
+                    }
+                } else if (position == 1) {
+                    taskdraft = draftSave();
+                    if (null != taskdraft) {
+                        showLoading();
+                        new FinishDraftRefresh(getMy()).execute();
+                    } else {
+                        ToastShow("请完善必填信息");
+                    }
                 }
             }
         });
-        addMenuView(menuTextView);
+        MenuImageView menuImageView = new MenuImageView(getMy());
+        menuImageView.setBackgroundResource(R.drawable.more);
+        menuImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                titlePopup.show(v);
+            }
+        });
+        addMenuView(menuImageView);
+
     }
 
     private Task save() {
@@ -321,54 +355,80 @@ public class JobAddActivity extends JwActivity {
         return task;
     }
 
+    private Taskdraft draftSave() {
 
-//    /**
-//     * 创建日期及时间选择对话框
-//     */
-//    @Override
-//    protected Dialog onCreateDialog(int id) {
-//        Dialog dialog = null;
-//
-//        if (StrUtils.IsNotEmpty(timeData)) {
-//            String[] data = timeData.split("-");
-//            int year = Integer.parseInt(data[0]);
-//            int mouth = Integer.parseInt(data[1]) - 1;
-//            int day = Integer.parseInt(data[2]);
-//            dialog = new android.app.DatePickerDialog(
-//                    this,
-//                    new android.app.DatePickerDialog.OnDateSetListener() {
-//                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
-//                            if (timeFlag == 0) {
-//                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
-//                            } else {
-//                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
-//                            }
-//                        }
-//                    },
-//                    year, // 传入年份
-//                    mouth, // 传入月份
-//                    day // 传入天数
-//            );
-//        } else {
-//            Calendar c = Calendar.getInstance();
-//            dialog = new android.app.DatePickerDialog(
-//                    this,
-//                    new android.app.DatePickerDialog.OnDateSetListener() {
-//                        public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
-//                            if (timeFlag == 0) {
-//                                etStartTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
-//                            } else {
-//                                etEndTime.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
-//                            }
-//                        }
-//                    },
-//                    c.get(Calendar.YEAR), // 传入年份
-//                    c.get(Calendar.MONTH), // 传入月份
-//                    c.get(Calendar.DAY_OF_MONTH) // 传入天数
-//            );
-//        }
-//        return dialog;
-//    }
+        taskdraft = new Taskdraft();
+
+        String task_name = etTaskName.getText().toString();
+        if (StrUtils.IsNotEmpty(task_name)) {
+            taskdraft.setTask_name(task_name);
+        } else {
+            return null;
+        }
+
+        String start_time = etStartTime.getText().toString();
+        if (StrUtils.IsNotEmpty(start_time)) {
+            taskdraft.setBegin_time(start_time);
+        }
+
+
+        String end_time = etEndTime.getText().toString();
+        if (StrUtils.IsNotEmpty(end_time)) {
+            taskdraft.setOver_time(end_time);
+        }
+
+
+        if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
+        } else {
+            return null;
+        }
+
+
+        String shr = etShr.getText().toString();
+        if (StrUtils.IsNotEmpty(shr) && StrUtils.IsNotEmpty(shrCode)) {
+            taskdraft.setAuditor_code(shrCode);
+        } else {
+            return null;
+        }
+
+
+        String gcz = etGcz.getText().toString();
+        if (StrUtils.IsNotEmpty(gcz) && StrUtils.IsNotEmpty(gczCode)) {
+            taskdraft.setObserver_code(gczCode);
+        }
+
+
+        String cyz = tvCyz.getText().toString();
+        if (StrUtils.IsNotEmpty(cyz) && StrUtils.IsNotEmpty(cyzCode)) {
+            taskdraft.setParticipant_code(cyzCode);
+        }
+
+
+        String rwyq = etRwyq.getText().toString();
+        if (StrUtils.IsNotEmpty(rwyq)) {
+            taskdraft.setTask_request(rwyq);
+        } else {
+            return null;
+        }
+
+
+        String yxj = etYxj.getText().toString();
+        if (StrUtils.IsNotEmpty(yxj)) {
+            taskdraft.setPriority(yxj);
+        }
+
+
+        String khbz = etKhbz.getText().toString();
+        if (StrUtils.IsNotEmpty(khbz)) {
+            taskdraft.setDegree(khbz);
+            if (null != item) {
+                taskdraft.setDegree_score(item.getDegree_score());
+            }
+        }
+
+        return taskdraft;
+    }
+
 
     /**
      * 创建日期及时间选择对话框
@@ -386,7 +446,7 @@ public class JobAddActivity extends JwActivity {
             dateTime = dateAndTime.split(":");
             hours = Integer.parseInt(dateTime[0]);
             minutes = Integer.parseInt(data[1]);
-            dateDialog = new MyDatePickDialog(JobAddActivity.this, new android.app.DatePickerDialog.OnDateSetListener() {
+            dateDialog = new MyDatePickDialog(JobAddActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                     str = new StringBuilder("");
@@ -423,7 +483,7 @@ public class JobAddActivity extends JwActivity {
             dateDialog.show();
         } else {
             Calendar c = Calendar.getInstance();
-            dateDialog = new MyDatePickDialog(JobAddActivity.this, new android.app.DatePickerDialog.OnDateSetListener() {
+            dateDialog = new MyDatePickDialog(JobAddActivity.this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
                     str = new StringBuilder("");
@@ -463,6 +523,31 @@ public class JobAddActivity extends JwActivity {
             dateDialog.show();
         }
         return dateDialog;
+    }
+
+
+    //开始时间
+    @OnClick(R.id.li_file)
+    void fileUpClick() {
+
+        showFileChooser();
+    }
+
+    /**
+     * 调用文件选择软件来选择文件
+     **/
+    private void showFileChooser() {
+        intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult(Intent.createChooser(intent, "请选择一个要上传的文件"),
+                    1991);
+        } catch (ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(getMy(), "请安装文件管理器", Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
 
@@ -892,6 +977,7 @@ public class JobAddActivity extends JwActivity {
                                 task.setNow_state(0);
                                 task.setNow_state_name(Contants.wqr);
                                 task.setPic_code(pic_unid);
+                                task.setFile_code(file_unid);
                                 task.setPrincipal_dept_code(deptCodes[i]);
                             }
 
@@ -948,6 +1034,7 @@ public class JobAddActivity extends JwActivity {
         protected void onPostExecute(String result) {
 //            pushData();
             uploadPic();
+            saveFlag = true;
             ToastShow("任务发布成功");
             hideLoading();
 
@@ -1015,24 +1102,24 @@ public class JobAddActivity extends JwActivity {
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-        //  if ("0".equals(flag)) {
-        finish();
-        // }
-//        else if ("1".equals(flag)) {
-//            pushData();
-//        }
+        if (mode == 1) {
+            progressDialog.dismiss();
+            ToastShow("文件上传成功");
+        } else {
+            finish();
+        }
+
+
     }
 
     @Override
     public void HttpFail(String strMsg) {
         super.HttpFail(strMsg);
-        finish();
     }
 
     @Override
     public void HttpFinish() {
         super.HttpFinish();
-        finish();
     }
 
 
@@ -1044,9 +1131,16 @@ public class JobAddActivity extends JwActivity {
         int size = Bimp.drr.size();
         if (size != 0) {
             for (String sFile : Bimp.drr) {
-                File file = new File(sFile);
+                String fileName = sFile.substring(0, 3);
                 try {
-                    params.put(pic_unid, file);
+                    sFile = ReduceUtil.compressImage(sFile, fileName, 50);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+
+                try {
+                    params.put(pic_unid, new File(sFile));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -1167,12 +1261,27 @@ public class JobAddActivity extends JwActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case TAKE_PICTURE:
-                if (Bimp.drr.size() < 9 && resultCode == -1) {
-                    Bimp.drr.add(path);
-                }
-                break;
+        if(resultCode==RESULT_OK){
+            switch (requestCode) {
+                case TAKE_PICTURE:
+                    if (Bimp.drr.size() < 9 && resultCode == -1) {
+                        Bimp.drr.add(path);
+                    }
+                    break;
+                case 1991:
+                    Uri uri = data.getData();
+                    url = api.util.FileUtils.getImageAbsolutePath(JobAddActivity.this, uri);
+                    if (StrUtils.IsNotEmpty(url)) {
+
+                        fileNameFj = url.substring(url.lastIndexOf("/") + 1, url.length());
+                        String textName = etFile.getText().toString();
+                        textName += "/"+fileNameFj;
+                        textName = textName.substring(1,textName.length());
+                        etFile.setText(textName);
+                        saveFile();
+                    }
+                    break;
+            }
         }
     }
 
@@ -1327,4 +1436,190 @@ public class JobAddActivity extends JwActivity {
         Bimp.max = 0;
         super.onDestroy();
     }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if(!saveFlag){
+                CustomDialog.Builder builder = new CustomDialog.Builder(this);
+                builder.setMessage("是否放弃本次任务发布?");
+                builder.setTitle("提示");
+                builder.setPositiveButton("暂存草稿", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        taskdraft = draftSave();
+                        if (null != taskdraft) {
+                            showLoading();
+                            new FinishDraftRefresh(getMy()).execute();
+                        } else {
+                            ToastShow("请完善必填信息");
+                        }
+                    }
+                });
+
+                builder.setNegativeButton("去意已决",
+                        new android.content.DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                finish();
+                            }
+                        });
+
+                builder.create().show();
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * 保存到数据库
+     */
+    private class FinishDraftRefresh extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public FinishDraftRefresh(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            String result = "1";
+            try {
+                if (StrUtils.IsNotEmpty(fzr) && StrUtils.IsNotEmpty(fzrCode)) {
+                    String[] fzrNames = fzr.split(",");
+                    String[] fzrs = fzrCode.split(",");
+                    String[] deptCodes = deptCode.split(",");
+                    //批量发布任务
+                    for (int i = 0; i < fzrs.length; i++) {
+                        taskdraft.setPrincipal_code(fzrs[i]);
+                        if (null != taskdraft) {
+
+                            String unid = Utils.getUUid();
+                            if (null != users) {
+                                 /*  //设置任务名为任务名-负责人-发布时间
+                                   String taskName = task_name+"_"+fzrNames[i]+"_"+taskdraft.getOver_time();
+                                   taskdraft.setTask_name(taskName);*/
+                                taskdraft.setPrincipal_nickname(fzrNames[i]);
+                                taskdraft.setTask_code(unid);
+                                taskdraft.setPromulgator_code(users.getUser_code());
+                                taskdraft.setPromulgator_name(users.getUsername());
+                                taskdraft.setNickname(users.getNickname());
+                                //设置当前状态(已发布未确认)
+                                taskdraft.setNow_state(0);
+                                taskdraft.setNow_state_name(Contants.wqr);
+                                taskdraft.setPic_code(pic_unid);
+                                taskdraft.setFile_code(file_unid);
+                                taskdraft.setPrincipal_dept_code(deptCodes[i]);
+                            }
+
+                            if (StrUtils.IsNotEmpty(orgcode)) {
+                                taskdraft.setOrg_code(orgcode);
+                                taskdraft.setOrg_name(orgname);
+                            }
+
+                            jCloudDB.save(taskdraft);
+
+
+                        }
+                    }
+
+
+                }
+            } catch (CloudServiceException e) {
+                result = "0";
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+//            pushData();
+            uploadPic();
+            saveFlag = true;
+            ToastShow("任务已成功保存到草稿中");
+            hideLoading();
+
+        }
+
+    }
+
+    private void saveFile() {
+        if (StrUtils.IsNotEmpty(url)) {
+
+            fileNameFj = url.substring(url.lastIndexOf("/") + 1, url.length());
+            AjaxParams params = new AjaxParams();
+            try {
+                params.put(file_unid, new File(url));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String apiStr = Utils.uploadPic();
+            mode =1;
+            progressDialog = ProgressDialog.show(JobAddActivity.this, "上传", "正在努力上传中,请稍候！");
+            progressDialog.setCancelable(false);
+            JwHttpPost(apiStr, params, false);
+
+        }
+    }
+
+//    /**
+//     * 保存到数据库
+//     */
+//    private class FielSaveFinishRefresh extends AsyncTask<String, Void, String> {
+//        private Context context;
+//        private int mode = 0;
+//        private JCloudDB jCloudDB;
+//
+//        /**
+//         * @param context 上下文
+//         */
+//        public FielSaveFinishRefresh(Context context) {
+//            this.context = context;
+//            jCloudDB = new JCloudDB();
+//        }
+//
+//        @Override
+//        protected String doInBackground(String... params) {
+//
+//            String result = "1";
+//
+//            DeptFileItem deptFileItem = new DeptFileItem();
+//            deptFileItem.setNickname(users.getNickname());
+//            deptFileItem.setDepart_code(dept_code);
+//            deptFileItem.setFounder_code(users.getUser_code());
+//            deptFileItem.setFile_name(fileNameFj);
+//
+//            try {
+//                jCloudDB.save(deptFileItem);
+//            }  catch (CloudServiceException e) {
+//                result = "0";
+//                e.printStackTrace();
+//            }
+//
+//
+//
+//            return result;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(String result) {
+//            if (result.equals("1")) {
+//                ToastShow("文件已成功上传到部门文件夹");
+//            } else {
+//                ToastShow("文件上传失败");
+//            }
+//
+//            hideLoading();
+//        }
+//    }
+
 }

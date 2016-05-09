@@ -42,6 +42,10 @@ public class LoginActivity extends JwActivity {
     Button btLogin;
     @Bind(R.id.tv_rigster)
     TextView tvRigster;
+    @Bind(R.id.tv_forget)
+    TextView tvForget;
+    @Bind(R.id.tv_edit)
+    TextView tvEdit;
 
     private List<Users> list;
     String device_token = "";
@@ -92,9 +96,17 @@ public class LoginActivity extends JwActivity {
     @OnClick(R.id.tv_rigster)
     void registerClick() {
         JwStartActivity(RegisterActivity.class);
-        finish();
     }
 
+    @OnClick(R.id.tv_forget)
+    void forgetClick() {
+        JwStartActivity(ForgetActivity.class);
+    }
+
+    @OnClick(R.id.tv_edit)
+    void edittClick() {
+        JwStartActivity(EditPwdActivity.class);
+    }
 
     /**
      * 保存到数据库

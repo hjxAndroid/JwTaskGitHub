@@ -14,11 +14,12 @@
     </string-array>
 
     <string-array name="job_home_array">
-        <item>我发布</item>
-        <item>我审核</item>
-        <item>我负责</item>
-        <item>我参与</item>
-        <item>我观察</item>
+        <item>发布</item>
+        <item>审核</item>
+        <item>负责</item>
+        <item>参与</item>
+        <item>观察</item>
+        <item>草稿</item>
     </string-array>
 
     <string-array name="job_home_image_array">
@@ -27,6 +28,7 @@
         <item>@drawable/job_fzr</item>
         <item>@drawable/job_cyz</item>
         <item>@drawable/job_gcz</item>
+        <item>@drawable/draft</item>
     </string-array>
 
 
@@ -59,5 +61,45 @@
         <item>优秀</item>
         <item>良好</item>
         <item>未完成</item>
+    </string-array>
+
+
+    <string-array name="fz_array">
+        <item>未确认</item>
+        <item>已确认</item>
+        <item>未审核</item>
+        <item>已审核</item>
+        <item>审核驳回</item>
+        <item>延期申请中</item>
+        <item>已延期</item>
+        <item>延期驳回</item>
+        <item>放弃申请中</item>
+        <item>已放弃</item>
+        <item>放弃驳回</item>
+    </string-array>
+
+    <string-array name="fz_img_array">
+        <item>@drawable/icon_wur</item>
+        <item>@drawable/icon_yqr</item>
+        <item>@drawable/icon_wsh</item>
+        <item>@drawable/icon_ysh</item>
+        <item>@drawable/icon_shbh</item>
+        <item>@drawable/yqsqz</item>
+        <item>@drawable/yyq</item>
+        <item>@drawable/yqbh</item>
+        <item>@drawable/fqsqz</item>
+        <item>@drawable/yfq</item>
+        <item>@drawable/fqbh</item>
+    </string-array>
+
+
+    <string-array name="chao_array">
+        <item>三天内到期</item>
+        <item>已到期</item>
+    </string-array>
+
+    <string-array name="caho_img_array">
+        <item>@drawable/kuaichao</item>
+        <item>@drawable/chao</item>
     </string-array>
 </resources>

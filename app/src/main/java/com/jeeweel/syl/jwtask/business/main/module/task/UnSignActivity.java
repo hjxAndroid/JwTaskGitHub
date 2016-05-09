@@ -19,6 +19,8 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -189,6 +191,16 @@ public class UnSignActivity extends JwListActivity {
                     list.remove(j);
                 }
             }
+        }
+    }
+
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (msg.equals("sign_refresh")) {
+            mListItems.clear();
+            showLoading();
+            new FinishRefresh(getMy(), 0).execute();
         }
     }
 }

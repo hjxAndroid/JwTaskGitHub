@@ -418,11 +418,10 @@ public class SignUpActivity extends JwActivity {
                 uploadPic();
                 ToastShow("签到成功");
                 hideLoadingSign();
-//                int signedCounts = Integer.parseInt(signCounts) + 1;
-//                String sSignedCounts = Integer.toString(signedCounts);
-//                tvSignCounts.setText(sSignedCounts);
                 tvSignButton.setText("签到");
                 OttUtils.push("news_refresh", "");
+                OttUtils.push("sign_refresh", "");
+                finish();
             }
             tvSignCounts.setText(signCounts);
 

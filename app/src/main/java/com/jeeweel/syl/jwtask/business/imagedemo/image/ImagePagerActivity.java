@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.View;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jwtask.R;
@@ -32,6 +33,12 @@ public class ImagePagerActivity extends FragmentActivity {
 		ImagePagerAdapter mAdapter = new ImagePagerAdapter(
 				getSupportFragmentManager(), urls);
 		mPager.setAdapter(mAdapter);
+		mPager.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int a = 1;
+			}
+		});
 		indicator = (TextView) findViewById(R.id.indicator);
 
 		CharSequence text = getString(R.string.viewpager_indicator, 1, mPager

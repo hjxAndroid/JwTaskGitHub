@@ -33,6 +33,7 @@ import java.util.List;
 
 import api.util.Contants;
 import api.util.OttUtils;
+import api.util.ShaerHelper;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.TitlePopup;
@@ -102,22 +103,12 @@ public class PublicyDetailActivity extends JwActivity {
         }
     }
 
-    //    private void initRight() {
-//        MenuTextView menuTextView = new MenuTextView(getMy());
-//        menuTextView.setText("修改公告");
-//        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-//        menuTextView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View arg0) {
-//                JwStartActivity(ChangePublicyActivity.class, publicity);
-//            }
-//        });
-//        addMenuView(menuTextView);
-//    }
+
     private void initView() {
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "修改公告");
-        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a5), "删除公告");
+        ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a1), "分享");
+        ActionItem action2 = new ActionItem(getResources().getDrawable(R.drawable.a5), "删除公告");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
@@ -125,7 +116,11 @@ public class PublicyDetailActivity extends JwActivity {
             public void onItemClick(ActionItem item, int position) {
                 if (position == 0) {
                     JwStartActivity(ChangePublicyActivity.class, publicity);
-                } else {
+                } else if(position == 1){
+                    String tittle = publicity.getPublicity_title();
+                    String content = publicity.getPublicity_content();
+                    new ShaerHelper(PublicyDetailActivity.this, tittle, content);
+                }else{
                     showAlertDialog();
                 }
             }

@@ -148,11 +148,26 @@
             android:textColorHint="@color/text_gray"
             android:textSize="@dimen/textSize_normal" />
 
+
+        <ImageView android:id="@+id/iv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/send_message" />
+
+
         <ImageView android:id="@+id/iv_phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
             android:background="@drawable/phone_call" />
     </LinearLayout>
 

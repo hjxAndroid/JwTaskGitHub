@@ -50,15 +50,15 @@ import butterknife.ButterKnife;
  * Created by Ragn on 2016/1/5.
  */
 public class DeptTaskListActivity extends JwActivity {
-    List<DeptTask> mListItems = new ArrayList<DeptTask>();
+    List<Task> mListItems = new ArrayList<Task>();
 
     @Bind(R.id.listview)
     ListView listview;
     private CommonAdapter commonAdapter;
     private Users users;
-    List<DeptTask> list;
+    List<Task> list;
     private Userdept userdept;
-    DeptTask deptTask;
+    Task deptTask;
     String flag = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,22 +81,22 @@ public class DeptTaskListActivity extends JwActivity {
     }
 
     protected void initListView() {
-        commonAdapter = new CommonAdapter<DeptTask>(getMy(), mListItems, R.layout.item_news) {
+        commonAdapter = new CommonAdapter<Task>(getMy(), mListItems, R.layout.item_news) {
             @Override
-            public void convert(ViewHolder helper, DeptTask item) {
+            public void convert(ViewHolder helper, Task item) {
                 helper.setText(R.id.task,item.getTask_name());
                 helper.setText(R.id.tv_task_news,item.getNickname());
                 helper.setText(R.id.tv_task_time,item.getCreate_time());
                 TextView textView = helper.getView(R.id.tv_end_time);
                 textView.setVisibility(View.VISIBLE);
-                textView.setText(item.getEnd_time());
+                textView.setText(item.getOver_time());
             }
         };
         listview.setAdapter(commonAdapter);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                deptTask = (DeptTask)commonAdapter.getItem(position);
+                deptTask = (Task)commonAdapter.getItem(position);
                 showLoading();
                 new GetTaskRefresh(getMy()).execute();
             }
@@ -126,8 +126,8 @@ public class DeptTaskListActivity extends JwActivity {
 
             if (null != users) {
                 try {
-                    list = jCloudDB.findAllByWhere(DeptTask.class,
-                           "dept_code = " + StrUtils.QuotedStr(userdept.getDept_code()) + " and user_code="+StrUtils.QuotedStr(userdept.getUser_code()));
+                    list = jCloudDB.findAllByWhere(Task.class,
+                            "principal_code = "+StrUtils.QuotedStr(userdept.getUser_code())+" and principal_dept_code ="+StrUtils.QuotedStr(userdept.getDept_code()));
 
                 } catch (CloudServiceException e) {
                     result = "0";

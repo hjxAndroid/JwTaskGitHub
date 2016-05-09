@@ -18,9 +18,7 @@ import java.util.HashMap;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
-import cn.smssdk.gui.RegisterPage;
+
 
 import android.os.Handler.Callback;
 

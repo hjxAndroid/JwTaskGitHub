@@ -1,6 +1,9 @@
 package api.util;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 
@@ -101,5 +104,6 @@ public class Utils {
         String url = Contants.All_URL + "/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665";
         return url;
     }
+
 
 }

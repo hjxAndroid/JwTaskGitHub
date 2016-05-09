@@ -54,12 +54,14 @@ public class JobListActivity extends JwListActivity {
     private Users users;
     private String tv_search;
 
-
+String state = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_job_list);
-        setTitle("我发布的");
+        String title = getIntent().getStringExtra("title");
+        setTitle(title);
+        state = getIntent().getStringExtra(StaticStrUtils.baseItem);
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
         initListViewController();
@@ -211,12 +213,12 @@ public class JobListActivity extends JwListActivity {
                     if (mode == 0) {
                         setPage(true);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()) + "ORDER BY now_state ASC  limit " + pageStart + "," + pageEnd);
+                                "promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()) + "and now_state = "+ state +" ORDER BY create_time DESC  limit " + pageStart + "," + pageEnd);
                         mListItems.clear();
                     } else {
                         setPage(false);
                         list = jCloudDB.findAllByWhere(Task.class,
-                                "promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()) + "ORDER BY now_state ASC  limit " + pageStart + "," + pageEnd);
+                                "promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()) + "and now_state = "+ state +" ORDER BY create_time DESC  limit " + pageStart + "," + pageEnd);
                     }
                 } catch (CloudServiceException e) {
                     e.printStackTrace();

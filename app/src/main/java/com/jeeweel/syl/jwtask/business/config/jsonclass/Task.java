@@ -30,7 +30,7 @@ public class Task extends BaseItem{
      * 预留组织ID
      */
     private int org_id;
-
+    private String file_code;
     private String org_code;
     /**
      * 预留组织名称
@@ -180,6 +180,14 @@ public class Task extends BaseItem{
     private String pic_code;
     private String principal_dept_code;
 
+
+    public String getFile_code() {
+        return file_code;
+    }
+
+    public void setFile_code(String file_code) {
+        this.file_code = file_code;
+    }
 
     public String getPrincipal_dept_code() {
         return principal_dept_code;

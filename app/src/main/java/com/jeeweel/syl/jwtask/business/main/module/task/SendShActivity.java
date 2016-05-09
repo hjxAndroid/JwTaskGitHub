@@ -3,6 +3,8 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,18 +28,15 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
-import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
@@ -51,6 +50,7 @@ import com.jeeweel.syl.jwtask.business.main.module.photo.PhotoActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.umeng.analytics.MobclickAgent;
@@ -93,6 +93,8 @@ public class SendShActivity extends JwActivity {
     GridNoScrollView noScrollgridview;
 
     Submit submit;
+    @Bind(R.id.et_fj)
+    TextView etFj;
     private AlertDialog dialog;
 
     private ScrollView li_fb;
@@ -101,6 +103,11 @@ public class SendShActivity extends JwActivity {
 
     Users users;
 
+    int mode = 0;
+    String fileNameFj = "";
+    String url = "";
+    String file_unid = "";
+    ProgressDialog progressDialog = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,6 +116,7 @@ public class SendShActivity extends JwActivity {
         context = this;
         setTitle("递交审核");
         users = JwAppAplication.getInstance().getUsers();
+        file_unid = Utils.getUUid();
         task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         setData();
         initRight();
@@ -122,6 +130,69 @@ public class SendShActivity extends JwActivity {
         }
     }
 
+    //开始时间
+    @OnClick(R.id.li_fj)
+    void fileUpClick() {
+        showFileChooser();
+    }
+
+    /**
+     * 调用文件选择软件来选择文件
+     **/
+    private void showFileChooser() {
+        intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult(Intent.createChooser(intent, "请选择一个要上传的文件"),
+                    1991);
+        } catch (ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(getMy(), "请安装文件管理器", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    @Override
+    public void HttpSuccess(ResMsgItem resMsgItem) {
+        if (mode == 1) {
+            progressDialog.dismiss();
+            ToastShow("文件上传成功");
+        } else {
+            finish();
+        }
+
+
+    }
+
+    @Override
+    public void HttpFail(String strMsg) {
+        super.HttpFail(strMsg);
+    }
+
+    @Override
+    public void HttpFinish() {
+        super.HttpFinish();
+    }
+
+    private void saveFile() {
+        if (StrUtils.IsNotEmpty(url)) {
+
+            fileNameFj = url.substring(url.lastIndexOf("/") + 1, url.length());
+            AjaxParams params = new AjaxParams();
+            try {
+                params.put(file_unid, new File(url));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String apiStr = Utils.uploadPic();
+            mode =1;
+            progressDialog = ProgressDialog.show(SendShActivity.this, "上传", "正在努力上传中,请稍候！");
+            progressDialog.setCancelable(false);
+            JwHttpPost(apiStr, params, false);
+
+        }
+    }
 
     @OnClick(R.id.li_zwpj)
     void zwpjClick() {
@@ -158,6 +229,7 @@ public class SendShActivity extends JwActivity {
             submit.setTask_code(task.getTask_code());
             submit.setTask_name(task.getTask_name());
             submit.setPerformance(wcqk);
+            submit.setFile_code(file_unid);
             submit.setFeedback(StrUtils.IsNull(yjfk));
             submit.setEvaluate(StrUtils.IsNull(zwpj));
 
@@ -385,12 +457,27 @@ public class SendShActivity extends JwActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case TAKE_PICTURE:
-                if (Bimp.drr.size() < 9 && resultCode == -1) {
-                    Bimp.drr.add(path);
-                }
-                break;
+        if(resultCode == RESULT_OK){
+            switch (requestCode) {
+                case TAKE_PICTURE:
+                    if (Bimp.drr.size() < 9 && resultCode == -1) {
+                        Bimp.drr.add(path);
+                    }
+                    break;
+                case 1991:
+                    Uri uri = data.getData();
+                    url = api.util.FileUtils.getImageAbsolutePath(SendShActivity.this, uri);
+                    if (StrUtils.IsNotEmpty(url)) {
+
+                        fileNameFj = url.substring(url.lastIndexOf("/") + 1, url.length());
+                        String textName = etFj.getText().toString();
+                        textName += "/" + fileNameFj;
+                        textName = textName.substring(1, textName.length());
+                        etFj.setText(textName);
+                        saveFile();
+                    }
+                    break;
+            }
         }
     }
 

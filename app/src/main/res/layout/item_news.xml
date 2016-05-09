@@ -23,7 +23,10 @@
         android:id="@+id/task"
         android:layout_alignTop="@+id/iv_head"
         android:layout_toRightOf="@+id/iv_head"
-        android:layout_marginLeft="8dp"/>
+        android:layout_toLeftOf="@+id/tv_end_time"
+        android:layout_marginLeft="8dp"
+        android:singleLine="true"
+        android:ellipsize="end"/>
 
     <TextView android:id="@+id/tv_task_news"
         android:layout_width="wrap_content"

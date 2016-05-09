@@ -221,6 +221,12 @@ public class TaskJobHomeActivity extends JwActivity {
                 jobItems.add(jobItem4);
 
 
+                //草稿
+                JobItem jobItem5 = new JobItem();
+                jobItem5.setData(data[5]);
+                jobItem5.setNews_state("0");
+                jobItems.add(jobItem5);
+
                 TypedArray imagesArrays = getResources().obtainTypedArray(
                         R.array.job_home_image_array);
                 JobGridAdapter gridViewAdapter = new JobGridAdapter(getMy(), jobItems,
@@ -233,7 +239,7 @@ public class TaskJobHomeActivity extends JwActivity {
                         switch (position) {
                             case 0:
                                 //我发布的
-                                JwStartActivity(JobListActivity.class);
+                                JwStartActivity(FbSortActivity.class);
                                 break;
                             case 1:
                                 //我审核的
@@ -241,7 +247,7 @@ public class TaskJobHomeActivity extends JwActivity {
                                 break;
                             case 2:
                                 //我负责的
-                                JwStartActivity(JobFzListActivity.class);
+                                JwStartActivity(FzSortActivity.class);
                                 break;
                             case 3:
                                 //我参与的
@@ -250,6 +256,10 @@ public class TaskJobHomeActivity extends JwActivity {
                             case 4:
                                 //我观察的
                                 JwStartActivity(JobGcListActivity.class);
+                                break;
+                            case 5:
+                                //草稿
+                                JwStartActivity(JobDraftListActivity.class);
                                 break;
                             default:
                                 break;

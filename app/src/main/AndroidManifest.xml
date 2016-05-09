@@ -65,6 +65,44 @@
             </intent-filter>
         </service>
 
+        <!-- 分享内容编辑页 -->
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+
+        <!-- 腾讯SSO授权的Activity注册 -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1104728221" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
+        <!-- 微信回调activity -->
+        <activity
+            android:name=".business.main.module.basic.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
         <!-- 自动更新服务 -->
         <service
             android:name="com.umeng.update.net.DownloadingService"
@@ -75,13 +113,6 @@
             android:name="com.umeng.update.UpdateDialogActivity"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        <!-- 短信验证 -->
-        ެެ
-        <activity
-            android:name="com.mob.tools.MobUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <!-- 推送开始 -->
         <receiver
@@ -447,6 +478,10 @@
             android:label="@string/title_activity_solve_delay" >
         </activity>
         <activity
+            android:name=".business.main.module.task.JobDraftListActivity"
+            android:label="@string/title_activity_solve_delay" >
+        </activity>
+        <activity
             android:name=".business.main.module.task.ApplyGiveUpActivity"
             android:label="@string/title_activity_apply_give_up"
             android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
@@ -537,6 +572,42 @@
         <activity
             android:name=".business.main.module.contact.DeptTaskDetailActivity"
             android:label="@string/title_activity_dept_task_detail" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.ForgetActivity"
+            android:label="@string/title_activity_forget" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.JobEditActivity"
+            android:label="@string/title_activity_job_edit" >
+        </activity>
+        <activity
+            android:name=".business.main.module.contact.ContantCommitActivity"
+            android:label="@string/title_activity_contant_commit" >
+        </activity>
+        <activity
+            android:name=".business.main.module.basic.EditPwdActivity"
+            android:label="@string/title_activity_edit_pwd" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.FzSortActivity"
+            android:label="@string/title_activity_fz_sort" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.OverTaskListActivity"
+            android:label="@string/title_activity_over_task_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.OveredTaskListActivity"
+            android:label="@string/title_activity_overed_task_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.contact.DeptFileListActivity"
+            android:label="@string/title_activity_dept_file_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.FbSortActivity"
+            android:label="@string/title_activity_fb_sort" >
         </activity>
     </application>
 

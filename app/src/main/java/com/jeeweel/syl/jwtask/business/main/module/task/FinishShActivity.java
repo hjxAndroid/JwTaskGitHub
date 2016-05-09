@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,14 +38,21 @@ import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
+import com.jeeweel.syl.lib.api.core.jwpublic.store.StoreUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
 import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
+import com.jeeweel.syl.lib.api.core.toast.JwToast;
 import com.umeng.analytics.MobclickAgent;
 
+import net.tsz.afinal.FinalHttp;
+import net.tsz.afinal.http.AjaxCallBack;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import api.util.Contants;
+import api.util.FileUtils;
 import api.util.OttUtils;
 import api.util.Utils;
 import api.view.GridNoScrollView;
@@ -80,6 +89,8 @@ public class FinishShActivity extends JwActivity {
     ListNoScrollView listview;
     @Bind(R.id.tv_rwnd)
     TextView tvRwnd;
+    @Bind(R.id.lvfile)
+    ListNoScrollView lvfile;
 
     private AlertDialog dialog;
     Activity context;
@@ -93,6 +104,9 @@ public class FinishShActivity extends JwActivity {
     String orgCode;
 
     TitlePopup titlePopup;
+    List<Picture> fjList;
+    ProgressDialog  progress;
+    CommonAdapter fileAdapter = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,36 +121,6 @@ public class FinishShActivity extends JwActivity {
     }
 
     private void initRight() {
-      /*  MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("完成");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-
-                wcqk = liWcqk.getText().toString();
-                shpj = etShpj.getText().toString();
-
-                if (StrUtils.IsNotEmpty(wcqk) && StrUtils.IsNotEmpty(shpj)) {
-                    showLoading();
-                    double sco = 0.01;
-                    if (shpj.equals("优秀")) {
-                        sco = task.getDegree_score() * 1;
-                    } else if (shpj.equals("良好")) {
-                        sco = task.getDegree_score() * (0.5);
-                    } else if (shpj.equals("未完成")) {
-                        sco = task.getDegree_score() * (-0.5);
-                    }
-                    score = (int) sco;
-
-                    new saveRefresh(getMy()).execute();
-                } else {
-                    ToastShow("请完成审核内容");
-                }
-            }
-        });
-        addMenuView(menuTextView);*/
-
 
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a0), "同意");
@@ -167,14 +151,14 @@ public class FinishShActivity extends JwActivity {
                         ToastShow("请完成审核内容");
                     }
                 } else {
-                   //拒绝
+                    //拒绝
                     wcqk = liWcqk.getText().toString();
                     shpj = etShpj.getText().toString();
 
                     if (StrUtils.IsNotEmpty(wcqk) && StrUtils.IsNotEmpty(shpj)) {
                         showLoading();
                         new RefuseRefresh(getMy()).execute();
-                    }else {
+                    } else {
                         ToastShow("请完成审核内容");
                     }
                 }
@@ -195,6 +179,68 @@ public class FinishShActivity extends JwActivity {
         showLoading();
         task = (Task) getIntent().getSerializableExtra(StaticStrUtils.baseItem);
         new FinishRefresh(getMy()).execute();
+    }
+
+    /**
+     * 字节转换为kb
+     *
+     * @param bt
+     * @return kb大小
+     */
+    private int byteToKB(int bt) {
+        return Math.round(bt / 1024);
+    }
+    /**
+     * 下载文件
+     */
+    private void downloadApk(String sDownUrl, String filename) {
+        String sApkPath = StoreUtils.getSDPath() + filename;
+        FinalHttp jwHttp = new FinalHttp();
+        jwHttp.download(sDownUrl, sApkPath, new AjaxCallBack<File>() {
+
+            @Override
+            public int getRate() {
+                return super.getRate();
+            }
+
+            @Override
+            public AjaxCallBack<File> progress(boolean progress, int rate) {
+                return super.progress(progress, rate);
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+            }
+
+            @Override
+            public void onLoading(long count, long current) {
+                super.onLoading(count, current);
+                progress.setProgressNumberFormat("%1d k/%2d k");
+                progress.setMax(byteToKB((int) count));
+                progress.setProgress(byteToKB((int) current));
+            }
+
+            @Override
+            public void onSuccess(File f) {
+
+                progress.dismiss();
+                String path = f.getAbsolutePath();
+                fileAdapter.notifyDataSetChanged();
+                File file = new File(path);
+                FileUtils.openFile(file,FinishShActivity.this);
+
+            }
+
+
+            @Override
+            public void onFailure(Throwable t, int errorNo, String strMsg) {
+                JwToast.ToastShow("文件下载异常");
+                progress.dismiss();
+            }
+        });
+
+
     }
 
     @OnClick(R.id.li_shpj)
@@ -238,9 +284,13 @@ public class FinishShActivity extends JwActivity {
                     pictureList = jCloudDB.findAllByWhere(Picture.class,
                             "pic_code=" + StrUtils.QuotedStr(task.getTask_code()));
 
-                    String newSql = "select * from  v_taskflow where task_code= "+ StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
+                    String newSql = "select * from  v_taskflow where task_code= " + StrUtils.QuotedStr(task.getTask_code()) + "ORDER BY create_time DESC";
                     //查找数据
                     taskflows = jCloudDB.findAllBySql(Taskflow.class, newSql);
+
+                    if (ListUtils.IsNotNull(list)) {
+                        fjList = jCloudDB.findAllByWhere(Picture.class, "pic_code=" + StrUtils.QuotedStr(list.get(0).getFile_code()));
+                    }
 
                     List<Alreadyread> alreadyreadList = jCloudDB.findAllByWhere(Alreadyread.class,
                             "task_code=" + StrUtils.QuotedStr(task.getTask_code()) + "and operator_code=" + StrUtils.QuotedStr(users.getUser_code()) + "and org_code=" + StrUtils.QuotedStr(orgCode));
@@ -276,9 +326,64 @@ public class FinishShActivity extends JwActivity {
                     tvZwpj.setText(StrUtils.IsNull(submit.getEvaluate()));
                 }
 
+                if (ListUtils.IsNotNull(fjList)) {
+
+                    fileAdapter = new CommonAdapter<Picture>(getMy(), fjList, R.layout.item_file) {
+                        @Override
+                        public void convert(ViewHolder helper, final Picture item) {
+                            helper.setText(R.id.tv_name, "任务附件"+helper.getPosition()+":");
+                            String file = item.getPic_road();
+                            final String fileName = file.substring(file.lastIndexOf("_") + 1, file.length());
+                            helper.setText(R.id.tv_fj, fileName);
+                            final Button bt_load = helper.getView(R.id.bt_load);
+
+                            final String fliePath = StoreUtils.getSDPath()+ fileName;
+                            if(FileUtils.fileIsExists(fliePath)){
+                                //已下载，显示打开，按钮可点击 1
+                                bt_load.setText("打开");
+                                bt_load.setTag("1");
+                                bt_load.setClickable(true);
+                                bt_load.setBackgroundResource(R.drawable.bg_dk);
+                            }else{
+                                //还未下载，按钮显示下载,可点击
+                                bt_load.setTag("0");
+                                bt_load.setClickable(true);
+                                bt_load.setBackgroundResource(R.drawable.bg_xz);
+                            }
+
+                            bt_load.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if(bt_load.getTag().equals("0")){
+                                        //显示下载中，不可点击
+                                        bt_load.setText("下载中");
+                                        bt_load.setBackgroundResource(R.drawable.bg_xzz);
+                                        bt_load.setClickable(false);
+                                        //显示加载进度条
+                                        progress = new ProgressDialog(FinishShActivity.this);
+                                        progress.setTitle("正在下载...");
+                                        progress.setCancelable(false);
+                                        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                        progress.setIndeterminate(false);
+                                        progress.setProgress(0);
+                                        progress.show();
+
+                                        String path = Utils.getPicUrl()+item.getPic_road();
+                                        downloadApk(path,fileName);
+                                    }else if(bt_load.getTag().equals("1")){
+                                        File file = new File(fliePath);
+                                        FileUtils.openFile(file,FinishShActivity.this);
+                                    }
+                                }
+                            });
+                        }
+                    };
+                    lvfile.setAdapter(fileAdapter);
+                }
+
                 if (ListUtils.IsNotNull(pictureList)) {
                     final String imgs[] = new String[pictureList.size()];
-                    for(int i = 0; i<pictureList.size();i++){
+                    for (int i = 0; i < pictureList.size(); i++) {
                         imgs[i] = Utils.getPicUrl() + pictureList.get(i).getPic_road();
                     }
 
@@ -293,8 +398,8 @@ public class FinishShActivity extends JwActivity {
                     noScrollgridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            if(imgs.length!=0){
-                                Intent intent = new Intent(getMy(),ImagePagerActivity.class);
+                            if (imgs.length != 0) {
+                                Intent intent = new Intent(getMy(), ImagePagerActivity.class);
                                 // 图片url,为了演示这里使用常量，一般从数据库中或网络中获取
                                 intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_URLS, imgs);
                                 intent.putExtra(ImagePagerActivity.EXTRA_IMAGE_INDEX, position);
@@ -313,7 +418,7 @@ public class FinishShActivity extends JwActivity {
                             helper.setText(R.id.tv_time, item.getCreate_time());
 
                             ImageView imageView = helper.getImageView(R.id.iv_xz);
-                            JwImageLoader.displayImage(Utils.getPicUrl()+item.getPic_road(),imageView);
+                            JwImageLoader.displayImage(Utils.getPicUrl() + item.getPic_road(), imageView);
                         }
                     };
                     listview.setAdapter(commonAdapter);
@@ -440,7 +545,7 @@ public class FinishShActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
-                ToastShow("审核成功");
+                ToastShow("递交审核成功");
                 OttUtils.push("sh_refresh", "");
                 OttUtils.push("news_refresh", "");
                 finish();
