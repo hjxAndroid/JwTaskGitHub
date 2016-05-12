@@ -97,21 +97,9 @@ public class CheckSignPersonActivity extends JwListActivity {
         setTitle("签到详情");
         getData();
         initListViewController();
-        initRight();
+        initView();
     }
 
-    private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("删除签到");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                showAlertDialog();
-            }
-        });
-        addMenuView(menuTextView);
-    }
 
     private void initView() {
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -439,7 +427,6 @@ public class CheckSignPersonActivity extends JwListActivity {
             if (ListUtils.IsNotNull(list)) {
                 tvTitle.setText(list.get(0).getSign_title());
                 tvSignedContent.setText(list.get(0).getSign_msg());
-                initView();
             } else {
                 llSignedTitle.setVisibility(View.GONE);
                 llSignedContent.setVisibility(View.GONE);

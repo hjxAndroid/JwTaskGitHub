@@ -1,5 +1,6 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -79,6 +80,7 @@ import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
 
 //import com.jeeweel.syl.lib.api.jwlib.baidumaps.InitLocationSign;
 
