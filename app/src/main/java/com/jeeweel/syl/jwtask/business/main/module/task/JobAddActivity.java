@@ -1144,7 +1144,7 @@ public class JobAddActivity extends JwActivity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
+                mode = 0;
                 String apiStr = Utils.uploadPic();
                 JwHttpPost(apiStr, params, true);
             }

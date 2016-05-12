@@ -544,7 +544,7 @@ public class JobDetailActivity extends JwActivity {
                                 gczs.add(shritem.get(0));
                             }
                         } else {
-                            String sql = "select * from users where user_code = " + StrUtils.QuotedStr(code);
+                            String sql = "select * from users where user_code = " + StrUtils.QuotedStr(codeGcz);
 
                             gczs = jCloudDB.findAllBySql(Users.class, sql);
                         }

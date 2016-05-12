@@ -1,48 +1,253 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.jeeweel.syl.jwtask.business.main.module.task.FzSortActivity">
-
-
-    <api.view.LineGridView
-        android:id="@+id/line_gv"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:horizontalSpacing="0dp"
-        android:numColumns="4"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="2dp" >
-    </api.view.LineGridView>
-
-    <View android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/gray_fgx" />
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.jeeweel.syl.jwtask.business.main.module.task.FzSortActivity">
 
 
-    <View android:id="@+id/line"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/line_gv"
-        android:layout_marginTop="10dp"
-        android:background="@color/gray_fgx" />
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="确认栏"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/ios7blue"/>
 
-    <api.view.LineGridView
-        android:id="@+id/chaoqi_gv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:layout_below="@+id/line"
-        android:layout_marginTop="10dp"
-        android:horizontalSpacing="0dp"
-        android:numColumns="4"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="2dp" >
-    </api.view.LineGridView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp">
 
-    <View android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="@color/gray_fgx" />
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/tv_wqr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/icon_wur"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="未确认"/>
+
+            <TextView
+                android:id="@+id/tv_yqr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/icon_yqr"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="已确认"/>
+
+        </LinearLayout>
+
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="审核栏"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/ios7blue"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp">
+
+
+            <TextView
+                android:id="@+id/tv_wsh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/icon_wsh"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="未审核"/>
+
+            <TextView
+                android:id="@+id/tv_ysh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/icon_ysh"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="已审核"/>
+
+            <TextView
+                android:id="@+id/tv_shbh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/icon_shbh"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="审核驳回"/>
+        </LinearLayout>
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="延期栏"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/ios7blue"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp">
+
+
+            <TextView
+                android:id="@+id/tv_yqsqz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/yqsqz"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="延期申请中"/>
+
+            <TextView
+                android:id="@+id/tv_yyq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/yyq"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="已延期"/>
+
+            <TextView
+                android:id="@+id/tv_yqbh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/yqbh"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="延期驳回"/>
+
+        </LinearLayout>
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="放弃栏"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/ios7blue"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp">
+
+
+            <TextView
+                android:id="@+id/tv_fqsqz"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/fqsqz"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="放弃申请中"/>
+
+            <TextView
+                android:id="@+id/tv_yfq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/yfq"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="已放弃"/>
+
+            <TextView
+                android:id="@+id/tv_fqbh"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/fqbh"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="放弃驳回"/>
+
+        </LinearLayout>
+
+        <TextView android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="超期栏"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="10dp"
+            android:background="@color/ios7blue"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp">
+
+
+            <TextView
+                android:id="@+id/tv_stn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/kuaichao"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="三天到期"/>
+
+            <TextView
+                android:id="@+id/tv_ydq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/chaoqinew"
+                android:textColor="@color/list_text_color"
+                android:textSize="14sp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_horizontal"
+                android:text="已到期"/>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

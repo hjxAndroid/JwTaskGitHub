@@ -122,7 +122,7 @@ public class FriendDetailActivity extends JwActivity {
         titlePopup = new TitlePopup(this, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ActionItem action = new ActionItem(getResources().getDrawable(R.drawable.a5), "绩效查看");
         ActionItem action1 = new ActionItem(getResources().getDrawable(R.drawable.a0), "添加好友");
-        ActionItem action2 = new ActionItem(getResources().getDrawable(R.drawable.a6), "移除该部");
+        ActionItem action2 = new ActionItem(getResources().getDrawable(R.drawable.a6), "移出该部");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
         titlePopup.addAction(action2);
