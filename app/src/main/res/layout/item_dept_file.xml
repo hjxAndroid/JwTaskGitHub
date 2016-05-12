@@ -48,12 +48,24 @@
         android:textColor="@color/TextColorGray"
         android:textSize="@dimen/textSize_small" />
 
+    <Button android:id="@+id/bt_delet"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:layout_toLeftOf="@+id/bt_load"
+        android:layout_centerVertical="true"
+        android:background="@color/ios7red"
+        android:textColor="@color/white"
+        android:text="删除"
+        android:visibility="gone"/>
+
     <Button android:id="@+id/bt_load"
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
         android:background="@color/ios7blue"
         android:textColor="@color/white"
-        android:text="下载"/>
+        android:text="下载"
+        />
 </RelativeLayout>
