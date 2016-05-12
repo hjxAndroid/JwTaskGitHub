@@ -39,7 +39,14 @@ public class Users {
     private String device_token;
     private String pic_road;
     private String pic_exists;
+    private String phone;
 
+    public String getPhone() {
+        return phone;
+    }
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
     public String getPhoto_code() {
         return photo_code;
     }

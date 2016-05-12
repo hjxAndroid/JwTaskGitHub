@@ -17,6 +17,7 @@ import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.News;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.SignedPictures;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
@@ -82,6 +83,7 @@ public class NewsHomeActivity extends JwActivity {
     List<Task> wshlist;
     List<Task> wqrlist;
 
+    List<Publicity> publicylist;
     boolean flag = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,16 +245,9 @@ public class NewsHomeActivity extends JwActivity {
                 newsList.add(news1);
                 newsList.add(news2);
 
-//                //通过存储过程获取消息列表，用完删除
-//                String sql = "call get_msg_list('" + users.getUser_code() + "','" + orgCode + "');";
-//                CloudDB.execSQL(sql);
-//
-//                String newSql = "select * from  v_tmp" + users.getUser_code();
-//                //查找数据
-//                newsList = jCloudDB.findAllBySql(News.class, newSql);
-
-                // String deletSql = "DROP TABLE tmp" + users.getUser_code();
-                //cv CloudDB.execSQL(deletSql);
+                //公告未读
+//                publicylist = jCloudDB.findAllByWhere(Publicity.class,
+//                        "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = 2 or now_state = 4 or now_state = 7");
 
                 //签到列表
                 unSignList = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" + " and t.receive_code LIKE  " + StrUtils.QuotedStrLike(users.getUser_code()) +

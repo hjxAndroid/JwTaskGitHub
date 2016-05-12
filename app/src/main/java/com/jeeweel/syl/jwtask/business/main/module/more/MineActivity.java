@@ -187,6 +187,15 @@ public class MineActivity extends JwActivity {
     }
 
 
+
+    @OnClick(R.id.ll_phone)
+    void phoneClick() {
+        Intent intent = new Intent();
+        intent.putExtra("title", "设置电话");
+        intent.setClass(MineActivity.this, MineEditnameActivity.class);
+        JwStartActivity(intent);
+    }
+
     @OnClick(R.id.ll_user_head)
     void editPhotoClick() {
         JwStartActivity(MinePhotoActivity.class);

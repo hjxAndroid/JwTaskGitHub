@@ -53,6 +53,9 @@ public class MineEditnameActivity extends JwActivity {
             et.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         } else if (strtitle.equals("修改部门名") || strtitle.equals("修改组织名")) {
             code = intent.getStringExtra("code");
+        } else if (strtitle.equals("设置电话")) {
+            et.setText(users.getPhone());
+            et.setInputType(InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         }
     }
 
@@ -169,7 +172,15 @@ public class MineEditnameActivity extends JwActivity {
                 } catch (CloudServiceException e) {
                     result = "0";
                 }
-            } else if (strtitle.equals("修改部门名")) {
+            }  else if (strtitle.equals("设置电话")) {
+                users.setEmail(str1);
+                sql = "UPDATE users SET phone='" + str1 + "'WHERE username ='" + phone + "'";
+                try {
+                    CloudDB.execSQL(sql);
+                } catch (CloudServiceException e) {
+                    result = "0";
+                }
+            }else if (strtitle.equals("修改部门名")) {
                 String sqlDept = "UPDATE dept SET depart_name='" + str1 + "'WHERE depart_code ='" + code + "'";
                 String sqlUserdept = "UPDATE userdept SET dept_name='" + str1 + "'WHERE dept_code ='" + code + "'";
 

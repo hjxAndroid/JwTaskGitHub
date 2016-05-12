@@ -131,7 +131,7 @@
             android:layout_marginBottom="10.0dip"
             android:layout_marginLeft="10.0dip"
             android:layout_marginTop="10.0dip"
-            android:text="电话:"
+            android:text="账号:"
             android:textColor="@color/list_text_name_color"
             android:textSize="@dimen/textSize_normal" />
 
@@ -150,14 +150,14 @@
 
 
         <ImageView android:id="@+id/iv_msg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
             android:layout_centerInParent="true"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
             android:paddingLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/send_message" />
+            android:background="@drawable/duanxin" />
 
 
         <ImageView android:id="@+id/iv_phone"
@@ -172,6 +172,59 @@
     </LinearLayout>
 
 
+    <LinearLayout android:id="@+id/li_phone_phone"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/one_line_height"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/settings_up_select"
+        android:gravity="center_vertical"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10.0dip"
+            android:layout_marginLeft="10.0dip"
+            android:layout_marginTop="10.0dip"
+            android:text="电话:"
+            android:textColor="@color/list_text_name_color"
+            android:textSize="@dimen/textSize_normal" />
+
+        <TextView
+            android:id="@+id/tv_phone_phone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10.0dip"
+            android:layout_weight="1.0"
+            android:maxLength="20"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
+            android:textColorHint="@color/text_gray"
+            android:textSize="@dimen/textSize_normal" />
+
+
+        <ImageView android:id="@+id/iv_phone_msg"
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_centerInParent="true"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/duanxin" />
+
+
+        <ImageView android:id="@+id/iv_phone_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginRight="20dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingRight="10dp"
+            android:background="@drawable/phone_call" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="fill_parent"

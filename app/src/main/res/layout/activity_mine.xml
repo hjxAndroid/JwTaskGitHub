@@ -101,6 +101,43 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/ll_phone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/item_Height"
+                android:background="@drawable/shape_li"
+                android:clickable="true"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电话"
+                    android:layout_marginLeft="@dimen/margin_Size"
+                    android:textSize="@dimen/test_size" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right">
+
+                    <TextView
+                        android:id="@+id/tv_phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="未设置"
+                        android:textColor="@color/list_text_color"
+                        android:textSize="@dimen/test_size" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/_uidic_forms_item_arrow" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:id="@+id/ll_email"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/item_Height"

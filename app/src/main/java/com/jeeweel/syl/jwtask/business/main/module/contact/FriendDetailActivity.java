@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.telephony.SmsManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,7 +16,6 @@ import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.ActionItem;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Friend;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
@@ -26,7 +24,6 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
-import com.jeeweel.syl.jwtask.business.main.module.task.JobDetailActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.WebActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -66,6 +63,12 @@ public class FriendDetailActivity extends JwActivity {
     ListNoScrollView listview;
     @Bind(R.id.iv)
     ImageView iv;
+    @Bind(R.id.tv_phone_phone)
+    TextView tvPhonePhone;
+    @Bind(R.id.iv_phone_msg)
+    ImageView ivPhoneMsg;
+    @Bind(R.id.iv_phone_phone)
+    ImageView ivPhonePhone;
 
 
     private List<Users> usersList;
@@ -194,7 +197,7 @@ public class FriendDetailActivity extends JwActivity {
         });
 
         builder.setNegativeButton("否",
-                new android.content.DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -218,7 +221,7 @@ public class FriendDetailActivity extends JwActivity {
         });
 
         builder.setNegativeButton("否",
-                new android.content.DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -243,7 +246,7 @@ public class FriendDetailActivity extends JwActivity {
         });
 
         builder.setNegativeButton("否",
-                new android.content.DialogInterface.OnClickListener() {
+                new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
@@ -448,15 +451,15 @@ public class FriendDetailActivity extends JwActivity {
                     userdepts = jCloudDB.findAllByWhere(Userdept.class,
                             "username=" + StrUtils.QuotedStr(phone));
 
-                    for(Userdept userdept : userdepts){
+                    for (Userdept userdept : userdepts) {
 
 
                         deptTasks = jCloudDB.findAllByWhere(Task.class,
-                                "principal_code = "+StrUtils.QuotedStr(friend_code)+" and principal_dept_code ="+StrUtils.QuotedStr(userdept.getDept_code()));
+                                "principal_code = " + StrUtils.QuotedStr(friend_code) + " and principal_dept_code =" + StrUtils.QuotedStr(userdept.getDept_code()));
 
-                        if(ListUtils.IsNotNull(deptTasks)){
+                        if (ListUtils.IsNotNull(deptTasks)) {
                             userdept.setAdmin_state(111111);
-                        }else{
+                        } else {
                             userdept.setAdmin_state(0);
                         }
                     }
@@ -476,19 +479,20 @@ public class FriendDetailActivity extends JwActivity {
                 if (ListUtils.IsNotNull(usersList)) {
                     Users users = usersList.get(0);
                     nickname.setText(users.getNickname());
+                    tvPhonePhone.setText(users.getPhone());
                     tvPhone.setText(users.getUsername());
                     tvEmail.setText(users.getEmail());
                     tvArea.setText(users.getArea());
                 }
 
                 if (ListUtils.IsNotNull(userdepts)) {
-                   final CommonAdapter commonAdapter = new CommonAdapter<Userdept>(getMy(), userdepts, R.layout.item_friend_detail) {
+                    final CommonAdapter commonAdapter = new CommonAdapter<Userdept>(getMy(), userdepts, R.layout.item_friend_detail) {
                         @Override
                         public void convert(ViewHolder helper, Userdept item) {
                             ImageView iv_task_num = helper.getImageView(R.id.iv_task_num);
-                            if(item.getAdmin_state()==111111){
+                            if (item.getAdmin_state() == 111111) {
                                 iv_task_num.setVisibility(View.VISIBLE);
-                            }else{
+                            } else {
                                 iv_task_num.setVisibility(View.GONE);
                             }
                             helper.setText(R.id.tv_org_name, item.getOrg_name());
@@ -499,7 +503,7 @@ public class FriendDetailActivity extends JwActivity {
                     listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Userdept userdept = (Userdept)commonAdapter.getItem(position);
+                            Userdept userdept = (Userdept) commonAdapter.getItem(position);
                             Intent intent = new Intent(getMy(), DeptTaskListActivity.class);
                             intent.putExtra(StaticStrUtils.baseItem, userdept);
                             intent.putExtra("flag", "fb");
@@ -543,6 +547,32 @@ public class FriendDetailActivity extends JwActivity {
 
     }
 
+    @OnClick(R.id.iv_phone_phone)
+    void phonecallClick() {
+        String number = tvPhonePhone.getText().toString();
+        if (StrUtils.IsNotEmpty(number)) {
+            //用intent启动拨打电话
+            Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + number));
+            startActivity(intent);
+        }
+
+    }
+
+    @OnClick(R.id.iv_msg)
+    void phonemsgClick() {
+        String number = tvPhonePhone.getText().toString();
+        if (StrUtils.IsNotEmpty(number)) {
+            Uri smsToUri = Uri.parse("smsto:" + number);
+
+            Intent intent = new Intent(Intent.ACTION_SENDTO, smsToUri);
+
+            intent.putExtra("sms_body", "天天：");
+
+            startActivity(intent);
+
+        }
+
+    }
     /**
      * 删除组织成员
      */
