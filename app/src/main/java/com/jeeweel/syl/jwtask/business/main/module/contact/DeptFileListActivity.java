@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -148,7 +149,6 @@ public class DeptFileListActivity extends JwListActivity {
                 commonAdapter.notifyDataSetChanged();
                 File file = new File(path);
                 FileUtils.openFile(file,DeptFileListActivity.this);
-
             }
 
             @Override
@@ -219,6 +219,7 @@ public class DeptFileListActivity extends JwListActivity {
             }
         };
         setCommonAdapter(commonAdapter);
+
         super.initListViewController();
     }
 
