@@ -105,5 +105,43 @@ public class Utils {
         return url;
     }
 
+    /**
+     * 根据字典获取医务名
+     */
+    public static String getProfession(int type) {
+        String result = "";
+        switch (type){
+            case 0 :
+                result = "医务";
+                break;
+            case 1 :
+                result = "政务";
+                break;
+            case 2 :
+                result = "院务";
+                break;
+            default :
+                break;
+        }
+        return result;
+    }
+    /**
+     * 根据字典获取身份
+     */
+    public static String getPerson(int type) {
+        String result = "";
+        switch (type){
+            case 0 :
+                result = "文员";
+                break;
+            case 1 :
+                result = "军人";
+                break;
+            default :
+                break;
+        }
+        return result;
+    }
+
 
 }

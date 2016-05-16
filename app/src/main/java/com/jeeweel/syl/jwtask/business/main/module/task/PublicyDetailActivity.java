@@ -70,7 +70,6 @@ public class PublicyDetailActivity extends JwActivity {
 
     Users users;
     String orgCode;
-
     List<Userorg> alreadyreads;
     List<Userorg> unReads;
 
@@ -82,6 +81,7 @@ public class PublicyDetailActivity extends JwActivity {
         setTitle("公告详情");
         users = JwAppAplication.getInstance().getUsers();
         orgCode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
+        initView();
         setData();
         new FinishRefreshIfIsFounder(getMy()).execute();
     }
@@ -111,6 +111,7 @@ public class PublicyDetailActivity extends JwActivity {
         ActionItem action2 = new ActionItem(getResources().getDrawable(R.drawable.a5), "删除公告");
         titlePopup.addAction(action);
         titlePopup.addAction(action1);
+        titlePopup.addAction(action2);
         titlePopup.setItemOnClickListener(new TitlePopup.OnItemOnClickListener() {
             @Override
             public void onItemClick(ActionItem item, int position) {
@@ -304,7 +305,6 @@ public class PublicyDetailActivity extends JwActivity {
         @Override
         protected void onPostExecute(String result) {
             if ("1".equals(result)) {
-                initView();
                 hideLoading();
             }
         }
@@ -331,7 +331,6 @@ public class PublicyDetailActivity extends JwActivity {
             try {
 
                 if (null != users && null != publicity) {
-
                     //已读人数
                     // String readSql  = "SELECT c.operator_code,c.nickname,c.create_time from alreadyread c where c.org_code = "+StrUtils.QuotedStr(publicity.getAccept_org_code())+" and c.task_code = "+ StrUtils.QuotedStr(publicity.getPublicity_code());
                     String readSql = "SELECT t.* from userorg t where t.user_code in (SELECT c.operator_code from alreadyread c where c.org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code()) + " and c.task_code = " + StrUtils.QuotedStr(publicity.getPublicity_code()) + ")  and t.org_code = " + StrUtils.QuotedStr(publicity.getAccept_org_code());

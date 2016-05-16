@@ -13,6 +13,11 @@ import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
 @Table(name = "signed")
 public class Signed extends BaseItem {
+    private String file_code;
+    /**
+     * 确认状态
+     */
+    private String confirm_state;
     /**
      * mid
      */
@@ -74,6 +79,23 @@ public class Signed extends BaseItem {
     private String pictureListSting;
     private String photo_code;
     private String uuid;
+
+
+    public String getFile_code() {
+        return file_code;
+    }
+
+    public void setFile_code(String file_code) {
+        this.file_code = file_code;
+    }
+
+    public String getConfirm_state() {
+        return confirm_state;
+    }
+
+    public void setConfirm_state(String confirm_state) {
+        this.confirm_state = confirm_state;
+    }
 
     public String getProuser_name() {
         return prouser_name;

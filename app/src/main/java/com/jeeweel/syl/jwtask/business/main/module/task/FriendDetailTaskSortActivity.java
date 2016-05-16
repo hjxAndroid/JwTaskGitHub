@@ -9,6 +9,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.jeeweel.syl.jwtask.R;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Userdept;
+import com.jeeweel.syl.jwtask.business.main.module.contact.DeptTaskListActivity;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 
@@ -17,7 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class FbSortActivity extends JwActivity {
+public class FriendDetailTaskSortActivity extends JwActivity {
 
 
     @Bind(R.id.tv_wqr)
@@ -45,31 +47,20 @@ public class FbSortActivity extends JwActivity {
     private Activity context;
     MenuTextView menuTextView;
     Intent intent = null;
+    Userdept userdept = null;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fb_sort);
-        setTitle("我发布");
+        userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        setTitle(getIntent().getStringExtra("name"));
         context = this;
         ButterKnife.bind(this);
-        intent = new Intent(context, JobListActivity.class);
-        initRight();
+        intent = new Intent(context, DeptTaskListActivity.class);
+        intent.putExtra("userdept", userdept);
+        intent.putExtra("flag", "fb");
     }
 
-    private void initRight() {
-        MenuTextView menuTextView = new MenuTextView(getMy());
-        menuTextView.setText("全部");
-        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
-        menuTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                Intent intent1 = new Intent(context, JobAllListActivity.class);
-                intent1.putExtra(StaticStrUtils.baseItem, "0");
-                intent1.putExtra("title", "全部");
-                startActivity(intent1);
-            }
-        });
-        addMenuView(menuTextView);
-    }
+
     @OnClick(R.id.tv_wqr)
     void wqrClick() {
         //未确认

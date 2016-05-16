@@ -2,18 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/margin_Size"
                 android:layout_marginRight="@dimen/margin_Size"
                 android:layout_marginTop="@dimen/margin_Size"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
                 android:background="@drawable/settings_mid_select">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_xz"
         android:layout_width="@dimen/lrk_doctor_width_height"
         android:layout_height="@dimen/lrk_doctor_width_height"
-        android:layout_marginRight="10.0dip"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10.0dip"
+
         android:src="@drawable/dialog_share_link_default_icon"
         app:border_color="@color/white"
         app:border_width="1.0dip"/>
@@ -25,9 +27,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/margin_Size"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/iv_xz"
-        android:text="@string/tv_userName"/>
+        android:layout_alignTop="@+id/iv_xz" />
+
+    <TextView
+        android:id="@+id/tv_check_state"
+        style="@style/text_nomor_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/margin_Size"
+        android:layout_alignTop="@+id/iv_xz"
+        android:layout_marginTop="5dp"
+        android:layout_toRightOf="@+id/tv_check_user_name" />
 
     <TextView
         android:id="@+id/tv_check_time"
@@ -36,18 +49,20 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/margin_Size"
-        android:layout_marginTop="30dp"
-        android:layout_toRightOf="@+id/tv_check_user_name"
-        android:text="@string/tv_userName"/>
+        android:layout_alignTop="@+id/iv_xz"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+       android:layout_alignParentRight="true" />
 
     <TextView
         android:id="@+id/tv_check_loc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/iv_xz"
+        android:layout_toRightOf="@+id/iv_xz"
         android:layout_marginLeft="@dimen/margin_Size"
-        android:layout_marginTop="@dimen/margin_Large_Top_Size"
+        android:layout_marginBottom="5dp"
+        android:textColor="@color/ios7gray"
         android:drawableLeft="@drawable/poi_item_icon"
-        android:drawablePadding="@dimen/margin_Size"
-        android:text="丰泽街道福建中建培训中心"/>
+        android:drawablePadding="@dimen/margin_Size" />
 </RelativeLayout>

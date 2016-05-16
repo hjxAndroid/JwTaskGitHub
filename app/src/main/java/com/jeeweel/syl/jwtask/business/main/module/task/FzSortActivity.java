@@ -8,11 +8,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.lib.api.config.StaticStrUtils;
 import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
+import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+
+import java.util.HashMap;
 
 import api.adapter.GridViewAdapter;
+import api.util.Contants;
+import api.util.OttUtils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -51,7 +57,24 @@ public class FzSortActivity extends JwActivity {
         setTitle("我负责");
         context = this;
         ButterKnife.bind(this);
-        intent = new Intent(context, JobListActivity.class);
+        intent = new Intent(context, JobFzListActivity.class);
+        initRight();
+    }
+
+    private void initRight() {
+        MenuTextView menuTextView = new MenuTextView(getMy());
+        menuTextView.setText("全部");
+        menuTextView.setTextColor(getResources().getColor(R.color.back_blue));
+        menuTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                Intent intent1 = new Intent(context, FzAllListActivity.class);
+                intent1.putExtra(StaticStrUtils.baseItem, "0");
+                intent1.putExtra("title", "全部");
+                startActivity(intent1);
+            }
+        });
+        addMenuView(menuTextView);
     }
 
 

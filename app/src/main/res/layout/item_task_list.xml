@@ -28,13 +28,23 @@
         android:singleLine="true"
         android:ellipsize="end"/>
 
-    <TextView android:id="@+id/tv_task_news"
+    <TextView android:id="@+id/tv_task_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/task"
         android:layout_alignLeft="@+id/task"
         android:textSize="13dp"
-        android:text="11"
+        android:textColor="@color/gray"
+        android:ellipsize="end"
+        android:singleLine="true"/>
+
+    <TextView android:id="@+id/tv_task_news"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/task"
+        android:layout_toRightOf="@+id/tv_task_state"
+        android:textSize="13dp"
+        android:layout_marginLeft="8dp"
         android:textColor="@color/gray"
         android:ellipsize="end"
         android:singleLine="true"/>

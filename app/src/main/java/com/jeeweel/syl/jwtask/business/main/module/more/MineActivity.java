@@ -21,7 +21,7 @@ import com.jeeweel.syl.jcloudlib.db.jsonclass.ResMsgItem;
 import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jcloudlib.db.utils.StrUtils;
 import com.jeeweel.syl.jwtask.R;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.LSignedCountItem;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.TaskScoresItem;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -30,12 +30,9 @@ import com.jeeweel.syl.lib.api.core.activity.baseactivity.JwActivity;
 import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
-import com.jeeweel.syl.lib.api.core.jwutil.SharedPreferencesUtils;
 import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
 import com.squareup.otto.Subscribe;
 import com.umeng.analytics.MobclickAgent;
-
-import net.tsz.afinal.FinalDb;
 
 import java.util.Calendar;
 import java.util.List;
@@ -64,6 +61,7 @@ public class MineActivity extends JwActivity {
     @Bind(R.id.tv_area)
     TextView tv_area;
 
+    List<Users> userList;
     Users users;
     String phone;
     String birthday;
@@ -73,6 +71,9 @@ public class MineActivity extends JwActivity {
     @Bind(R.id.tv_jxfz)
     TextView tvJxfz;
     TaskScoresItem taskScoresItem;
+    @Bind(R.id.tv_phone)
+    TextView tvPhone;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,10 +93,9 @@ public class MineActivity extends JwActivity {
         users = JwAppAplication.getInstance().users;
         phone = users.getUsername();
         user_code = users.getUser_code();
-        getData();
     }
 
-    private void getData(){
+    private void getData() {
         showLoading();
         new FinishRefresh(getMy()).execute();
     }
@@ -118,6 +118,10 @@ public class MineActivity extends JwActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getData();
+    }
+
+    private void setView(Users users){
         str = users.getNickname();
         if (StrUtils.IsNotEmpty(str)) {
             tv_nickname.setText(str);
@@ -134,6 +138,10 @@ public class MineActivity extends JwActivity {
         str = users.getEmail();
         if (StrUtils.IsNotEmpty(str)) {
             tv_mail.setText(str);
+        }
+        str = users.getRemark();
+        if (StrUtils.IsNotEmpty(str)) {
+            tvPhone.setText(str);
         }
         str = users.getSex();
         if (StrUtils.IsNotEmpty(str)) {
@@ -163,7 +171,6 @@ public class MineActivity extends JwActivity {
             JwImageLoader.displayImage(users.getPic_all_road(), iv_user_head2);
         }
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -185,7 +192,6 @@ public class MineActivity extends JwActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
 
 
     @OnClick(R.id.ll_phone)
@@ -284,7 +290,7 @@ public class MineActivity extends JwActivity {
                         //, int dayOfMonth,int hours,int mintues,int seconds
                         // +"-"+hours+"-"+mintues+"-"+seconds
                         public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
-                            tv_birthday.setText("" + year + "-" + (month + 1) + "-" +dayOfMonth);
+                            tv_birthday.setText("" + year + "-" + (month + 1) + "-" + dayOfMonth);
                             birthday = tv_birthday.getText().toString();
                             new saveBirthday(getMy()).execute();
                         }
@@ -376,7 +382,11 @@ public class MineActivity extends JwActivity {
             String sSql = "";
             JCloudDB jCloudDB = new JCloudDB();
             try {
-                if(StrUtils.IsNotEmpty(user_code)){
+
+                userList = jCloudDB.findAllByWhere(Users.class,
+                        "user_code = "+ StrUtils.QuotedStr(user_code));
+
+                if (StrUtils.IsNotEmpty(user_code)) {
                     sSql = "SELECT SUM(t.score) as score from submit t where t.task_code in (SELECT b.task_code from task b where b.principal_code = ? and b.now_state = '3')";
                     SqlInfo sqlInfo = new SqlInfo();
                     sqlInfo.setSql(sSql);
@@ -405,7 +415,12 @@ public class MineActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
 
-                if(null!=taskScoresItem){
+                if(ListUtils.IsNotNull(userList)){
+                    users = userList.get(0);
+                    setView(users);
+                }
+
+                if (null != taskScoresItem) {
                     tvJxfz.setText(taskScoresItem.getScore());
                 }
 

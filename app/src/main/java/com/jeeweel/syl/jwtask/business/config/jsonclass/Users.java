@@ -41,6 +41,34 @@ public class Users {
     private String pic_exists;
     private String phone;
 
+    private String profession_type;
+    private String person_type;
+    private String duty;
+
+    public String getProfession_type() {
+        return profession_type;
+    }
+
+    public void setProfession_type(String profession_type) {
+        this.profession_type = profession_type;
+    }
+
+    public String getPerson_type() {
+        return person_type;
+    }
+
+    public void setPerson_type(String person_type) {
+        this.person_type = person_type;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
+
     public String getPhone() {
         return phone;
     }

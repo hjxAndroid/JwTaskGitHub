@@ -2,6 +2,7 @@ package com.jeeweel.syl.jwtask.business.config.jsonclass;
 
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Id;
 import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
+import com.jeeweel.syl.lib.api.config.publicjsonclass.BaseItem;
 
 /**
  * @author 苏逸龙 317616660@qq.com
@@ -11,7 +12,7 @@ import com.jeeweel.syl.jcloudlib.db.annotation.sqlite.Table;
  */
 
 @Table(name = "sign")
-public class Sign {
+public class Sign extends BaseItem{
     /**
      * mid
      */

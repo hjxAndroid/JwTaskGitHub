@@ -49,4 +49,12 @@
         android:id="@+id/tv_time"
         android:textColor="@color/TextColorGray"
         android:textSize="@dimen/textSize_small"/>
+
+    <ImageView android:id="@+id/iv_publicy_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tv_title"
+        android:layout_toRightOf="@+id/tv_title"
+        android:background="@drawable/new_point"
+        android:visibility="visible"/>
 </RelativeLayout>

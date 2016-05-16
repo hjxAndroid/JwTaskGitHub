@@ -24,6 +24,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Userorg;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
 import com.jeeweel.syl.jwtask.business.main.module.basic.GetUserPicture;
+import com.jeeweel.syl.jwtask.business.main.module.task.FriendDetailTaskSortActivity;
 import com.jeeweel.syl.jwtask.business.main.module.task.WebActivity;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.CommonAdapter;
 import com.jeeweel.syl.lib.api.component.adpter.comadpter.ViewHolder;
@@ -69,6 +70,12 @@ public class FriendDetailActivity extends JwActivity {
     ImageView ivPhoneMsg;
     @Bind(R.id.iv_phone_phone)
     ImageView ivPhonePhone;
+    @Bind(R.id.profession_type)
+    TextView professionType;
+    @Bind(R.id.person_type)
+    TextView personType;
+    @Bind(R.id.identity_type)
+    TextView identityType;
 
 
     private List<Users> usersList;
@@ -104,6 +111,7 @@ public class FriendDetailActivity extends JwActivity {
         } else {
             initRight();
         }
+        listview.setFocusable(false);
         friend_code = intent.getStringExtra("friend_code");
         getData();
         if (StrUtils.IsNotEmpty(friend_code)) {
@@ -455,7 +463,7 @@ public class FriendDetailActivity extends JwActivity {
 
 
                         deptTasks = jCloudDB.findAllByWhere(Task.class,
-                                "principal_code = " + StrUtils.QuotedStr(friend_code) + " and principal_dept_code =" + StrUtils.QuotedStr(userdept.getDept_code()));
+                                "principal_code = " + StrUtils.QuotedStr(friend_code) + " and principal_dept_code =" + StrUtils.QuotedStr(userdept.getDept_code()) +" and now_state != 3");
 
                         if (ListUtils.IsNotNull(deptTasks)) {
                             userdept.setAdmin_state(111111);
@@ -483,6 +491,15 @@ public class FriendDetailActivity extends JwActivity {
                     tvPhone.setText(users.getUsername());
                     tvEmail.setText(users.getEmail());
                     tvArea.setText(users.getArea());
+                    if(StrUtils.IsNotEmpty(users.getProfession_type())){
+                        professionType.setText(Utils.getProfession(Integer.parseInt(users.getProfession_type())));
+                    }
+                    if(StrUtils.IsNotEmpty(users.getPerson_type())){
+                        personType.setText(Utils.getPerson(Integer.parseInt(users.getPerson_type())));
+                    }
+                    if(StrUtils.IsNotEmpty(users.getDuty())){
+                        identityType.setText(users.getDuty());
+                    }
                 }
 
                 if (ListUtils.IsNotNull(userdepts)) {
@@ -504,9 +521,10 @@ public class FriendDetailActivity extends JwActivity {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                             Userdept userdept = (Userdept) commonAdapter.getItem(position);
-                            Intent intent = new Intent(getMy(), DeptTaskListActivity.class);
+                            Intent intent = new Intent(getMy(), FriendDetailTaskSortActivity.class);
                             intent.putExtra(StaticStrUtils.baseItem, userdept);
                             intent.putExtra("flag", "fb");
+                            intent.putExtra("name", usersList.get(0).getNickname());
                             startActivity(intent);
                         }
                     });
@@ -514,7 +532,7 @@ public class FriendDetailActivity extends JwActivity {
                 }
 
             } else {
-                ToastShow("用户名或密码出错");
+                ToastShow("请求数据出错");
             }
             hideLoading();
         }
@@ -573,6 +591,7 @@ public class FriendDetailActivity extends JwActivity {
         }
 
     }
+
     /**
      * 删除组织成员
      */

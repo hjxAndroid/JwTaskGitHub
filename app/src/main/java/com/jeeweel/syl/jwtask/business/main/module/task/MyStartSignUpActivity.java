@@ -80,7 +80,7 @@ public class MyStartSignUpActivity extends JwListActivity {
     @Override
     public void onListItemClick(int position) {
         Sign sign = (Sign) commonAdapter.getItem(position);
-        JwStartActivity(CheckSignPersonActivity.class, sign.getSign_code());
+        JwStartActivity(CheckSignPersonActivity.class, sign);
     }
 
     @Override

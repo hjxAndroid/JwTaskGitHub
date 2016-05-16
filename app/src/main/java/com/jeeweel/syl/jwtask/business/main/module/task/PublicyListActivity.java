@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
@@ -12,7 +13,6 @@ import com.jeeweel.syl.jcloudlib.db.sqlite.SqlInfo;
 import com.jeeweel.syl.jwtask.R;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Orgunit;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
-import com.jeeweel.syl.jwtask.business.config.jsonclass.Publicity;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.V_publicityunread;
 import com.jeeweel.syl.jwtask.business.main.JwAppAplication;
@@ -35,12 +35,19 @@ import api.util.Contants;
 import api.util.Utils;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PublicyListActivity extends JwListActivity {
     List<V_publicityunread> mListItems = new ArrayList<V_publicityunread>();
 
     @Bind(R.id.listview)
     PullToRefreshListView listview;
+    @Bind(R.id.publicy_wd)
+    TextView publicyWd;
+    @Bind(R.id.publicy_yd)
+    TextView publicyYd;
+    @Bind(R.id.noData)
+    TextView noData;
     private CommonAdapter commonAdapter;
 
     private int pageStart = 0; //截取的开始
@@ -58,11 +65,12 @@ public class PublicyListActivity extends JwListActivity {
 
     private String orgcode;
 
+    private String flag = "0";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend_list);
+        setContentView(R.layout.activity_publicy_list);
         setTitle("公告列表");
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
@@ -74,6 +82,36 @@ public class PublicyListActivity extends JwListActivity {
             initListViewController();
         }
     }
+
+    private void resetAll() {
+        publicyWd.setBackgroundResource(R.drawable.shape_white);
+        publicyWd.setTextColor(getResources().getColor(R.color.list_text_color));
+        publicyYd.setBackgroundResource(R.drawable.shape_white);
+        publicyYd.setTextColor(getResources().getColor(R.color.list_text_color));
+    }
+
+    //未读
+    @OnClick(R.id.publicy_wd)
+    void wzxClick() {
+        resetAll();
+        publicyWd.setBackgroundResource(R.drawable.shape_blue);
+        publicyWd.setTextColor(getResources().getColor(R.color.white));
+        flag = "0";
+        dataSourceClear(0, mListItems);
+        onListViewHeadRefresh();
+    }
+
+    //已读
+    @OnClick(R.id.publicy_yd)
+    void yzxClick() {
+        resetAll();
+        publicyYd.setBackgroundResource(R.drawable.shape_blue);
+        publicyYd.setTextColor(getResources().getColor(R.color.white));
+        flag = "1";
+        dataSourceClear(0, mListItems);
+        onListViewHeadRefresh();
+    }
+
 
     private void initView() {
         MenuTextView menuTextView = new MenuTextView(getMy());
@@ -94,6 +132,12 @@ public class PublicyListActivity extends JwListActivity {
         commonAdapter = new CommonAdapter<V_publicityunread>(getMy(), mListItems, R.layout.item_publicy) {
             @Override
             public void convert(ViewHolder helper, V_publicityunread item) {
+                ImageView iv = helper.getImageView(R.id.iv_publicy_num);
+                if (flag.equals("0")) {
+                    iv.setVisibility(View.VISIBLE);
+                } else {
+                    iv.setVisibility(View.GONE);
+                }
                 helper.setText(R.id.tv_name, item.getNickname());
                 helper.setText(R.id.tv_title, item.getPublicity_title());
                 helper.setText(R.id.tv_time, item.getCreate_time());
@@ -205,23 +249,37 @@ public class PublicyListActivity extends JwListActivity {
         @Override
         protected String doInBackground(String... params) {
 
-            String result = "0";
+            String result = "1";
 
             if (null != users) {
                 try {
                     if (mode == 0) {
                         setPage(true);
-                        list = jCloudDB.findAllByWhere(V_publicityunread.class,
-                                "accept_org_code = " + StrUtils.QuotedStr(orgcode)
-                                        + " order by create_time desc limit " + pageStart + "," + pageEnd
-                        );
+                        if (flag.equals("0")) {
+                            //未读公告
+                            String pulicSql = "SELECT * from publicity t where t.accept_org_code = " + StrUtils.QuotedStr(orgcode) + " and t.publicity_code not in (SELECT task_code from alreadyread WHERE operator_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and org_code = " + StrUtils.QuotedStr(orgcode) + ")  order by create_time desc limit " + pageStart + "," + pageEnd;
+                            //查找数据
+                            list = jCloudDB.findAllBySql(V_publicityunread.class, pulicSql);
+                        } else {
+                            //未读公告
+                            String pulicSql = "SELECT * from publicity t where t.accept_org_code = " + StrUtils.QuotedStr(orgcode) + " and t.publicity_code in (SELECT task_code from alreadyread WHERE operator_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and org_code = " + StrUtils.QuotedStr(orgcode) + ")  order by create_time desc limit " + pageStart + "," + pageEnd;
+                            //查找数据
+                            list = jCloudDB.findAllBySql(V_publicityunread.class, pulicSql);
+                        }
                         mListItems.clear();
                     } else {
                         setPage(false);
-                        list = jCloudDB.findAllByWhere(V_publicityunread.class,
-                                "accept_org_code = " + StrUtils.QuotedStr(orgcode)
-                                        + " order by create_time desc limit " + pageStart + "," + pageEnd
-                        );
+                        if (flag.equals("0")) {
+                            //未读公告
+                            String pulicSql = "SELECT * from publicity t where t.accept_org_code = " + StrUtils.QuotedStr(orgcode) + " and t.publicity_code not in (SELECT task_code from alreadyread WHERE operator_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and org_code = " + StrUtils.QuotedStr(orgcode) + ")  order by create_time desc limit " + pageStart + "," + pageEnd;
+                            //查找数据
+                            list = jCloudDB.findAllBySql(V_publicityunread.class, pulicSql);
+                        } else {
+                            //已读公告
+                            String pulicSql = "SELECT * from publicity t where t.accept_org_code = " + StrUtils.QuotedStr(orgcode) + " and t.publicity_code in (SELECT task_code from alreadyread WHERE operator_code = " + StrUtils.QuotedStr(users.getUser_code()) + " and org_code = " + StrUtils.QuotedStr(orgcode) + ")  order by create_time desc limit " + pageStart + "," + pageEnd;
+                            //查找数据
+                            list = jCloudDB.findAllBySql(V_publicityunread.class, pulicSql);
+                        }
                     }
 
                     if (ListUtils.IsNotNull(list)) {
@@ -251,10 +309,11 @@ public class PublicyListActivity extends JwListActivity {
                             }
                         }
                     } else {
-                        result = "0";
+
                     }
 
                 } catch (CloudServiceException e) {
+                    result = "0";
                     e.printStackTrace();
                 }
 
@@ -267,7 +326,12 @@ public class PublicyListActivity extends JwListActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
                 mListItems.addAll(list);
-                commonAdapter.notifyDataSetChanged();
+                if(mListItems.size()!=0){
+                    commonAdapter.notifyDataSetChanged();
+                }else{
+                    listview.setEmptyView(noData);
+                }
+
             } else {
                 //没有加载到数据
             }

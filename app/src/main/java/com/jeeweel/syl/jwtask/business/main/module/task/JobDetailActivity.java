@@ -24,6 +24,7 @@ import com.jeeweel.syl.jwtask.business.config.jsonclass.Dept;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.DeptTask;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Picture;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Task;
+import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskdraft;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Taskflow;
 import com.jeeweel.syl.jwtask.business.config.jsonclass.Users;
 import com.jeeweel.syl.jwtask.business.imagedemo.image.ImagePagerActivity;
@@ -163,6 +164,7 @@ public class JobDetailActivity extends JwActivity {
                             intent.putExtra("draft", draft);
                         }
                         startActivity(intent);
+                        finish();
                     } else {
                         JwToast.ToastShow("该任务已确定无法修改");
                     }
@@ -214,26 +216,49 @@ public class JobDetailActivity extends JwActivity {
 
     private void showAlertDeleatDialog() {
 
-        CustomDialog.Builder builder = new CustomDialog.Builder(this);
-        builder.setMessage("删除该任务会导致其他任务接收人不能正常完成该任务，您确定删除该任务吗？");
-        builder.setTitle("提示");
-        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-                //设置你的操作事项
-                showLoading();
-                new deleteMember(getMy()).execute();
-            }
-        });
+        if(StrUtils.IsNotEmpty(draft)){
+            CustomDialog.Builder builder = new CustomDialog.Builder(this);
+            builder.setMessage("确定删除该草稿吗？");
+            builder.setTitle("提示");
+            builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    //设置你的操作事项
+                    showLoading();
+                    new deleteDraft(getMy()).execute();
+                }
+            });
 
-        builder.setNegativeButton("否",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+            builder.setNegativeButton("否",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
 
-        builder.create().show();
+            builder.create().show();
+        }else{
+            CustomDialog.Builder builder = new CustomDialog.Builder(this);
+            builder.setMessage("删除该任务会导致其他任务接收人不能正常完成该任务，您确定删除该任务吗？");
+            builder.setTitle("提示");
+            builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                    //设置你的操作事项
+                    showLoading();
+                    new deleteMember(getMy()).execute();
+                }
+            });
+
+            builder.setNegativeButton("否",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            builder.create().show();
+        }
 
     }
 
@@ -998,7 +1023,7 @@ public class JobDetailActivity extends JwActivity {
     }
 
     /**
-     * 删除组织成员
+     * 删除任务
      */
     private class deleteMember extends AsyncTask<String, Void, String> {
         private Context context;
@@ -1036,6 +1061,47 @@ public class JobDetailActivity extends JwActivity {
             }
         }
     }
+
+
+    /**
+     * 删除任务
+     */
+    private class deleteDraft extends AsyncTask<String, Void, String> {
+        private Context context;
+        private JCloudDB jCloudDB;
+
+        /**
+         * @param context 上下文
+         */
+        public deleteDraft(Context context) {
+            this.context = context;
+            jCloudDB = new JCloudDB();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String result = "1";
+            try {
+                jCloudDB.deleteByWhere(Taskdraft.class, " task_code = " + StrUtils.QuotedStr(task.getTask_code()) + " and promulgator_code = " + StrUtils.QuotedStr(users.getUser_code()));
+
+            } catch (CloudServiceException e) {
+                result = "0";
+                e.printStackTrace();
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if ("1".equals(result)) {
+                ToastShow("删除成功");
+                hideLoading();
+                finish();
+                OttUtils.push("delet_refresh", "");
+            }
+        }
+    }
+
 
     @Override
     public void onResume() {

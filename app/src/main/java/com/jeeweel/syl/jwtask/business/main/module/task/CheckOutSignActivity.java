@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
@@ -58,10 +59,15 @@ public class CheckOutSignActivity extends JwListActivity {
 
     @Override
     public void initListViewController() {
-        commonAdapter = new CommonAdapter<Signed>(getMy(), mListItems, R.layout.item_my_signed) {
+        commonAdapter = new CommonAdapter<Signed>(getMy(), mListItems, R.layout.item_sign_person_detail) {
             @Override
             public void convert(ViewHolder helper, Signed item) {
-                helper.setText(R.id.tv_check_title_name, item.getSign_title());
+                if(item.getConfirm_state().equals("0")){
+                    helper.setText(R.id.tv_check_state, "未确认");
+                }else{
+                    helper.setText(R.id.tv_check_state, "已确认");
+                }
+                helper.setText(R.id.tv_check_user_name, item.getSign_title());
                 helper.setText(R.id.tv_check_time, item.getCreate_time().substring(0, 16));
                 helper.setText(R.id.tv_check_loc, item.getLocation());
             }
@@ -81,6 +87,15 @@ public class CheckOutSignActivity extends JwListActivity {
         } else {
             userPic = "";
         }
+    }
+
+    @Override
+    public void onListItemClick(int position) {
+            Signed signed = (Signed) commonAdapter.getItem(position);
+            Intent intent = new Intent(CheckOutSignActivity.this,SignedDetailActivity.class);
+            intent.putExtra(StaticStrUtils.baseItem,signed);
+            intent.putExtra("my","my");
+            startActivity(intent);
     }
 
     private void getData() {

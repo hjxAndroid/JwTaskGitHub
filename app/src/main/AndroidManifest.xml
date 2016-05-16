@@ -609,6 +609,18 @@
             android:name=".business.main.module.task.FbSortActivity"
             android:label="@string/title_activity_fb_sort" >
         </activity>
+        <activity
+            android:name=".business.main.module.task.FriendDetailTaskSortActivity"
+            android:label="@string/title_activity_friend_detail_task_sort" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.FzAllListActivity"
+            android:label="@string/title_activity_fz_all_list" >
+        </activity>
+        <activity
+            android:name=".business.main.module.task.JobAllListActivity"
+            android:label="@string/title_activity_job_all_list" >
+        </activity>
     </application>
 
 </manifest>

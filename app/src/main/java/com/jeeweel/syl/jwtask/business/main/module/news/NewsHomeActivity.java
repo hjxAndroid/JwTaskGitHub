@@ -1,3 +1,4 @@
+
 package com.jeeweel.syl.jwtask.business.main.module.news;
 
 import android.content.Context;
@@ -245,9 +246,10 @@ public class NewsHomeActivity extends JwActivity {
                 newsList.add(news1);
                 newsList.add(news2);
 
-                //公告未读
-//                publicylist = jCloudDB.findAllByWhere(Publicity.class,
-//                        "auditor_code like " + StrUtils.QuotedStrLike(users.getUser_code()) + "and now_state = 2 or now_state = 4 or now_state = 7");
+                //未读公告
+                String pulicSql = "SELECT * from publicity t where t.accept_org_code = "+StrUtils.QuotedStr(orgCode)+" and t.publicity_code not in (SELECT task_code from alreadyread WHERE operator_code = "+StrUtils.QuotedStr(users.getUser_code())+" and org_code = "+StrUtils.QuotedStr(orgCode)+")";
+                //查找数据
+                publicylist = jCloudDB.findAllBySql(Publicity.class, pulicSql);
 
                 //签到列表
                 unSignList = jCloudDB.findAllBySql(SignedPictures.class, "SELECT t.* from sign t where t.sign_code not in (SELECT b.sign_code from signed b where b.sign_code in(SELECT t.sign_code from sign t where t.receive_code LIKE " + StrUtils.QuotedStrLike(users.getUser_code()) + ") and b.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) + ")" + " and t.receive_code LIKE  " + StrUtils.QuotedStrLike(users.getUser_code()) +
@@ -280,11 +282,13 @@ public class NewsHomeActivity extends JwActivity {
         protected void onPostExecute(String result) {
             if (result.equals("1")) {
 
+                int sum = 0;
                 if (ListUtils.IsNotNull(newsList)) {
 
                     int signnum = 0;
                     if(ListUtils.IsNotNull(unSignList)){
                         signnum = unSignList.size();
+                        sum += signnum;
                     }
                     if(signnum!=0){
                         newsList.get(1).setReadstate("0");
@@ -307,17 +311,27 @@ public class NewsHomeActivity extends JwActivity {
                         newsList.get(2).setReadstate("0");
                         newsList.get(2).setReadsum(tasknnum + "");
                         newsList.get(2).setAlread("0");
-
+                        sum += tasknnum;
                     }
 
                     allList.addAll(newsList);
                     commonAdapter.notifyDataSetChanged();
                 }
 
+                //公告未读数
+                if (ListUtils.IsNotNull(publicylist)&&publicylist.size()!=0) {
+                        newsList.get(0).setMsg_title(publicylist.get(0).getPublicity_title());
+                        newsList.get(0).setReadstate("0");
+                        newsList.get(0).setReadsum(publicylist.size() + "");
+                        newsList.get(0).setAlread("0");
+                        sum+=publicylist.size();
+                }
+
 
                 //刷新好友列表
                 if (ListUtils.IsNotNull(friendList)) {
                     int size = friendList.size();
+                    sum+=size;
                     //好友请求数量
                     tvFriendNum.setText(IntUtils.toStr(size));
                     tvFriendNum.setVisibility(View.VISIBLE);
@@ -358,6 +372,7 @@ public class NewsHomeActivity extends JwActivity {
                     showAlertDeleatDialog();
                 }
 
+                JwAppAplication.getInstance().updateNumShortCut(IntUtils.toStr(sum));
             } else {
                 ToastShow("请求出错");
             }

@@ -85,6 +85,7 @@ import java.util.Map;
 import api.photoview.Bimp;
 import api.photoview.FileUtils;
 import api.util.Contants;
+import api.util.OttUtils;
 import api.util.ReduceUtil;
 import api.util.Utils;
 import butterknife.Bind;
@@ -216,6 +217,7 @@ public class JobEditActivity extends JwActivity {
         orgcode = (String) SharedPreferencesUtils.get(getMy(), Contants.org_code, "");
         orgname = (String) SharedPreferencesUtils.get(getMy(), Contants.org_name, "");
         pic_unid = Utils.getUUid();
+        file_unid = Utils.getUUid();
         task = (Task) getIntent().getSerializableExtra("task");
         taskName = (Task) getIntent().getSerializableExtra("taskName");
         draft = getIntent().getStringExtra("draft");
@@ -903,8 +905,20 @@ public class JobEditActivity extends JwActivity {
             try {
                 String sql = "";
 
-                sql = " update task set task_name = " + StrUtils.QuotedStr(task.getTask_name()) + ",begin_time = " + StrUtils.QuotedStr(task.getBegin_time()) + ", over_time = " + StrUtils.QuotedStr(task.getOver_time()) + ", task_request = " + StrUtils.QuotedStr(task.getTask_request()) + "" +
-                        ", priority = " + StrUtils.QuotedStr(task.getPriority()) + ", assess_standard = " + StrUtils.QuotedStr(task.getAssess_standard()) + " where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                int size = Bimp.drr.size();
+                if (size != 0 && StrUtils.IsNotEmpty(fileNameFj)) {
+                    sql = " update task set file_code = "+StrUtils.QuotedStr(file_unid)+", pic_code = "+StrUtils.QuotedStr(pic_unid)+", task_name = " + StrUtils.QuotedStr(task.getTask_name()) + ",begin_time = " + StrUtils.QuotedStr(task.getBegin_time()) + ", over_time = " + StrUtils.QuotedStr(task.getOver_time()) + ", task_request = " + StrUtils.QuotedStr(task.getTask_request()) + "" +
+                            ", priority = " + StrUtils.QuotedStr(task.getPriority()) + ", assess_standard = " + StrUtils.QuotedStr(task.getAssess_standard()) + " where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                }else if(size != 0&&StrUtils.isEmpty(fileNameFj)){
+                    sql = " update task set pic_code = "+StrUtils.QuotedStr(pic_unid)+", task_name = " + StrUtils.QuotedStr(task.getTask_name()) + ",begin_time = " + StrUtils.QuotedStr(task.getBegin_time()) + ", over_time = " + StrUtils.QuotedStr(task.getOver_time()) + ", task_request = " + StrUtils.QuotedStr(task.getTask_request()) + "" +
+                            ", priority = " + StrUtils.QuotedStr(task.getPriority()) + ", assess_standard = " + StrUtils.QuotedStr(task.getAssess_standard()) + " where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                }else if(size == 0 && StrUtils.IsNotEmpty(fileNameFj)){
+                    sql = " update task set file_code = "+StrUtils.QuotedStr(file_unid)+", task_name = " + StrUtils.QuotedStr(task.getTask_name()) + ",begin_time = " + StrUtils.QuotedStr(task.getBegin_time()) + ", over_time = " + StrUtils.QuotedStr(task.getOver_time()) + ", task_request = " + StrUtils.QuotedStr(task.getTask_request()) + "" +
+                            ", priority = " + StrUtils.QuotedStr(task.getPriority()) + ", assess_standard = " + StrUtils.QuotedStr(task.getAssess_standard()) + " where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                }else{
+                    sql = " update task set task_name = " + StrUtils.QuotedStr(task.getTask_name()) + ",begin_time = " + StrUtils.QuotedStr(task.getBegin_time()) + ", over_time = " + StrUtils.QuotedStr(task.getOver_time()) + ", task_request = " + StrUtils.QuotedStr(task.getTask_request()) + "" +
+                            ", priority = " + StrUtils.QuotedStr(task.getPriority()) + ", assess_standard = " + StrUtils.QuotedStr(task.getAssess_standard()) + " where task_code = " + StrUtils.QuotedStr(task.getTask_code());
+                }
 
 
                 CloudDB.execSQL(sql);
@@ -918,7 +932,6 @@ public class JobEditActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-//            pushData();
             if (result.equals("1")) {
                 uploadPic();
                 ToastShow("任务修改成功");
@@ -948,6 +961,7 @@ public class JobEditActivity extends JwActivity {
 
 
     public void pushData() {
+        mode = 0;
         flag = "0";
         if (task != null) {
             String title = task.getTask_name();
@@ -995,26 +1009,35 @@ public class JobEditActivity extends JwActivity {
         if (mode == 1) {
             progressDialog.dismiss();
             ToastShow("文件上传成功");
-        } else {
-            finish();
+        } else if(mode == 0){
+            OttUtils.push("delet_refresh","");
+            JobEditActivity.this.finish();
+        }else if(mode ==2){
+            pushData();
         }
 
 
     }
     @Override
     public void HttpFail(String strMsg) {
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        ToastShow(strMsg);
         super.HttpFail(strMsg);
-        finish();
     }
 
     @Override
     public void HttpFinish() {
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
         super.HttpFinish();
-        finish();
     }
 
 
     void uploadPic() {
+
         flag = "1";
         AjaxParams params = new AjaxParams();
 
@@ -1028,38 +1051,19 @@ public class JobEditActivity extends JwActivity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-
-
                 try {
                     params.put(pic_unid, new File(sFile));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                //"http://121.199.8.223:8090/JCloud/servlet/CloudFileRest?appkey=58975c511b1bcaddecc906a2c9337665"
                 String apiStr = Utils.uploadPic();
+                mode = 2;
                 JwHttpPost(apiStr, params, true);
             }
         } else {
-            finish();
+            pushData();
         }
     }
-
-//    @Override
-//    public void HttpSuccess(ResMsgItem resMsgItem) {
-//        if (OUtils.IsNotNull(resMsgItem)) {
-//            if (resMsgItem != null) {
-//                int error = resMsgItem.getStatus();
-//                String sMsg = resMsgItem.getMsg();
-//                if (error == 1 || error == 99) {
-//                    JwToast.ToastShow(sMsg);
-//                } else {
-//                    JwToast.ToastShow(sMsg);
-//                    OttUtils.push("refresh", "");
-//                    finish();
-//                }
-//            }
-//        }
-//    }
 
 
     @Override
@@ -1377,9 +1381,6 @@ public class JobEditActivity extends JwActivity {
 
 
                             if (null != users) {
-                                 /*  //设置任务名为任务名-负责人-发布时间
-                                   String taskName = task_name+"_"+fzrNames[i]+"_"+task.getOver_time();
-                                   task.setTask_name(taskName);*/
                                 task.setPrincipal_nickname(fzrNames[i]);
                                 task.setPromulgator_code(users.getUser_code());
                                 task.setPromulgator_name(users.getUsername());
@@ -1427,12 +1428,6 @@ public class JobEditActivity extends JwActivity {
 
                         }
                     }
-
-
-//                   //保存图片表
-//                   for (String sFile : Bimp.drr) {
-//                       CloudFile.upload(sFile,pic_unid);
-//                   }
 
 
                 }

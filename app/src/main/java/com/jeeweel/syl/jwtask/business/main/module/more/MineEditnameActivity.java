@@ -173,8 +173,8 @@ public class MineEditnameActivity extends JwActivity {
                     result = "0";
                 }
             }  else if (strtitle.equals("设置电话")) {
-                users.setEmail(str1);
-                sql = "UPDATE users SET phone='" + str1 + "'WHERE username ='" + phone + "'";
+                users.setRemark(str1);
+                sql = "UPDATE users SET remark='" + str1 + "'WHERE username ='" + phone + "'";
                 try {
                     CloudDB.execSQL(sql);
                 } catch (CloudServiceException e) {

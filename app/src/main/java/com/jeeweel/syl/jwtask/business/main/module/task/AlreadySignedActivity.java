@@ -29,6 +29,8 @@ import com.jeeweel.syl.lib.api.core.control.imageloader.JwImageLoader;
 import com.jeeweel.syl.lib.api.core.jwpublic.json.JwJSONUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.list.ListUtils;
 import com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils;
+import com.jeeweel.syl.lib.api.core.otto.ActivityMsgEvent;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,116 +255,12 @@ public class AlreadySignedActivity extends JwListActivity {
         }
     }
 
+    @Subscribe
+    public void resultInfo(ActivityMsgEvent activityMsgEvent) {
+        String msg = activityMsgEvent.getMsg();
+        if (msg.equals("sign_refresh")) {
+            new FinishRefresh(getMy(), 0).execute();
+        }
+    }
 
-    //备份
-//    /**
-//     * 保存到数据库
-//     */
-//    private class FinishRefresh extends AsyncTask<String, Void, String> {
-//        private Context context;
-//        private JCloudDB jCloudDB;
-//        private int mode = 0;
-//
-//
-//        /**
-//         * @param context 上下文
-//         */
-//        public FinishRefresh(Context context, int mode) {
-//            this.context = context;
-//            jCloudDB = new JCloudDB();
-//            this.mode = mode;
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... params) {
-//
-//            String result = "1";
-//
-//            if (null != users) {
-//                try {
-//                    //创建视图
-//                    String sql = "create or replace view v_signed_pic " +
-//                            " as ( SELECT " +
-//                            " signed. *, picture.pic_road " +
-//                            " FROM " +
-//                            " signed " +
-//                            " LEFT JOIN picture ON signed.uuid = picture.pic_code " +
-//                            " WHERE " +
-//                            " signed.sign_user_code IN ( " +
-//                            " SELECT " +
-//                            " b.sign_user_code " +
-//                            " FROM " +
-//                            " signed b " +
-//                            " WHERE " +
-//                            " b.sign_code IN ( " +
-//                            " SELECT " +
-//                            " t.sign_code " +
-//                            " FROM " +
-//                            " sign t " +
-//                            " WHERE " +
-//                            " t.receive_code LIKE " +
-//                            StrUtils.QuotedStrLike(users.getUser_code()) +
-//                            " ) " +
-//                            " AND b.sign_user_code = " +
-//                            StrUtils.QuotedStr(users.getUser_code()) +
-//                            " ) " + "and signed.sign_user_code = " + StrUtils.QuotedStr(users.getUser_code()) +
-//                            "ORDER BY " +
-//                            " create_time DESC) ";
-//                    CloudDB.execSQL(sql);
-//
-//
-//                    if (mode == 0) {
-//                        setPage(true);
-//                        alreadySigned = jCloudDB.findAllBySql(SignedPictures.class, " SELECT " +
-//                                " * " +
-//                                " FROM " +
-//                                " v_signed_pic " +
-//                                " GROUP BY " +
-//                                " sign_code " +
-//                                " LIMIT " + pageStart +
-//                                "," +
-//                                pageEnd);
-//                        mListItems.clear();
-//                    } else {
-//                        setPage(false);
-//                        alreadySigned = jCloudDB.findAllBySql(SignedPictures.class, " SELECT " +
-//                                " * " +
-//                                " FROM " +
-//                                " v_signed_pic " +
-//                                " GROUP BY " +
-//                                " sign_code " +
-//                                " LIMIT " + pageStart +
-//                                "," +
-//                                pageEnd);
-//                    }
-//                    if (ListUtils.IsNotNull(alreadySigned)) {
-//                        result = "1";
-//                    } else {
-//                        result = "0";
-//                    }
-//                } catch (CloudServiceException e) {
-//                    result = "0";
-//                    e.printStackTrace();
-//                }
-////                String deletSql = "DROP View v_signed_pic";
-////                try {
-////                    CloudDB.execSQL(deletSql);
-////                } catch (CloudServiceException e) {
-////                    e.printStackTrace();
-////                }
-//
-//            }
-//            return result;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            if (result.equals("1")) {
-//                mListItems.addAll(alreadySigned);
-//                commonAdapter.notifyDataSetChanged();
-//            }
-//            listview.onRefreshComplete();
-//            hideLoading();
-//        }
-//    }
 }

@@ -113,4 +113,7 @@
     <string name="title_activity_overed_task_list">OveredTaskListActivity</string>
     <string name="title_activity_dept_file_list">DeptFileListActivity</string>
     <string name="title_activity_fb_sort">FbSortActivity</string>
+    <string name="title_activity_friend_detail_task_sort">FriendDetailTaskSortActivity</string>
+    <string name="title_activity_fz_all_list">FzAllListActivity</string>
+    <string name="title_activity_job_all_list">JobAllListActivity</string>
 </resources>

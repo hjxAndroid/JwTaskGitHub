@@ -3,6 +3,7 @@ package com.jeeweel.syl.jwtask.business.main;
 import android.app.Notification;
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -28,7 +29,10 @@ import com.umeng.message.entity.UMessage;
 import net.tsz.afinal.FinalDb;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
+import api.util.AppShortCutUtil;
 import api.util.Contants;
 
 import cn.bmob.v3.Bmob;
@@ -59,10 +63,14 @@ public class JwAppAplication extends JeeweelApplication {
     private PushAgent mPushAgent;
 
     private String Bmob_ID = "76b5654046319eb094cbb0b3c0e4c5af";
+
+    public static String num = "0";
+    private static Context mAppContext = null;
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+        mAppContext = getApplicationContext();
         //设置整个APP的地址
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/RobotoCondensed-Regular.ttf")
@@ -137,6 +145,16 @@ public class JwAppAplication extends JeeweelApplication {
 
     public static void setUsers(Users users) {
         JwAppAplication.users = users;
+    }
+
+
+    public static void updateNumShortCut(String nums) {
+        if (!nums.equals("0")) {
+            AppShortCutUtil.addNumShortCut(mAppContext, true,
+                    String.valueOf(nums), true);
+        } else {
+            AppShortCutUtil.addNumShortCut(mAppContext, true, "0", true);
+        }
     }
 
 

@@ -3,6 +3,8 @@ package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -39,7 +41,6 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.google.gson.JsonElement;
 import com.jeeweel.syl.jcloudlib.db.api.CloudDB;
-import com.jeeweel.syl.jcloudlib.db.api.CloudFile;
 import com.jeeweel.syl.jcloudlib.db.api.JCloudDB;
 import com.jeeweel.syl.jcloudlib.db.exception.CloudServiceException;
 import com.jeeweel.syl.jcloudlib.db.jsonclass.ResMsgItem;
@@ -148,6 +149,8 @@ public class SignUpActivity extends JwActivity {
     TextView tvSignedContent;
     @Bind(R.id.tv_sign_button)
     TextView tvSignButton;
+    @Bind(R.id.et_file)
+    TextView etFile;
     private ScrollView li_fb;
     private Activity context;
     GridAdapter adapter;
@@ -155,7 +158,11 @@ public class SignUpActivity extends JwActivity {
     private Users users;
     private SFProgrssDialog m_customProgrssDialog;
 
-
+    String fileNameFj = "";
+    String url = "";
+    String file_unid = "";
+    ProgressDialog progressDialog;
+    int mode = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,6 +177,7 @@ public class SignUpActivity extends JwActivity {
         mMyLocationListener = new MyLocationListener();
         mLocationClient.registerLocationListener(mMyLocationListener);
         mLocationClient.start();
+        file_unid = Utils.getUUid();
         users = JwAppAplication.getInstance().getUsers();
         initLocation();
         initRight();
@@ -188,6 +196,69 @@ public class SignUpActivity extends JwActivity {
             }
         });
         addMenuView(menuTextView);
+    }
+
+
+    //开始时间
+    @OnClick(R.id.li_file)
+    void fileUpClick() {
+
+        showFileChooser();
+    }
+
+    /**
+     * 调用文件选择软件来选择文件
+     **/
+    private void showFileChooser() {
+        intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult(Intent.createChooser(intent, "请选择一个要上传的文件"),
+                    1991);
+        } catch (ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+            Toast.makeText(getMy(), "请安装文件管理器", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+
+    private void saveFile() {
+        if (StrUtils.IsNotEmpty(url)) {
+
+            fileNameFj = url.substring(url.lastIndexOf("/") + 1, url.length());
+            AjaxParams params = new AjaxParams();
+            try {
+                params.put(file_unid, new File(url));
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            String apiStr = Utils.uploadPic();
+            mode =1;
+            progressDialog = ProgressDialog.show(SignUpActivity.this, "上传", "正在努力上传中,请稍候！");
+            progressDialog.setCancelable(false);
+            JwHttpPost(apiStr, params, false);
+
+        }
+    }
+    @Override
+    public void HttpSuccess(com.jeeweel.syl.lib.api.config.publicjsonclass.ResMsgItem resMsgItem) {
+        if (mode == 1) {
+            progressDialog.dismiss();
+            ToastShow("文件上传成功");
+        }
+
+    }
+
+    @Override
+    public void HttpFail(String strMsg) {
+        super.HttpFail(strMsg);
+    }
+
+    @Override
+    public void HttpFinish() {
+        super.HttpFinish();
     }
 
 
@@ -303,6 +374,7 @@ public class SignUpActivity extends JwActivity {
         signed.setLongtude(longitude);
         signed.setLocation(address);
         signed.setNickname(userNick);
+        signed.setFile_code(file_unid);
         signed.setProuser_name(prouserName);
         signed.setRemark(etRemark.getText().toString());
         tvSignButton.setText("进行中");
@@ -591,12 +663,27 @@ public class SignUpActivity extends JwActivity {
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case TAKE_PICTURE:
-                if (Bimp.drr.size() < 9 && resultCode == -1) {
-                    Bimp.drr.add(path);
-                }
-                break;
+        if(resultCode==RESULT_OK){
+            switch (requestCode) {
+                case TAKE_PICTURE:
+                    if (Bimp.drr.size() < 9 && resultCode == -1) {
+                        Bimp.drr.add(path);
+                    }
+                    break;
+                case 1991:
+                    Uri uri = data.getData();
+                    url = api.util.FileUtils.getImageAbsolutePath(SignUpActivity.this, uri);
+                    if (com.jeeweel.syl.lib.api.core.jwpublic.string.StrUtils.IsNotEmpty(url)) {
+
+                        fileNameFj = url.substring(url.lastIndexOf("/") + 1, url.length());
+                        String textName = etFile.getText().toString();
+                        textName += "/" + fileNameFj;
+                        textName = textName.substring(1, textName.length());
+                        etFile.setText(textName);
+                        saveFile();
+                    }
+                    break;
+            }
         }
     }
 

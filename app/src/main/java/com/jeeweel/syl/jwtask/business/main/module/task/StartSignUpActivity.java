@@ -1,6 +1,7 @@
 package com.jeeweel.syl.jwtask.business.main.module.task;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -41,7 +42,9 @@ import java.util.List;
 
 import api.adapter.SignAdapter;
 import api.util.Contants;
+import api.util.ShaerHelper;
 import api.util.Utils;
+import api.view.CustomDialog;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -360,21 +363,42 @@ public class StartSignUpActivity extends JwActivity {
             JwHttpGet(apiStr, true);
         }
     }
+    public void showAlertDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("是否分享到微信");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                new ShaerHelper(StartSignUpActivity.this,sign.getSign_title(),sign.getSend_context());
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                }
+        );
+
+        builder.create().show();
+    }
 
     @Override
     public void HttpSuccess(ResMsgItem resMsgItem) {
-        finish();
+       showAlertDialog();
     }
 
     @Override
     public void HttpFail(String strMsg) {
-        finish();
         super.HttpFail(strMsg);
     }
 
     @Override
     public void HttpFinish() {
-        finish();
         super.HttpFinish();
     }
 

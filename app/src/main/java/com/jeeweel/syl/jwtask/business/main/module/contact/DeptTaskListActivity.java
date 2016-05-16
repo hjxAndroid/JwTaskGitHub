@@ -60,11 +60,12 @@ public class DeptTaskListActivity extends JwActivity {
     private Userdept userdept;
     Task deptTask;
     String flag = "";
+    String state = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dept_task);
-        setTitle("任务列表");
+        setTitle(getIntent().getStringExtra("title"));
         users = JwAppAplication.getInstance().getUsers();
         ButterKnife.bind(this);
         getData();
@@ -77,16 +78,18 @@ public class DeptTaskListActivity extends JwActivity {
 
     private void getData() {
         flag = getIntent().getStringExtra("flag");
-        userdept = (Userdept)getIntent().getSerializableExtra(StaticStrUtils.baseItem);
+        userdept = (Userdept)getIntent().getSerializableExtra("userdept");
+        state = getIntent().getStringExtra(StaticStrUtils.baseItem);
     }
 
     protected void initListView() {
-        commonAdapter = new CommonAdapter<Task>(getMy(), mListItems, R.layout.item_news) {
+        commonAdapter = new CommonAdapter<Task>(getMy(), mListItems, R.layout.item_task_list) {
             @Override
             public void convert(ViewHolder helper, Task item) {
                 helper.setText(R.id.task,item.getTask_name());
                 helper.setText(R.id.tv_task_news,item.getNickname());
                 helper.setText(R.id.tv_task_time,item.getCreate_time());
+                helper.setText(R.id.tv_task_state,item.getNow_state_name());
                 TextView textView = helper.getView(R.id.tv_end_time);
                 textView.setVisibility(View.VISIBLE);
                 textView.setText(item.getOver_time());
@@ -127,7 +130,7 @@ public class DeptTaskListActivity extends JwActivity {
             if (null != users) {
                 try {
                     list = jCloudDB.findAllByWhere(Task.class,
-                            "principal_code = "+StrUtils.QuotedStr(userdept.getUser_code())+" and principal_dept_code ="+StrUtils.QuotedStr(userdept.getDept_code()));
+                            "principal_code = "+StrUtils.QuotedStr(userdept.getUser_code())+" and principal_dept_code ="+StrUtils.QuotedStr(userdept.getDept_code()) +" and now_state = "+state);
 
                 } catch (CloudServiceException e) {
                     result = "0";

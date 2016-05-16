@@ -1,7 +1,38 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.jeeweel.syl.lib.api.core.activity.baseactivity.JwListActivity">
+
+    <LinearLayout android:id="@+id/li"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_margin="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/publicy_wd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_blue"
+            android:gravity="center"
+            android:text="未读公告"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSize_normal" />
+
+        <TextView
+            android:id="@+id/publicy_yd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/shape_white"
+            android:gravity="center"
+            android:text="已读公告"
+            android:textColor="@color/list_text_color"
+            android:textSize="@dimen/textSize_normal" />
+
+    </LinearLayout>
 
     <com.jeeweel.syl.lib.api.component.viewcontroller.pull.PullToRefreshListView
         android:id="@id/listview"
@@ -11,7 +42,15 @@
         android:divider="@color/divider_color"
         android:dividerHeight="1.0px"
         android:fadingEdge="none"
+        android:layout_below="@+id/li"
         android:listSelector="@color/transparent"
         android:scrollbars="none" />
 
+    <TextView
+        android:id="@+id/noData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+        android:text="暂无记录！"
+        android:visibility="gone"/>
 </RelativeLayout>

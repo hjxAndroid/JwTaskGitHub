@@ -89,6 +89,7 @@ import api.photoview.Bimp;
 import api.photoview.FileUtils;
 import api.util.Contants;
 import api.util.ReduceUtil;
+import api.util.ShaerHelper;
 import api.util.Utils;
 import api.view.CustomDialog;
 import api.view.TitlePopup;
@@ -783,22 +784,6 @@ public class JobAddActivity extends JwActivity {
                         fzr += userdept.getNickname() + ",";
                         fzrCode += userdept.getUser_code() + ",";
                         deptCode += userdept.getDept_code() + ",";
-                       /* if(deptflag){
-                            for(String key : deptCodeMap.keySet()) {
-                                if(key.equals(userdept.getUser_code())){
-                                    deptCodeMap.get(key).add(userdept.getDept_code());
-                                }else{
-                                    List<String> vals = new ArrayList();
-                                    vals.add(userdept.getDept_code());
-                                    deptCodeMap.put(userdept.getUser_code(), vals);
-                                }
-                            }
-                        }else{
-                            List<String> vals = new ArrayList();
-                            vals.add(userdept.getDept_code());
-                            deptCodeMap.put(userdept.getUser_code(),vals);
-                            deptflag = true;
-                        }*/
                     }
                     if (StrUtils.IsNotEmpty(fzr)) {
                         fzr = fzr.substring(0, fzr.length() - 1);
@@ -1016,12 +1001,6 @@ public class JobAddActivity extends JwActivity {
                     }
 
 
-//                   //保存图片表
-//                   for (String sFile : Bimp.drr) {
-//                       CloudFile.upload(sFile,pic_unid);
-//                   }
-
-
                 }
             } catch (CloudServiceException e) {
                 result = "0";
@@ -1032,7 +1011,6 @@ public class JobAddActivity extends JwActivity {
 
         @Override
         protected void onPostExecute(String result) {
-//            pushData();
             uploadPic();
             saveFlag = true;
             ToastShow("任务发布成功");
@@ -1058,6 +1036,7 @@ public class JobAddActivity extends JwActivity {
 
 
     public void pushData() {
+        mode = 2;
         flag = "0";
         if (task != null) {
             String title = task.getTask_name();
@@ -1105,8 +1084,10 @@ public class JobAddActivity extends JwActivity {
         if (mode == 1) {
             progressDialog.dismiss();
             ToastShow("文件上传成功");
-        } else {
-            finish();
+        } else if(mode == 0){
+            showAlertDialog();
+        }else if(mode == 2){
+            pushData();
         }
 
 
@@ -1123,7 +1104,32 @@ public class JobAddActivity extends JwActivity {
     }
 
 
+    public void showAlertDialog() {
+
+        CustomDialog.Builder builder = new CustomDialog.Builder(this);
+        builder.setMessage("是否分享到微信");
+        builder.setTitle("提示");
+        builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                new ShaerHelper(JobAddActivity.this,task.getTask_name(),task.getTask_request());
+            }
+        });
+
+        builder.setNegativeButton("否",
+                new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        finish();
+                    }
+                }
+        );
+
+        builder.create().show();
+    }
+
     void uploadPic() {
+
         flag = "1";
         AjaxParams params = new AjaxParams();
 
@@ -1144,12 +1150,13 @@ public class JobAddActivity extends JwActivity {
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                mode = 0;
                 String apiStr = Utils.uploadPic();
+                mode = 2;
                 JwHttpPost(apiStr, params, true);
             }
         } else {
-            finish();
+            pushData();
+            showAlertDialog();
         }
     }
 

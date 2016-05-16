@@ -239,7 +239,7 @@ public class DeptUsersListActivity extends JwListActivity {
     public void showAlertDialog() {
 
         CustomDialog.Builder builder = new CustomDialog.Builder(this);
-        builder.setMessage("您确定要解散该组织");
+        builder.setMessage("您确定要解散该部门");
         builder.setTitle("提示");
         builder.setPositiveButton("是", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
@@ -497,11 +497,11 @@ public class DeptUsersListActivity extends JwListActivity {
 
                     if (ListUtils.IsNotNull(listDeptFounder) || ListUtils.IsNotNull(listIsFounder)) {
 
-                        flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + "\'" + orgCode + "\'");
-                        flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + "\'" + orgCode + "\'");
-                        flagDept = jCloudDB.deleteByWhere(Dept.class, " org_code = " + "\'" + orgCode + "\'");
+                        flagUserDept = jCloudDB.deleteByWhere(Userdept.class, " org_code = " + "\'" + orgCode + "\' and dept_code = "+StrUtils.QuotedStr(dept_code));
+                        //flagUserOrg = jCloudDB.deleteByWhere(Userorg.class, " org_code = " + "\'" + orgCode + "\' and depart_code = "+StrUtils.QuotedStr(dept_code));
+                        flagDept = jCloudDB.deleteByWhere(Dept.class, " org_code = " + "\'" + orgCode + "\' and depart_code = "+StrUtils.QuotedStr(dept_code));
 
-                        if (flagUserDept && flagUserOrg && flagDept) {
+                        if (flagUserDept && flagDept) {
                             result = "1";
                         } else {
                             result = "0";
